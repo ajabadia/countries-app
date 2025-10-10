@@ -1,16 +1,34 @@
+@import '../../../../../styles/variables';
+@import '../ui-button/ui-button.component';
+/**
+ * Barra de herramientas: organización visual de los botones superiores de tabla
+ */
 .toolbar-buttons {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
   justify-content: flex-start;
-  align-items: center;
+  align-items: center;   // ¡Asegura vertical centrado!
   flex-wrap: wrap;
 
-  app-ui-button.toolbar-btn {
-    // Puedes heredar los mixins o sobrescribir aquí, o en el SCSS del ui-button
-    // Para los iconos, los botones ya gestionan los hover, colores, y BEM
-    &.danger {
-      // Overrides para el botón de eliminar
+  // Aplica a tus botones personalizados (usa la clase real)
+  app-ui-button.ui-button {
+    /* Altura visual mayor */
+    padding: 0.55em 1.1em 0.55em 1em;
+    min-height: 2.7em;
+    font-size: 1em;
+    display: flex;              // Centra contenido (icono+texto)
+    align-items: center;
+    justify-content: center;
+    box-sizing: border-box;
+
+    // Clases de color específicas si las usas
+    &.ui-button--main {
+      /* Color para botón "nuevo" si lo necesitas */
+      // background: var(--color-primary, #007bff);
+    }
+    &.ui-button--danger {
+      // Color para botón eliminar
       background: var(--color-danger-h8, #fff2f1);
       color: var(--color-danger, #e84c3d);
 
@@ -27,17 +45,15 @@
   }
 }
 
-// Responsive
+/* Responsive toolbar, menor separación vertical/mayor compacidad en móvil */
 @media (max-width: 600px) {
   .toolbar-buttons {
     gap: 0.6em;
-    app-ui-button.toolbar-btn {
-      padding: 0.37em 0.87em 0.37em 0.77em;
-      font-size: 0.97em;
 
-      .toolbar-btn__icon {
-        width: 1.3em; height: 1.3em;
-      }
+    app-ui-button.ui-button {
+      padding: 0.37em 0.87em 0.37em 0.77em;
+      min-height: 2.2em;
+      font-size: 0.97em;
     }
   }
 }
