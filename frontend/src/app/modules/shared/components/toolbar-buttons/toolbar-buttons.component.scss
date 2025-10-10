@@ -1,59 +1,87 @@
 @import '../../../../../styles/variables';
-@import '../ui-button/ui-button.component';
-/**
- * Barra de herramientas: organización visual de los botones superiores de tabla
- */
+
 .toolbar-buttons {
   display: flex;
   gap: 1rem;
   margin-bottom: 1.5rem;
   justify-content: flex-start;
-  align-items: center;   // ¡Asegura vertical centrado!
+  align-items: center;
   flex-wrap: wrap;
 
-  // Aplica a tus botones personalizados (usa la clase real)
-  app-ui-button.ui-button {
-    /* Altura visual mayor */
-    padding: 0.55em 1.1em 0.55em 1em;
-    min-height: 2.7em;
-    font-size: 1em;
-    display: flex;              // Centra contenido (icono+texto)
+  .tb-btn {
+    display: flex;
     align-items: center;
     justify-content: center;
+    gap: 0.5em;
+    padding: 0.55em 1.15em;
+    min-height: 2.7em;
+    font-size: 1.08em;
+    border: none;
+    border-radius: 0.5em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
     box-sizing: border-box;
+    outline: none;
 
-    // Clases de color específicas si las usas
-    &.ui-button--main {
-      /* Color para botón "nuevo" si lo necesitas */
-      // background: var(--color-primary, #007bff);
+    &__icon {
+      font-size: 1.2em;
+      display: flex;
+      align-items: center;
     }
-    &.ui-button--danger {
-      // Color para botón eliminar
-      background: var(--color-danger-h8, #fff2f1);
-      color: var(--color-danger, #e84c3d);
 
-      &:hover:not(:disabled),
-      &:focus-visible:not(:disabled) {
-        background: var(--color-danger-h6, #ffe5e3);
-        color: var(--color-danger-dark, #b22c24);
+    // Botón "nuevo" (color corporativo)
+    &--main {
+      background: #0a7de9;          // Azul corporativo
+      color: #fff;
+      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
+        background: #136ddc;
+        box-shadow: 0 0 0 2px #c9e9fb inset;
       }
-      &:active:not(:disabled) {
-        background: var(--color-danger-h4, #ffccc6);
-        color: var(--color-danger-dark, #b22c24);
+    }
+
+    // Botón "editar" (amarillo)
+    &--edit {
+      background: #ffe391;
+      color: #926f13;
+      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
+        background: #ffde55;
+        color: #805a09;
+        box-shadow: 0 0 0 2px #fff0c1 inset;
       }
+    }
+
+    // Botón "borrar" (rojo)
+    &--danger {
+      background: #ffb0aa;
+      color: #be371c;
+      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
+        background: #ff8072;
+        color: #9c2611;
+        box-shadow: 0 0 0 2px #ffe1dc inset;
+      }
+    }
+
+    // Deshabilitado visualmente
+    &:disabled, &.tb-btn--disabled {
+      opacity: 0.52;
+      background: #ebebeb !important;
+      color: #b0b0b0 !important;
+      cursor: not-allowed;
+      pointer-events: none;
+      box-shadow: none;
     }
   }
 }
 
-/* Responsive toolbar, menor separación vertical/mayor compacidad en móvil */
+// Responsive toolbar
 @media (max-width: 600px) {
   .toolbar-buttons {
     gap: 0.6em;
-
-    app-ui-button.ui-button {
-      padding: 0.37em 0.87em 0.37em 0.77em;
-      min-height: 2.2em;
-      font-size: 0.97em;
+    .tb-btn {
+      padding: 0.37em 0.77em;
+      min-height: 2.1em;
+      font-size: 0.99em;
     }
   }
 }
