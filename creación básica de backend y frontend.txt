@@ -2,6 +2,4 @@ Set-ExecutionPolicy -Scope Process Bypass; ./setup_backend.ps1
 
 PowerShell -ExecutionPolicy Bypass -File .\setup_frontend.ps1
 
-arreglar problemas
-
 
