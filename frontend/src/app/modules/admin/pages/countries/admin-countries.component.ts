@@ -144,11 +144,15 @@ tableColumns: TableColumn[] = [
     this.fetchCountries();
   }
 
-  onSortChange(sort: { key: string, order: 'asc' | 'desc' }): void {
-    this.sortKey = sort.key;
-    this.sortOrder = sort.order;
-    this.fetchCountries();
+  onSortChange(key: string) {
+  if (this.sortKey === key) {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.sortKey = key;
+    this.sortOrder = 'asc';
   }
+  this.fetchCountries();
+}
 
   //-----------------------------------------------
   // TABLA Y SELECCIÓN AVANZADA
@@ -341,3 +345,6 @@ tableColumns: TableColumn[] = [
     return Math.ceil(this.totalCountries / this.pageSize) || 1;
   }
 }
+
+
+

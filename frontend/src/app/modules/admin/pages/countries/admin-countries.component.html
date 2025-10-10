@@ -33,8 +33,20 @@
           (stateChange)="onGeneralToggle($event)">
         </app-toggle-checkbox>
       </th>
-      <th *ngFor="let col of tableColumns.slice(1)">
-        {{col.label}}
+      <th
+        *ngFor="let col of tableColumns.slice(1)"
+        [style.width]="col.width" 
+        [style.min-width]="col.minWidth" 
+        [style.max-width]="col.maxWidth"
+
+        [class.sortable]="col.sortable"
+        (click)="col.sortable ? onSortChange(col.key) : null"
+      >
+        {{ col.label }}
+        <span *ngIf="sortKey === col.key">
+          <ng-container *ngIf="sortOrder === 'asc'">▲</ng-container>
+          <ng-container *ngIf="sortOrder === 'desc'">▼</ng-container>
+        </span>
       </th>
       
     </tr>

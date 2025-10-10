@@ -96,10 +96,48 @@
   flex: 1 1 auto;
   padding: 2em 1.6em 1.2em 1.6em;
   background: var(--modal-body-bg, #fff);
+  display: flex;
+  flex-direction: column;
+  align-items: center; /* Centra verticalmente el grupo de campos si hay espacio */
+  
+.modal-form-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center; // centra verticalmente label e input
+  width: 420px;        // puedes ajustar a lo que prefieras
+  margin-bottom: 1.2rem;
+}
 
-  @media (max-width: 600px) {
+.modal-form-label {
+  flex: 0 0 140px;     // ancho fijo para etiquetas, ajusta a tu literal más largo
+  text-align: right;
+  margin-right: 16px;
+  font-weight: 500;
+}
+
+.modal-form-input {
+  flex: 1 1 auto;
+  min-width: 120px;
+  max-width: 300px;
+  padding: 0.5rem 0.7rem;
+  border-radius: 6px;
+  border: 1px solid #c2c2c2;
+}
+
+@media (max-width: 600px) {
+  .modal-form-row {
+    width: 95vw;
+    flex-direction: column;
+    align-items: stretch;
     padding: 1.2em 0.4em;
   }
+  .modal-form-label {
+    text-align: left;
+    margin-bottom: 2px;
+    margin-right: 0;
+  }
+}
+  
 }
 
 // --- FOOTER/BOTONES ---
