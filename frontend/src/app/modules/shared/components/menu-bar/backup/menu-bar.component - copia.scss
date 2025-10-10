@@ -1,0 +1,35 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.menu-bar {
+  display: flex;
+  flex-wrap: wrap;      // permite pasar a otra línea si no cabe
+  align-items: center;
+  width: 100%;
+  min-height: 48px;
+  background: var(--color-surface, #f7fafd);
+  border-bottom: 1px solid var(--color-border, #e3eefa);
+  padding: 0 var(--space-m);
+  box-shadow: 0 2px 4px rgba(37,56,137,0.02);
+  z-index: 5;
+  position: relative;
+}
+
+.menu-bar > * {
+  flex: 0 1 auto !important;       // <-- esta línea da ancho solo según contenido
+  text-align: center;
+  min-width: 0;
+  margin: 0 4px;        // opcional para espacio entre botones
+}
+
+
+
+@media (max-width: 700px) {
+  .menu-bar {
+    padding: 0 4px;
+  }
+  .menu-bar > * {
+    font-size: 0.95em;
+    padding: 0 2px;
+  }
+}

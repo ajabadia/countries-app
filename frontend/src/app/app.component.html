@@ -1,15 +1,12 @@
 
-
   <app-header></app-header>
-   <app-menu-bar>
-      <app-admin-menu
-        [items]="[
-            { label: '', icon: 'icon-error', route: '/public' },
-            { label: 'Público', icon: 'icon-user', route: '/public' },
-            { label: 'Administración', icon: 'icon-table', route: '/admin' }
-          ]">
-       </app-admin-menu>
-      </app-menu-bar>
-        <router-outlet></router-outlet>
+<app-menu-bar
+  [items]="[
+    { label: 'Inicio', icon: 'icon-home', route: '/public' },
+    { label: 'Público', icon: 'icon-user', route: '/public' },
+    { label: 'Administración', icon: 'icon-table', route: '/admin', badge: 3 }
+  ]"
+  ariaLabel="Menú principal"
+></app-menu-bar>
+<router-outlet></router-outlet>
    <app-footer></app-footer>
-

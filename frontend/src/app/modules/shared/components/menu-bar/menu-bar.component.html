@@ -1,3 +1,45 @@
-<nav class="menu-bar" aria-label="Zona de menús de navegación">
-  <ng-content></ng-content>
+<!-- menu-bar.component.html -->
+
+<nav class="menu-bar" [attr.aria-label]="ariaLabel">
+  <ul class="menu-bar__list" role="menubar">
+    <li *ngFor="let item of items"
+        class="menu-bar__item"
+        [class.menu-bar__item--active]="isActive(item)"
+        [class.menu-bar__item--disabled]="item.disabled"
+        role="none">
+
+      <!-- Enlace interno Angular -->
+      <a *ngIf="item.route && !item.external"
+         class="menu-bar__link"
+         [routerLink]="item.route"
+         routerLinkActive="menu-bar__link--active"
+         [routerLinkActiveOptions]="{ exact: true }"
+         tabindex="0"
+         [attr.aria-current]="isActive(item) ? 'page' : null"
+         [attr.aria-disabled]="item.disabled ? 'true' : null"
+         role="menuitem">
+
+         <span *ngIf="item.icon" class="menu-bar__icon" aria-hidden="true">
+           <img [src]="'assets/icons/' + item.icon + '.svg'" alt="" />
+         </span>
+         <span class="menu-bar__label">{{ item.label }}</span>
+         <span *ngIf="item.badge" class="menu-bar__badge">{{ item.badge }}</span>
+      </a>
+
+      <!-- Enlace externo -->
+      <a *ngIf="item.route && item.external"
+         class="menu-bar__link"
+         [href]="item.route"
+         target="_blank" rel="noopener"
+         tabindex="0"
+         [attr.aria-disabled]="item.disabled ? 'true' : null"
+         role="menuitem">
+         <span *ngIf="item.icon" class="menu-bar__icon" aria-hidden="true">
+           <img [src]="'assets/icons/' + item.icon + '.svg'" alt="" />
+         </span>
+         <span class="menu-bar__label">{{ item.label }}</span>
+         <span *ngIf="item.badge" class="menu-bar__badge">{{ item.badge }}</span>
+      </a>
+    </li>
+  </ul>
 </nav>
