@@ -4,7 +4,7 @@ import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
 import { CountriesService, Country } from 'src/app/services/countries.service';
 import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
 
-// País vacío para resets/modales
+// País vacío para inicializar/resetear formularios y selección
 const COUNTRY_EMPTY: Country = {
   id: '',
   alpha2may: '',
@@ -19,8 +19,8 @@ const COUNTRY_EMPTY: Country = {
   styleUrls: ['./admin-countries.component.scss']
 })
 export class AdminCountriesComponent implements OnInit {
-  // --- Estados del componente ---
-  searchTerm: string = '';
+  // --- Estados básicos de la vista ---
+  searchTerm = '';
   countries: Country[] = [];
   tableColumns: TableColumn[] = [
     { key: 'toggle', label: '', sticky: 'left', width: '44px' },
@@ -34,7 +34,8 @@ export class AdminCountriesComponent implements OnInit {
   pageSize = 10;
   sortKey: string | null = null;
   sortOrder: 'asc' | 'desc' = 'asc';
-
+  
+  // --- Estados de la UI/modal/formulario ---
   pais: Country = { ...COUNTRY_EMPTY };
   showEditModal = false;
   showConfirmDelete = false;
@@ -42,68 +43,18 @@ export class AdminCountriesComponent implements OnInit {
   errorMsg = '';
   countryForm!: FormGroup;
 
+  // --- Servicio avanzado de selección de filas ---
+  public selection: SelectionService<Country> = new SelectionService<Country>();
+  // Proxy para compatibilidad con <app-toolbar-buttons>
+  get selectedItems(): Country[] { return this.selection.selected; }
+  set selectedItems(val: Country[]) { this.selection.selected = val; }
+
   constructor(
     private countriesService: CountriesService,
-    private fb: FormBuilder,
-    public selection: SelectionService<Country>
+    private fb: FormBuilder
   ) {}
 
-  // Total de páginas para el paginador
-  get totalPages(): number {
-    return Math.ceil(this.totalCountries / this.pageSize) || 1;
-  }
-
-  // Estado visual del toggle general (cabecera)
-  get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
-    if (this.selection.selected.length === this.countries.length && this.countries.length > 0) return 'checked';
-    if (this.selection.selected.length > 0) return 'indeterminate';
-    return 'unchecked';
-  }
-
-  // Estado visual de cada toggle por fila
-  rowToggleState(row: Country): 'checked' | 'unchecked' {
-    return this.selection.selected.some(item => item.id === row.id) ? 'checked' : 'unchecked';
-  }
-
-  // --- FUNCIONES DE SELECCIÓN VISUAL Y ACCESIBILIDAD ---
-  isSelected(row: Country): boolean {
-    return this.selection.selected.some(item => item.id === row.id);
-  }
-
-  // Click en fila: selección avanzada (ctrl, shift, simple)
-  onRowClick(row: Country, event: MouseEvent): void {
-    if (event.ctrlKey || event.metaKey) {
-      // Toggle selección con Ctrl/Cmd
-      if (this.isSelected(row)) {
-        this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
-      } else {
-        this.selection.selected = [...this.selection.selected, row];
-      }
-    } else if (event.shiftKey) {
-      // Selección por rango con Shift
-      const lastIdx = this.countries.findIndex(item => item.id === (this.selection.selected[this.selection.selected.length - 1]?.id));
-      const thisIdx = this.countries.findIndex(item => item.id === row.id);
-      if (lastIdx !== -1) {
-        const [start, end] = [lastIdx, thisIdx].sort((a, b) => a - b);
-        const range = this.countries.slice(start, end + 1);
-        const newSelection = [
-          ...this.selection.selected,
-          ...range.filter(r => !this.isSelected(r))
-        ];
-        // Elimina duplicados y mantiene orden original
-        this.selection.selected = this.countries.filter(country =>
-          newSelection.some(s => s.id === country.id)
-        );
-      } else {
-        this.selection.selected = [row];
-      }
-    } else {
-      // Selección simple (click normal)
-      this.selection.selected = [row];
-    }
-  }
-
-  // --- CRUD Y MODALES ---
+  // --- Inicialización: crea el formulario y carga los países ---
   ngOnInit(): void {
     this.countryForm = this.fb.group({
       id: ['', Validators.required],
@@ -115,6 +66,7 @@ export class AdminCountriesComponent implements OnInit {
     this.fetchCountries();
   }
 
+  // --- Carga los países de la página activa ---
   fetchCountries(): void {
     this.countriesService.getCountries({
       search: this.searchTerm,
@@ -125,13 +77,14 @@ export class AdminCountriesComponent implements OnInit {
     }).subscribe((result: { data: Country[]; total: number }) => {
       this.countries = result.data;
       this.totalCountries = result.total;
-      // Sincro selección según la página visible
+      // Sincroniza la selección solo a filas visibles (paginación)
       this.selection.selected = this.selection.selected.filter(sel =>
         this.countries.some(c => c.id === sel.id)
       );
     });
   }
 
+  // --- Interacciones de paginación, búsqueda y ordenación ---
   onValueChange(term: string): void {
     this.searchTerm = term;
     this.page = 1;
@@ -143,18 +96,67 @@ export class AdminCountriesComponent implements OnInit {
     this.fetchCountries();
   }
 
-  onSelectionChange(selectedRows: Country[]): void {
-    this.selection.selected = [...selectedRows];
-  }
-
   onSortChange(sort: { key: string, order: 'asc' | 'desc' }): void {
     this.sortKey = sort.key;
     this.sortOrder = sort.order;
     this.fetchCountries();
   }
 
-  // --- FUNCIONES DE TOGGLE GENERAL Y FILA ---
-  onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate') {
+  // --- Selección avanzada y compatibilidad con tabla/toolbar ---
+  onSelectionChange(selectedRows: Country[]): void {
+    this.selection.selected = [...selectedRows];
+  }
+
+  isSelected(row: Country): boolean {
+    return this.selection.selected.some(item => item.id === row.id);
+  }
+
+  // Click en fila: selección simple, múltiple o por rango
+  onRowClick(row: Country, event: MouseEvent): void {
+    if (event.ctrlKey || event.metaKey) {
+      // Toggle selección
+      if (this.isSelected(row)) {
+        this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
+      } else {
+        this.selection.selected = [...this.selection.selected, row];
+      }
+    } else if (event.shiftKey) {
+      // Selección por rango
+      const lastIdx = this.countries.findIndex(item => item.id === (this.selection.selected[this.selection.selected.length - 1]?.id));
+      const thisIdx = this.countries.findIndex(item => item.id === row.id);
+      if (lastIdx !== -1) {
+        const [start, end] = [lastIdx, thisIdx].sort((a, b) => a - b);
+        const range = this.countries.slice(start, end + 1);
+        const newSelection = [
+          ...this.selection.selected,
+          ...range.filter(r => !this.isSelected(r))
+        ];
+        this.selection.selected = this.countries.filter(country =>
+          newSelection.some(s => s.id === country.id)
+        );
+      } else {
+        this.selection.selected = [row];
+      }
+    } else {
+      this.selection.selected = [row];
+    }
+  }
+
+  // --- Funciones generales y por fila para los toggles de selección/checkboxes ---
+  get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
+    if (this.selection.selected.length === this.countries.length && this.countries.length > 0)
+      return 'checked';
+    if (this.selection.selected.length > 0)
+      return 'indeterminate';
+    return 'unchecked';
+  }
+
+  rowToggleState(row: Country): 'checked' | 'unchecked' {
+    return this.isSelected(row) ? 'checked' : 'unchecked';
+  }
+
+  // Toggle general (cabecera)
+  onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate'): void {
     if (newState === 'checked') {
       this.selection.selected = [...this.countries];
     } else {
@@ -162,7 +164,8 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  onRowToggle(row: Country, newState: 'checked' | 'unchecked' | 'indeterminate') {
+  // Toggle individual (por fila)
+  onRowToggle(row: Country, newState: 'checked' | 'unchecked' | 'indeterminate'): void {
     if (newState === 'checked') {
       if (!this.isSelected(row)) {
         this.selection.selected = [...this.selection.selected, row];
@@ -172,12 +175,18 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  // --- GETTERS PARA BOTONES Y MODALES ---
-  get allVisibleSelected() { return this.selection.selected.length === this.countries.length && this.countries.length > 0; }
-  get someVisibleSelected() { return this.selection.selected.length > 0 && this.selection.selected.length < this.countries.length; }
-  get anySelected() { return this.selection.selected.length > 0; }
+  // --- Getters para la habilitación de botones y estilos de selección ---
+  get allVisibleSelected() {
+    return this.selection.selected.length === this.countries.length && this.countries.length > 0;
+  }
+  get someVisibleSelected() {
+    return this.selection.selected.length > 0 && this.selection.selected.length < this.countries.length;
+  }
+  get anySelected() {
+    return this.selection.selected.length > 0;
+  }
 
-  // --- MODALES Y FLUJO CRUD ---
+  // --- Gestión de modales y flujo CRUD ---
   onNew(): void {
     this.editMode = false;
     this.showEditModal = true;
@@ -216,8 +225,7 @@ export class AdminCountriesComponent implements OnInit {
         error => {
           this.errorMsg = 'Error actualizando país';
           console.error(error);
-        }
-      );
+        });
     } else {
       this.countriesService.createCountry(valores).subscribe(
         () => {
@@ -229,8 +237,7 @@ export class AdminCountriesComponent implements OnInit {
         error => {
           this.errorMsg = 'Error creando país';
           console.error(error);
-        }
-      );
+        });
     }
   }
 
@@ -271,5 +278,10 @@ export class AdminCountriesComponent implements OnInit {
       this.countryForm.patchValue({ ...this.selection.selected[0] });
       this.abrirConfirmEliminar();
     }
+  }
+
+  // --- Paginación auxiliar ---
+  get totalPages(): number {
+    return Math.ceil(this.totalCountries / this.pageSize) || 1;
   }
 }

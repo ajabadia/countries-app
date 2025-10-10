@@ -1,9 +1,16 @@
 <div class="table-controls">
   <div class="controls-left">
     <!-- Tus botones: Nuevo país, Eliminar seleccionados -->
-  <button (click)="onNew()" class="btn-primary">Nuevo país</button>
-  <button (click)="onDeleteSelected()" [disabled]="!anySelected" class="btn-danger">Eliminar seleccionados</button>
-  </div>
+ <app-toolbar-buttons
+  [selected]="selectedItems"
+  entity="country"
+  (new)="onNew()"
+  (edit)="onEdit()"
+  (delete)="onDeleteSelected()">
+</app-toolbar-buttons>  
+
+
+</div>
     <span>{{countries.length}} países</span>
   <div class="controls-right">
     <app-search-box
@@ -13,6 +20,7 @@
     </app-search-box>
     </div>
 </div>
+
 
 <table class="admin-table">
   <thead>
