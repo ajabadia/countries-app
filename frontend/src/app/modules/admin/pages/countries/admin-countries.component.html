@@ -1,14 +1,17 @@
 <div class="table-controls">
-  <input
-    class="field-input field-large"
-    type="search"
-    placeholder="Filtrar país"
-    [(ngModel)]="searchTerm"
-    (ngModelChange)="onValueChange($event)"
-  />
+  <div class="controls-left">
+    <!-- Tus botones: Nuevo país, Eliminar seleccionados -->
   <button (click)="onNew()" class="btn-primary">Nuevo país</button>
   <button (click)="onDeleteSelected()" [disabled]="!anySelected" class="btn-danger">Eliminar seleccionados</button>
-  <span>{{countries.length}} países</span>
+  </div>
+    <span>{{countries.length}} países</span>
+  <div class="controls-right">
+    <app-search-box
+      [value]="searchTerm"
+      (valueChange)="onValueChange($event)"
+      placeholder="Buscar país...">
+    </app-search-box>
+    </div>
 </div>
 
 <table class="admin-table">

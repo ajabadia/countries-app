@@ -56,6 +56,7 @@
 .table-controls {
   display: flex;
   align-items: center;
+  justify-content: space-between;
   gap: 1em;
   min-height: 38px;
   margin-bottom: 10px;
@@ -64,7 +65,20 @@
     color: #227bff;
     margin-left: .7em;
   }
+  .controls-left {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .controls-right {
+    display: flex;
+    align-items: center;
+  }
 }
+
+
+
 
 // =========================
 // BOTONES Y UTILIDADES VISUALES DE ACCIÓN
