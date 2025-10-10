@@ -53,10 +53,12 @@
 </table>
 
 
-<div class="pagination">
-  <button (click)="onPageChange(page - 1)" [disabled]="page <= 1">&lt;</button>
-  <span>Página {{page}} / {{totalPages}}</span>
-  <button (click)="onPageChange(page + 1)" [disabled]="page >= totalPages">&gt;</button>
+<div style="display:flex; justify-content:center;">
+<app-paginator
+  [page]="page"
+  [totalPages]="totalPages"
+  (pageChange)="onPageChange($event)">
+</app-paginator>
 </div>
 
 <!-- Modal alta/edición país -->
