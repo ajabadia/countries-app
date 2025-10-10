@@ -34,7 +34,7 @@
       <th *ngFor="let col of tableColumns.slice(1)">
         {{col.label}}
       </th>
-      <th>Acciones</th>
+      
     </tr>
   </thead>
   <tbody>
@@ -53,9 +53,6 @@
       <td>{{country.alpha2may}}</td>
       <td>{{country.alpha3may}}</td>
       <td>{{country.numeric}}</td>
-      <td>
-        <button (click)="onEdit(country); $event.stopPropagation()" class="btn-edit">Editar</button>
-      </td>
     </tr>
   </tbody>
 </table>
@@ -99,10 +96,12 @@
 </div>
 
 <!-- Modal confirmación eliminar -->
-<div *ngIf="showConfirmDelete" class="modal">
-  <div class="modal-text">
-    ¿Seguro que quieres eliminar el país <strong>{{pais.defaultname}}</strong>?
-  </div>
-  <button (click)="eliminarPais()" class="btn-danger">Eliminar</button>
-  <button (click)="cancelarEliminar()" class="btn">Cancelar</button>
-</div>
+<app-confirm-dialog
+  [visible]="showConfirmDelete"
+  [title]="'Eliminar país'"
+  [message]="'¿Seguro que deseas eliminar este país? Esta acción no se puede deshacer.'"
+  [variant]="'warning'"
+  (confirm)="eliminarPais()"
+  (cancel)="cancelarEliminar()"
+>
+</app-confirm-dialog>
