@@ -58,8 +58,11 @@
   align-items: center;
   justify-content: space-between;
   gap: 1em;
-  min-height: 38px;
-  margin-bottom: 10px;
+  min-height: 3.3em;
+  width: 100%;
+  display: flex;
+  margin-right: 1em;
+  margin-left: 1em;
   span {
     font-weight: 600;
     color: #227bff;
@@ -68,16 +71,25 @@
   .controls-left {
     display: flex;
     align-items: center;
-    gap: 0.5rem;
-  }
+     height: 100%;
+    min-height: inherit;
+    gap: 2em;
+    margin-top: 1.5em;
+    
+    
+    app-toolbar-buttons {
+      display: flex;
+      align-items: center;
+      height: 100%;
+    }
+      }
 
   .controls-right {
     display: flex;
     align-items: center;
-  }
+    margin-right: 1em;
+      }
 }
-
-
 
 
 // =========================

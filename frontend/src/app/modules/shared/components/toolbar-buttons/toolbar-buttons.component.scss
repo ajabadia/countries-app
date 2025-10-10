@@ -74,6 +74,20 @@
   }
 }
 
+.tb-btn__icon img {
+    // Hereda el color del texto del botón como "fill" del SVG
+    // Necesario que el SVG use fill="currentColor" en su raíz.
+    filter: none;
+    vertical-align: middle;
+    margin-right: 0.35em;
+    height: 1.22em;
+    width: auto;
+    display: inline-block;
+    color: inherit;  // Hereda color del botón
+  }
+ 
+
+
 // Responsive toolbar
 @media (max-width: 600px) {
   .toolbar-buttons {

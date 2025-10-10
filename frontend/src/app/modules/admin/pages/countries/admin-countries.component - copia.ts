@@ -4,15 +4,7 @@ import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
 import { CountriesService, Country } from 'src/app/services/countries.service';
 import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
 
-// Interfaz global para la configuración de toolbar-buttons
-export interface ToolbarButtonConfig {
-  iconSrc: string; // Ruta al SVG de iconos (ej: 'assets/icons/icon-add.svg')
-  label: string;
-  color: 'main' | 'edit' | 'danger' | string;
-  disabled?: boolean;
-  action: () => void;
-}
-
+// País vacío para inicializar/resetear formularios y selección
 const COUNTRY_EMPTY: Country = {
   id: '',
   alpha2may: '',
@@ -27,9 +19,7 @@ const COUNTRY_EMPTY: Country = {
   styleUrls: ['./admin-countries.component.scss']
 })
 export class AdminCountriesComponent implements OnInit {
-  //---------------------------
-  // ESTADOS PRINCIPALES
-  //---------------------------
+  // --- Estados básicos de la vista ---
   searchTerm = '';
   countries: Country[] = [];
   tableColumns: TableColumn[] = [
@@ -44,10 +34,8 @@ export class AdminCountriesComponent implements OnInit {
   pageSize = 10;
   sortKey: string | null = null;
   sortOrder: 'asc' | 'desc' = 'asc';
-
-  //---------------------------
-  // ESTADOS DE MODAL, FORMULARIO Y ERRORES
-  //---------------------------
+  
+  // --- Estados de la UI/modal/formulario ---
   pais: Country = { ...COUNTRY_EMPTY };
   showEditModal = false;
   showConfirmDelete = false;
@@ -55,50 +43,18 @@ export class AdminCountriesComponent implements OnInit {
   errorMsg = '';
   countryForm!: FormGroup;
 
-  //---------------------------
-  // SELECCIÓN Y TOOLBAR
-  //---------------------------
+  // --- Servicio avanzado de selección de filas ---
   public selection: SelectionService<Country> = new SelectionService<Country>();
+  // Proxy para compatibilidad con <app-toolbar-buttons>
   get selectedItems(): Country[] { return this.selection.selected; }
   set selectedItems(val: Country[]) { this.selection.selected = val; }
-
-  entity = 'country';
-
-  // Botones de la toolbar configurados y sincronizados con el estado actual (SVG desde assets)
-  get toolbarButtons(): ToolbarButtonConfig[] {
-    return [
-      {
-        iconSrc: 'assets/icons/icon-add.svg',
-        label: `Nuevo ${this.entity}`,
-        color: 'main',
-        action: () => this.onNew(),
-        disabled: false
-      },
-      {
-        iconSrc: 'assets/icons/icon-edit.svg',
-        label: 'Editar',
-        color: 'edit',
-        action: () => this.onEdit(),
-        disabled: !(this.selection.selected.length === 1)
-      },
-      {
-        iconSrc: 'assets/icons/icon-delete.svg',
-        label: 'Borrar',
-        color: 'danger',
-        action: () => this.onDeleteSelected(),
-        disabled: !this.selection.selected.length
-      }
-    ];
-  }
 
   constructor(
     private countriesService: CountriesService,
     private fb: FormBuilder
   ) {}
 
-  //-----------------------------------------------
-  // FLUJO PRINCIPAL: INICIALIZACIÓN Y CARGA
-  //-----------------------------------------------
+  // --- Inicialización: crea el formulario y carga los países ---
   ngOnInit(): void {
     this.countryForm = this.fb.group({
       id: ['', Validators.required],
@@ -110,8 +66,8 @@ export class AdminCountriesComponent implements OnInit {
     this.fetchCountries();
   }
 
+  // --- Carga los países de la página activa ---
   fetchCountries(): void {
-    // Lógica de paginación, filtros, etc.
     this.countriesService.getCountries({
       search: this.searchTerm,
       page: this.page,
@@ -121,16 +77,14 @@ export class AdminCountriesComponent implements OnInit {
     }).subscribe((result: { data: Country[]; total: number }) => {
       this.countries = result.data;
       this.totalCountries = result.total;
-      // Selección sincronizada con la página actual
+      // Sincroniza la selección solo a filas visibles (paginación)
       this.selection.selected = this.selection.selected.filter(sel =>
         this.countries.some(c => c.id === sel.id)
       );
     });
   }
 
-  //-----------------------------------------------
-  // HANDLERS DE BUSQUEDA, PAGINACIÓN Y ORDEN
-  //-----------------------------------------------
+  // --- Interacciones de paginación, búsqueda y ordenación ---
   onValueChange(term: string): void {
     this.searchTerm = term;
     this.page = 1;
@@ -148,9 +102,7 @@ export class AdminCountriesComponent implements OnInit {
     this.fetchCountries();
   }
 
-  //-----------------------------------------------
-  // TABLA Y SELECCIÓN AVANZADA
-  //-----------------------------------------------
+  // --- Selección avanzada y compatibilidad con tabla/toolbar ---
   onSelectionChange(selectedRows: Country[]): void {
     this.selection.selected = [...selectedRows];
   }
@@ -159,15 +111,17 @@ export class AdminCountriesComponent implements OnInit {
     return this.selection.selected.some(item => item.id === row.id);
   }
 
-  // Selección tipo Excel/múltiple CTRL/SHIFT
+  // Click en fila: selección simple, múltiple o por rango
   onRowClick(row: Country, event: MouseEvent): void {
     if (event.ctrlKey || event.metaKey) {
+      // Toggle selección
       if (this.isSelected(row)) {
         this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
       } else {
         this.selection.selected = [...this.selection.selected, row];
       }
     } else if (event.shiftKey) {
+      // Selección por rango
       const lastIdx = this.countries.findIndex(item => item.id === (this.selection.selected[this.selection.selected.length - 1]?.id));
       const thisIdx = this.countries.findIndex(item => item.id === row.id);
       if (lastIdx !== -1) {
@@ -188,9 +142,7 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  //-----------------------------------------------
-  // TOGGLES DE CHECKBOX, CABECERA, FILA
-  //-----------------------------------------------
+  // --- Funciones generales y por fila para los toggles de selección/checkboxes ---
   get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
     if (this.selection.selected.length === this.countries.length && this.countries.length > 0)
       return 'checked';
@@ -203,6 +155,7 @@ export class AdminCountriesComponent implements OnInit {
     return this.isSelected(row) ? 'checked' : 'unchecked';
   }
 
+  // Toggle general (cabecera)
   onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate'): void {
     if (newState === 'checked') {
       this.selection.selected = [...this.countries];
@@ -211,6 +164,7 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
+  // Toggle individual (por fila)
   onRowToggle(row: Country, newState: 'checked' | 'unchecked' | 'indeterminate'): void {
     if (newState === 'checked') {
       if (!this.isSelected(row)) {
@@ -221,9 +175,7 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  //-----------------------------------------------
-  // GETTERS PARA ESTADO DE LOS BOTONES Y ESTILOS
-  //-----------------------------------------------
+  // --- Getters para la habilitación de botones y estilos de selección ---
   get allVisibleSelected() {
     return this.selection.selected.length === this.countries.length && this.countries.length > 0;
   }
@@ -234,9 +186,7 @@ export class AdminCountriesComponent implements OnInit {
     return this.selection.selected.length > 0;
   }
 
-  //-----------------------------------------------
-  // CRUD Y MODALES DE PAÍS
-  //-----------------------------------------------
+  // --- Gestión de modales y flujo CRUD ---
   onNew(): void {
     this.editMode = false;
     this.showEditModal = true;
@@ -330,9 +280,7 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  //-----------------------------------------------
-  // PAGINACIÓN AUXILIAR
-  //-----------------------------------------------
+  // --- Paginación auxiliar ---
   get totalPages(): number {
     return Math.ceil(this.totalCountries / this.pageSize) || 1;
   }
