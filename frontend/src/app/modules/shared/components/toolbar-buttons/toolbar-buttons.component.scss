@@ -1,0 +1,43 @@
+.toolbar-buttons {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 1.5rem;
+  justify-content: flex-start;
+  align-items: center;
+  flex-wrap: wrap;
+
+  app-ui-button.toolbar-btn {
+    // Puedes heredar los mixins o sobrescribir aquí, o en el SCSS del ui-button
+    // Para los iconos, los botones ya gestionan los hover, colores, y BEM
+    &.danger {
+      // Overrides para el botón de eliminar
+      background: var(--color-danger-h8, #fff2f1);
+      color: var(--color-danger, #e84c3d);
+
+      &:hover:not(:disabled),
+      &:focus-visible:not(:disabled) {
+        background: var(--color-danger-h6, #ffe5e3);
+        color: var(--color-danger-dark, #b22c24);
+      }
+      &:active:not(:disabled) {
+        background: var(--color-danger-h4, #ffccc6);
+        color: var(--color-danger-dark, #b22c24);
+      }
+    }
+  }
+}
+
+// Responsive
+@media (max-width: 600px) {
+  .toolbar-buttons {
+    gap: 0.6em;
+    app-ui-button.toolbar-btn {
+      padding: 0.37em 0.87em 0.37em 0.77em;
+      font-size: 0.97em;
+
+      .toolbar-btn__icon {
+        width: 1.3em; height: 1.3em;
+      }
+    }
+  }
+}

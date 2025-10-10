@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" aria-label="Alerta" role="img">
+  <circle cx="12" cy="12" r="11" fill="none" stroke="currentColor" stroke-width="2"/>
+  <rect x="11" y="7" width="2" height="9" rx="1" fill="currentColor"/>
+  <circle cx="12" cy="17" r="1.2" fill="currentColor"/>
+</svg>

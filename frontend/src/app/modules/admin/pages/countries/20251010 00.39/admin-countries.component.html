@@ -1,0 +1,170 @@
+<app-ui-heading
+  [level]="1"
+  text="Países"
+  icon="icon-country"
+  iconPosition="left"
+  color="primary"
+  textAlign="left"
+  ariaLabel="Entrar a Países">
+</app-ui-heading>
+
+<div style="display:flex; justify-content:flex-end;">
+  <app-search-box
+   [value]="searchTerm"
+   (valueChange)="onValueChange($event)"
+   placeholder="Buscar país...">
+  </app-search-box>
+</div>
+
+<app-toolbar-buttons
+  [selected]="selectedItems"
+  entity="country"
+  (new)="onNew()"
+  (edit)="onEdit()"
+  (delete)="onDeleteSelected()">
+</app-toolbar-buttons>
+
+
+<app-table
+  [columns]="tableColumns"
+  [items]="countries"
+  [selectedItems]="selectedItems"
+  (selectionChange)="onSelectionChange($event)"
+  (sortChange)="onSortChange($event)">
+</app-table>
+
+<div style="display:flex; justify-content:center;">
+<app-paginator
+  [page]="page"
+  [totalPages]="totalPages"
+  (pageChange)="onPageChange($event)">
+</app-paginator>
+</div>
+
+
+ <!-- MODAL  -->
+   <!-- Creación y edición  -->
+<!-- Modal (respetando tu estructura actual) -->
+<app-modal
+  [visible]="showEditModal"
+  [title]="editMode ? 'Editar país' : 'Nuevo país'"
+  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+  [acceptDisabled]="countryForm.invalid"
+  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+  [acceptDisabled]="countryForm.invalid"
+  [icon]="editMode ? 'icon-pen' : 'icon-add'"       
+  [iconPosition]="'left'"                      
+  [iconSize]="editMode ? 'l' : 'l'"           
+  [titleAlign]="'left'"                      
+  [titleColor]="editMode ? 'primary' : 'primary'"
+  [color]="'transparent'"
+  (accept)="saveCountry()"
+  (close)="closeCountryModal()">
+
+
+
+  <form [formGroup]="countryForm" (ngSubmit)="saveCountry()" class="vertical-form" keydown.enter="$event.preventDefault()">
+    <div class="form-field">
+      <label for="id" class="field-label">ID</label>
+      <input 
+        class="field-input field-medium"
+        placeholder=""
+        type="text" 
+        formControlName="id" 
+        id="id" required
+        maxlength="2"
+        minlength="2"
+        pattern="^[a-z]{2}$"
+        required
+        autocomplete="off"
+        size="2"
+        
+        />
+      <span class="error-msg">Debe poner dos minúsculas.</span>
+    </div>
+    <div class="form-field">
+      <label for="defaultname" class="field-label">Nombre</label>
+      <input 
+        type="text" 
+        formControlName="defaultname" 
+        id="defaultname" 
+        required 
+        class="field-input field-large"
+        maxlength="50"
+        minlength="3"
+        pattern="^[A-Za-z0-9]{3,50}$"
+        autocomplete="off"
+        size="50"
+        placeholder=""
+        />
+        <span class="error-msg">Debe poner entre tres y cinco carácteres.</span>
+    </div>
+    <div class="form-field">
+      <label for="alpha2may" class="field-label">Alpha-2</label>
+      <input 
+        type="text" 
+        formControlName="alpha2may" 
+        id="alpha2may" 
+        class="field-input field-medium"
+        maxlength="2"
+        minlength="2"
+        pattern="^[A-Z]{2}$"
+        required
+        autocomplete="off"
+        size="2"
+        placeholder=""
+        />
+        <span class="error-msg">Debe poner dos mayúsculas.</span>
+    </div>
+    <div class="form-field">
+      <label for="alpha3may" class="field-label">Alpha-3</label>
+      <input 
+          placeholder=""
+          type="text" 
+          formControlName="alpha3may" 
+          id="alpha3may" 
+          class="field-input field-medium"
+          maxlength="3"
+          minlength="3"
+          pattern="^[A-Z]{3}$"
+          required
+          autocomplete="off"
+          size="3"
+          
+          />
+          <span class="error-msg">Debe poner tres mayúsculas.</span>
+    </div>
+    <div class="form-field">
+      <label for="numeric" class="field-label">Numérico</label>
+      <input 
+          type="text" 
+          formControlName="numeric" 
+          id="numeric" 
+          class="field-input field-medium"
+          maxlength="3"
+          minlength="3"
+          pattern="^[0-9]{3}$"
+          required
+          autocomplete="off"
+          inputmode="numeric"
+          size="3"
+          placeholder=""
+          />
+          <span class="error-msg">Debe poner tres números (si es necesario rellene con ceros a la izquierda).</span>
+    </div>
+    <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
+  </form>
+</app-modal>
+
+
+
+
+<app-confirm-dialog
+  [visible]="showConfirmDelete"
+  [title]="'Eliminar país'"
+  [message]="'¿Seguro que deseas eliminar este país? Esta acción no se puede deshacer.'"
+  [variant]="'warning'"
+  (confirm)="eliminarPais()"
+  (cancel)="cancelarEliminar()"
+>
+</app-confirm-dialog>

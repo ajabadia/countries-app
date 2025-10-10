@@ -1,0 +1,27 @@
+<div class="toolbar-buttons">
+  <app-ui-button 
+    type="button"
+    class="ui-button ui-button--main"
+    icon="icon-add"
+    (click)="new.emit()">
+    Nuevo {{ entity }}
+  </app-ui-button>
+
+  <app-ui-button
+    type="button"
+    class="ui-button"
+    icon="icon-pen"
+    [disabled]="!selected.length || selected.length !== 1"
+    (click)="edit.emit()">
+    Editar
+  </app-ui-button>
+
+  <app-ui-button
+    type="button"
+    class="ui-button ui-button--danger"
+    icon="icon-trash-2"
+    [disabled]="!selected.length"
+    (click)="delete.emit()">
+    Borrar
+  </app-ui-button>
+</div>

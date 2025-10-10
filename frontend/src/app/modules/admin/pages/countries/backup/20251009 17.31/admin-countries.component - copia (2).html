@@ -1,0 +1,91 @@
+<app-ui-heading
+  [level]="1"
+  text="Países"
+  icon="icon-country"
+  iconPosition="left"
+  color="primary"
+  textAlign="left"
+  ariaLabel="Entrar a Países">
+</app-ui-heading>
+
+<div style="display:flex; justify-content:flex-end;">
+  <app-search-box
+   [value]="searchTerm"
+   (valueChange)="onValueChange($event)"
+   placeholder="Buscar país...">
+  </app-search-box>
+</div>
+
+<app-toolbar-buttons
+  [selected]="selectedItems"
+  entity="country"
+  (new)="onNew()"
+  (edit)="onEdit()"
+  (delete)="onDeleteSelected()">
+</app-toolbar-buttons>
+
+
+<app-table
+  [columns]="tableColumns"
+  [items]="countries"
+  [selectedItems]="selectedItems"
+  (selectionChange)="onSelectionChange($event)"
+  (sortChange)="onSortChange($event)">
+</app-table>
+
+<div style="display:flex; justify-content:center;">
+<app-paginator
+  [page]="page"
+  [totalPages]="totalPages"
+  (pageChange)="onPageChange($event)">
+</app-paginator>
+</div>
+
+
+ <!-- MODAL  -->
+   <!-- Creación y edición  -->
+<!-- Modal (respetando tu estructura actual) -->
+<app-modal
+  [visible]="showEditModal"
+  [title]="editMode ? 'Editar país' : 'Nuevo país'"
+  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+  [acceptDisabled]="countryForm.invalid"
+  (accept)="saveCountry()"
+  (close)="closeCountryModal()">
+  <form [formGroup]="countryForm" (ngSubmit)="saveCountry()" class="modal-form" keydown.enter="$event.preventDefault()">
+    <div class="form-field">
+      <label for="id">ID</label>
+      <input type="text" formControlName="id" id="id" required />
+    </div>
+    <div class="form-field">
+      <label for="defaultname">Nombre</label>
+      <input type="text" formControlName="defaultname" id="defaultname" required />
+    </div>
+    <div class="form-field">
+      <label for="alpha2may">Alpha-2</label>
+      <input type="text" formControlName="alpha2may" id="alpha2may" />
+    </div>
+    <div class="form-field">
+      <label for="alpha3may">Alpha-3</label>
+      <input type="text" formControlName="alpha3may" id="alpha3may" />
+    </div>
+    <div class="form-field">
+      <label for="numeric">Numérico</label>
+      <input type="text" formControlName="numeric" id="numeric" />
+    </div>
+    <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
+  </form>
+</app-modal>
+
+
+
+
+<app-confirm-dialog
+  [visible]="showConfirmDelete"
+  [title]="'Eliminar país'"
+  [message]="'¿Seguro que deseas eliminar este país? Esta acción no se puede deshacer.'"
+  [variant]="'warning'"
+  (confirm)="eliminarPais()"
+  (cancel)="cancelarEliminar()"
+>
+</app-confirm-dialog>

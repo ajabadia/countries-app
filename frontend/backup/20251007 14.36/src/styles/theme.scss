@@ -1,0 +1,141 @@
+// theme.scss
+// Sistema de temas y overrides visuales. Modular y 100% BEM.
+// Compatible con Angular, design tokens y temas accesibles/modernos.
+@import './variables';
+
+// ======================
+// TEMA OSCURO (modo dark)
+// ======================
+[data-theme='dark'] {
+  html, body {
+    background: var(--color-primary-dark, #232d44);
+    color: var(--color-text, #f2f2f6);
+  }
+  input, select, textarea {
+    background: var(--color-surface, #232d44);
+    color: var(--color-text, #f2f2f6);
+    border-color: var(--color-secondary-aa, #2d5b7f);
+  }
+  .app-header, .app__header {
+    background: var(--color-primary-dark, #232d44);
+    box-shadow: none;
+    border-bottom: 1px solid var(--color-secondary-aa, #2d5b7f);
+  }
+  .card, .modal {
+    background: #222e46;
+    color: var(--color-text, #f2f2f6);
+    box-shadow: 0 2px 6px rgba(37, 56, 137, 0.09);
+  }
+  .card {
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-base);
+    &--elevated { box-shadow: var(--shadow-lg); }
+  }
+  .btn, button, .ui-button {
+    background: var(--color-secondary-aa, #344b5a);
+    color: var(--color-text, #f2f2f6);
+    border-color: var(--color-primary-aa, #2851a5);
+    &:hover, &:focus {
+      background: var(--color-primary-aa, #2851a5);
+      color: var(--color-primary-contrast, #fff);
+    }
+    &--secondary {
+      background: var(--color-surface);
+      border-color: var(--color-border);
+      color: var(--color-text);
+      &:hover:not(:disabled) {
+        background: var(--color-secondary-light);
+        border-color: var(--color-secondary);
+      }
+    }
+  }
+  .dropdown__menu {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-xl);
+  }
+  .dropdown__item {
+    &:hover,
+    &:focus {
+      background: var(--color-secondary-light);
+    }
+  }
+}
+
+// ==================================
+// TEMA DE ALTO CONTRASTE (a11y)
+// ==================================
+[data-theme='high-contrast'] {
+  --color-primary: #0066cc;
+  --color-primary-dark: #004499;
+  --color-text: #000000;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #000000;
+  --border-width: 2px;
+  .btn { border-width: var(--border-width-thick); font-weight: 700; }
+  .form-element { border-width: var(--border-width-thick); }
+  .heading {
+    &--1, &--2, &--3, &--4, &--5, &--6 {
+      border: var(--border-width-thick) solid var(--color-text);
+    }
+  }
+}
+
+// ========================================
+// TEMA REDUCIDO (accesibilidad motion)
+// ========================================
+[data-theme='reduced-motion'] {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// ============================
+// UTILIDADES DE TEMA/VARIANTES
+// ============================
+.theme-toggle {
+  @extend .btn;
+  @extend .btn--ghost;
+  @include size(40px);
+  padding: 0;
+  &__icon {
+    @include size(20px);
+    transition: transform var(--transition-base);
+  }
+  &:hover {
+    .theme-toggle__icon { transform: rotate(15deg); }
+  }
+}
+
+// ================================================================
+// PREFERENCIAS DEL SISTEMA (detectadas por el navegador)
+// ================================================================
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    // Aquí podrías resetear variables si quieres tema oscuro auto
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-base: 0ms;
+    --transition-fast: 0ms;
+    --transition-slow: 0ms;
+  }
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+@media (prefers-contrast: high) {
+  :root {
+    --color-border: #000000;
+    --border-width: 2px;
+  }
+}
+
+// Siguiente: añade nuevos themes/overrides siguiendo estos patrones.

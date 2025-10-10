@@ -1,0 +1,14 @@
+
+
+<app-admin-menu
+  [items]="[
+    { label: 'Dashboard', icon: 'icon-dashboard', route: '/admin/dashboard' },
+    { label: 'Países', icon: 'icon-country', route: '/admin/countries' },
+    { label: 'Continentes', icon: 'icon-continents', route: '/admin/continents' },
+    { label: 'Áreas', icon: 'icon-area', route: '/admin/areas' },
+    { label: 'Dependencias', icon: 'icon-dependencies', route: '/admin/dependencies' },
+    { label: 'Lenguajes', icon: 'icon-languages', route: '/admin/languages' },
+    { label: 'Traducciones', icon: 'icon-translations', route: '/admin/translations' }
+  ]"
+></app-admin-menu>
+<router-outlet></router-outlet>

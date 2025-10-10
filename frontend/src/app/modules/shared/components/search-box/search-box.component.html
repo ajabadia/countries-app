@@ -1,0 +1,15 @@
+<div class="search-box-wrapper">
+  
+  <input
+    type="text"
+    class="search-input"
+    placeholder="Buscar…"
+    [(ngModel)]="value"
+    (input)="onValueChange($any($event.target)?.value || '')"
+    autocomplete="on"
+    spellcheck="false"
+  />
+  <button *ngIf="value" class="clear-btn" (click)="clear()" aria-label="Borrar búsqueda">
+    &times;
+  </button>
+</div>

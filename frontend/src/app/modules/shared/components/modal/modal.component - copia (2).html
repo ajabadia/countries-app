@@ -1,0 +1,38 @@
+<!-- Fondo oscurecido -->
+<div class="modal-backdrop" *ngIf="visible" (click)="closeOnBackdrop ? onClose() : null"></div>
+
+<!-- Contenedor principal -->
+<div class="modal-container"
+     *ngIf="visible"
+     role="dialog"
+     aria-modal="true"
+     tabindex="0">
+  <!-- Cabecera -->
+  <div class="modal-header">
+    <span class="modal-title">{{ title }}</span>
+    <button class="modal-close-btn" aria-label="Cerrar" (click)="onClose()">&times;</button>
+  </div>
+  
+  <!-- Cuerpo: centrado mientras cabe, scrolleable si es alto -->
+  <div class="modal-body">
+    <div class="modal-body-centerer">
+      <ng-content></ng-content>
+    </div>
+  </div>
+  
+  <!-- Pie: siempre visible, no se escapa con el scroll -->
+  <div class="modal-footer">
+    <button *ngIf="showClose"
+      class="modal-btn modal-btn--close"
+      (click)="onClose()">
+      {{ closeLabel }}
+    </button>
+    <button *ngIf="showAccept"
+      class="modal-btn modal-btn--accept"
+      [disabled]="acceptDisabled"
+      (click)="onAccept()">
+      {{ acceptLabel }}
+    </button>
+  </div>
+</div>
+

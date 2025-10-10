@@ -1,0 +1,160 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.ui-heading {
+  font-weight: 600;
+  line-height: 1.3;
+  margin: 0;
+  
+  // Alineación de texto
+  &--align-left { text-align: left; }
+  &--align-center { text-align: center; }
+  &--align-right { text-align: right; }
+  
+  // Colores
+  &--color-text { color: var(--color-text); }
+  &--color-primary { color: var(--color-primary-contrast); }
+  &--color-secondary { color: var(--color-secondary); }
+  &--color-accent { color: var(--color-accent); }
+  &--color-muted { color: var(--color-text-muted); }
+  
+  // Tamaños por defecto según nivel
+  &--level-1 { 
+    font-size: 2.5rem; 
+    font-weight: 700;
+    margin-bottom: var(--space-l);
+  }
+  &--level-2 { 
+    font-size: 2rem; 
+    font-weight: 600;
+    margin-bottom: var(--space-m);
+  }
+  &--level-3 { 
+    font-size: 1.75rem; 
+    font-weight: 600;
+    margin-bottom: var(--space-m);
+  }
+  &--level-4 { 
+    font-size: 1.5rem; 
+    font-weight: 500;
+    margin-bottom: var(--space-s);
+  }
+  &--level-5 { 
+    font-size: 1.25rem; 
+    font-weight: 500;
+    margin-bottom: var(--space-s);
+  }
+  &--level-6 { 
+    font-size: 1.125rem; 
+    font-weight: 500;
+    margin-bottom: var(--space-xs);
+  }
+  
+  // Layout con iconos
+  &--has-icon {
+    display: flex;
+    align-items: center;
+    gap: var(--space-xs);
+  }
+  
+  &--icon-top {
+    flex-direction: column;
+    align-items: center;
+    
+    .ui-heading__content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+  }
+  
+  &--icon-bottom {
+    flex-direction: column;
+    align-items: center;
+    
+    .ui-heading__content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+  }
+  
+  &--icon-left {
+    .ui-heading__content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+  }
+  
+  &--icon-right {
+    .ui-heading__content {
+      display: flex;
+      align-items: center;
+      gap: var(--space-xs);
+    }
+  }
+
+  .ui-heading__icon {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: inherit !important; // ← Fuerza heredar color; 
+    transition: opacity 0.2s;
+    width: auto;
+    height: auto;
+    min-width: unset;
+    min-height: unset;
+
+
+
+
+
+    // Posiciones específicas
+    &--top {
+      margin-bottom: var(--space-xs);
+    }
+    
+    &--bottom {
+      margin-top: var(--space-xs);
+    }
+    
+    &--left {
+      margin-right: var(--space-xs);
+    }
+    
+    &--right {
+      margin-left: var(--space-xs);
+    }
+    
+    // Asegurarse de que el SVG herede el color
+    :deep(svg) {
+      fill: currentColor;
+      stroke: currentColor;
+      color: currentColor;
+    }
+  }
+  
+  .ui-heading__content {
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
+  
+  .ui-heading__text {
+    flex: 1;
+    display: inline;
+  }
+}
+
+// Responsive design
+@media (max-width: 768px) {
+  .ui-heading {
+    &--level-1 { font-size: 2rem; }
+    &--level-2 { font-size: 1.75rem; }
+    &--level-3 { font-size: 1.5rem; }
+    &--level-4 { font-size: 1.25rem; }
+    &--level-5 { font-size: 1.125rem; }
+    &--level-6 { font-size: 1rem; }
+  }
+}

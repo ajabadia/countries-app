@@ -1,0 +1,53 @@
+
+
+<div class="dashboard-admin">
+<app-ui-heading
+  [level]="1"
+  text="Continentes"
+  icon="icon-continents"
+  iconPosition="left"
+  color="primary"
+  textAlign="left"
+  ariaLabel="Entrar a continentes">
+ </app-ui-heading>
+
+  <div class="dashboard-admin__cards">
+    <app-ui-stat-card
+      label="Países"
+      [icon]="'icon-country'"
+      [value]="countriesCount ?? '—'"
+      detailRoute="/admin/countries">
+    </app-ui-stat-card>
+    <app-ui-stat-card
+      label="Áreas"
+      [icon]="'icon-area'"
+      [value]="areasCount ?? '—'"
+      detailRoute="/admin/areas">
+    </app-ui-stat-card>
+    <app-ui-stat-card
+      label="Continentes"
+      [icon]="'icon-continents'"
+      [value]="continentsCount ?? '—'"
+      detailRoute="/admin/continents">
+    </app-ui-stat-card>
+    <app-ui-stat-card
+      label="Lenguajes"
+      [icon]="'icon-languages'"
+      [value]="languagesCount ?? '—'"
+      detailRoute="/admin/languages">
+    </app-ui-stat-card>
+    <app-ui-stat-card
+      label="Dependencias"
+      [icon]="'icon-dependencies'"
+      [value]="dependenciesCount ?? '—'"
+      detailRoute="/admin/dependencies">
+    </app-ui-stat-card>
+    <app-ui-stat-card
+      label="Traducciones"
+      [icon]="'icon-translations'"
+      [value]="translationsCount ?? '—'"
+      detailRoute="/admin/translations">
+    </app-ui-stat-card>
+  </div>
+</div>
+

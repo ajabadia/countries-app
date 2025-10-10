@@ -1,0 +1,102 @@
+.flag {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 6px;
+  background: var(--color-surface, #fff);
+  box-shadow: 0 2px 10px 0 rgba(11,122,208,0.06);
+  transition: box-shadow 0.14s, filter 0.13s;
+
+  &--xs { height: 16px; }
+  &--s  { height: 20px; }
+  &--m  { height: 28px; }
+  &--l  { height: 36px; }
+  &--xl { height: 48px; }
+
+  img {
+    display: block;
+    height: 100%;
+    width: auto;
+    border-radius: 5px;
+    user-select: none;
+    pointer-events: none;
+    object-fit: contain; // mantiene relación
+    filter: none;
+    box-shadow: none;
+    transition: filter 0.14s, box-shadow 0.14s;
+    background: var(--color-background, #f4f7fa);
+  }
+  // Para banderas en sombra
+  &:hover,
+  &:focus-visible {
+    box-shadow: 0 4px 18px 0 rgba(11,122,208,0.15);
+  }
+
+  &--grayscale img {
+    filter: grayscale(100%) brightness(0.98);
+    opacity: 0.7;
+  }
+
+:host {
+  display: inline-block;
+  vertical-align: middle;
+}
+
+.flag {
+  display: inline-block;
+  vertical-align: middle;
+  border-radius: 2px;
+  background: #eee;
+  object-fit: cover;
+}
+
+.flag--s {
+  width: 20px;
+  height: 14px;
+}
+
+.flag--m {
+  width: 32px;
+  height: 22px;
+}
+
+.flag--xs {
+  width: 12px;
+  height: 8px;
+}
+
+.flag--l {
+  width: 48px;
+  height: 34px;
+}
+
+/* escala a custom size */
+.flag[style] {
+  width: inherit;
+  height: inherit;
+}
+
+
+
+
+
+  // Estilo para estados deshabilitados
+  &--disabled img {
+    opacity: 0.45;
+    filter: grayscale(100%) brightness(0.92);
+    outline: none;
+    box-shadow: none;
+  }
+}
+
+// Responsive en tamaños de bandera
+@media (max-width: 900px) {
+  .flag--xl { height: 36px; }
+  .flag--l  { height: 28px; }
+}
+
+@media (max-width: 580px) {
+  .flag--m  { height: 20px; }
+  .flag--l,
+  .flag--xl { height: 24px; }
+}
+

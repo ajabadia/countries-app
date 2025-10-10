@@ -1,0 +1,47 @@
+<ng-container [ngSwitch]="level">
+  <!-- Nivel 1 (h1) -->
+
+  <h1 *ngSwitchCase="1" [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <span *ngIf="icon && iconPosition === 'left'" class="ui-heading__icon ui-heading__icon--left"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="allowHtml" [innerHTML]="text"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="!allowHtml">{{ text }}</span>
+    <span *ngIf="icon && iconPosition === 'right'" class="ui-heading__icon ui-heading__icon--right"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <div *ngIf="subtitle" class="ui-heading__subtitle">{{ subtitle }}</div>
+    <div *ngIf="desc" class="ui-heading__desc">{{ desc }}</div>
+  </h1>
+  <!-- Nivel 2 (h2) -->
+  <h2 *ngSwitchCase="2" [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <span *ngIf="icon && iconPosition === 'left'" class="ui-heading__icon ui-heading__icon--left"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="allowHtml" [innerHTML]="text"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="!allowHtml">{{ text }}</span>
+    <span *ngIf="icon && iconPosition === 'right'" class="ui-heading__icon ui-heading__icon--right"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <div *ngIf="subtitle" class="ui-heading__subtitle">{{ subtitle }}</div>
+    <div *ngIf="desc" class="ui-heading__desc">{{ desc }}</div>
+  </h2>
+  <!-- Nivel 3 (h3) -->
+  <h3 *ngSwitchCase="3" [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <span *ngIf="icon && iconPosition === 'left'" class="ui-heading__icon ui-heading__icon--left"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="allowHtml" [innerHTML]="text"></span>
+    <span class="ui-heading__text" [ngStyle]="getTextStyle()" *ngIf="!allowHtml">{{ text }}</span>
+    <span *ngIf="icon && iconPosition === 'right'" class="ui-heading__icon ui-heading__icon--right"
+          [ngStyle]="getIconStyle()" [innerHTML]="svgContent" aria-hidden="true"></span>
+    <div *ngIf="subtitle" class="ui-heading__subtitle">{{ subtitle }}</div>
+    <div *ngIf="desc" class="ui-heading__desc">{{ desc }}</div>
+  </h3>
+  <!-- Más niveles... (Idéntico patrón para h4, h5, h6) -->
+  <h4 *ngSwitchCase="4" [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <!-- (repetir estructura) -->
+  </h4>
+  <h5 *ngSwitchCase="5" [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <!-- (repetir estructura) -->
+  </h5>
+  <h6 *ngSwitchDefault [ngClass]="getHeadingClasses()" [attr.aria-label]="ariaLabel">
+    <!-- (repetir estructura) -->
+  </h6>
+</ng-container>
+

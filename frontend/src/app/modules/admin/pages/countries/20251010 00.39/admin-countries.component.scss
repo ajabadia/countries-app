@@ -1,0 +1,85 @@
+.field-input {
+  /* Elimina flex, que hace que crezca a todo el ancho */
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0.6em;
+  font-size: 1rem;
+  border-radius: 0.28em;
+  border: 1px solid #dde;
+  background: #f5f8fa;
+  transition: background 0.15s, border 0.2s;
+  box-sizing: border-box;
+}
+
+/* Tamaños personalizados, SIEMPRE estáticos */
+.field-small  { width: 4ch !important; min-width: 4ch !important; max-width: 4ch !important; }
+.field-medium { width: 6ch !important; min-width: 6ch !important; max-width: 6ch !important; }
+.field-large  { width: 36ch !important; min-width: 12ch !important; max-width: 50ch !important; }
+
+/* Azul si es requerido Y vacío */
+.field-input:required:placeholder-shown {
+  background: #e3f0ff;
+  border: 1.5px solid #8ebefc;
+}
+
+/* Validado, OK: blanco */
+.field-input:required:valid {
+  background: #fff;
+  border: 1.5px solid #51b57f;
+}
+
+/* Invalidado, con dato (no vacío): rojo */
+.field-input:required:invalid:not(:placeholder-shown) {
+  background: #ffefef;
+  border: 1.5px solid #f23e3e;
+}
+
+/* Focus */
+.field-input:focus {
+  outline: 2px solid #0067fa;
+  outline-offset: 1px;
+  z-index: 2;
+}
+
+/* Etiquetas y alineación del formulario */
+.vertical-form {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+.form-field {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+.field-label {
+  flex: 0 0 160px;
+  text-align: right;
+  padding-right: 28px;
+  font-size: 1rem;
+  font-weight: 500;
+}
+
+/* Mensaje solo en error y si hay valor */
+.error-msg {
+  display: none;
+  color: #e94343;
+  font-size: .99em;
+  margin-left: 10px;
+  font-weight: 500;
+}
+.field-input:required:invalid:not(:placeholder-shown) ~ .error-msg {
+  display: inline;
+}
+
+@media (max-width: 600px) {
+  .vertical-form { max-width: 100%; gap: 1rem; }
+  .field-label { flex: 0 0 110px; padding-right: 11px; font-size: .95rem; }
+  .field-input { font-size: .98rem; padding: 0.5em; }
+}
+

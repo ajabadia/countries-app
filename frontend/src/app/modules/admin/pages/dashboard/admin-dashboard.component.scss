@@ -1,0 +1,50 @@
+.dashboard-admin {
+  background: var(--color-background, #f4f7fa);
+  min-height: 100vh;
+  padding-bottom: 3em;
+}
+
+.dashboard-admin__cards {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-xl, 2em);
+  justify-content: flex-start;
+}
+
+/* Responsive cards */
+@media (max-width: 700px) {
+  .dashboard-admin__cards {
+    flex-direction: column;
+    gap: var(--space-m, 1em);
+  }
+}
+
+/* Branding para header si tienes .dashboard-admin__header */
+.dashboard-admin__header {
+  background: var(--color-primary, #0b7ad0);
+  color: var(--color-primary-contrast, #fff);
+  padding: 1.25em 2em;
+  border-bottom: 1px solid var(--color-secondary-light, #eaeff2);
+  font-size: 1.4em;
+  font-weight: 700;
+  letter-spacing: 0.01em;
+}
+
+/* Si tienes .app-ui-stat-card aquí para forzar branding en dashboard */
+.dashboard-admin__cards .app-ui-stat-card {
+  background: var(--color-surface, #fff);
+  color: var(--color-primary, #0b7ad0);
+  border: 1px solid var(--color-secondary-light, #eaeff2);
+  border-radius: 1em;
+  box-shadow: 0 2px 10px 0 rgba(11, 122, 208, 0.06);
+  padding: 2em 1.5em;
+  min-width: 210px;
+  min-height: 180px;
+  transition: box-shadow 0.2s, background 0.25s;
+}
+
+.dashboard-admin__cards .app-ui-stat-card:hover {
+  box-shadow: 0 6px 18px 0 rgba(11, 122, 208, 0.13);
+  background: var(--color-primary-h7, #e7f2fa);
+  color: var(--color-primary-dark, #073864);
+}

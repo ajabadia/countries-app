@@ -1,0 +1,85 @@
+//toggle-checkbox.component.scss
+
+.toggle {
+  position: relative;
+  display: inline-block;
+  width: 38px;
+  height: 22px;
+  outline: none !important;
+  border: none !important;
+  background: none !important;
+  box-sizing: border-box;
+  overflow: visible;
+  vertical-align: middle;
+
+  input {
+    opacity: 0;
+    width: 0;
+    height: 0;
+    margin: 0;
+    position: absolute;
+    outline: none !important;
+    border: none !important;
+    box-shadow: none !important;
+    background: none !important;
+
+    &:focus {
+      outline: none !important;
+      box-shadow: none !important;
+    }
+  }
+
+  .slider {
+    position: absolute;
+    cursor: pointer;
+    top: 2px;
+    left: 0;
+    right: 0;
+    bottom: 2px;
+    background: #d6e0ea;
+    transition: 0.4s;
+    border-radius: 14px;
+    outline: none !important;
+    width: 100%;
+
+    &::before {
+      position: absolute;
+      content: "";
+      height: 18px;
+      width: 18px;
+      left: 2px;
+      bottom: 2px;
+      background: #3198f7;
+      transition: 0.4s;
+      border-radius: 50%;
+      box-shadow: 0 1px 4px 0 rgb(0 0 0 / 16%);
+    }
+  }
+
+  &.toggle--checked .slider {
+    background: #aeeaff;
+    &::before {
+      left: 18px;
+      background: #03a9f4;
+    }
+  }
+  &.toggle--indeterminate .slider {
+    background: #ffe584;
+    &::before {
+      left: 10px;
+      background: #b4b4b4;
+    }
+  }
+}
+
+.toggle:focus,
+.toggle:focus-within,
+.toggle:active,
+.toggle input:focus,
+.toggle input:active,
+.toggle input:focus-visible {
+  outline: none !important;
+  border: none !important;
+  box-shadow: none !important;
+  background: none !important;
+}

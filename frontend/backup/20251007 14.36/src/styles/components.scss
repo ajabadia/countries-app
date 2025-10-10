@@ -1,0 +1,163 @@
+// components.scss
+// Componentes base del sistema de diseño con metodología BEM
+// --------------------------------------------------------------
+
+
+// BOTÓN BASE (BEM)
+.btn {
+  @include button-base;
+  @include button-size('md');
+  @include focus-visible;
+
+  &--primary { @include button-variant('primary'); }
+  &--secondary { @include button-variant('secondary'); }
+  &--outline { @include button-variant('outline'); }
+  &--ghost { @include button-variant('ghost'); }
+  &--danger { @include button-variant('danger'); }
+
+  &--xs { @include button-size('xs'); }
+  &--sm { @include button-size('sm'); }
+  &--lg { @include button-size('lg'); }
+  &--xl { @include button-size('xl'); }
+
+  &--full-width { width: 100%; }
+  &--loading { @include state-loading; }
+
+  &__icon {
+    @include size(1em);
+
+    &--left { margin-right: var(--space-xs); }
+    &--right { margin-left: var(--space-xs); }
+  }
+}
+
+// CARD BASE
+.card {
+  @include card-base;
+
+  &--elevated { @include card-elevated; }
+  &--interactive {
+    cursor: pointer;
+    transition: all var(--transition-base);
+
+    &:hover {
+      box-shadow: var(--shadow-md);
+      transform: translateY(-2px);
+    }
+  }
+
+  &__header {
+    margin: calc(var(--space-m) * -1) calc(var(--space-m) * -1) var(--space-m) calc(var(--space-m) * -1);
+    padding: var(--space-m);
+    border-bottom: var(--border-width) solid var(--color-border);
+    background: var(--color-secondary-light);
+    border-radius: var(--radius-lg) var(--radius-lg) 0 0;
+  }
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text);
+    margin: 0;
+  }
+
+  &__content {
+    padding: 0;
+  }
+
+  &__footer {
+    margin: var(--space-m) calc(var(--space-m) * -1) calc(var(--space-m) * -1) calc(var(--space-m) * -1);
+    padding: var(--space-m);
+    border-top: var(--border-width) solid var(--color-border);
+    background: var(--color-secondary-light);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+  }
+}
+
+// MODAL
+.modal {
+  position: fixed;
+  inset: 0;
+  z-index: var(--z-modal);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-m);
+
+  &__backdrop {
+    position: absolute;
+    inset: 0;
+    background: var(--modal-overlay-bg);
+    backdrop-filter: blur(4px);
+  }
+
+  &__content {
+    @include card-base;
+    position: relative;
+    max-width: 90vw;
+    max-height: 90vh;
+    overflow: hidden;
+    box-shadow: var(--modal-shadow);
+    margin: 0;
+    z-index: 1;
+    animation: modal-enter 200ms ease-out;
+
+    &--sm { width: 400px; }
+    &--md { width: 600px; }
+    &--lg { width: 800px; }
+    &--xl { width: 1000px; }
+    &--full { width: calc(100vw - var(--space-xl)); height: calc(100vh - var(--space-xl)); }
+  }
+
+  &__header {
+    @include flex-between;
+    padding: var(--space-m);
+    border-bottom: var(--border-width) solid var(--modal-header-border);
+    gap: var(--space-m);
+  }
+
+  &__title {
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    margin: 0;
+    color: var(--color-text);
+  }
+
+  &__close {
+    @include button-reset;
+    @include size(32px);
+    @include flex-center;
+    border-radius: var(--radius-md);
+    color: var(--color-text-muted);
+    transition: all var(--transition-fast);
+
+    &:hover {
+      background: var(--color-secondary-light);
+      color: var(--color-text);
+    }
+  }
+
+  &__body {
+    padding: var(--space-m);
+    overflow-y: auto;
+    max-height: calc(90vh - 140px);
+  }
+
+  &__footer {
+    @include flex-between;
+    padding: var(--space-m);
+    border-top: var(--border-width) solid var(--modal-header-border);
+    gap: var(--space-sm);
+  }
+}
+
+@keyframes modal-enter {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(-20px);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}

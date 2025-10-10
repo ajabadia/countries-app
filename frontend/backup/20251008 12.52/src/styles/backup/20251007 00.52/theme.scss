@@ -1,0 +1,147 @@
+// theme.scss
+// Gestión de temas y variantes visuales
+// --------------------------------------------------------------
+
+@import './variables';
+
+// === TEMA OSCURO ===
+[data-theme='dark'] {
+  // Overrides específicos para el tema oscuro
+  .app {
+    &__header {
+      background: var(--color-surface);
+      border-bottom: var(--border-width) solid var(--color-border);
+      box-shadow: none;
+    }
+  }
+
+  .card {
+    background: var(--color-surface);
+    border-color: var(--color-border);
+    box-shadow: var(--shadow-base);
+
+    &--elevated {
+      box-shadow: var(--shadow-lg);
+    }
+  }
+
+  .btn {
+    &--secondary {
+      background: var(--color-surface);
+      border-color: var(--color-border);
+      color: var(--color-text);
+
+      &:hover:not(:disabled) {
+        background: var(--color-secondary-light);
+        border-color: var(--color-secondary);
+      }
+    }
+  }
+
+  .dropdown {
+    &__menu {
+      background: var(--color-surface);
+      border-color: var(--color-border);
+      box-shadow: var(--shadow-xl);
+    }
+
+    &__item {
+      &:hover,
+      &:focus {
+        background: var(--color-secondary-light);
+      }
+    }
+  }
+}
+
+// === TEMA DE ALTO CONTRASTE ===
+[data-theme='high-contrast'] {
+  --color-primary: #0066cc;
+  --color-primary-dark: #004499;
+  --color-text: #000000;
+  --color-background: #ffffff;
+  --color-surface: #ffffff;
+  --color-border: #000000;
+  --border-width: 2px;
+
+  .btn {
+    border-width: var(--border-width-thick);
+    font-weight: 700;
+  }
+
+  .form-element {
+    border-width: var(--border-width-thick);
+  }
+
+  .heading {
+    &--1,
+    &--2,
+    &--3,
+    &--4,
+    &--5,
+    &--6 {
+      border: var(--border-width-thick) solid var(--color-text);
+    }
+  }
+}
+
+// === TEMA REDUCIDO ===
+[data-theme='reduced-motion'] {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+// === UTILIDADES DE TEMA ===
+.theme-toggle {
+  @extend .btn;
+  @extend .btn--ghost;
+  @include size(40px);
+  padding: 0;
+
+  &__icon {
+    @include size(20px);
+    transition: transform var(--transition-base);
+  }
+
+  &:hover {
+    .theme-toggle__icon {
+      transform: rotate(15deg);
+    }
+  }
+}
+
+// === PREFERENCIAS DEL SISTEMA ===
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme]) {
+    @import 'variables';
+    // Aplicar automáticamente variables del tema oscuro
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  :root {
+    --transition-base: 0ms;
+    --transition-fast: 0ms;
+    --transition-slow: 0ms;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-contrast: high) {
+  :root {
+    --color-border: #000000;
+    --border-width: 2px;
+  }
+}

@@ -1,0 +1,10 @@
+<label class="toggle" [class.toggle--checked]="checked">
+  <input
+    type="checkbox"
+    [checked]="checked"
+    (change)="toggle()"
+    tabindex="0"
+    aria-label="Activar/Desactivar"
+  />
+  <span class="slider"></span>
+</label>

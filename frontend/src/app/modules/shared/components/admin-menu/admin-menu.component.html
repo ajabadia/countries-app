@@ -1,0 +1,62 @@
+<nav class="admin-menu" aria-label="Menú de administración">
+  <ul class="admin-menu__list" role="menubar">
+    <li
+      *ngFor="let item of items"
+      class="admin-menu__item"
+      [class.admin-menu__item--active]="isActive(item)"
+      [class.admin-menu__item--disabled]="item.disabled"
+      role="none"
+    >
+      <ng-container *ngIf="!item.external; else externalLink">
+        <a
+          *ngIf="item.route"
+          class="admin-menu__link"
+          [routerLink]="item.route"
+          [attr.aria-current]="isActive(item) ? 'page' : null"
+          [attr.tabindex]="item.disabled ? -1 : 0"
+          [class.admin-menu__link--active]="isActive(item)"
+          [class.admin-menu__link--disabled]="item.disabled"
+          [routerLinkActive]="'admin-menu__link--active'"
+          [routerLinkActiveOptions]="{ exact: true }"
+        >
+          <span *ngIf="item.icon" class="admin-menu__icon" aria-hidden="true">
+            <app-ui-button
+              [icon]="item.icon"
+              color="icon"
+              size="sm"
+              variant="icon"
+              [disabled]="!!item.disabled"
+              aria-hidden="true"
+            ></app-ui-button>
+          </span>
+          <span class="admin-menu__label">{{ item.label }}</span>
+        </a>
+      </ng-container>
+      <ng-template #externalLink>
+        <a
+          *ngIf="item.route"
+          class="admin-menu__link"
+          [href]="item.route"
+          target="_blank"
+          rel="noopener"
+          [attr.tabindex]="item.disabled ? -1 : 0"
+          [class.admin-menu__link--disabled]="item.disabled"
+        >
+          <span *ngIf="item.icon" class="admin-menu__icon" aria-hidden="true">
+            <app-ui-button
+              [icon]="item.icon"
+              color="icon"
+              size="sm"
+              variant="icon"
+              [disabled]="!!item.disabled"
+              aria-hidden="true"
+            ></app-ui-button>
+          </span>
+          <span class="admin-menu__label">{{ item.label }}</span>
+        </a>
+      </ng-template>
+    </li>
+  </ul>
+  <div *ngIf="footer" class="admin-menu__footer">{{ footer }}</div>
+</nav>
+

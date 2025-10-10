@@ -1,0 +1,169 @@
+@import '../../../../../styles/variables';
+
+// Estructura general table
+.admin-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  background: var(--color-surface, #fff);
+  box-shadow: 0 3px 14px 0 rgba(11,122,208,0.03);
+  font-size: 1em;
+  border-radius: 13px;
+  overflow: visible;
+  margin-block: 0.7em;
+  table-layout: fixed;
+
+  th, td {
+    padding: 0.65em 0.7em;
+    text-align: left;
+    vertical-align: middle;
+    border: none;
+    background: none;
+    font-weight: 500;
+    font-size: 1em;
+    letter-spacing: 0.01em;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .admin-table__toggle-header,
+  .admin-table__toggle-cell {
+    width: 50px !important;
+    min-width: 50px !important;
+    max-width: 50px !important;
+    padding-left: 0.15em;
+    padding-right: 0.15em;
+    text-align: center;
+  }
+
+  .admin-table__sticky-left {
+    position: sticky;
+    left: 0;
+    background: inherit;
+    z-index: 5;
+    box-shadow: 2px 0 8px -5px rgba(11,122,208,.08);
+  }
+
+  .admin-table__sticky-right {
+    position: sticky;
+    right: 0;
+    background: inherit;
+    z-index: 5;
+    box-shadow: -2px 0 8px -5px rgba(11,122,208,.08);
+  }
+
+  thead th {
+    background: var(--color-primary-h8, #f5faff);
+    color: var(--color-primary-dark, #073864);
+    font-weight: 600;
+    font-size: 1.01em;
+    border-bottom: 2px solid var(--color-border, #e3eefa);
+    user-select: none;
+    &.sortable {
+      cursor: pointer;
+      transition: background 0.13s;
+      &:hover, &:focus {
+        background: var(--color-primary-h6, #e7eefa);
+        outline: none;
+      }
+    }
+    .admin-table__sort-icon {
+      font-size: 1.25em;
+      margin-left: 0.3em;
+      vertical-align: middle;
+      opacity: 0.9;
+      color: #4682bf;
+      width: 1em;
+      display: inline-block;
+      text-align: center;
+      transition: color 0.14s;
+      &.asc, &.desc {
+        color: var(--color-primary, #1976d2);
+        opacity: 1;
+      }
+    }
+  }
+
+  tbody tr {
+    background: none;
+    &:hover {
+      background: var(--color-primary-h9, #f7fcfe);
+      cursor: pointer;
+    }
+    &.selected {
+      background: var(--color-accent-h8, #eef1ff);
+    }
+  }
+
+  .admin-table__checkbox,
+  .admin-table__sticky-left {
+    text-align: center;
+  }
+  .admin-table__sticky-right {
+    text-align: right;
+    padding-right: 0.6em;
+  }
+}
+
+/* ============== PARA FLAG + NAME ============= */
+
+.table__flag-name {
+  display: flex;
+  align-items: center;
+  gap: 0.25em; // MENOS espacio entre toggle y bandera
+  min-width: 120px;
+  max-width: 320px; // mayor ancho para el nombre!
+  margin-left: 0.1em;
+}
+
+app-flag-icon {
+  width: 22px !important;
+  height: 16px !important;
+  min-width: 22px;
+  min-height: 16px;
+  vertical-align: middle;
+  flex-shrink: 0;
+}
+
+.country-name {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  min-width: 80px;
+  max-width: 240px;
+  display: inline-block;
+  margin-left: 0.22em;
+  vertical-align: middle;
+  font-weight: 500;
+}
+
+
+
+/* === para la selección de registros ===== */
+
+tr.selected {
+  background: var(--color-primary-h7, #e7f2fa);
+  box-shadow: 0 2px 8px rgba(11,122,208,0.07);
+}
+
+
+/* ============== RESPONSIVE ============= */
+
+@media (max-width: 900px) {
+  .admin-table th, .admin-table td {
+    padding: 0.5em 0.32em;
+    font-size: 0.97em;
+  }
+}
+
+@media (max-width: 600px) {
+  .admin-table th, .admin-table td {
+    padding: 0.36em 0.15em;
+    font-size: 0.94em;
+  }
+  .admin-table td:not(.admin-table__sticky-left):not(.admin-table__sticky-right) {
+    min-width: 90px;
+    font-size: 1em;
+  }
+}

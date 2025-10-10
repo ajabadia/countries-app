@@ -1,0 +1,95 @@
+<div class="table-controls">
+  <input
+    class="field-input field-large"
+    type="search"
+    placeholder="Filtrar país"
+    [(ngModel)]="searchTerm"
+    (ngModelChange)="onValueChange($event)"
+  />
+  <button (click)="onNew()" class="btn-primary">Nuevo país</button>
+  <button (click)="onDeleteSelected()" [disabled]="!anySelected" class="btn-danger">Eliminar seleccionados</button>
+  <span>{{countries.length}} países</span>
+</div>
+
+<table class="admin-table">
+  <thead>
+    <tr>
+      <th>
+        <app-toggle-checkbox
+          [state]="generalToggleState"
+          (stateChange)="onGeneralToggle($event)">
+        </app-toggle-checkbox>
+      </th>
+      <th *ngFor="let col of tableColumns.slice(1)">
+        {{col.label}}
+      </th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr
+      *ngFor="let country of countries"
+      [class.row-selected]="isSelected(country)"
+      (click)="onRowClick(country, $event)">
+      <td>
+        <app-toggle-checkbox
+          [state]="rowToggleState(country)"
+          (stateChange)="onRowToggle(country, $event)"
+          (click)="$event.stopPropagation()">
+        </app-toggle-checkbox>
+      </td>
+      <td>{{country.defaultname}}</td>
+      <td>{{country.alpha2may}}</td>
+      <td>{{country.alpha3may}}</td>
+      <td>{{country.numeric}}</td>
+      <td>
+        <button (click)="onEdit(country); $event.stopPropagation()" class="btn-edit">Editar</button>
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+
+<div class="pagination">
+  <button (click)="onPageChange(page - 1)" [disabled]="page <= 1">&lt;</button>
+  <span>Página {{page}} / {{totalPages}}</span>
+  <button (click)="onPageChange(page + 1)" [disabled]="page >= totalPages">&gt;</button>
+</div>
+
+<!-- Modal alta/edición país -->
+<div *ngIf="showEditModal" class="modal">
+  <form [formGroup]="countryForm" class="vertical-form">
+    <div class="form-field">
+      <label class="field-label">ID</label>
+      <input class="field-input field-small" formControlName="id" required />
+    </div>
+    <div class="form-field">
+      <label class="field-label">Nombre</label>
+      <input class="field-input field-large" formControlName="defaultname" required />
+    </div>
+    <div class="form-field">
+      <label class="field-label">Alpha-2</label>
+      <input class="field-input field-small" formControlName="alpha2may" />
+    </div>
+    <div class="form-field">
+      <label class="field-label">Alpha-3</label>
+      <input class="field-input field-medium" formControlName="alpha3may" />
+    </div>
+    <div class="form-field">
+      <label class="field-label">Numérico</label>
+      <input class="field-input field-small" formControlName="numeric" />
+    </div>
+    <div *ngIf="errorMsg" class="error-msg">{{errorMsg}}</div>
+    <button type="button" (click)="saveCountry()" class="btn-primary">Guardar</button>
+    <button type="button" (click)="closeCountryModal()" class="btn">Cancelar</button>
+  </form>
+</div>
+
+<!-- Modal confirmación eliminar -->
+<div *ngIf="showConfirmDelete" class="modal">
+  <div class="modal-text">
+    ¿Seguro que quieres eliminar el país <strong>{{pais.defaultname}}</strong>?
+  </div>
+  <button (click)="eliminarPais()" class="btn-danger">Eliminar</button>
+  <button (click)="cancelarEliminar()" class="btn">Cancelar</button>
+</div>

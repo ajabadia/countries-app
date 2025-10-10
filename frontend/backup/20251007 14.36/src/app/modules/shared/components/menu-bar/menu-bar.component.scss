@@ -1,0 +1,21 @@
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
+
+.menu-bar {
+  width: 100%;
+  min-height: 48px;
+  background: var(--color-surface, #f7fafd);
+  border-bottom: 1px solid var(--color-border, #e3eefa);
+  display: flex;
+  align-items: center;
+  padding: 0 var(--space-m);
+  box-shadow: 0 2px 4px rgba(37,56,137,0.02);
+  z-index: 5;
+  position: relative;
+}
+
+.menu-bar > * {
+  flex: 1 1 0%;
+  text-align: center;
+  min-width: 0;
+}
