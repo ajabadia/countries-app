@@ -36,12 +36,6 @@ export class ModalComponent {
       this.accept.emit();
     }
   }
-onBackdropClick(event: MouseEvent) {
-  // Solo cerrar si el click es sobre el propio fondo y no sobre la modal interna
-  if (event.target && (event.target as HTMLElement).classList.contains('modal-backdrop')) {
-    this.close.emit();
-  }
-}
 
   onClose() {
     this.close.emit();

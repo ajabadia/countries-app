@@ -1,3 +1,14 @@
+<app-ui-heading
+  [level]="1"
+  text="Países"
+  icon="icon-country"
+  iconPosition="left"
+  color="primary"
+  textAlign="left"
+  ariaLabel="Entrar a Países">
+ </app-ui-heading>
+
+
 <div class="table-controls">
   <div class="controls-left">
     <!-- Tus botones: Nuevo país, Eliminar seleccionados -->
@@ -57,34 +68,118 @@
 </app-paginator>
 </div>
 
-<!-- Modal alta/edición país -->
-<div *ngIf="showEditModal" class="modal">
-  <form [formGroup]="countryForm" class="vertical-form">
+<!-- MODAL de creación/edición de país -->
+////
+
+<app-modal
+  [visible]="showEditModal"
+  [title]="editMode ? 'Editar país' : 'Nuevo país'"
+  [subtitle]="editMode ? pais.defaultname : ''"
+  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+  [acceptDisabled]="countryForm.invalid"
+  [icon]="editMode ? 'icon-edit' : 'icon-add'"
+  [iconPosition]="'left'"
+  [iconSize]="'l'"
+  [titleAlign]="'left'"
+  [titleColor]="'primary'"
+  [color]="'transparent'"
+  [showClose]="true"
+  (accept)="saveCountry()"
+  (close)="closeCountryModal()">
+
+
+  <!-- FORMULARIO de país -->
+
+
+  
+  <form         
+       [formGroup]="countryForm"
+        (ngSubmit)="saveCountry()"
+        class="modal-form"
+        keydown.enter="$event.preventDefault()">
     <div class="form-field">
-      <label class="field-label">ID</label>
-      <input class="field-input field-small" formControlName="id" required />
+      <label for="id" class="field-label">ID</label>
+      <input class="field-input field-medium"
+             placeholder=""
+             type="text"
+             formControlName="id"
+             id="id"
+             maxlength="2"
+             minlength="2"
+             pattern="^[a-z]{2}$"
+             autocomplete="off"
+             required />
+      <span class="error-msg" *ngIf="countryForm.get('id')?.invalid && countryForm.get('id')?.touched">
+        Debe poner dos minúsculas.
+      </span>
     </div>
     <div class="form-field">
-      <label class="field-label">Nombre</label>
-      <input class="field-input field-large" formControlName="defaultname" required />
+      <label for="defaultname" class="field-label">Nombre</label>
+      <input type="text"
+             formControlName="defaultname"
+             id="defaultname"
+             class="field-input field-large"
+             maxlength="50"
+             minlength="3"
+             pattern="^[A-Za-z0-9 ]{3,50}$"
+             autocomplete="off"
+             required />
+      <span class="error-msg" *ngIf="countryForm.get('defaultname')?.invalid && countryForm.get('defaultname')?.touched">
+        Debe poner entre tres y cincuenta caracteres.
+      </span>
     </div>
     <div class="form-field">
-      <label class="field-label">Alpha-2</label>
-      <input class="field-input field-small" formControlName="alpha2may" />
+      <label for="alpha2may" class="field-label">Alpha-2</label>
+      <input type="text"
+             formControlName="alpha2may"
+             id="alpha2may"
+             class="field-input field-medium"
+             maxlength="2"
+             minlength="2"
+             pattern="^[A-Z]{2}$"
+             autocomplete="off"
+             required />
+      <span class="error-msg" *ngIf="countryForm.get('alpha2may')?.invalid && countryForm.get('alpha2may')?.touched">
+        Debe poner dos mayúsculas.
+      </span>
     </div>
     <div class="form-field">
-      <label class="field-label">Alpha-3</label>
-      <input class="field-input field-medium" formControlName="alpha3may" />
+      <label for="alpha3may" class="field-label">Alpha-3</label>
+      <input type="text"
+             formControlName="alpha3may"
+             id="alpha3may"
+             class="field-input field-medium"
+             maxlength="3"
+             minlength="3"
+             pattern="^[A-Z]{3}$"
+             autocomplete="off"
+             required />
+      <span class="error-msg" *ngIf="countryForm.get('alpha3may')?.invalid && countryForm.get('alpha3may')?.touched">
+        Debe poner tres mayúsculas.
+      </span>
     </div>
     <div class="form-field">
-      <label class="field-label">Numérico</label>
-      <input class="field-input field-small" formControlName="numeric" />
+      <label for="numeric" class="field-label">Numérico</label>
+      <input type="text"
+             formControlName="numeric"
+             id="numeric"
+             class="field-input field-medium"
+             maxlength="3"
+             minlength="3"
+             pattern="^[0-9]{3}$"
+             autocomplete="off"
+             inputmode="numeric"
+             required />
+      <span class="error-msg" *ngIf="countryForm.get('numeric')?.invalid && countryForm.get('numeric')?.touched">
+        Debe poner tres números (rellene con ceros a la izquierda si es necesario).
+      </span>
     </div>
-    <div *ngIf="errorMsg" class="error-msg">{{errorMsg}}</div>
-    <button type="button" (click)="saveCountry()" class="btn-primary">Guardar</button>
-    <button type="button" (click)="closeCountryModal()" class="btn">Cancelar</button>
+    <div *ngIf="errorMsg" class="error-msg">
+      {{ errorMsg }}
+    </div>
   </form>
-</div>
+</app-modal>
+
 
 <!-- Modal confirmación eliminar -->
 <app-confirm-dialog

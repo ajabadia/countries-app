@@ -1,52 +1,62 @@
-<!-- Fondo oscurecido -->
-<div class="modal-backdrop" *ngIf="visible" (click)="closeOnBackdrop ? onClose() : null"></div>
-
-<!-- Contenedor principal -->
-<div class="modal-container"
-     *ngIf="visible"
-     role="dialog"
-     aria-modal="true"
-     tabindex="0">
-<!-- Cabecera -->
-<div class="modal-header">
-  <app-ui-heading
-    class="modal-title"
-    [text]="title"
-    [icon]="icon"
-    [iconPosition]="iconPosition"
-    [iconSize]="iconSize"
-    [level]="2"
-    [textAlign]="titleAlign"
-   
-      [color]="'transparent'" 
-    [subtitle]="subtitle"
-    class="modal-title"
-    style="width:100%; background:transparent; color:inherit; padding:0;"
-  ></app-ui-heading>
-  <button class="modal-close-btn" aria-label="Cerrar" (click)="onClose()">&times;</button>
+<!-- Fondo gris traslúcido -->
+<div 
+  class="modal-backdrop"
+  *ngIf="visible"
+  (click)="closeOnBackdrop && onBackdropClick($event)">
 </div>
 
-  
-  <!-- Cuerpo: centrado mientras cabe, scrolleable si es alto -->
-  <div class="modal-body">
-    <div class="modal-body-centerer">
-      <ng-content></ng-content>
+<!-- Contenedor centrado de la modal -->
+<div
+  class="modal-container"
+  *ngIf="visible"
+  [ngClass]="'modal--' + color"
+  role="dialog"
+  aria-modal="true"
+>
+  <!-- Cabecera -->
+  <div class="modal-header" [ngClass]="'align-' + titleAlign">
+    <ng-container *ngIf="icon && iconPosition === 'left'">
+      <span class="modal-header-icon" [ngClass]="'icon-size-' + iconSize">
+        <img [src]="'assets/icons/' + icon + '.svg'" alt="" />
+      </span>
+    </ng-container>
+    <div class="modal-title" [ngClass]="'text-' + titleColor">
+      {{ title }}
+      <ng-container *ngIf="subtitle">
+        <span class="modal-subtitle">{{ subtitle }}</span>
+      </ng-container>
     </div>
+    <ng-container *ngIf="showClose">
+      <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">
+        ×
+      </button>
+    </ng-container>
   </div>
-  
-  <!-- Pie: siempre visible, no se escapa con el scroll -->
-  <div class="modal-footer">
-    <button *ngIf="showClose"
-      class="modal-btn modal-btn--close"
-      (click)="onClose()">
+
+  <!-- Cuerpo/modal body -->
+  <div class="modal-body">
+    <ng-content></ng-content>
+  </div>
+
+  <!-- Footer/botones -->
+  <div class="modal-footer" *ngIf="showAccept || showClose">
+    <button 
+      *ngIf="showClose"
+      type="button"
+      class="btn modal-btn modal-btn--cancel"
+      (click)="onClose()"
+      [disabled]="false"
+    >
       {{ closeLabel }}
     </button>
-    <button *ngIf="showAccept"
-      class="modal-btn modal-btn--accept"
+    <button
+      *ngIf="showAccept"
+      type="button"
+      class="btn modal-btn modal-btn--accept"
       [disabled]="acceptDisabled"
-      (click)="onAccept()">
+      (click)="onAccept()"
+    >
       {{ acceptLabel }}
     </button>
   </div>
 </div>
-
