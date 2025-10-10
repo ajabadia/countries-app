@@ -40,22 +40,30 @@
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let country of countries"
-      [class.row-selected]="isSelected(country)"
-      (click)="onRowClick(country, $event)">
-      <td>
-        <app-toggle-checkbox
-          [state]="rowToggleState(country)"
-          (stateChange)="onRowToggle(country, $event)"
-          (click)="$event.stopPropagation()">
-        </app-toggle-checkbox>
-      </td>
-      <td>{{country.defaultname}}</td>
-      <td>{{country.alpha2may}}</td>
-      <td>{{country.alpha3may}}</td>
-      <td>{{country.numeric}}</td>
-    </tr>
+<tr *ngFor="let country of countries" [class.row-selected]="isSelected(country)" (click)="onRowClick(country, $event)">
+  <td>
+    <app-toggle-checkbox
+      [state]="rowToggleState(country)"
+      (stateChange)="onRowToggle(country, $event)"
+      (click)="$event.stopPropagation()"
+    ></app-toggle-checkbox>
+  </td>
+
+  <!-- Nombre + Flag en la celda correcta, usando flexbox -->
+  <td style="display: flex; align-items: center;">
+    <app-flag-icon
+      [iso2]="country.id"
+      [size]="'m'"
+      [iconType]="'country'"
+      style="margin-right: 6px"
+    ></app-flag-icon>
+    <span>{{ country.defaultname }}</span>
+  </td>
+
+  <td>{{ country.alpha2may }}</td>
+  <td>{{ country.alpha3may }}</td>
+  <td>{{ country.numeric }}</td>
+</tr>
   </tbody>
 </table>
 

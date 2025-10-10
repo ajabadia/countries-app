@@ -32,13 +32,15 @@ export class AdminCountriesComponent implements OnInit {
   //---------------------------
   searchTerm = '';
   countries: Country[] = [];
-  tableColumns: TableColumn[] = [
-    { key: 'toggle', label: '', sticky: 'left', width: '44px' },
-    { key: 'defaultname', label: 'Nombre', sortable: true, minWidth: '35%' },
-    { key: 'alpha2may', label: 'Alpha-2', sortable: true, maxWidth: '5%', sticky: 'right' },
-    { key: 'alpha3may', label: 'Alpha-3', sortable: true, maxWidth: '5%', sticky: 'right' },
-    { key: 'numeric', label: 'Numérico', sortable: true, maxWidth: '5%', sticky: 'right' }
-  ];
+tableColumns: TableColumn[] = [
+  { key: 'toggle', label: '', sticky: 'left', width: '44px' },
+  { key: 'defaultname', label: 'Nombre', sortable: true, width: '40%', minWidth: '160px' },
+  { key: 'alpha2may', label: 'Alpha-2', sortable: true, maxWidth: '8%', sticky: 'right' },
+  { key: 'alpha3may', label: 'Alpha-3', sortable: true, maxWidth: '8%', sticky: 'right' },
+  { key: 'numeric', label: 'Numérico', sortable: true, maxWidth: '8%', sticky: 'right' }
+];
+
+
   totalCountries = 0;
   page = 1;
   pageSize = 10;
