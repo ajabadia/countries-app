@@ -21,6 +21,11 @@ import { ToggleCheckboxComponent } from './components/toggle-checkbox/toggle-che
 import { ModalComponent } from './components/modal/modal.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
 
+import { UiIconModule } from './models/ui-icon.module';
+//estos son de pruebas
+import { IconTestComponent } from './pruebas/icon-test/icon-test.component';
+
+
 @NgModule({
   declarations: [
     HeaderComponent,
@@ -39,12 +44,15 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     TableComponent,
     ToggleCheckboxComponent,
     ModalComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    IconTestComponent //<- este es de pruebas
+    
   ],
   imports: [
     CommonModule,
     RouterModule,
-    FormsModule  // ✅ Movido aquí desde declarations
+    FormsModule,
+    UiIconModule  // ✅ Movido aquí desde declarations
   ],
   exports: [
     HeaderComponent,
@@ -64,7 +72,9 @@ import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dial
     ToggleCheckboxComponent,
     FormsModule,
     ModalComponent,
-    ConfirmDialogComponent
+    ConfirmDialogComponent,
+    UiIconModule,       
+    IconTestComponent //<- este es de pruebas  
   ]
 })
 export class SharedModule {}

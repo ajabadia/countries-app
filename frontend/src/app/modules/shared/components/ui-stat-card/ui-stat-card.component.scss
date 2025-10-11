@@ -1,5 +1,5 @@
 .ui-stat-card {
-  // Corporativo y accesible
+  // ---- Contenedor principal corporativo y accesible ----
   font-family: var(--font-family, 'Inter', 'Roboto', sans-serif);
   background: var(--color-surface, #fff);
   border-radius: var(--radius-md, 9px);
@@ -18,7 +18,7 @@
   outline: none;
   transition: box-shadow 0.2s, background 0.2s;
 
-  // Icono SVG, hereda color corporativo SIEMPRE (currentColor) -- asegúrate que el SVG no fije fill="black"
+  // ---- ICONO corporativo ----
   &__icon {
     width: 72px;
     height: 72px;
@@ -27,6 +27,8 @@
     align-items: center;
     justify-content: center;
 
+    // SVG inline: usa siempre "currentColor" para heredar color corporativo
+    // Importante: si el SVG viene de assets y pone fill="black", modifícalo en el archivo o patch
     svg {
       width: 100% !important;
       height: 100% !important;
@@ -36,11 +38,11 @@
       fill: currentColor !important;
       color: var(--color-primary, #10416a) !important;
       stroke: currentColor !important;
-      // Si el SVG viene de assets y pone fill="black", modifícalo a "currentColor" en el archivo
+      // Deprecable: Si usas solo <app-ui-icon>, no necesitas patch/color con DomSanitizer
     }
   }
 
-  // Label corporativo
+  // ---- LABEL de la tarjeta ----
   &__label {
     color: var(--color-tertiary, #727272);
     margin-bottom: 0.25em;
@@ -49,7 +51,7 @@
     font-family: inherit;
   }
 
-  // Valor principal corporativo
+  // ---- VALOR principal visual ----
   &__value {
     font-size: 2.2em;
     font-weight: 700;
@@ -58,7 +60,7 @@
     font-family: inherit;
   }
 
-  // Hover y foco
+  // ---- Interacciones (hover, foco, activo) ----
   &:hover,
   &:focus {
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
@@ -71,3 +73,7 @@
     outline: 2px solid var(--color-primary, #10416a);
   }
 }
+
+// ---- DEPRECADOS/LEGACY (comentario) ----
+// Si usas solo <app-ui-icon>, el patch de fill/color para svg cargado manualmente no es necesario.
+// Si se sigue usando [innerHTML]="svgContent", asegúrate de que el SVG no tenga fill="black".

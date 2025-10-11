@@ -3,8 +3,8 @@
 <div class="dashboard-admin">
 <app-ui-heading
   [level]="1"
-  text="Continentes"
-  icon="icon-continents"
+  text="Panel de control"
+  icon="icon-dashboard"
   iconPosition="left"
   color="primary"
   textAlign="left"
@@ -16,38 +16,57 @@
       label="Países"
       [icon]="'icon-country'"
       [value]="countriesCount ?? '—'"
+      iconType="map-globe"
+      iconColor="#10416a"
       detailRoute="/admin/countries">
     </app-ui-stat-card>
+
     <app-ui-stat-card
       label="Áreas"
       [icon]="'icon-area'"
       [value]="areasCount ?? '—'"
+      iconType="system"
+      iconColor="#10416a"
       detailRoute="/admin/areas">
     </app-ui-stat-card>
+
     <app-ui-stat-card
       label="Continentes"
       [icon]="'icon-continents'"
       [value]="continentsCount ?? '—'"
+      iconType="system"
+      iconColor="#10416a"
       detailRoute="/admin/continents">
     </app-ui-stat-card>
+
     <app-ui-stat-card
       label="Lenguajes"
       [icon]="'icon-languages'"
       [value]="languagesCount ?? '—'"
+      iconType="system"
+      iconColor="#10416a"
       detailRoute="/admin/languages">
     </app-ui-stat-card>
+
     <app-ui-stat-card
       label="Dependencias"
       [icon]="'icon-dependencies'"
       [value]="dependenciesCount ?? '—'"
+      iconType="system"
+      iconColor="#10416a"
       detailRoute="/admin/dependencies">
     </app-ui-stat-card>
     <app-ui-stat-card
       label="Traducciones"
       [icon]="'icon-translations'"
       [value]="translationsCount ?? '—'"
+      iconType="system"
+      iconColor="#10416a"
       detailRoute="/admin/translations">
     </app-ui-stat-card>
+
+
+    
   </div>
 </div>
 

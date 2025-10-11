@@ -1,12 +1,25 @@
+<!-- Tarjeta de estadísticas accesible y corporativa -->
 <div
   class="ui-stat-card"
-  [class.active]="isActive"
   tabindex="0"
+  role="button"
+  [attr.aria-label]="label"
   (click)="onClick()"
-  (focus)="isActive = true"
-  (blur)="isActive = false"
+  (keydown.enter)="onKeydown()"
+  (keydown.space)="onKeydown()"
 >
-  <div class="ui-stat-card__icon" *ngIf="svgContent" [innerHTML]="svgContent"></div>
-  <div class="ui-stat-card__label">{{ label }}</div>
-  <div class="ui-stat-card__value">{{ value }}</div>
+  <span class="ui-stat-card__icon" *ngIf="icon">
+    <app-ui-icon
+      [icon]="icon"
+      [type]="iconType || 'system'"
+      [color]="iconColor || ''"
+      [class]="iconClass || ''"
+    ></app-ui-icon>
+  </span>
+
+
+  <div class="ui-stat-card__content">
+    <div class="ui-stat-card__value">{{ value }}</div>
+    <div class="ui-stat-card__label">{{ label }}</div>
+  </div>
 </div>

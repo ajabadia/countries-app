@@ -14,12 +14,25 @@ import { AdminLanguagesComponent } from './modules/admin/pages/languages/admin-l
 import { AdminTranslationsComponent } from './modules/admin/pages/translations/admin-translations.component';
 
 
+
+
+
 @NgModule({
-  declarations: [AppComponent,  
+  declarations: [
+    AppComponent, 
+    
+    
   ],
-  imports: [BrowserModule, AppRoutingModule, SharedModule, HttpClientModule],
+  imports: [
+    BrowserModule, 
+    AppRoutingModule, 
+    SharedModule, 
+    HttpClientModule],
   providers: [],
-  bootstrap: [AppComponent]
+  bootstrap: [AppComponent],
+  exports: [
+  
+  ]
 })
 export class AppModule {}
 
