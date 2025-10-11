@@ -1,15 +1,19 @@
 import { Component, Input } from '@angular/core';
 
 /**
- * Interfaz de configuración para cada botón de la toolbar.
- * Permite determinar el icono (ruta SVG), texto, color, estado y acción.
+ * Interfaz base para la configuración de cada botón de la toolbar
+ * Todos los parámetros incluidos para icono, visual, y eventos.
  */
 export interface ToolbarButtonConfig {
-  iconSrc: string; // Ruta al SVG, por ejemplo: 'assets/icons/icon-add.svg'
-  label: string;   // Texto del botón
-  color: 'main' | 'edit' | 'danger' | string; // Clase visual (también permite personalizadas)
-  disabled?: boolean; // true si el botón debe estar deshabilitado
-  action: () => void; // Acción a ejecutar al hacer click
+  icon: string; // Nombre del icono (ej: 'icon-add')
+  iconType?: string; // Tipo de icono (por defecto 'system')
+  iconSize?: number | 'xs' | 's' | 'm' | 'l' | 'xl'; // Tamaño
+  iconColor?: string;
+  iconClass?: string;
+  label: string; // Texto del botón
+  color: 'main' | 'edit' | 'danger' | string; // Colores del sistema o personalizados
+  disabled?: boolean; // true si el botón está deshabilitado
+  action: () => void; // Callback, pasas () => this.onNew() (padre)
 }
 
 @Component({
@@ -19,11 +23,24 @@ export interface ToolbarButtonConfig {
 })
 export class ToolbarButtonsComponent {
   /**
-   * Recibe desde el padre el array de botones a renderizar,
-   * con iconos SVG, texto, color, estado y callback.
+   * Recibe el array de botones desde el padre
    */
   @Input() buttons: ToolbarButtonConfig[] = [];
 
-  // Opcional: puedes añadir aquí métodos de utilidad para test o depuración.
-}
+  // Defaults para iconos si el padre no los especifica
+  readonly defaultIconType = 'system';
+  readonly defaultIconSize: 's' = 's';
+  readonly defaultIconColor = '';
 
+  /**
+   * Esta función intermedia se llama siempre desde el template HTML en (click).
+   * Así se garantiza que no se pierda el contexto de Angular/Padre
+   * y el método del padre (ej: this.onNew()) se ejecuta de verdad.
+   * Además, solo ejecuta la acción si el botón está habilitado.
+   */
+  ejecutarAccion(btn: ToolbarButtonConfig) {
+    if (!btn.disabled && typeof btn.action === 'function') {
+      btn.action();
+    }
+  }
+}

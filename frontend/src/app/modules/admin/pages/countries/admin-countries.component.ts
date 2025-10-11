@@ -3,8 +3,15 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
 import { CountriesService, Country } from 'src/app/services/countries.service';
 import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
+import { ToolbarButtonConfig } from 'src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component';
+
+
+
+
 
 // Interfaz global para la configuración de toolbar-buttons
+
+/* ---antiguo, quitar cuando vaya bien--
 export interface ToolbarButtonConfig {
   iconSrc: string; // Ruta al SVG de iconos (ej: 'assets/icons/icon-add.svg')
   label: string;
@@ -12,6 +19,7 @@ export interface ToolbarButtonConfig {
   disabled?: boolean;
   action: () => void;
 }
+  */
 
 const COUNTRY_EMPTY: Country = {
   id: '',
@@ -67,6 +75,8 @@ tableColumns: TableColumn[] = [
   entity = 'country';
 
   // Botones de la toolbar configurados y sincronizados con el estado actual (SVG desde assets)
+  /* Antiguo, quitar cuando todo vaya bien
+  
   get toolbarButtons(): ToolbarButtonConfig[] {
     return [
       {
@@ -92,6 +102,39 @@ tableColumns: TableColumn[] = [
       }
     ];
   }
+*/
+
+get toolbarButtons(): ToolbarButtonConfig[] {
+  return [
+    {
+      // iconSrc: 'assets/icons/icon-add.svg',
+      icon: 'icon-user', // <--- campo obligatorio
+      iconType: 'system',    // <- explícitamente por coherencia
+      iconSize: 's',         // <-- puedes poner 's' (20px)
+      label: `Nuevo ${this.entity}`,
+      color: 'main',
+      action: () => this.onNew(),
+      disabled: false
+    },
+    {
+      // iconSrc: 'assets/icons/icon-edit.svg',
+      icon: 'icon-edit', // <--- campo obligatorio
+      label: 'Editar',
+      color: 'edit',
+      action: () => this.onEdit(),
+      disabled: !(this.selection.selected.length === 1)
+    },
+    {
+      // iconSrc: 'assets/icons/icon-delete.svg',
+      icon: 'icon-delete', // <--- campo obligatorio
+      label: 'Borrar',
+      color: 'danger',
+      action: () => this.onDeleteSelected(),
+      disabled: !this.selection.selected.length
+    }
+  ];
+}
+
 
   constructor(
     private countriesService: CountriesService,

@@ -1,31 +1,14 @@
 <div class="toolbar-buttons">
-  <app-ui-button 
+  <button
+    *ngFor="let btn of buttons"
     type="button"
-    class="ui-button ui-button--main"
-    icon="icon-add"
-    (click)="new.emit()"
-    [color]="'primary'">
-    Nuevo {{ entity }}
-  </app-ui-button>
-
-  <app-ui-button
-    type="button"
-    class="ui-button"
-    icon="icon-pen"
-    [disabled]="!selected.length || selected.length !== 1"
-    (click)="edit.emit()"
-    [color]="'accent'">
-    Editar
-  </app-ui-button>
-
-  <app-ui-button
-    type="button"
-    class="ui-button ui-button--danger"
-    icon="icon-trash-2"
-    [disabled]="!selected.length"
-    (click)="delete.emit()"
-    [color]="'danger'">
-    Borrar
-  </app-ui-button>
+    class="tb-btn"
+    [ngClass]="'tb-btn--' + btn.color"
+    [disabled]="btn.disabled"
+    (click)="btn.action()">
+    <span class="tb-btn__icon">
+      <img [src]="btn.iconSrc" alt="" width="20" height="20" />
+    </span>
+    {{ btn.label }}
+  </button>
 </div>
-

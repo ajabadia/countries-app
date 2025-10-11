@@ -1,4 +1,4 @@
-<div class="toolbar-buttons">
+<!-- div class="toolbar-buttons">
   <button
     *ngFor="let btn of buttons"
     type="button"
@@ -11,4 +11,28 @@
     </span>
     {{ btn.label }}
   </button>
+</div -->
+
+
+<div class="toolbar-buttons">
+  <button
+  *ngFor="let btn of buttons"
+  class="tb-btn tb-btn--{{btn.color}}"
+  [disabled]="btn.disabled"
+  (click)="ejecutarAccion(btn)"
+  [attr.aria-label]="btn.label"
+  >
+    <span class="tb-btn__icon">
+      <!-- Adaptación completa: pasa parámetro, o toma valor por defecto si no se pasa -->
+      <app-ui-icon
+        [icon]="btn.icon"
+        [type]="btn.iconType || defaultIconType"
+        [size]="btn.iconSize || defaultIconSize"
+        [color]="btn.iconColor || defaultIconColor"
+        [class]="btn.iconClass"
+      ></app-ui-icon>
+    </span>
+    <span class="tb-btn__label">{{ btn.label }}</span>
+  </button>
 </div>
+

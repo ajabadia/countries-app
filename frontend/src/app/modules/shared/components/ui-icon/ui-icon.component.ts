@@ -17,7 +17,10 @@ export class UiIconComponent implements OnInit {
   /** Color CSS/hex para el icono */
   @Input() color?: string;
 
-  /** Tamaño del icono: admite número en px o string ('xs', 's', 'm', 'l', 'xl') */
+  /**
+   * Tamaño del icono: admite número en px o string ('xs', 's', 'm', 'l', 'xl').
+   * Se valida en computedSize para asegurar que siempre hay un tamaño positivo correcto.
+   */
   @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl' = 24;
 
   /** Clase CSS adicional para variantes o estilos */
@@ -34,8 +37,8 @@ export class UiIconComponent implements OnInit {
   </svg>
   `;
 
-  // ----- Tabla de conversión de tamaños -----
-  private readonly sizeMap: Record<string, number> = {
+  // Tabla para traducir strings a valores px
+  private readonly sizeMap: Record<'xs' | 's' | 'm' | 'l' | 'xl', number> = {
     xs: 16,
     s: 20,
     m: 24,
@@ -43,13 +46,20 @@ export class UiIconComponent implements OnInit {
     xl: 40
   };
 
-  /** Propiedad computada para el tamaño final en px */
+  /**
+   * Devuelve el tamaño real en píxeles ya validado y seguro:
+   * - Si es number, devuelve el absoluto o 24 si <=0
+   * - Si es un string válido, devuelve el mapeo definido
+   * - Si es string inválido, devuelve 24
+   */
   get computedSize(): number {
-    return typeof this.size === 'number'
-      ? this.size
-      : this.sizeMap[this.size] ?? 24;
+    if (typeof this.size === 'number') {
+      const absNumber = Math.abs(this.size);
+      return absNumber > 0 ? absNumber : 24;
+    }
+    // size es string: buscamos en el mapeo o devolvemos 24 por defecto.
+    return this.sizeMap[this.size] ?? 24;
   }
-  // ------------------------------------------
 
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
@@ -84,21 +94,21 @@ export class UiIconComponent implements OnInit {
   }
 
   /**
-   * Patch para asegurar que el SVG:
-   * - Lleve fill="currentColor" para heredar color CSS/SCSS
-   * - Elimine restricciones de width/height
-   * - Permite escalar el SVG según [size]
+   * Parchea el SVG para asegurar:
+   * - fill="currentColor" siempre presente
+   * - elimina width/height fijos
+   * - siempre escalable según computedSize
    */
   private patchSvg(svg: string): string {
-    // Cambia cualquier fill a currentColor
+    // Patch fill
     svg = svg.replace(/fill="[^\"]*"/g, 'fill="currentColor"');
 
-    // Añade fill="currentColor" al svg si le falta
+    // Añade fill="currentColor" al SVG si falta
     svg = svg.replace(/<svg([^>]*)>/, (match, attrs) => {
       return match.includes('fill=') ? match : `<svg${attrs} fill="currentColor">`;
     });
 
-    // Elimina width/height fijos
+    // Elimina width y height fijos en root SVG
     svg = svg.replace(/(width|height)="[^\"]*"/g, '');
 
     return svg;
