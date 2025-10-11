@@ -8,8 +8,12 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./ui-heading.component.scss']
 })
 export class UiHeadingComponent implements OnInit, OnChanges {
+
   @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 1;
   @Input() subtitle?: string;
+  @Input() title: string = '';
+  @Input() titleColor?: string;
+  @Input() customClass?: string;
   @Input() desc?: string;
   @Input() text: string = '';
   @Input() textAlign: 'left' | 'center' | 'right' = 'left';
@@ -17,13 +21,26 @@ export class UiHeadingComponent implements OnInit, OnChanges {
   @Input() icon?: string;
   @Input() iconPosition: 'left' | 'right' | 'top' | 'bottom' = 'left';
   @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
+  @Input() iconColor?: string;
+  @Input() iconLabel?: string;
+  @Input() iconAriaLabel?: string;
   @Input() textSize?: 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | number;
   @Input() ariaLabel?: string;
   @Input() allowHtml: boolean = false;
+  @Input() headingLevel: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div' = 'h2';
+  @Input() headingClass?: string;
+
+  // Añadidos para evitar errores y permitir personalización
+  /** Clase CSS opcional para el icono, útil como [class] en app-ui-icon */
+  @Input() iconClass?: string;
+
+  /** Color opcional para el subtítulo, útil como [ngStyle]="{ color: subtitleColor }" */
+  @Input() subtitleColor?: string;
 
   svgContent: SafeHtml | null = null;
 
   private readonly iconSizes = { xs: 16, s: 20, m: 24, l: 32, xl: 40 };
+
   private readonly textSizes = {
     xs: '0.75rem',
     s: '0.875rem',
@@ -69,6 +86,7 @@ export class UiHeadingComponent implements OnInit, OnChanges {
     } else {
       size = `${this.iconSizes.m}px`;
     }
+
     return {
       width: size,
       height: size,

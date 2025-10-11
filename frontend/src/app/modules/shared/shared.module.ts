@@ -20,8 +20,8 @@ import { TableComponent } from './components/table/table.component';
 import { ToggleCheckboxComponent } from './components/toggle-checkbox/toggle-checkbox.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-
 import { UiIconModule } from './models/ui-icon.module';
+
 //estos son de pruebas
 import { IconTestComponent } from './pruebas/icon-test/icon-test.component';
 
