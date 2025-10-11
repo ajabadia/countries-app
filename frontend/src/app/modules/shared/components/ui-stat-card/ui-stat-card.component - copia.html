@@ -1,3 +1,4 @@
+<!-- Tarjeta de estadísticas accesible y corporativa -->
 <div
   class="ui-stat-card"
   tabindex="0"
@@ -7,19 +8,15 @@
   (keydown.enter)="onKeydown()"
   (keydown.space)="onKeydown()"
 >
-  <span
-    class="ui-stat-card__icon"
-    *ngIf="icon"
-    [ngStyle]="{ width: getIconSizePx() + 'px', height: getIconSizePx() + 'px' }"
-  >
+  <span class="ui-stat-card__icon" *ngIf="icon">
     <app-ui-icon
       [icon]="icon"
       [type]="iconType || 'system'"
-      [color]="iconColor || 'var(--color-primary, #10416a)'"
-      [class]="iconClass"
-      [size]="getIconSizePx()"
+      [color]="iconColor || ''"
+      [class]="iconClass || ''"
     ></app-ui-icon>
   </span>
+
 
   <div class="ui-stat-card__content">
     <div class="ui-stat-card__value">{{ value }}</div>

@@ -1,5 +1,14 @@
-<span class="ui-icon"
-      [ngStyle]="{ color: color, width: size + 'px', height: size + 'px' }"
-      [ngClass]="class"
-      [innerHTML]="svgContent">
+<span 
+  class="ui-icon"
+  [ngClass]="[type || '', class || '']" 
+  [ngStyle]="{ color: color, width: size + 'px', height: size + 'px' }" 
+  [attr.title]="icon"
+>
+  <span 
+    *ngIf="svgContent" 
+    [innerHTML]="svgContent" 
+    [style.width.px]="size"
+    [style.height.px]="size"
+    style="display:inline-block;vertical-align:middle"
+  ></span>
 </span>

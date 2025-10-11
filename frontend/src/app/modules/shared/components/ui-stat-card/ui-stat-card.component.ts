@@ -1,6 +1,6 @@
 import { Component, Input, OnInit, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-// Si ya NO vas a cargar SVG manualmente, puedes eliminar las dos siguientes líneas:
+// Sólo usa estos imports si tienes SVG legacy
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -10,30 +10,38 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   styleUrls: ['./ui-stat-card.component.scss']
 })
 export class UiStatCardComponent implements OnInit {
+  /** Texto del label (leyenda) */
   @Input() label!: string;
+  /** Valor principal (número/dato a mostrar) */
   @Input() value!: string | number;
-  /** Nombre del icono SVG (sin extensión) para usar con ui-icon (recomendado) */
+  /** Nombre del icono SVG/corporativo a mostrar */
   @Input() icon?: string;
-  /** Tipo de icono para ui-icon ('system', 'flag-circle', etc.) */
-  @Input() iconType: string = 'system'; // Si tienes lógica distinta por tipo, lo mantienes
-  /** Alternativamente, si quieres seguir usando SVG a mano: */
-  svgContent: SafeHtml | null = null; // puedes eliminar si no la quieres nunca
-  /** Ruta de detalle a navegar al hacer clic */
+  /** Tipo de icono para el componente ui-icon ('system', 'flag-circle', ...) */
+  @Input() iconType: string = 'system';
+  /** Ruta de detalle, navega al clic sobre la tarjeta */
   @Input() detailRoute?: string;
-@Input() iconClass: string = ''; // Opcional. Recibe la clase para indicar tipo de icono
-@Input() iconColor: string = ''; // El color parametrizable en formato CSS (ej: '#10416a' o 'var(--color-primary)')
+  /** Clase CSS opcional para el icono */
+  @Input() iconClass: string = '';
+  /** Color del icono, acepta hex, nombre CSS, variable, etc. */
+  @Input() iconColor: string = '';
+  /**
+   * Tamaño del icono ('xs' = 32px, 's' = 48px, 'm' = 72px, 'l' = 96px, 'xl' = 120px)
+   * También acepta un número específico en px.
+   * Valor por defecto: 'm'
+   */
+  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
 
-
+  // Sólo si usas SVG manualmente (legacy)
+  svgContent: SafeHtml | null = null;
   isActive = false;
 
   constructor(
     private router: Router,
-    private http: HttpClient,           // puedes eliminar si no usas svgContent
-    private sanitizer: DomSanitizer     // puedes eliminar si no usas svgContent
+    private http: HttpClient,
+    private sanitizer: DomSanitizer
   ) {}
 
   ngOnInit() {
-    // Si quieres seguir manteniendo la función legacy para svg inyectado manual:
     if (this.icon && !this.usaUiIcon()) {
       this.http.get(`/assets/icons/${this.icon}.svg`, { responseType: 'text' }).subscribe({
         next: svg => this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svg),
@@ -42,21 +50,34 @@ export class UiStatCardComponent implements OnInit {
     }
   }
 
-  /** Determina si se debe usar el nuevo componente ui-icon o el método antiguo */
-  usaUiIcon(): boolean {
-    // Si quisieras forzar tipo/condición para usar uno u otro, ajusta aquí
-    return true; // usa siempre <app-ui-icon>; pon false si quieres legacy
+  /** Mapea los tamaños de icono textuales a píxeles */
+  getIconSizePx(): number {
+    switch (this.iconSize) {
+      case 'xs': return 32;
+      case 's':  return 48;
+      case 'm':  return 72;
+      case 'l':  return 96;
+      case 'xl': return 120;
+      default:   return typeof this.iconSize === 'number' ? this.iconSize : 72;
+    }
   }
 
-  /** Acción navegable al hacer click en la tarjeta */
+  /** Cambia esto si en algún caso quieres usar SVG legacy en vez de ui-icon */
+  usaUiIcon(): boolean {
+    return true;
+  }
+
+  /** Navega a la ruta de detalle si está definida */
   onClick(): void {
     if (this.detailRoute) {
       this.router.navigate([this.detailRoute]);
     }
   }
 
-  /** Teclado: enter y espacio disparan onClick */
+  /** Permite activar el click por teclado (accesibilidad) */
   @HostListener('keydown.enter')
   @HostListener('keydown.space')
-  onKeydown() { this.onClick(); }
+  onKeydown() {
+    this.onClick();
+  }
 }

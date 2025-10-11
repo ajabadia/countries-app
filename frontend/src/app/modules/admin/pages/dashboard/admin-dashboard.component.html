@@ -12,12 +12,15 @@
  </app-ui-heading>
 
   <div class="dashboard-admin__cards">
+
+
     <app-ui-stat-card
       label="Países"
       [icon]="'icon-country'"
       [value]="countriesCount ?? '—'"
-      iconType="map-globe"
+      iconType="system"
       iconColor="#10416a"
+       iconSize="xl"
       detailRoute="/admin/countries">
     </app-ui-stat-card>
 
@@ -27,6 +30,7 @@
       [value]="areasCount ?? '—'"
       iconType="system"
       iconColor="#10416a"
+      iconSize="l"
       detailRoute="/admin/areas">
     </app-ui-stat-card>
 
@@ -36,6 +40,7 @@
       [value]="continentsCount ?? '—'"
       iconType="system"
       iconColor="#10416a"
+      iconSize="l"
       detailRoute="/admin/continents">
     </app-ui-stat-card>
 
@@ -45,6 +50,7 @@
       [value]="languagesCount ?? '—'"
       iconType="system"
       iconColor="#10416a"
+      iconSize="l"
       detailRoute="/admin/languages">
     </app-ui-stat-card>
 
@@ -54,6 +60,7 @@
       [value]="dependenciesCount ?? '—'"
       iconType="system"
       iconColor="#10416a"
+      iconSize="l"
       detailRoute="/admin/dependencies">
     </app-ui-stat-card>
     <app-ui-stat-card
@@ -62,6 +69,7 @@
       [value]="translationsCount ?? '—'"
       iconType="system"
       iconColor="#10416a"
+      iconSize="l"
       detailRoute="/admin/translations">
     </app-ui-stat-card>
 

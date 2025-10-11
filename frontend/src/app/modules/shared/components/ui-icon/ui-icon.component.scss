@@ -5,40 +5,38 @@
   vertical-align: middle;
 }
 
-:host ::ng-deep svg {
-  display: inline-block;
-  width: 1em;
-  height: 1em;
-  vertical-align: middle;
-  fill: currentColor !important;
-}
-
+/* Wrapper icono, permite variantes pero sin restricciones de tamaño */
 .ui-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 24px;
-  min-height: 24px;
   vertical-align: middle;
+  background: transparent; // Fondo por defecto transparente
   transition: color 0.2s;
-
+  // No pongas min/max-width aquí si vas a escalar por [size]
 }
 
+/* SVG interno: escala y color heredados siempre */
+:host ::ng-deep svg {
+  width: 100% !important;
+  height: 100% !important;
+  display: block;
+  vertical-align: middle;
+  fill: currentColor !important; // El color depende del input/color/contexto
+}
 
-// Icono sistema corporativo estándar (dashboard, stats, etc.)
+/* Variantes estilísticas solo para color/padding */
 .ui-icon.system {
-  color: var(--color-primary, #10416a);
-  font-size: 2.2rem;
-  box-shadow: 0 2px 12px rgba(16,65,106,0.07);
+  color: var(--color-primary, #10416a);   // Color principal azul corporativo
+  box-shadow: 0 2px 12px rgba(16,65,106,0.07); // Sombra
   border-radius: .5em;
-  background: linear-gradient(135deg, #1178a4 60%, #c2e6ff 100%);
+  background: transparent; // Sin fondo degradado
   padding: .4em;
 }
 
-// Bandera circular pequeña
+/* Variantes extra: solo color, borde, no font-size! */
 .ui-icon.flag-circle {
   color: var(--color-flag, #fff);
-  font-size: 1.45rem;
   background: var(--flag-bg, #11a2ea);
   border: 2.5px solid #c9e7fc;
   border-radius: 50%;
@@ -46,48 +44,7 @@
   padding: .15em;
 }
 
-// Bandera rectangular (p.ej. para detalle o filas de tabla)
-.ui-icon.flag-detail {
-  color: #fff;
-  font-size: 1.35rem;
-  background: #217dd6;
-  border: 1.5px solid #b3d9f8;
-  border-radius: 4px;
-  padding: .1em .2em;
-}
-
-// Icono mapamundi (globo)
-.ui-icon.map-globe {
-  color: #1bbc7a;
-  font-size: 2rem;
-  background: linear-gradient(135deg, #e3faea 60%, #c2ffe8 100%);
-  border-radius: 50%;
-  box-shadow: 0 2px 12px rgba(27,188,122,0.07);
-}
-
-// Icono de estadísticas (usado en cards resumen)
-.ui-icon.stat {
-  color: #d75530;
-  font-size: 2.1rem;
-  background: #fff0e5;
-  border-radius: .5em;
-  box-shadow: 0 2px 10px rgba(215,85,48,0.05);
-  padding: .35em;
-}
-
-// Icono interactivo de acción (botones)
-.ui-icon.action {
-  color: var(--color-action, #1d75d6);
-  font-size: 1.6rem;
-  background: #eaf6fe;
-  border-radius: 50%;
-  transition: box-shadow 0.2s;
-  cursor: pointer;
-  &:hover { box-shadow: 0 2px 8px rgba(29,117,214,0.10); }
-}
-
-
-
+/* Fallback/error */
 .ui-icon.notfound svg {
   opacity: 0.4;
   filter: grayscale(1);

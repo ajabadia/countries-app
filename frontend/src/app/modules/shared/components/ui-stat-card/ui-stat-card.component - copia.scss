@@ -20,27 +20,25 @@
 
   // ---- ICONO corporativo ----
   &__icon {
+    width: 72px;
+    height: 72px;
     margin-bottom: var(--space-m, 1em);
     display: flex;
     align-items: center;
     justify-content: center;
-    // El tamaño lo marca [ngStyle], pero si quieres clases para variantes:
-    &--xs { width: 32px; height: 32px; }
-    &--s  { width: 48px; height: 48px; }
-    &--m  { width: 72px; height: 72px; }
-    &--l  { width: 96px; height: 96px; }
-    &--xl { width: 120px; height: 120px; }
-    // Si sólo usas ngStyle estos no son necesarios
 
+    // SVG inline: usa siempre "currentColor" para heredar color corporativo
+    // Importante: si el SVG viene de assets y pone fill="black", modifícalo en el archivo o patch
     svg {
       width: 100% !important;
       height: 100% !important;
-      max-width: 100% !important;
-      max-height: 100% !important;
+      max-width: 72px;
+      max-height: 72px;
       display: block;
       fill: currentColor !important;
       color: var(--color-primary, #10416a) !important;
       stroke: currentColor !important;
+      // Deprecable: Si usas solo <app-ui-icon>, no necesitas patch/color con DomSanitizer
     }
   }
 
@@ -75,3 +73,7 @@
     outline: 2px solid var(--color-primary, #10416a);
   }
 }
+
+// ---- DEPRECADOS/LEGACY (comentario) ----
+// Si usas solo <app-ui-icon>, el patch de fill/color para svg cargado manualmente no es necesario.
+// Si se sigue usando [innerHTML]="svgContent", asegúrate de que el SVG no tenga fill="black".
