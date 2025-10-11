@@ -11,8 +11,11 @@
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: transparent; // Fondo por defecto transparente
+  background: transparent !important;; // Fondo por defecto transparente
   transition: color 0.2s;
+  box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
   // No pongas min/max-width aquí si vas a escalar por [size]
 }
 
@@ -30,8 +33,11 @@
   color: var(--color-primary, #10416a);   // Color principal azul corporativo
   box-shadow: 0 2px 12px rgba(16,65,106,0.07); // Sombra
   border-radius: .5em;
-  background: transparent; // Sin fondo degradado
-  padding: .4em;
+  background: transparent !important;
+   box-shadow: none !important;
+  border-radius: 0 !important;
+  padding: 0 !important;
+  
 }
 
 /* Variantes extra: solo color, borde, no font-size! */

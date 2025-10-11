@@ -31,7 +31,9 @@
     &--l  { width: 96px; height: 96px; }
     &--xl { width: 120px; height: 120px; }
     // Si sólo usas ngStyle estos no son necesarios
-
+  background: transparent !important; // <-- obligatorio si hereda fondo de la card o de algún mixin
+  box-shadow: none !important;
+  border-radius: 0 !important;
     svg {
       width: 100% !important;
       height: 100% !important;
