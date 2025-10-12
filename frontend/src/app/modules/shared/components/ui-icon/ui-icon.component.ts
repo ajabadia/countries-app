@@ -1,4 +1,4 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 
@@ -6,7 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   selector: 'app-ui-icon',
   templateUrl: './ui-icon.component.html',
   styleUrls: ['./ui-icon.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush // CLAVE: solo redibuja si cambian los inputs
+  changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiIconComponent implements OnInit {
   @Input() icon!: string;
@@ -28,7 +28,6 @@ export class UiIconComponent implements OnInit {
     xs: 16, s: 20, m: 24, l: 32, xl: 40
   };
 
-  // CACHE e instancia única para cada icono/tipo/tamaño/color
   private static svgCache = new Map<string, SafeHtml>();
 
   get computedSize(): number {
@@ -39,11 +38,16 @@ export class UiIconComponent implements OnInit {
     return this.sizeMap[this.size] ?? 24;
   }
 
+  // Asigna la clase por tipo de manera automática
+  @HostBinding('class')
+  get typeClass(): string {
+    return ['ui-icon', this.type, this.class].filter(Boolean).join(' ');
+  }
+
   constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
 
   ngOnInit(): void {
     const cacheKey = `${this.type}|${this.icon}|${this.computedSize}|${this.color || ''}`;
-    // Si ya tenemos este SVG en el caché global, usarlo directamente
     if (UiIconComponent.svgCache.has(cacheKey)) {
       this.svgContent = UiIconComponent.svgCache.get(cacheKey)!;
       return;
@@ -52,7 +56,6 @@ export class UiIconComponent implements OnInit {
     const path = this.getIconPath();
     this.http.get(path, { responseType: 'text' }).subscribe({
       next: svg => {
-        // Parchea y cachea
         const patched = this.sanitizer.bypassSecurityTrustHtml(this.patchSvg(svg));
         UiIconComponent.svgCache.set(cacheKey, patched);
         this.svgContent = patched;

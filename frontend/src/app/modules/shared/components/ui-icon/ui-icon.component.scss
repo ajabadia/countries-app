@@ -5,44 +5,39 @@
   vertical-align: middle;
 }
 
-/* Wrapper icono, permite variantes pero sin restricciones de tamaño */
+/* Wrapper icono */
 .ui-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   vertical-align: middle;
-  background: transparent !important;; // Fondo por defecto transparente
+  background: transparent !important;
   transition: color 0.2s;
   box-shadow: none !important;
   border-radius: 0 !important;
   padding: 0 !important;
-  // No pongas min/max-width aquí si vas a escalar por [size]
 }
 
-/* SVG interno: escala y color heredados siempre */
+/* SVG interno */
 :host ::ng-deep svg {
   width: 100% !important;
   height: 100% !important;
   display: block;
   vertical-align: middle;
-  fill: currentColor !important; // El color depende del input/color/contexto
+  fill: currentColor !important;
 }
 
-/* Variantes estilísticas solo para color/padding */
+/* Variantes */
 .ui-icon.system {
-  color: var(--color-primary, #10416a);   // Color principal azul corporativo
-  box-shadow: 0 2px 12px rgba(16,65,106,0.07); // Sombra
+  color: var(--color-primary, #10416a);
+  box-shadow: 0 2px 12px rgba(16,65,106,0.07);
   border-radius: .5em;
   background: transparent !important;
-   box-shadow: none !important;
+  box-shadow: none !important;
   border-radius: 0 !important;
   padding: 0 !important;
-  
 }
 
-
-
-/* Variantes extra: solo color, borde, no font-size! */
 .ui-icon.flag-circle {
   color: var(--color-flag, #fff);
   background: var(--flag-bg, #11a2ea);
@@ -52,8 +47,6 @@
   padding: .15em;
 }
 
-
-/* Fallback/error */
 .ui-icon.notfound svg {
   opacity: 0.4;
   filter: grayscale(1);
