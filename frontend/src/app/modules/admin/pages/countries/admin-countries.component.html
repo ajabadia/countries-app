@@ -80,12 +80,16 @@
 
 
 <div style="display:flex; justify-content:center;">
-<app-paginator
-  [page]="page"
-  [totalPages]="totalPages"
-  (pageChange)="onPageChange($event)">
-</app-paginator>
+  <app-paginator
+    [page]="page"
+    [totalPages]="totalPages"
+    [totalCountries]="totalCountries"
+    [pageSize]="pageSize"
+    (pageChange)="onPageChange($event)"
+    (pageSizeChange)="onPageSizeChange($event)"
+  ></app-paginator>
 </div>
+
 
 <!-- MODAL de creación/edición de país -->
 

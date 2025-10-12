@@ -2,14 +2,14 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 
 @Component({
   selector: 'app-paginator',
-  templateUrl: './paginator.component.html',
+  templateUrl: './paginator.component.html', // ver arriba
   styleUrls: ['./paginator.component.scss']
 })
 export class PaginatorComponent {
   @Input() page: number = 1;
   @Input() totalPages: number = 1;
   @Input() totalCountries: number = 0;
-  @Input() pageSize: number = 10;
+  @Input() pageSize: number = 10; // añadir al padre también
   @Output() pageChange = new EventEmitter<number>();
   @Output() pageSizeChange = new EventEmitter<number>();
 
@@ -34,9 +34,9 @@ export class PaginatorComponent {
   }
 
   onPageSizeChange(event: Event) {
-    const newSize = Number((event.target as HTMLSelectElement).value);
-    this.pageSizeChange.emit(newSize); // Solo emite el valor nuevo
+    // actualiza página y emite nuevo tamaño
     this.page = 1;
+    this.pageSizeChange.emit(this.pageSize);
     this.pageChange.emit(this.page);
   }
 }

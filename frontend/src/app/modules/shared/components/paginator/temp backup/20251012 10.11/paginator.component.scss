@@ -1,0 +1,81 @@
+@import '../../../../../styles/variables';
+
+.paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
+  margin-top: 1.5rem;
+
+  &__button {
+    background: none;
+    border: none;
+    padding: 0.25em 0.7em;
+    font-size: 1.1em;
+    color: var(--primary-color, #115);
+    cursor: pointer;
+    border-radius: 3px;
+    transition: background 0.1s;
+    outline: none;
+
+    &:hover:not([disabled]) {
+      background: rgba(0, 64, 192, 0.08);
+    }
+
+    &[disabled] {
+      color: #bbb;
+      cursor: not-allowed;
+      opacity: 0.5;
+    }
+
+    &:focus-visible {
+      box-shadow: 0 0 0 2px #315cff55;
+    }
+  }
+
+  &__info {
+    margin: 0 1em;
+    font-family: monospace;
+    font-weight: 500;
+    letter-spacing: 0.03em;
+    font-size: 1.07em;
+  }
+
+  &__block {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  &__select,
+  &__input {
+    font: inherit;
+    padding: 0.2em 0.7em;
+    border: 1px solid #aaa;
+    border-radius: 4px;
+    appearance: none;
+    min-width: 50px;
+
+    &:focus {
+      outline: 2px solid #2d7fff55;
+      border-color: #2d7fff;
+    }
+  }
+
+  &__label {
+    font-size: 0.89em;
+    margin-left: 1em;
+    color: #495057;
+  }
+
+  &__summary {
+    width: 100%;
+    margin-top: 0.7em;
+    text-align: center;
+    font-size: 0.96em;
+    color: #555;
+    font-family: inherit;
+  }
+}
+

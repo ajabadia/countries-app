@@ -1,3 +1,5 @@
+//admin-countries.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
@@ -5,7 +7,22 @@ import { CountriesService, Country } from 'src/app/services/countries.service';
 import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
 import { ToolbarButtonConfig } from 'src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component';
 
-/* Modelo base vacío */
+
+
+
+
+// Interfaz global para la configuración de toolbar-buttons
+
+/* ---antiguo, quitar cuando vaya bien--
+export interface ToolbarButtonConfig {
+  iconSrc: string; // Ruta al SVG de iconos (ej: 'assets/icons/icon-add.svg')
+  label: string;
+  color: 'main' | 'edit' | 'danger' | string;
+  disabled?: boolean;
+  action: () => void;
+}
+  */
+
 const COUNTRY_EMPTY: Country = {
   id: '',
   alpha2may: '',
@@ -20,28 +37,29 @@ const COUNTRY_EMPTY: Country = {
   styleUrls: ['./admin-countries.component.scss']
 })
 export class AdminCountriesComponent implements OnInit {
-
-  // ----------------------------------------
-  // ESTADO PRINCIPAL Y CONFIGURACIÓN DE TABLA
-  // ----------------------------------------
+  //---------------------------
+  // ESTADOS PRINCIPALES
+  //---------------------------
   searchTerm = '';
   countries: Country[] = [];
-  tableColumns: TableColumn[] = [
-    { key: 'toggle', label: '', sticky: 'left', width: '44px' },
-    { key: 'defaultname', label: 'Nombre', sortable: true, width: '40%', minWidth: '160px' },
-    { key: 'alpha2may', label: 'Alpha-2', sortable: true, maxWidth: '8%', sticky: 'right' },
-    { key: 'alpha3may', label: 'Alpha-3', sortable: true, maxWidth: '8%', sticky: 'right' },
-    { key: 'numeric', label: 'Numérico', sortable: true, maxWidth: '8%', sticky: 'right' }
-  ];
+tableColumns: TableColumn[] = [
+  { key: 'toggle', label: '', sticky: 'left', width: '44px' },
+  { key: 'defaultname', label: 'Nombre', sortable: true, width: '40%', minWidth: '160px' },
+  { key: 'alpha2may', label: 'Alpha-2', sortable: true, maxWidth: '8%', sticky: 'right' },
+  { key: 'alpha3may', label: 'Alpha-3', sortable: true, maxWidth: '8%', sticky: 'right' },
+  { key: 'numeric', label: 'Numérico', sortable: true, maxWidth: '8%', sticky: 'right' }
+];
+
+
   totalCountries = 0;
   page = 1;
   pageSize = 10;
   sortKey: string | null = null;
   sortOrder: 'asc' | 'desc' = 'asc';
 
-  // ----------------------------------------
-  // ESTADO MODALES, FORMULARIO Y ERRORES
-  // ----------------------------------------
+  //---------------------------
+  // ESTADOS DE MODAL, FORMULARIO Y ERRORES
+  //---------------------------
   pais: Country = { ...COUNTRY_EMPTY };
   showEditModal = false;
   showConfirmDelete = false;
@@ -49,44 +67,85 @@ export class AdminCountriesComponent implements OnInit {
   errorMsg = '';
   countryForm!: FormGroup;
 
-  // ----------------------------------------
-  // SELECCIÓN & TOOLBAR BUTTONS
-  // ----------------------------------------
+  //---------------------------
+  // SELECCIÓN Y TOOLBAR
+  //---------------------------
   public selection: SelectionService<Country> = new SelectionService<Country>();
   get selectedItems(): Country[] { return this.selection.selected; }
   set selectedItems(val: Country[]) { this.selection.selected = val; }
+
   entity = 'country';
 
+  // Botones de la toolbar configurados y sincronizados con el estado actual (SVG desde assets)
+  /* Antiguo, quitar cuando todo vaya bien
+  
   get toolbarButtons(): ToolbarButtonConfig[] {
     return [
       {
-        icon: 'icon-user', iconType: 'system', iconSize: 's',
-        label: `Nuevo ${this.entity}`, color: 'main',
-        action: () => this.onNew(), disabled: false
+        iconSrc: 'assets/icons/icon-add.svg',
+        label: `Nuevo ${this.entity}`,
+        color: 'main',
+        action: () => this.onNew(),
+        disabled: false
       },
       {
-        icon: 'icon-edit',
-        label: 'Editar', color: 'edit',
+        iconSrc: 'assets/icons/icon-edit.svg',
+        label: 'Editar',
+        color: 'edit',
         action: () => this.onEdit(),
         disabled: !(this.selection.selected.length === 1)
       },
       {
-        icon: 'icon-delete',
-        label: 'Borrar', color: 'danger',
+        iconSrc: 'assets/icons/icon-delete.svg',
+        label: 'Borrar',
+        color: 'danger',
         action: () => this.onDeleteSelected(),
         disabled: !this.selection.selected.length
       }
     ];
   }
+*/
 
-  // ----------------------------------------
-  // INICIALIZACIÓN Y CARGA DE DATOS
-  // ----------------------------------------
+get toolbarButtons(): ToolbarButtonConfig[] {
+  return [
+    {
+      // iconSrc: 'assets/icons/icon-add.svg',
+      icon: 'icon-user', // <--- campo obligatorio
+      iconType: 'system',    // <- explícitamente por coherencia
+      iconSize: 's',         // <-- puedes poner 's' (20px)
+      label: `Nuevo ${this.entity}`,
+      color: 'main',
+      action: () => this.onNew(),
+      disabled: false
+    },
+    {
+      // iconSrc: 'assets/icons/icon-edit.svg',
+      icon: 'icon-edit', // <--- campo obligatorio
+      label: 'Editar',
+      color: 'edit',
+      action: () => this.onEdit(),
+      disabled: !(this.selection.selected.length === 1)
+    },
+    {
+      // iconSrc: 'assets/icons/icon-delete.svg',
+      icon: 'icon-delete', // <--- campo obligatorio
+      label: 'Borrar',
+      color: 'danger',
+      action: () => this.onDeleteSelected(),
+      disabled: !this.selection.selected.length
+    }
+  ];
+}
+
+
   constructor(
     private countriesService: CountriesService,
     private fb: FormBuilder
   ) {}
 
+  //-----------------------------------------------
+  // FLUJO PRINCIPAL: INICIALIZACIÓN Y CARGA
+  //-----------------------------------------------
   ngOnInit(): void {
     this.countryForm = this.fb.group({
       id: ['', Validators.required],
@@ -97,7 +156,9 @@ export class AdminCountriesComponent implements OnInit {
     });
     this.fetchCountries();
   }
+
   fetchCountries(): void {
+    // Lógica de paginación, filtros, etc.
     this.countriesService.getCountries({
       search: this.searchTerm,
       page: this.page,
@@ -107,15 +168,16 @@ export class AdminCountriesComponent implements OnInit {
     }).subscribe((result: { data: Country[]; total: number }) => {
       this.countries = result.data;
       this.totalCountries = result.total;
+      // Selección sincronizada con la página actual
       this.selection.selected = this.selection.selected.filter(sel =>
         this.countries.some(c => c.id === sel.id)
       );
     });
   }
 
-  // ----------------------------------------
+  //-----------------------------------------------
   // HANDLERS DE BUSQUEDA, PAGINACIÓN Y ORDEN
-  // ----------------------------------------
+  //-----------------------------------------------
   onValueChange(term: string): void {
     this.searchTerm = term;
     this.page = 1;
@@ -127,26 +189,19 @@ export class AdminCountriesComponent implements OnInit {
     this.fetchCountries();
   }
 
-  /** Adaptado: handler para el cambio de tamaño de página */
-  onPageSizeChange(newSize: number): void {
-    this.pageSize = newSize;
-    this.page = 1;
-    this.fetchCountries();
-  }
-
   onSortChange(key: string) {
-    if (this.sortKey === key) {
-      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortKey = key;
-      this.sortOrder = 'asc';
-    }
-    this.fetchCountries();
+  if (this.sortKey === key) {
+    this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
+  } else {
+    this.sortKey = key;
+    this.sortOrder = 'asc';
   }
+  this.fetchCountries();
+}
 
-  // ----------------------------------------
-  // SELECCIÓN AVANZADA Y TABLA
-  // ----------------------------------------
+  //-----------------------------------------------
+  // TABLA Y SELECCIÓN AVANZADA
+  //-----------------------------------------------
   onSelectionChange(selectedRows: Country[]): void {
     this.selection.selected = [...selectedRows];
   }
@@ -155,6 +210,7 @@ export class AdminCountriesComponent implements OnInit {
     return this.selection.selected.some(item => item.id === row.id);
   }
 
+  // Selección tipo Excel/múltiple CTRL/SHIFT
   onRowClick(row: Country, event: MouseEvent): void {
     if (event.ctrlKey || event.metaKey) {
       if (this.isSelected(row)) {
@@ -183,9 +239,9 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  // ----------------------------------------
-  // CHECKBOXES Y TOGGLE DE SELECCIÓN
-  // ----------------------------------------
+  //-----------------------------------------------
+  // TOGGLES DE CHECKBOX, CABECERA, FILA
+  //-----------------------------------------------
   get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
     if (this.selection.selected.length === this.countries.length && this.countries.length > 0)
       return 'checked';
@@ -216,9 +272,9 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  // ----------------------------------------
-  // BOTONES ESTADO PARA LA TOOLBAR
-  // ----------------------------------------
+  //-----------------------------------------------
+  // GETTERS PARA ESTADO DE LOS BOTONES Y ESTILOS
+  //-----------------------------------------------
   get allVisibleSelected() {
     return this.selection.selected.length === this.countries.length && this.countries.length > 0;
   }
@@ -229,9 +285,9 @@ export class AdminCountriesComponent implements OnInit {
     return this.selection.selected.length > 0;
   }
 
-  // ----------------------------------------
-  // CRUD: MODALES, CREAR, EDITAR, BORRAR PAÍSES
-  // ----------------------------------------
+  //-----------------------------------------------
+  // CRUD Y MODALES DE PAÍS
+  //-----------------------------------------------
   onNew(): void {
     this.editMode = false;
     this.showEditModal = true;
@@ -286,6 +342,8 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
+
+  
   closeCountryModal(): void {
     this.showEditModal = false;
     this.countryForm.reset();
@@ -325,11 +383,15 @@ export class AdminCountriesComponent implements OnInit {
     }
   }
 
-  // ----------------------------------------
-  // GETTER DE TOTAL DE PÁGINAS PARA PAGINADOR
-  // ----------------------------------------
+  //-----------------------------------------------
+  // PAGINACIÓN AUXILIAR
+  //-----------------------------------------------
   get totalPages(): number {
     return Math.ceil(this.totalCountries / this.pageSize) || 1;
   }
-
+  
 }
+
+
+
+
