@@ -25,9 +25,10 @@
     outline: none;
 
     &__icon {
-      font-size: 1.2em;
+      font-size: inherit; // hereda del botón; puedes ajustar si quieres tamaño exacto
       display: flex;
       align-items: center;
+
     }
 
     // Botón "nuevo" (color corporativo)

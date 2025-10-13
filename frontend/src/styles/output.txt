@@ -1,0 +1,23 @@
+Listado de rutas de carpetas para el volumen 2tb
+El número de serie del volumen es BA49-15DA
+D:.
+¦   base.scss
+¦   components.scss
+¦   mixins.scss
+¦   output.txt
+¦   theme.scss
+¦   variables.scss
+¦   
++---backup
+¦   +---20251007 00.52
+¦           theme.scss
+¦           
++---shared
+        explicaciones.txt
+        _admin-form.scss
+        _admin-modal.scss
+        _admin-paginator.scss
+        _admin-shared.scss
+        _admin-table.scss
+        _admin-toolbar.scss
+        

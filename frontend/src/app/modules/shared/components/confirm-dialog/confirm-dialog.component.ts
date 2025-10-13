@@ -10,6 +10,7 @@ export class ConfirmDialogComponent {
   @Input() message: string = '';
   @Input() visible: boolean = false;
   @Input() variant: 'info' | 'success' | 'error' | 'warning' = 'info';
+  @Input() data: any[] = [];
 
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();

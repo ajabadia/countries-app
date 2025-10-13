@@ -13,6 +13,7 @@ import { AdminLanguagesComponent } from './pages/languages/admin-languages.compo
 import { AdminTranslationsComponent } from './pages/translations/admin-translations.component';
 
 import { ReactiveFormsModule } from '@angular/forms';
+import { CountryModule } from './pages/countries/country.module';
 
 
 @NgModule({
@@ -30,7 +31,8 @@ import { ReactiveFormsModule } from '@angular/forms';
     CommonModule,
     SharedModule,
     AdminRoutingModule,
-    ReactiveFormsModule
+    ReactiveFormsModule,
+    CountryModule
   ]
 })
 export class AdminModule { }

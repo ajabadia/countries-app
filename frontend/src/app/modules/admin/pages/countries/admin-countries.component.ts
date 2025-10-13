@@ -1,335 +1,202 @@
+
+// admin-countries.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
-import { CountriesService, Country } from 'src/app/services/countries.service';
-import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
-import { ToolbarButtonConfig } from 'src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component';
+import { Country } from 'src/app/modules/shared/models/country.model';
+import { CountriesService } from '../../../../services/countries.service';
+import { COUNTRY_TABLE_COLUMNS } from './country-table.columns';
 
-/* Modelo base vacío */
-const COUNTRY_EMPTY: Country = {
-  id: '',
-  alpha2may: '',
-  alpha3may: '',
-  numeric: '',
-  defaultname: ''
-};
 
 @Component({
   selector: 'app-admin-countries',
   templateUrl: './admin-countries.component.html',
-  styleUrls: ['./admin-countries.component.scss']
+  styleUrls: ['./admin-countries.component.scss'],
 })
 export class AdminCountriesComponent implements OnInit {
-
-  // ----------------------------------------
-  // ESTADO PRINCIPAL Y CONFIGURACIÓN DE TABLA
-  // ----------------------------------------
-  searchTerm = '';
+  // ==== Estados y colecciones principales ====
   countries: Country[] = [];
-  tableColumns: TableColumn[] = [
-    { key: 'toggle', label: '', sticky: 'left', width: '44px' },
-    { key: 'defaultname', label: 'Nombre', sortable: true, width: '40%', minWidth: '160px' },
-    { key: 'alpha2may', label: 'Alpha-2', sortable: true, maxWidth: '8%', sticky: 'right' },
-    { key: 'alpha3may', label: 'Alpha-3', sortable: true, maxWidth: '8%', sticky: 'right' },
-    { key: 'numeric', label: 'Numérico', sortable: true, maxWidth: '8%', sticky: 'right' }
-  ];
-  totalCountries = 0;
+  pagedCountries: Country[] = [];
+  selectedCountries: Country[] = [];
+  editingCountry: Country | null = null;
+// columnas
+  columns = COUNTRY_TABLE_COLUMNS;
+  // ==== Formulario reactivo para el modal ====
+  countryForm: FormGroup;
+
+  // ==== Estados de la interfaz (modals, paginación, etc) ====
+  showEditModal = false;
+  isEditMode = false;
+  showConfirmDialog = false;
+  searchTerm = '';
   page = 1;
-  pageSize = 10;
-  sortKey: string | null = null;
+  // Cambia perPage por pageSize para correspondencia directa con paginador
+  pageSize: number = 25;
+  totalPages = 1;
+  totalCountries: number = 0; // Número total tras filtros
+
+  // ==== Ordenación ====
+  sortKey: string = 'name';
   sortOrder: 'asc' | 'desc' = 'asc';
 
-  // ----------------------------------------
-  // ESTADO MODALES, FORMULARIO Y ERRORES
-  // ----------------------------------------
-  pais: Country = { ...COUNTRY_EMPTY };
-  showEditModal = false;
-  showConfirmDelete = false;
-  editMode = false;
-  errorMsg = '';
-  countryForm!: FormGroup;
-
-  // ----------------------------------------
-  // SELECCIÓN & TOOLBAR BUTTONS
-  // ----------------------------------------
-  public selection: SelectionService<Country> = new SelectionService<Country>();
-  get selectedItems(): Country[] { return this.selection.selected; }
-  set selectedItems(val: Country[]) { this.selection.selected = val; }
-  entity = 'country';
-
-  get toolbarButtons(): ToolbarButtonConfig[] {
-    return [
-      {
-        icon: 'icon-user', iconType: 'system', iconSize: 's',
-        label: `Nuevo ${this.entity}`, color: 'main',
-        action: () => this.onNew(), disabled: false
-      },
-      {
-        icon: 'icon-edit',
-        label: 'Editar', color: 'edit',
-        action: () => this.onEdit(),
-        disabled: !(this.selection.selected.length === 1)
-      },
-      {
-        icon: 'icon-delete',
-        label: 'Borrar', color: 'danger',
-        action: () => this.onDeleteSelected(),
-        disabled: !this.selection.selected.length
-      }
-    ];
-  }
-
-  // ----------------------------------------
-  // INICIALIZACIÓN Y CARGA DE DATOS
-  // ----------------------------------------
   constructor(
-    private countriesService: CountriesService,
-    private fb: FormBuilder
-  ) {}
-
-  ngOnInit(): void {
+    private fb: FormBuilder,
+    private countriesService: CountriesService
+  ) {
+    // Inicializamos el formulario básico (puedes ampliarlo)
     this.countryForm = this.fb.group({
-      id: ['', Validators.required],
-      alpha2may: [''],
-      alpha3may: [''],
-      numeric: [''],
-      defaultname: ['', Validators.required]
-    });
-    this.fetchCountries();
-  }
-  fetchCountries(): void {
-    this.countriesService.getCountries({
-      search: this.searchTerm,
-      page: this.page,
-      pageSize: this.pageSize,
-      sortKey: this.sortKey ?? undefined,
-      sortOrder: this.sortOrder
-    }).subscribe((result: { data: Country[]; total: number }) => {
-      this.countries = result.data;
-      this.totalCountries = result.total;
-      this.selection.selected = this.selection.selected.filter(sel =>
-        this.countries.some(c => c.id === sel.id)
-      );
+      name: ['', Validators.required],
+      code: ['', Validators.required],
+      // ...otros campos...
     });
   }
 
-  // ----------------------------------------
-  // HANDLERS DE BUSQUEDA, PAGINACIÓN Y ORDEN
-  // ----------------------------------------
-  onValueChange(term: string): void {
-    this.searchTerm = term;
-    this.page = 1;
-    this.fetchCountries();
+  // ===============================
+  //           LIFECYCLE
+  // ===============================
+  ngOnInit() {
+    this.loadCountries();
   }
 
-  onPageChange(newPage: number): void {
-    this.page = newPage;
-    this.fetchCountries();
+  // ===============================
+  //         CARGA Y LISTADO
+  // ===============================
+
+  /** Carga los países desde el backend */
+  loadCountries() {
+    this.countriesService.getAll().subscribe((data: Country[]) => {
+      this.countries = data;
+      this.applyFilterSortAndPaging();
+    });
   }
 
-  /** Adaptado: handler para el cambio de tamaño de página */
-  onPageSizeChange(newSize: number): void {
-    this.pageSize = newSize;
-    this.page = 1;
-    this.fetchCountries();
+  /** Aplica filtro, orden y paginación al listado ya cargado */
+  applyFilterSortAndPaging() {
+    // Filtrado
+let filtered = this.countries.filter(country =>
+  (
+    (country['defaultname'] || '') +
+    ' ' + (country['alpha2may'] || '') +
+    ' ' + (country['numeric'] || '') +
+    ' ' + (country['id'] || '') +
+    ' ' + (country['alpha3may'] || '')
+  ).toLowerCase().includes(this.searchTerm.toLowerCase())
+);
+
+
+    // Ordenación
+    filtered = filtered.sort((a, b) => {
+      const aValue = a[this.sortKey] ?? '';
+      const bValue = b[this.sortKey] ?? '';
+      return this.sortOrder === 'asc'
+        ? String(aValue).localeCompare(String(bValue))
+        : String(bValue).localeCompare(String(aValue));
+    });
+    // Paginación local usando pageSize en vez de perPage
+    this.totalPages = Math.ceil(filtered.length / this.pageSize);
+    const start = (this.page - 1) * this.pageSize;
+    this.pagedCountries = filtered.slice(start, start + this.pageSize);
+    this.totalCountries = filtered.length; // <-- Actualiza aquí
   }
 
-  onSortChange(key: string) {
-    if (this.sortKey === key) {
-      this.sortOrder = this.sortOrder === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortKey = key;
-      this.sortOrder = 'asc';
-    }
-    this.fetchCountries();
+  // ===============================
+  //         INTERACCIONES UI
+  // ===============================
+
+  /** Al cambiar el término de búsqueda (llamado desde ngModel y handleSearchInput) */
+
+onSearchChange(term: string) {
+  this.searchTerm = term;
+  this.page = 1;
+  this.applyFilterSortAndPaging();
+}
+
+  /** Compatible: método seguro para Angular 17+ si decides usar $event */
+  handleSearchInput(event: Event) {
+    this.onSearchChange((event.target as HTMLInputElement).value);
   }
 
-  // ----------------------------------------
-  // SELECCIÓN AVANZADA Y TABLA
-  // ----------------------------------------
-  onSelectionChange(selectedRows: Country[]): void {
-    this.selection.selected = [...selectedRows];
+  /** Recarga todos los datos */
+  onRefresh() {
+    this.loadCountries();
   }
 
-  isSelected(row: Country): boolean {
-    return this.selection.selected.some(item => item.id === row.id);
-  }
-
-  onRowClick(row: Country, event: MouseEvent): void {
-    if (event.ctrlKey || event.metaKey) {
-      if (this.isSelected(row)) {
-        this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
-      } else {
-        this.selection.selected = [...this.selection.selected, row];
-      }
-    } else if (event.shiftKey) {
-      const lastIdx = this.countries.findIndex(item => item.id === (this.selection.selected[this.selection.selected.length - 1]?.id));
-      const thisIdx = this.countries.findIndex(item => item.id === row.id);
-      if (lastIdx !== -1) {
-        const [start, end] = [lastIdx, thisIdx].sort((a, b) => a - b);
-        const range = this.countries.slice(start, end + 1);
-        const newSelection = [
-          ...this.selection.selected,
-          ...range.filter(r => !this.isSelected(r))
-        ];
-        this.selection.selected = this.countries.filter(country =>
-          newSelection.some(s => s.id === country.id)
-        );
-      } else {
-        this.selection.selected = [row];
-      }
-    } else {
-      this.selection.selected = [row];
-    }
-  }
-
-  // ----------------------------------------
-  // CHECKBOXES Y TOGGLE DE SELECCIÓN
-  // ----------------------------------------
-  get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
-    if (this.selection.selected.length === this.countries.length && this.countries.length > 0)
-      return 'checked';
-    if (this.selection.selected.length > 0)
-      return 'indeterminate';
-    return 'unchecked';
-  }
-
-  rowToggleState(row: Country): 'checked' | 'unchecked' {
-    return this.isSelected(row) ? 'checked' : 'unchecked';
-  }
-
-  onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate'): void {
-    if (newState === 'checked') {
-      this.selection.selected = [...this.countries];
-    } else {
-      this.selection.selected = [];
-    }
-  }
-
-  onRowToggle(row: Country, newState: 'checked' | 'unchecked' | 'indeterminate'): void {
-    if (newState === 'checked') {
-      if (!this.isSelected(row)) {
-        this.selection.selected = [...this.selection.selected, row];
-      }
-    } else {
-      this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
-    }
-  }
-
-  // ----------------------------------------
-  // BOTONES ESTADO PARA LA TOOLBAR
-  // ----------------------------------------
-  get allVisibleSelected() {
-    return this.selection.selected.length === this.countries.length && this.countries.length > 0;
-  }
-  get someVisibleSelected() {
-    return this.selection.selected.length > 0 && this.selection.selected.length < this.countries.length;
-  }
-  get anySelected() {
-    return this.selection.selected.length > 0;
-  }
-
-  // ----------------------------------------
-  // CRUD: MODALES, CREAR, EDITAR, BORRAR PAÍSES
-  // ----------------------------------------
-  onNew(): void {
-    this.editMode = false;
-    this.showEditModal = true;
+  /** Prepara modal para crear país */
+  onAddCountry() {
+    this.editingCountry = null;
+    this.isEditMode = false;
     this.countryForm.reset();
-    this.countryForm.patchValue({ ...COUNTRY_EMPTY });
-    this.errorMsg = '';
-    this.selection.selected = [];
-    this.pais = { ...COUNTRY_EMPTY };
-  }
-
-  onEdit(row?: Country): void {
-    const paisEditar = row || this.selection.selected[0];
-    if (!paisEditar) return;
-    this.editMode = true;
     this.showEditModal = true;
-    this.countryForm.reset();
-    this.countryForm.patchValue({ ...paisEditar });
-    this.errorMsg = '';
-    this.pais = { ...paisEditar };
   }
 
-  saveCountry(): void {
-    if (this.countryForm.invalid) {
-      this.errorMsg = 'Rellena todos los campos obligatorios';
-      return;
-    }
-    const valores = this.countryForm.value as Country;
-    if (this.editMode) {
-      this.countriesService.updateCountry(valores).subscribe(
-        () => {
-          this.showEditModal = false;
-          this.fetchCountries();
-          this.selection.selected = [];
-          this.pais = { ...COUNTRY_EMPTY };
-        },
-        error => {
-          this.errorMsg = 'Error actualizando país';
-          console.error(error);
-        });
-    } else {
-      this.countriesService.createCountry(valores).subscribe(
-        () => {
-          this.showEditModal = false;
-          this.fetchCountries();
-          this.selection.selected = [];
-          this.pais = { ...COUNTRY_EMPTY };
-        },
-        error => {
-          this.errorMsg = 'Error creando país';
-          console.error(error);
-        });
-    }
+  /** Prepara modal para editar país */
+  onEditCountry(country: Country) {
+    this.editingCountry = { ...country };
+    this.isEditMode = true;
+    this.countryForm.patchValue(this.editingCountry);
+    this.showEditModal = true;
   }
 
-  closeCountryModal(): void {
+  /** Llama cuando se guarda desde la modal (crear/editar) */
+  onSaveCountry(data: any) {
+    const isEdit = !!this.editingCountry;
+    const action$ = isEdit
+      ? this.countriesService.update({ ...this.editingCountry, ...data })
+      : this.countriesService.create(data);
+
+    action$.subscribe(() => {
+      this.showEditModal = false;
+      this.loadCountries();
+    });
+  }
+
+  /** Cierra el modal de edición/creación */
+  onCloseModal() {
     this.showEditModal = false;
-    this.countryForm.reset();
-    this.editMode = false;
-    this.errorMsg = '';
-    this.selection.selected = [];
-    this.pais = { ...COUNTRY_EMPTY };
   }
 
-  abrirConfirmEliminar(): void {
-    const toDelete = this.selection.selected[0] || this.pais;
-    if (!toDelete || !toDelete.id) return;
-    this.pais = { ...toDelete };
-    this.showConfirmDelete = true;
+  /** Al cambiar selección de la tabla */
+  onSelectionChange(selected: Country[]) {
+    this.selectedCountries = selected;
   }
 
-  eliminarPais(): void {
-    if (!this.pais || !this.pais.id) return;
-    this.countriesService.deleteCountry(this.pais.id).subscribe(() => {
-      this.showConfirmDelete = false;
-      this.fetchCountries();
-      this.selection.selected = [];
-      this.pais = { ...COUNTRY_EMPTY };
-    });
+  /** Al ordenar columnas en la tabla */
+  onSortChange({ key, order }: { key: string; order: 'asc' | 'desc' }) {
+    this.sortKey = key;
+    this.sortOrder = order;
+    this.applyFilterSortAndPaging();
   }
 
-  cancelarEliminar(): void {
-    this.showConfirmDelete = false;
-    this.pais = { ...COUNTRY_EMPTY };
+  /** Cambio de página */
+  onPageChange(newPage: number) {
+    this.page = newPage;
+    this.applyFilterSortAndPaging();
   }
 
-  onDeleteSelected(): void {
-    if (this.selection.selected.length > 0) {
-      this.editMode = true;
-      this.countryForm.patchValue({ ...this.selection.selected[0] });
-      this.abrirConfirmEliminar();
-    }
+  /** Cambio de tamaño de página (paginador) */
+  onPageSizeChange(event: number) {
+    this.pageSize = event;
+    this.page = 1; // Reinicia a la primera página
+    this.applyFilterSortAndPaging();
   }
 
-  // ----------------------------------------
-  // GETTER DE TOTAL DE PÁGINAS PARA PAGINADOR
-  // ----------------------------------------
-  get totalPages(): number {
-    return Math.ceil(this.totalCountries / this.pageSize) || 1;
+  // ===============================
+  //    CONFIRMACIÓN Y BORRADO
+  // ===============================
+
+  /** Confirma borrado múltiple */
+  onConfirmDelete() {
+    this.countriesService
+      .deleteMany(this.selectedCountries.map((c) => c.id))
+      .subscribe(() => {
+        this.showConfirmDialog = false;
+        this.selectedCountries = [];
+        this.loadCountries();
+      });
   }
 
+  /** Cancela ventana de borrado múltiple */
+  onCancelDelete() {
+    this.showConfirmDialog = false;
+  }
 }

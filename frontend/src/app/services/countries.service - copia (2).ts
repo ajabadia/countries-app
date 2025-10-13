@@ -1,36 +1,44 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
-import { map } from 'rxjs/operators';
+import { Observable } from 'rxjs';
 
-// USAR SOLO el modelo global y compartido
-import { Country } from 'src/app/modules/shared/models/country.model';
+// Interface coincidente con tu base de datos SQLite
+export interface Country {
+  id: string;
+  alpha2may: string;
+  alpha3may: string;
+  numeric: string;
+  defaultname: string;
+}
 
 @Injectable({ providedIn: 'root' })
 export class CountriesService {
   constructor(private http: HttpClient) {}
 
-  // --- Contadores para dashboard ---
   getCountriesCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/countries/count');
   }
+
   getAreasCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/areas/count');
   }
+
   getContinentsCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/continents/count');
   }
+
   getLanguagesCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/languages/count');
   }
+
   getDependenciesCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/dependencies/count');
   }
+
   getTranslationsCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/multilingualnames/count');
   }
 
-  // --- Listado con filtros, paginación, orden ---
   getCountries(params: {
     search?: string;
     page?: number;
@@ -50,31 +58,17 @@ export class CountriesService {
     );
   }
 
-  // --- CRUD de países ---
-  /** Devuelve el array completo de países para tabla */
-  getAll(): Observable<Country[]> {
-    // Extrae solo el array .data del resultado paginado
-    return this.getCountries().pipe(map(res => res.data));
-  }
-
-  /** Actualiza un país existente */
-  update(country: Country): Observable<any> {
+  // --- Métodos CRUD para admin-countries ---
+  updateCountry(country: Country): Observable<any> {
+    // OJO: la barra inicial '/' depende de tu proxy.conf.json; con proxy: sí, sin proxy: poner la url completa
     return this.http.put(`/api/countries/${country.id}`, country);
+    // Si no estás usando proxy, pon: 'http://localhost:3000/api/countries/' + country.id
   }
 
-  /** Crea un país nuevo */
-  create(country: Country): Observable<any> {
+  createCountry(country: Country): Observable<any> {
     return this.http.post('/api/countries', country);
   }
 
-  /** Borra varios países por id */
-  deleteMany(ids: (string | number)[]): Observable<any> {
-    return this.http.post('/api/countries/delete-many', { ids });
-    // Alternativa si tu API no soporta el endpoint:
-    // return forkJoin(ids.map(id => this.deleteCountry(id)));
-  }
-
-  /** Borra país individual por id */
   deleteCountry(id: string): Observable<any> {
     return this.http.delete(`/api/countries/${id}`);
   }

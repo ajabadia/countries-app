@@ -1,3 +1,6 @@
+<!--table.component.html-->
+
+<!--table.component.html-->
 <table class="admin-table">
   <thead>
     <tr>
@@ -26,9 +29,10 @@
           (stateChange)="onRowToggle(row, $event)">
         </app-toggle-checkbox>
       </td>
-      <td *ngFor="let col of columns" [ngStyle]="getColStyle(col)">
-        {{ row[col.key] }}
-      </td>
+<td *ngFor="let col of columns">
+  {{ row[col.key] }}
+</td>
+ 
     </tr>
   </tbody>
 </table>

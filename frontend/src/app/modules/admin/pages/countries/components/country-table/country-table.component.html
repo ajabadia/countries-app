@@ -1,0 +1,23 @@
+<app-html-country-table
+  [countries]="countries"
+  [selectedCountries]="selectedCountries"
+  [columns]="columns"
+  [sortKey]="sortKey"
+  [sortOrder]="sortOrder"
+  (rowClick)="onRowClick($event)"
+  (selectionChange)="onSelectionChange($event)"
+  (sortChange)="onSortChange($event)"
+  (selectCountry)="onSelectCountry($event)"
+  (editCountry)="onEditCountry($event)">
+</app-html-country-table>
+
+<!-- PAGINADOR GLOBAL FUERA DE LA TABLA -->
+<app-paginator
+  [page]="page"
+  [totalPages]="totalPages"
+  [pageSize]="perPage"
+  [totalItems]="totalItems"
+  [pageSizeOptions]="[10, 25, 50, 100]"
+  (pageChange)="onPageChange($event)"
+  (pageSizeChange)="onPageSizeChange($event)">
+</app-paginator>

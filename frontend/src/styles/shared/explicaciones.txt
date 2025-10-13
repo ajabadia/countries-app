@@ -1,0 +1,53 @@
+En cada componente admin-countries, admin-continents, etc, importa así en su SCSS:
+
+text
+@import 'src/styles/shared/_admin-shared.scss';
+
+
+
+Supongamos que tienes el componente admin-countries y necesitas form, tabla y modal.
+
+admin-countries.component.scss
+
+text
+@import 'src/styles/shared/admin-form';
+@import 'src/styles/shared/admin-table';
+@import 'src/styles/shared/admin-modal';
+
+// Aquí van los estilos específicos o overrides...
+.admin-countries__main-panel {
+  // ...
+}
+Y si tienes un paginator o una toolbar propia:
+admin-countries.component.scss
+
+text
+@import 'src/styles/shared/admin-form';
+@import 'src/styles/shared/admin-table';
+@import 'src/styles/shared/admin-modal';
+@import 'src/styles/shared/admin-paginator';
+@import 'src/styles/shared/admin-toolbar';
+
+// ... + tus estilos específicos
+Notas:
+
+No hace falta poner la extensión .scss al importar.
+
+Usa siempre la ruta absoluta desde src (así lo reconoce AngularCLI/Webpack sin líos).
+
+Puedes importar también variables.scss o mixins.scss antes que el resto si necesitas variables custom para overrides.
+
+
+
+src/
+└── styles/
+    ├── shared/
+    │   ├── _admin-shared.scss      // Base y utilidades comunes: tokens, helpers, botones, feedback, etc.
+    │   ├── _admin-form.scss        // Extiende y/o sobrescribe lo de shared para formularios
+    │   ├── _admin-modal.scss       // Extiende lo de shared para modales
+    │   ├── _admin-paginator.scss   // Extiende/override shared para paginador
+    │   ├── _admin-table.scss       // Extiende shared para tablas
+    │   └── _admin-toolbar.scss     // Extiende shared para toolbar y controles
+    ├── variables.scss              // Variables, colores, breakpoints generales (si no va en shared)
+    ├── mixins.scss                 // Mixins globales (si los usas)
+    └── styles.scss                 // Global app-wide

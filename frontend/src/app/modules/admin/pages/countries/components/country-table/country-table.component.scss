@@ -1,0 +1,22 @@
+@import "src/styles/shared/admin-shared.scss";
+
+.admin-table {
+  // Hereda todos los estilos .admin-table
+}
+
+.table-controls {
+  // Hereda todos los estilos .table-controls
+}
+
+.field-input {
+  // Hereda estilos globales de admin-form
+}
+
+.paginator {
+  // Hereda estilos globales de paginador
+}
+
+/* Si quieres override local: */
+.admin-table tbody tr.selected {
+  background: #e7f2fa;
+}

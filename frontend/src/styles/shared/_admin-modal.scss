@@ -1,0 +1,27 @@
+// ===============================
+// POPUP MODAL EDIT/CONFIRM
+// ===============================
+
+.modal {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  position: fixed; left: 0; top: 0;
+  width: 100vw; height: 100vh;
+  background: rgba(30,40,62,0.13);
+  z-index: 50; // asegurarse que sobresale
+}
+
+.modal-form {
+  width: 100%;
+  max-width: 520px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 1.4rem;
+}
+
+@media (max-width: 600px) {
+  .modal { font-size: .95em; }
+}

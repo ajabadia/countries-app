@@ -1,0 +1,42 @@
+// ===============================
+// FORMULARIOS ADMIN (inputs, layout)
+// ===============================
+
+.field-input {
+  display: inline-block;
+  vertical-align: middle;
+  padding: 0.6em;
+  font-size: 1rem;
+  border-radius: 0.28em;
+  border: 1px solid #dde;
+  background: #f5f8fa;
+  transition: background 0.15s, border 0.2s;
+  box-sizing: border-box;
+}
+
+.field-small  { width: 4ch !important; min-width: 4ch !important; max-width: 4ch !important; }
+.field-medium { width: 6ch !important; min-width: 6ch !important; max-width: 6ch !important; }
+.field-large  { width: 36ch !important; min-width: 12ch !important; max-width: 50ch !important; }
+
+.field-input:required:placeholder-shown { background: #e3f0ff; border: 1.5px solid #8ebefc; }
+.field-input:required:valid             { background: #fff; border: 1.5px solid #51b57f; }
+.field-input:required:invalid:not(:placeholder-shown) { background: #fff1f2; border: 1.5px solid #ec555c; }
+
+.error-msg {
+  color: #e62a3d;
+  background: #ffe3e8;
+  border: 1px solid #efb0b0;
+  border-radius: 7px;
+  margin: 8px 0;
+  padding: 0.16em 0.8em;
+  font-size: 1em;
+}
+
+.form-field { margin-bottom: 15px; }
+.field-label {
+  flex: 0 0 160px;
+  text-align: right;
+  padding-right: 28px;
+  font-size: 1rem;
+  font-weight: 500;
+}

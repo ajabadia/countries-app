@@ -1,0 +1,32 @@
+<!-- Modal principal. Puedes adaptar esta estructura a tu sistema de modales -->
+<div class="modal country-modal" *ngIf="visible">
+  <div class="modal-overlay" (click)="onClose()"></div>
+  <div class="modal-content">
+    <!-- Título dinámico -->
+    <header>
+      <h2>{{ isEditMode ? 'Editar país' : 'Nuevo país' }}</h2>
+      <button type="button" class="modal-close-btn" aria-label="Cerrar" (click)="onClose()">×</button>
+    </header>
+
+    <!-- Formulario reactivo -->
+    <form [formGroup]="form" (ngSubmit)="onSave()">
+      
+      <!-- Ejemplo de campo nombre, adapta a tus campos reales -->
+      <div class="form-group">
+        <label for="country-name">Nombre</label>
+        <input id="country-name" type="text" formControlName="name" />
+        <div *ngIf="form.get('name')?.invalid && (form.get('name')?.touched || form.get('name')?.dirty)" class="form-error">
+          El nombre es obligatorio.
+        </div>
+      </div>
+
+      <!-- Puedes añadir más campos country aquí -->
+
+      <!-- Acciones: guardar/cancelar -->
+      <footer class="modal-actions">
+        <button type="submit" [disabled]="form.invalid">Guardar</button>
+        <button type="button" (click)="onClose()">Cancelar</button>
+      </footer>
+    </form>
+  </div>
+</div>

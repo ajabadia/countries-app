@@ -1,38 +1,18 @@
-<!-- div class="toolbar-buttons">
-  <button
-    *ngFor="let btn of buttons"
-    type="button"
-    class="tb-btn"
-    [ngClass]="'tb-btn--' + btn.color"
-    [disabled]="btn.disabled"
-    (click)="btn.action()">
-    <span class="tb-btn__icon">
-      <img [src]="btn.iconSrc" alt="" width="20" height="20" />
-    </span>
-    {{ btn.label }}
-  </button>
-</div -->
-
-
 <div class="toolbar-buttons">
   <button
-  *ngFor="let btn of buttons"
-  class="tb-btn tb-btn--{{btn.color}}"
-  [disabled]="btn.disabled"
-  (click)="ejecutarAccion(btn)"
-  [attr.aria-label]="btn.label"
-  >
-    <span class="tb-btn__icon">
-      <!-- Adaptación completa: pasa parámetro, o toma valor por defecto si no se pasa -->
+    *ngFor="let btn of buttons"
+    class="tb-btn tb-btn--{{btn.color}}"
+    [disabled]="btn.disabled"
+    (click)="ejecutarAccion(btn)">
+    <span *ngIf="btn.icon" class="tb-btn__icon">
       <app-ui-icon
         [icon]="btn.icon"
-        [type]="btn.iconType || defaultIconType"
-        [size]="btn.iconSize || defaultIconSize"
-        [color]="btn.iconColor || defaultIconColor"
+        [type]="btn.iconType || 'system'"
+        [color]="btn.iconColor"
+        [size]="btn.iconSize || 'm'"
         [class]="btn.iconClass"
       ></app-ui-icon>
     </span>
-    <span class="tb-btn__label">{{ btn.label }}</span>
+    {{btn.label}}
   </button>
 </div>
-

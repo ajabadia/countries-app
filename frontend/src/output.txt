@@ -1,0 +1,1598 @@
+¦   favicon.ico
+¦   index.html
+¦   main.ts
+¦   output.txt
+¦   styles.scss
+¦   
++---app
+¦   ¦   app-routing.module.ts
+¦   ¦   app.component - copia.html
+¦   ¦   app.component.html
+¦   ¦   app.component.scss
+¦   ¦   app.component.spec.ts
+¦   ¦   app.component.ts
+¦   ¦   app.module.ts
+¦   ¦   
+¦   +---modules
+¦   ¦   +---admin
+¦   ¦   ¦   ¦   admin-routing.module.ts
+¦   ¦   ¦   ¦   admin.module.ts
+¦   ¦   ¦   ¦   
+¦   ¦   ¦   +---admin
+¦   ¦   ¦   ¦       admin.component.html
+¦   ¦   ¦   ¦       admin.component.scss
+¦   ¦   ¦   ¦       admin.component.ts
+¦   ¦   ¦   ¦       
+¦   ¦   ¦   +---pages
+¦   ¦   ¦       +---areas
+¦   ¦   ¦       ¦       admin-areas.component.html
+¦   ¦   ¦       ¦       admin-areas.component.scss
+¦   ¦   ¦       ¦       admin-areas.component.ts
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---continents
+¦   ¦   ¦       ¦       admin-continents.component.html
+¦   ¦   ¦       ¦       admin-continents.component.scss
+¦   ¦   ¦       ¦       admin-continents.component.ts
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---countries
+¦   ¦   ¦       ¦   ¦   ---admin-countries-form.ts
+¦   ¦   ¦       ¦   ¦   ---admin-countries-modals.ts
+¦   ¦   ¦       ¦   ¦   ---admin-countries-pagination.ts
+¦   ¦   ¦       ¦   ¦   ---admin-countries-selection.ts
+¦   ¦   ¦       ¦   ¦   ---admin-countries-table.ts
+¦   ¦   ¦       ¦   ¦   admin-countries.component - copia (2).ts
+¦   ¦   ¦       ¦   ¦   admin-countries.component - copia.ts
+¦   ¦   ¦       ¦   ¦   admin-countries.component.html
+¦   ¦   ¦       ¦   ¦   admin-countries.component.html -- antes de refactorizar
+¦   ¦   ¦       ¦   ¦   admin-countries.component.scss
+¦   ¦   ¦       ¦   ¦   admin-countries.component.scss  -- antes de refactorización
+¦   ¦   ¦       ¦   ¦   admin-countries.component.scss--antes de refactorizar
+¦   ¦   ¦       ¦   ¦   admin-countries.component.ts
+¦   ¦   ¦       ¦   ¦   admin-countries.component.ts ---
+¦   ¦   ¦       ¦   ¦   admin-countries.component.ts--antes de refactorizar
+¦   ¦   ¦       ¦   ¦   country.module.ts
+¦   ¦   ¦       ¦   ¦   
+¦   ¦   ¦       ¦   +---backup
+¦   ¦   ¦       ¦   ¦   +---20251009 17.31
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component - copia (2).html
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component - copia.html
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component - copia.scss
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component - copia.ts
+¦   ¦   ¦       ¦   ¦   ¦       
+¦   ¦   ¦       ¦   ¦   +---20251010 00.39
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component.html
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component.scss
+¦   ¦   ¦       ¦   ¦   ¦       admin-countries.component.ts
+¦   ¦   ¦       ¦   ¦   ¦       
+¦   ¦   ¦       ¦   ¦   +---20251010 15.00 estilos reguleros
+¦   ¦   ¦       ¦   ¦           admin-countries.component.html
+¦   ¦   ¦       ¦   ¦           admin-countries.component.scss
+¦   ¦   ¦       ¦   ¦           admin-countries.component.ts
+¦   ¦   ¦       ¦   ¦           
+¦   ¦   ¦       ¦   +---components
+¦   ¦   ¦       ¦   ¦   +---country-modal
+¦   ¦   ¦       ¦   ¦   ¦       country-modal.component.html
+¦   ¦   ¦       ¦   ¦   ¦       country-modal.component.ts
+¦   ¦   ¦       ¦   ¦   ¦       
+¦   ¦   ¦       ¦   ¦   +---country-paginator
+¦   ¦   ¦       ¦   ¦   ¦       country-paginator.component.html
+¦   ¦   ¦       ¦   ¦   ¦       country-paginator.component.ts
+¦   ¦   ¦       ¦   ¦   ¦       
+¦   ¦   ¦       ¦   ¦   +---country-table
+¦   ¦   ¦       ¦   ¦   ¦       country-table.component.html
+¦   ¦   ¦       ¦   ¦   ¦       country-table.component.ts
+¦   ¦   ¦       ¦   ¦   ¦       
+¦   ¦   ¦       ¦   ¦   +---country-toolbar
+¦   ¦   ¦       ¦   ¦           country-toolbar.component.html
+¦   ¦   ¦       ¦   ¦           country-toolbar.component.ts
+¦   ¦   ¦       ¦   ¦           
+¦   ¦   ¦       ¦   +---helpers--
+¦   ¦   ¦       ¦   ¦       countries.helpers.ts
+¦   ¦   ¦       ¦   ¦       
+¦   ¦   ¦       ¦   +---models
+¦   ¦   ¦       ¦           ---table-column.model.ts
+¦   ¦   ¦       ¦           country.model.ts
+¦   ¦   ¦       ¦           
+¦   ¦   ¦       +---dashboard
+¦   ¦   ¦       ¦       admin-dashboard.component - copia.scss
+¦   ¦   ¦       ¦       admin-dashboard.component.html
+¦   ¦   ¦       ¦       admin-dashboard.component.scss
+¦   ¦   ¦       ¦       admin-dashboard.component.ts
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---dependencies
+¦   ¦   ¦       ¦       admin-dependencies.component.html
+¦   ¦   ¦       ¦       admin-dependencies.component.scss
+¦   ¦   ¦       ¦       admin-dependencies.component.ts
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---languages
+¦   ¦   ¦       ¦       admin-languages.component.html
+¦   ¦   ¦       ¦       admin-languages.component.scss
+¦   ¦   ¦       ¦       admin-languages.component.ts
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---translations
+¦   ¦   ¦               admin-translations.component.html
+¦   ¦   ¦               admin-translations.component.scss
+¦   ¦   ¦               admin-translations.component.ts
+¦   ¦   ¦               
+¦   ¦   +---public
+¦   ¦   ¦   ¦   public-routing.module.ts
+¦   ¦   ¦   ¦   public.module.ts
+¦   ¦   ¦   ¦   
+¦   ¦   ¦   +---pages
+¦   ¦   ¦   ¦   +---countries
+¦   ¦   ¦   ¦   ¦       countries.component.html
+¦   ¦   ¦   ¦   ¦       countries.component.scss
+¦   ¦   ¦   ¦   ¦       countries.component.ts
+¦   ¦   ¦   ¦   ¦       
+¦   ¦   ¦   ¦   +---landing-page
+¦   ¦   ¦   ¦           landing-page.component.html
+¦   ¦   ¦   ¦           landing-page.component.scss
+¦   ¦   ¦   ¦           landing-page.component.ts
+¦   ¦   ¦   ¦           
+¦   ¦   ¦   +---public
+¦   ¦   ¦           public.component.html
+¦   ¦   ¦           public.component.scss
+¦   ¦   ¦           public.component.ts
+¦   ¦   ¦           
+¦   ¦   +---shared
+¦   ¦       ¦   README_SHARED.md
+¦   ¦       ¦   shared.module.ts
+¦   ¦       ¦   
+¦   ¦       +---components
+¦   ¦       ¦   +---admin-menu
+¦   ¦       ¦   ¦       admin-menu.component - copia.html
+¦   ¦       ¦   ¦       admin-menu.component.html
+¦   ¦       ¦   ¦       admin-menu.component.scss
+¦   ¦       ¦   ¦       admin-menu.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---confirm-dialog
+¦   ¦       ¦   ¦       confirm-dialog.component.html
+¦   ¦       ¦   ¦       confirm-dialog.component.scss
+¦   ¦       ¦   ¦       confirm-dialog.component.spec.ts
+¦   ¦       ¦   ¦       confirm-dialog.component.ts
+¦   ¦       ¦   ¦       README confirm-dialog.md
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---copyright
+¦   ¦       ¦   ¦       copyright.component.html
+¦   ¦       ¦   ¦       copyright.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---flag-icon
+¦   ¦       ¦   ¦   ¦   flag-icon.component.html
+¦   ¦       ¦   ¦   ¦   flag-icon.component.scss
+¦   ¦       ¦   ¦   ¦   flag-icon.component.spec.ts
+¦   ¦       ¦   ¦   ¦   flag-icon.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦       +---20251008
+¦   ¦       ¦   ¦               flag-icon.component - copia.html
+¦   ¦       ¦   ¦               flag-icon.component - copia.scss
+¦   ¦       ¦   ¦               flag-icon.component - copia.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---footer
+¦   ¦       ¦   ¦       footer.component.html
+¦   ¦       ¦   ¦       footer.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---header
+¦   ¦       ¦   ¦       header.component.html
+¦   ¦       ¦   ¦       header.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---logo
+¦   ¦       ¦   ¦       logo.component.html
+¦   ¦       ¦   ¦       logo.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---menu-bar
+¦   ¦       ¦   ¦   ¦   hacerlo dinámico - ahora es estático.txt
+¦   ¦       ¦   ¦   ¦   menu-bar.component - copia.scss
+¦   ¦       ¦   ¦   ¦   menu-bar.component.html
+¦   ¦       ¦   ¦   ¦   menu-bar.component.scss
+¦   ¦       ¦   ¦   ¦   menu-bar.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦       ¦   menu-bar.component - copia.html
+¦   ¦       ¦   ¦       ¦   menu-bar.component - copia.scss
+¦   ¦       ¦   ¦       ¦   menu-bar.component - copia.ts
+¦   ¦       ¦   ¦       ¦   
+¦   ¦       ¦   ¦       +---20251011 00.27
+¦   ¦       ¦   ¦               menu-bar.component.html
+¦   ¦       ¦   ¦               menu-bar.component.scss
+¦   ¦       ¦   ¦               menu-bar.component.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---modal
+¦   ¦       ¦   ¦   ¦   modal.component.html
+¦   ¦       ¦   ¦   ¦   modal.component.scss
+¦   ¦       ¦   ¦   ¦   modal.component.spec.ts
+¦   ¦       ¦   ¦   ¦   modal.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦       +---20251009 22.48
+¦   ¦       ¦   ¦       ¦       modal.component - copia (2).html
+¦   ¦       ¦   ¦       ¦       modal.component - copia.html
+¦   ¦       ¦   ¦       ¦       modal.component - copia.ts
+¦   ¦       ¦   ¦       ¦       modal.component----.scss
+¦   ¦       ¦   ¦       ¦       
+¦   ¦       ¦   ¦       +---20251010 20.21
+¦   ¦       ¦   ¦               modal.component.html
+¦   ¦       ¦   ¦               modal.component.scss
+¦   ¦       ¦   ¦               modal.component.spec.ts
+¦   ¦       ¦   ¦               modal.component.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---paginator
+¦   ¦       ¦   ¦   ¦   paginator.component.html
+¦   ¦       ¦   ¦   ¦   paginator.component.scss
+¦   ¦       ¦   ¦   ¦   paginator.component.spec.ts
+¦   ¦       ¦   ¦   ¦   paginator.component.ts
+¦   ¦       ¦   ¦   ¦   paginator.md
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---temp backup
+¦   ¦       ¦   ¦       ¦   PaginatorComponent.md
+¦   ¦       ¦   ¦       ¦   
+¦   ¦       ¦   ¦       +---20251008 21.16
+¦   ¦       ¦   ¦       ¦       paginator.component.html
+¦   ¦       ¦   ¦       ¦       paginator.component.scss
+¦   ¦       ¦   ¦       ¦       paginator.component.spec.ts
+¦   ¦       ¦   ¦       ¦       paginator.component.ts
+¦   ¦       ¦   ¦       ¦       
+¦   ¦       ¦   ¦       +---20251012 10.11
+¦   ¦       ¦   ¦               paginator.component.html
+¦   ¦       ¦   ¦               paginator.component.scss
+¦   ¦       ¦   ¦               paginator.component.spec.ts
+¦   ¦       ¦   ¦               paginator.component.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---search-box
+¦   ¦       ¦   ¦       search-box.component - copia.html
+¦   ¦       ¦   ¦       search-box.component - copia.scss
+¦   ¦       ¦   ¦       search-box.component.html
+¦   ¦       ¦   ¦       search-box.component.scss
+¦   ¦       ¦   ¦       search-box.component.spec.ts
+¦   ¦       ¦   ¦       search-box.component.ts
+¦   ¦       ¦   ¦       searchbox.md
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---services
+¦   ¦       ¦   ¦   +---selection
+¦   ¦       ¦   ¦           README_SELECTIONSERVICE.md
+¦   ¦       ¦   ¦           selection.service.spec.ts
+¦   ¦       ¦   ¦           selection.service.ts
+¦   ¦       ¦   ¦           
+¦   ¦       ¦   +---shared
+¦   ¦       ¦   ¦   +---components
+¦   ¦       ¦   +---table
+¦   ¦       ¦   ¦   ¦   README_TABLECOMPONENT.md
+¦   ¦       ¦   ¦   ¦   table.component - copia.html
+¦   ¦       ¦   ¦   ¦   table.component - copia.scss
+¦   ¦       ¦   ¦   ¦   table.component - copia.ts
+¦   ¦       ¦   ¦   ¦   table.component.html
+¦   ¦       ¦   ¦   ¦   table.component.scss
+¦   ¦       ¦   ¦   ¦   table.component.spec - copia.ts
+¦   ¦       ¦   ¦   ¦   table.component.spec.ts
+¦   ¦       ¦   ¦   ¦   table.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦           table.component - copia (2).html
+¦   ¦       ¦   ¦           table.component - copia.html
+¦   ¦       ¦   ¦           table.component - copia.scss
+¦   ¦       ¦   ¦           table.component - copia.ts
+¦   ¦       ¦   ¦           
+¦   ¦       ¦   +---toggle-checkbox
+¦   ¦       ¦   ¦   ¦   readme togglee-checkbox.md
+¦   ¦       ¦   ¦   ¦   toggle-checkbox.component.html
+¦   ¦       ¦   ¦   ¦   toggle-checkbox.component.scss
+¦   ¦       ¦   ¦   ¦   toggle-checkbox.component.spec.ts
+¦   ¦       ¦   ¦   ¦   toggle-checkbox.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦       +---20251009 00.34
+¦   ¦       ¦   ¦       ¦       toggle-checkbox.component - copia.html
+¦   ¦       ¦   ¦       ¦       toggle-checkbox.component - copia.scss
+¦   ¦       ¦   ¦       ¦       toggle-checkbox.component - copia.ts
+¦   ¦       ¦   ¦       ¦       toggle-checkbox.component.spec - copia.ts
+¦   ¦       ¦   ¦       ¦       
+¦   ¦       ¦   ¦       +---20251010 12.33
+¦   ¦       ¦   ¦               toggle-checkbox.component.html
+¦   ¦       ¦   ¦               toggle-checkbox.component.scss
+¦   ¦       ¦   ¦               toggle-checkbox.component.spec.ts
+¦   ¦       ¦   ¦               toggle-checkbox.component.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---toolbar-buttons
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component - copia.html
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component - copia.scss
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component - copia.ts
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component.html
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component.scss
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component.spec - copia.ts
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component.spec.ts
+¦   ¦       ¦   ¦   ¦   toolbar-buttons.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦       +---20251008 21.37
+¦   ¦       ¦   ¦       ¦       toolbar-buttons.component - copia.html
+¦   ¦       ¦   ¦       ¦       toolbar-buttons.component - copia.scss
+¦   ¦       ¦   ¦       ¦       
+¦   ¦       ¦   ¦       +---20251010 19.29
+¦   ¦       ¦   ¦               README - toolbar-buttons.md
+¦   ¦       ¦   ¦               toolbar-buttons.component - copia (2).ts
+¦   ¦       ¦   ¦               toolbar-buttons.component - copia.html
+¦   ¦       ¦   ¦               toolbar-buttons.component - copia.ts
+¦   ¦       ¦   ¦               
+¦   ¦       ¦   +---ui-button
+¦   ¦       ¦   ¦       ui-button.component.html
+¦   ¦       ¦   ¦       ui-button.component.scss
+¦   ¦       ¦   ¦       ui-button.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---ui-heading
+¦   ¦       ¦   ¦   ¦   ui-heading.component - copia.html
+¦   ¦       ¦   ¦   ¦   ui-heading.component - copia.scss
+¦   ¦       ¦   ¦   ¦   ui-heading.component - copia.ts
+¦   ¦       ¦   ¦   ¦   ui-heading.component.html
+¦   ¦       ¦   ¦   ¦   ui-heading.component.scss
+¦   ¦       ¦   ¦   ¦   ui-heading.component.ts
+¦   ¦       ¦   ¦   ¦   
+¦   ¦       ¦   ¦   +---backup
+¦   ¦       ¦   ¦           ui-heading.component - copia.html
+¦   ¦       ¦   ¦           ui-heading.component - copia.scss
+¦   ¦       ¦   ¦           ui-heading.component - copia.ts
+¦   ¦       ¦   ¦           ui-heading.component.html----
+¦   ¦       ¦   ¦           ui-heading.component.scss--
+¦   ¦       ¦   ¦           
+¦   ¦       ¦   +---ui-icon
+¦   ¦       ¦   ¦       ui-icon.component.html
+¦   ¦       ¦   ¦       ui-icon.component.scss
+¦   ¦       ¦   ¦       ui-icon.component.spec.ts
+¦   ¦       ¦   ¦       ui-icon.component.ts
+¦   ¦       ¦   ¦       
+¦   ¦       ¦   +---ui-stat-card
+¦   ¦       ¦       ¦   ui-stat-card.component - copia.html
+¦   ¦       ¦       ¦   ui-stat-card.component - copia.scss
+¦   ¦       ¦       ¦   ui-stat-card.component - copia.ts
+¦   ¦       ¦       ¦   ui-stat-card.component.html
+¦   ¦       ¦       ¦   ui-stat-card.component.scss
+¦   ¦       ¦       ¦   ui-stat-card.component.ts
+¦   ¦       ¦       ¦   
+¦   ¦       ¦       +---backup
+¦   ¦       ¦           +---20251008 22.00
+¦   ¦       ¦                   ui-stat-card.component - copia.html
+¦   ¦       ¦                   ui-stat-card.component - copia.scss
+¦   ¦       ¦                   ui-stat-card.component - copia.ts
+¦   ¦       ¦                   
+¦   ¦       +---models
+¦   ¦       ¦       README_TABLECOLUMN.md
+¦   ¦       ¦       table-column.model.ts
+¦   ¦       ¦       ui-icon.module.ts
+¦   ¦       ¦       
+¦   ¦       +---pruebas
+¦   ¦           +---icon-test
+¦   ¦                   icon-test.component.html
+¦   ¦                   icon-test.component.scss
+¦   ¦                   icon-test.component.spec.ts
+¦   ¦                   icon-test.component.ts
+¦   ¦                   
+¦   +---services
+¦           areas.service.ts--
+¦           continents.service.ts--
+¦           countries.service - copia.ts
+¦           countries.service.ts
+¦           dependencies.service.ts--
+¦           languages.service.ts--
+¦           README_COUNTRIESSERVICE.md
+¦           translations.service.ts
+¦           translations.service.ts--
+¦           
++---assets
+¦   ¦   .gitkeep
+¦   ¦   
+¦   +---i18n
+¦   ¦       en.json--
+¦   ¦       es.json
+¦   ¦       fr.json--
+¦   ¦       
+¦   +---icons
+¦   ¦   ¦   icon-add.svg
+¦   ¦   ¦   icon-alert.svg
+¦   ¦   ¦   icon-area.svg
+¦   ¦   ¦   icon-arrow.svg
+¦   ¦   ¦   icon-calendar.svg
+¦   ¦   ¦   icon-chevron-left.svg
+¦   ¦   ¦   icon-chevron-right.svg
+¦   ¦   ¦   icon-chevron.svg
+¦   ¦   ¦   icon-close.svg
+¦   ¦   ¦   icon-continents.svg
+¦   ¦   ¦   icon-country.svg
+¦   ¦   ¦   icon-dashboard.svg
+¦   ¦   ¦   icon-delete.svg
+¦   ¦   ¦   icon-dependencies.svg
+¦   ¦   ¦   icon-download-csv.svg
+¦   ¦   ¦   icon-download.svg
+¦   ¦   ¦   icon-edit.svg
+¦   ¦   ¦   icon-eraser.svg
+¦   ¦   ¦   icon-error.svg
+¦   ¦   ¦   icon-eye.svg
+¦   ¦   ¦   icon-filter.svg
+¦   ¦   ¦   icon-help.svg
+¦   ¦   ¦   icon-home.svg
+¦   ¦   ¦   icon-info-circle.svg
+¦   ¦   ¦   icon-info.svg
+¦   ¦   ¦   icon-languages.svg
+¦   ¦   ¦   icon-lock.svg
+¦   ¦   ¦   icon-magglass.svg
+¦   ¦   ¦   icon-map-marker.svg
+¦   ¦   ¦   icon-pen.svg
+¦   ¦   ¦   icon-refresh.svg
+¦   ¦   ¦   icon-save.svg
+¦   ¦   ¦   icon-settings.svg
+¦   ¦   ¦   icon-success.svg
+¦   ¦   ¦   icon-table.svg
+¦   ¦   ¦   icon-tin.svg
+¦   ¦   ¦   icon-translate.svg
+¦   ¦   ¦   icon-translations.svg
+¦   ¦   ¦   icon-trash-2.svg
+¦   ¦   ¦   icon-trash.svg
+¦   ¦   ¦   icon-unlock.svg
+¦   ¦   ¦   icon-upload.svg
+¦   ¦   ¦   icon-user.svg
+¦   ¦   ¦   icon-warning.svg
+¦   ¦   ¦   icon-world-globe.svg
+¦   ¦   ¦   theme-accent.svg
+¦   ¦   ¦   theme-contrast.svg
+¦   ¦   ¦   theme-dark.svg
+¦   ¦   ¦   theme-light.svg
+¦   ¦   ¦   
+¦   ¦   +---flags
+¦   ¦   ¦   ¦   flag-.svg
+¦   ¦   ¦   ¦   flag-ae.svg
+¦   ¦   ¦   ¦   flag-af.svg
+¦   ¦   ¦   ¦   flag-ag.svg
+¦   ¦   ¦   ¦   flag-ai.svg
+¦   ¦   ¦   ¦   flag-al.svg
+¦   ¦   ¦   ¦   flag-am.svg
+¦   ¦   ¦   ¦   flag-ao.svg
+¦   ¦   ¦   ¦   flag-aq.svg
+¦   ¦   ¦   ¦   flag-ar.svg
+¦   ¦   ¦   ¦   flag-as.svg
+¦   ¦   ¦   ¦   flag-at.svg
+¦   ¦   ¦   ¦   flag-au.svg
+¦   ¦   ¦   ¦   flag-aw.svg
+¦   ¦   ¦   ¦   flag-az.svg
+¦   ¦   ¦   ¦   flag-ba.svg
+¦   ¦   ¦   ¦   flag-bb.svg
+¦   ¦   ¦   ¦   flag-bd.svg
+¦   ¦   ¦   ¦   flag-be.svg
+¦   ¦   ¦   ¦   flag-bf.svg
+¦   ¦   ¦   ¦   flag-bg.svg
+¦   ¦   ¦   ¦   flag-bh.svg
+¦   ¦   ¦   ¦   flag-bi.svg
+¦   ¦   ¦   ¦   flag-bj.svg
+¦   ¦   ¦   ¦   flag-bl.svg
+¦   ¦   ¦   ¦   flag-bm.svg
+¦   ¦   ¦   ¦   flag-bo.svg
+¦   ¦   ¦   ¦   flag-bq.svg
+¦   ¦   ¦   ¦   flag-br.svg
+¦   ¦   ¦   ¦   flag-bs.svg
+¦   ¦   ¦   ¦   flag-bt.svg
+¦   ¦   ¦   ¦   flag-bv.svg
+¦   ¦   ¦   ¦   flag-bw.svg
+¦   ¦   ¦   ¦   flag-by.svg
+¦   ¦   ¦   ¦   flag-bz.svg
+¦   ¦   ¦   ¦   flag-ca.svg
+¦   ¦   ¦   ¦   flag-cd.svg
+¦   ¦   ¦   ¦   flag-cf.svg
+¦   ¦   ¦   ¦   flag-cg.svg
+¦   ¦   ¦   ¦   flag-ch.svg
+¦   ¦   ¦   ¦   flag-ci.svg
+¦   ¦   ¦   ¦   flag-ck.svg
+¦   ¦   ¦   ¦   flag-cl.svg
+¦   ¦   ¦   ¦   flag-cm.svg
+¦   ¦   ¦   ¦   flag-cn.svg
+¦   ¦   ¦   ¦   flag-co.svg
+¦   ¦   ¦   ¦   flag-cr.svg
+¦   ¦   ¦   ¦   flag-cu.svg
+¦   ¦   ¦   ¦   flag-cv.svg
+¦   ¦   ¦   ¦   flag-cw.svg
+¦   ¦   ¦   ¦   flag-cx.svg
+¦   ¦   ¦   ¦   flag-cy.svg
+¦   ¦   ¦   ¦   flag-cz.svg
+¦   ¦   ¦   ¦   flag-de.svg
+¦   ¦   ¦   ¦   flag-dj.svg
+¦   ¦   ¦   ¦   flag-dk.svg
+¦   ¦   ¦   ¦   flag-dm.svg
+¦   ¦   ¦   ¦   flag-do.svg
+¦   ¦   ¦   ¦   flag-dz.svg
+¦   ¦   ¦   ¦   flag-ec.svg
+¦   ¦   ¦   ¦   flag-ee.svg
+¦   ¦   ¦   ¦   flag-eg.svg
+¦   ¦   ¦   ¦   flag-eh.svg
+¦   ¦   ¦   ¦   flag-er.svg
+¦   ¦   ¦   ¦   flag-es.svg
+¦   ¦   ¦   ¦   flag-et.svg
+¦   ¦   ¦   ¦   flag-fi.svg
+¦   ¦   ¦   ¦   flag-fj.svg
+¦   ¦   ¦   ¦   flag-fk.svg
+¦   ¦   ¦   ¦   flag-fm.svg
+¦   ¦   ¦   ¦   flag-fo.svg
+¦   ¦   ¦   ¦   flag-fr.svg
+¦   ¦   ¦   ¦   flag-ga.svg
+¦   ¦   ¦   ¦   flag-gb.svg
+¦   ¦   ¦   ¦   flag-gd.svg
+¦   ¦   ¦   ¦   flag-ge.svg
+¦   ¦   ¦   ¦   flag-gf.svg
+¦   ¦   ¦   ¦   flag-gg.svg
+¦   ¦   ¦   ¦   flag-gh.svg
+¦   ¦   ¦   ¦   flag-gi.svg
+¦   ¦   ¦   ¦   flag-gl.svg
+¦   ¦   ¦   ¦   flag-gm.svg
+¦   ¦   ¦   ¦   flag-gn.svg
+¦   ¦   ¦   ¦   flag-gp.svg
+¦   ¦   ¦   ¦   flag-gq.svg
+¦   ¦   ¦   ¦   flag-gr.svg
+¦   ¦   ¦   ¦   flag-gs.svg
+¦   ¦   ¦   ¦   flag-gt.svg
+¦   ¦   ¦   ¦   flag-gu.svg
+¦   ¦   ¦   ¦   flag-gw.svg
+¦   ¦   ¦   ¦   flag-gy.svg
+¦   ¦   ¦   ¦   flag-hk.svg
+¦   ¦   ¦   ¦   flag-hm.svg
+¦   ¦   ¦   ¦   flag-hn.svg
+¦   ¦   ¦   ¦   flag-hr.svg
+¦   ¦   ¦   ¦   flag-ht.svg
+¦   ¦   ¦   ¦   flag-hu.svg
+¦   ¦   ¦   ¦   flag-id.svg
+¦   ¦   ¦   ¦   flag-ie.svg
+¦   ¦   ¦   ¦   flag-il.svg
+¦   ¦   ¦   ¦   flag-im.svg
+¦   ¦   ¦   ¦   flag-in.svg
+¦   ¦   ¦   ¦   flag-iq.svg
+¦   ¦   ¦   ¦   flag-ir.svg
+¦   ¦   ¦   ¦   flag-is.svg
+¦   ¦   ¦   ¦   flag-it.svg
+¦   ¦   ¦   ¦   flag-je.svg
+¦   ¦   ¦   ¦   flag-jm.svg
+¦   ¦   ¦   ¦   flag-jo.svg
+¦   ¦   ¦   ¦   flag-jp.svg
+¦   ¦   ¦   ¦   flag-ke.svg
+¦   ¦   ¦   ¦   flag-kg.svg
+¦   ¦   ¦   ¦   flag-kh.svg
+¦   ¦   ¦   ¦   flag-ki.svg
+¦   ¦   ¦   ¦   flag-km.svg
+¦   ¦   ¦   ¦   flag-kn.svg
+¦   ¦   ¦   ¦   flag-kp.svg
+¦   ¦   ¦   ¦   flag-kr.svg
+¦   ¦   ¦   ¦   flag-kw.svg
+¦   ¦   ¦   ¦   flag-ky.svg
+¦   ¦   ¦   ¦   flag-kz.svg
+¦   ¦   ¦   ¦   flag-la.svg
+¦   ¦   ¦   ¦   flag-lb.svg
+¦   ¦   ¦   ¦   flag-lc.svg
+¦   ¦   ¦   ¦   flag-li.svg
+¦   ¦   ¦   ¦   flag-lk.svg
+¦   ¦   ¦   ¦   flag-lr.svg
+¦   ¦   ¦   ¦   flag-ls.svg
+¦   ¦   ¦   ¦   flag-lt.svg
+¦   ¦   ¦   ¦   flag-lu.svg
+¦   ¦   ¦   ¦   flag-lv.svg
+¦   ¦   ¦   ¦   flag-ly.svg
+¦   ¦   ¦   ¦   flag-ma.svg
+¦   ¦   ¦   ¦   flag-mc.svg
+¦   ¦   ¦   ¦   flag-md.svg
+¦   ¦   ¦   ¦   flag-me.svg
+¦   ¦   ¦   ¦   flag-mf.svg
+¦   ¦   ¦   ¦   flag-mg.svg
+¦   ¦   ¦   ¦   flag-mh.svg
+¦   ¦   ¦   ¦   flag-mk.svg
+¦   ¦   ¦   ¦   flag-ml.svg
+¦   ¦   ¦   ¦   flag-mm.svg
+¦   ¦   ¦   ¦   flag-mn.svg
+¦   ¦   ¦   ¦   flag-mo.svg
+¦   ¦   ¦   ¦   flag-mp.svg
+¦   ¦   ¦   ¦   flag-mq.svg
+¦   ¦   ¦   ¦   flag-mr.svg
+¦   ¦   ¦   ¦   flag-ms.svg
+¦   ¦   ¦   ¦   flag-mt.svg
+¦   ¦   ¦   ¦   flag-mu.svg
+¦   ¦   ¦   ¦   flag-mv.svg
+¦   ¦   ¦   ¦   flag-mw.svg
+¦   ¦   ¦   ¦   flag-mx.svg
+¦   ¦   ¦   ¦   flag-my.svg
+¦   ¦   ¦   ¦   flag-mz.svg
+¦   ¦   ¦   ¦   flag-nan.svg
+¦   ¦   ¦   ¦   flag-nc.svg
+¦   ¦   ¦   ¦   flag-ne.svg
+¦   ¦   ¦   ¦   flag-nf.svg
+¦   ¦   ¦   ¦   flag-ng.svg
+¦   ¦   ¦   ¦   flag-ni.svg
+¦   ¦   ¦   ¦   flag-nl.svg
+¦   ¦   ¦   ¦   flag-no.svg
+¦   ¦   ¦   ¦   flag-np.svg
+¦   ¦   ¦   ¦   flag-nr.svg
+¦   ¦   ¦   ¦   flag-nu.svg
+¦   ¦   ¦   ¦   flag-nz.svg
+¦   ¦   ¦   ¦   flag-om.svg
+¦   ¦   ¦   ¦   flag-pa.svg
+¦   ¦   ¦   ¦   flag-pe.svg
+¦   ¦   ¦   ¦   flag-pf.svg
+¦   ¦   ¦   ¦   flag-pg.svg
+¦   ¦   ¦   ¦   flag-ph.svg
+¦   ¦   ¦   ¦   flag-pk.svg
+¦   ¦   ¦   ¦   flag-pl.svg
+¦   ¦   ¦   ¦   flag-pm.svg
+¦   ¦   ¦   ¦   flag-pn.svg
+¦   ¦   ¦   ¦   flag-pr.svg
+¦   ¦   ¦   ¦   flag-ps.svg
+¦   ¦   ¦   ¦   flag-pt.svg
+¦   ¦   ¦   ¦   flag-pw.svg
+¦   ¦   ¦   ¦   flag-py.svg
+¦   ¦   ¦   ¦   flag-qa.svg
+¦   ¦   ¦   ¦   flag-re.svg
+¦   ¦   ¦   ¦   flag-ro.svg
+¦   ¦   ¦   ¦   flag-rs.svg
+¦   ¦   ¦   ¦   flag-ru.svg
+¦   ¦   ¦   ¦   flag-rw.svg
+¦   ¦   ¦   ¦   flag-sa.svg
+¦   ¦   ¦   ¦   flag-sb.svg
+¦   ¦   ¦   ¦   flag-sc.svg
+¦   ¦   ¦   ¦   flag-sd.svg
+¦   ¦   ¦   ¦   flag-se.svg
+¦   ¦   ¦   ¦   flag-sg.svg
+¦   ¦   ¦   ¦   flag-sh.svg
+¦   ¦   ¦   ¦   flag-si.svg
+¦   ¦   ¦   ¦   flag-sj.svg
+¦   ¦   ¦   ¦   flag-sk.svg
+¦   ¦   ¦   ¦   flag-sl.svg
+¦   ¦   ¦   ¦   flag-sm.svg
+¦   ¦   ¦   ¦   flag-sn.svg
+¦   ¦   ¦   ¦   flag-so.svg
+¦   ¦   ¦   ¦   flag-sr.svg
+¦   ¦   ¦   ¦   flag-ss.svg
+¦   ¦   ¦   ¦   flag-st.svg
+¦   ¦   ¦   ¦   flag-sv.svg
+¦   ¦   ¦   ¦   flag-sx.svg
+¦   ¦   ¦   ¦   flag-sy.svg
+¦   ¦   ¦   ¦   flag-sz.svg
+¦   ¦   ¦   ¦   flag-tc.svg
+¦   ¦   ¦   ¦   flag-td.svg
+¦   ¦   ¦   ¦   flag-tf.svg
+¦   ¦   ¦   ¦   flag-tg.svg
+¦   ¦   ¦   ¦   flag-th.svg
+¦   ¦   ¦   ¦   flag-tj.svg
+¦   ¦   ¦   ¦   flag-tk.svg
+¦   ¦   ¦   ¦   flag-tl.svg
+¦   ¦   ¦   ¦   flag-tm.svg
+¦   ¦   ¦   ¦   flag-tn.svg
+¦   ¦   ¦   ¦   flag-to.svg
+¦   ¦   ¦   ¦   flag-tr.svg
+¦   ¦   ¦   ¦   flag-tt.svg
+¦   ¦   ¦   ¦   flag-tv.svg
+¦   ¦   ¦   ¦   flag-tw.svg
+¦   ¦   ¦   ¦   flag-tz.svg
+¦   ¦   ¦   ¦   flag-ua.svg
+¦   ¦   ¦   ¦   flag-ug.svg
+¦   ¦   ¦   ¦   flag-um.svg
+¦   ¦   ¦   ¦   flag-us.svg
+¦   ¦   ¦   ¦   flag-uy.svg
+¦   ¦   ¦   ¦   flag-uz.svg
+¦   ¦   ¦   ¦   flag-va.svg
+¦   ¦   ¦   ¦   flag-vc.svg
+¦   ¦   ¦   ¦   flag-ve.svg
+¦   ¦   ¦   ¦   flag-vg.svg
+¦   ¦   ¦   ¦   flag-vi.svg
+¦   ¦   ¦   ¦   flag-vn.svg
+¦   ¦   ¦   ¦   flag-vu.svg
+¦   ¦   ¦   ¦   flag-wf.svg
+¦   ¦   ¦   ¦   flag-ws.svg
+¦   ¦   ¦   ¦   flag-ye.svg
+¦   ¦   ¦   ¦   flag-yt.svg
+¦   ¦   ¦   ¦   flag-za.svg
+¦   ¦   ¦   ¦   flag-zm.svg
+¦   ¦   ¦   ¦   flag-zw.svg
+¦   ¦   ¦   ¦   
+¦   ¦   ¦   +---circle-flags
+¦   ¦   ¦       ¦   ac.svg
+¦   ¦   ¦       ¦   ad.svg
+¦   ¦   ¦       ¦   ae.svg
+¦   ¦   ¦       ¦   af-emirate.svg
+¦   ¦   ¦       ¦   af.svg
+¦   ¦   ¦       ¦   ag.svg
+¦   ¦   ¦       ¦   ai.svg
+¦   ¦   ¦       ¦   al.svg
+¦   ¦   ¦       ¦   am.svg
+¦   ¦   ¦       ¦   an.svg
+¦   ¦   ¦       ¦   ao.svg
+¦   ¦   ¦       ¦   aq-true_south.svg
+¦   ¦   ¦       ¦   aq.svg
+¦   ¦   ¦       ¦   ar.svg
+¦   ¦   ¦       ¦   as.svg
+¦   ¦   ¦       ¦   at.svg
+¦   ¦   ¦       ¦   au-aboriginal.svg
+¦   ¦   ¦       ¦   au-act.svg
+¦   ¦   ¦       ¦   au-nsw.svg
+¦   ¦   ¦       ¦   au-nt.svg
+¦   ¦   ¦       ¦   au-qld.svg
+¦   ¦   ¦       ¦   au-sa.svg
+¦   ¦   ¦       ¦   au-tas.svg
+¦   ¦   ¦       ¦   au-torres_strait_islands.svg
+¦   ¦   ¦       ¦   au-vic.svg
+¦   ¦   ¦       ¦   au-wa.svg
+¦   ¦   ¦       ¦   au.svg
+¦   ¦   ¦       ¦   aw.svg
+¦   ¦   ¦       ¦   ax.svg
+¦   ¦   ¦       ¦   az.svg
+¦   ¦   ¦       ¦   ba.svg
+¦   ¦   ¦       ¦   bb.svg
+¦   ¦   ¦       ¦   bd.svg
+¦   ¦   ¦       ¦   be.svg
+¦   ¦   ¦       ¦   bf.svg
+¦   ¦   ¦       ¦   bg.svg
+¦   ¦   ¦       ¦   bh.svg
+¦   ¦   ¦       ¦   bi.svg
+¦   ¦   ¦       ¦   bj.svg
+¦   ¦   ¦       ¦   bl.svg
+¦   ¦   ¦       ¦   bm.svg
+¦   ¦   ¦       ¦   bn.svg
+¦   ¦   ¦       ¦   bo.svg
+¦   ¦   ¦       ¦   bq-bo.svg
+¦   ¦   ¦       ¦   bq-sa.svg
+¦   ¦   ¦       ¦   bq-se.svg
+¦   ¦   ¦       ¦   bq.svg
+¦   ¦   ¦       ¦   br.svg
+¦   ¦   ¦       ¦   bs.svg
+¦   ¦   ¦       ¦   bt.svg
+¦   ¦   ¦       ¦   bv.svg
+¦   ¦   ¦       ¦   bw.svg
+¦   ¦   ¦       ¦   by.svg
+¦   ¦   ¦       ¦   bz.svg
+¦   ¦   ¦       ¦   ca-bc.svg
+¦   ¦   ¦       ¦   ca-qc.svg
+¦   ¦   ¦       ¦   ca.svg
+¦   ¦   ¦       ¦   cc.svg
+¦   ¦   ¦       ¦   cd.svg
+¦   ¦   ¦       ¦   cf.svg
+¦   ¦   ¦       ¦   cg.svg
+¦   ¦   ¦       ¦   ch-gr.svg
+¦   ¦   ¦       ¦   ch.svg
+¦   ¦   ¦       ¦   ci.svg
+¦   ¦   ¦       ¦   ck.svg
+¦   ¦   ¦       ¦   cl.svg
+¦   ¦   ¦       ¦   cm.svg
+¦   ¦   ¦       ¦   cn-hk.svg
+¦   ¦   ¦       ¦   cn-xj.svg
+¦   ¦   ¦       ¦   cn.svg
+¦   ¦   ¦       ¦   co.svg
+¦   ¦   ¦       ¦   cp.svg
+¦   ¦   ¦       ¦   cq.svg
+¦   ¦   ¦       ¦   cr.svg
+¦   ¦   ¦       ¦   cu.svg
+¦   ¦   ¦       ¦   cv.svg
+¦   ¦   ¦       ¦   cw.svg
+¦   ¦   ¦       ¦   cx.svg
+¦   ¦   ¦       ¦   cy.svg
+¦   ¦   ¦       ¦   cz.svg
+¦   ¦   ¦       ¦   de.svg
+¦   ¦   ¦       ¦   dg.svg
+¦   ¦   ¦       ¦   dj.svg
+¦   ¦   ¦       ¦   dk.svg
+¦   ¦   ¦       ¦   dm.svg
+¦   ¦   ¦       ¦   do.svg
+¦   ¦   ¦       ¦   dz.svg
+¦   ¦   ¦       ¦   ea.svg
+¦   ¦   ¦       ¦   easter_island.svg
+¦   ¦   ¦       ¦   east_african_federation.svg
+¦   ¦   ¦       ¦   ec-w.svg
+¦   ¦   ¦       ¦   ec.svg
+¦   ¦   ¦       ¦   ee.svg
+¦   ¦   ¦       ¦   eg.svg
+¦   ¦   ¦       ¦   eh.svg
+¦   ¦   ¦       ¦   er.svg
+¦   ¦   ¦       ¦   es-ar.svg
+¦   ¦   ¦       ¦   es-ce.svg
+¦   ¦   ¦       ¦   es-cn.svg
+¦   ¦   ¦       ¦   es-ct.svg
+¦   ¦   ¦       ¦   es-ga.svg
+¦   ¦   ¦       ¦   es-ib.svg
+¦   ¦   ¦       ¦   es-ml.svg
+¦   ¦   ¦       ¦   es-pv.svg
+¦   ¦   ¦       ¦   es-variant.svg
+¦   ¦   ¦       ¦   es.svg
+¦   ¦   ¦       ¦   et-af.svg
+¦   ¦   ¦       ¦   et-am.svg
+¦   ¦   ¦       ¦   et-be.svg
+¦   ¦   ¦       ¦   et-ga.svg
+¦   ¦   ¦       ¦   et-ha.svg
+¦   ¦   ¦       ¦   et-or.svg
+¦   ¦   ¦       ¦   et-si.svg
+¦   ¦   ¦       ¦   et-sn.svg
+¦   ¦   ¦       ¦   et-so.svg
+¦   ¦   ¦       ¦   et-sw.svg
+¦   ¦   ¦       ¦   et-ti.svg
+¦   ¦   ¦       ¦   et.svg
+¦   ¦   ¦       ¦   eu.svg
+¦   ¦   ¦       ¦   european_union.svg
+¦   ¦   ¦       ¦   ewe.svg
+¦   ¦   ¦       ¦   fi.svg
+¦   ¦   ¦       ¦   fj.svg
+¦   ¦   ¦       ¦   fk.svg
+¦   ¦   ¦       ¦   fm.svg
+¦   ¦   ¦       ¦   fo.svg
+¦   ¦   ¦       ¦   fr-20r.svg
+¦   ¦   ¦       ¦   fr-bre.svg
+¦   ¦   ¦       ¦   fr-cp.svg
+¦   ¦   ¦       ¦   fr.svg
+¦   ¦   ¦       ¦   fx.svg
+¦   ¦   ¦       ¦   ga.svg
+¦   ¦   ¦       ¦   gb-con.svg
+¦   ¦   ¦       ¦   gb-eng.svg
+¦   ¦   ¦       ¦   gb-nir.svg
+¦   ¦   ¦       ¦   gb-ork.svg
+¦   ¦   ¦       ¦   gb-sct.svg
+¦   ¦   ¦       ¦   gb-wls.svg
+¦   ¦   ¦       ¦   gb.svg
+¦   ¦   ¦       ¦   gd.svg
+¦   ¦   ¦       ¦   ge-ab.svg
+¦   ¦   ¦       ¦   ge.svg
+¦   ¦   ¦       ¦   gf.svg
+¦   ¦   ¦       ¦   gg.svg
+¦   ¦   ¦       ¦   gh.svg
+¦   ¦   ¦       ¦   gi.svg
+¦   ¦   ¦       ¦   gl.svg
+¦   ¦   ¦       ¦   gm.svg
+¦   ¦   ¦       ¦   gn.svg
+¦   ¦   ¦       ¦   gp.svg
+¦   ¦   ¦       ¦   gq.svg
+¦   ¦   ¦       ¦   gr.svg
+¦   ¦   ¦       ¦   gs.svg
+¦   ¦   ¦       ¦   gt.svg
+¦   ¦   ¦       ¦   gu.svg
+¦   ¦   ¦       ¦   guarani.svg
+¦   ¦   ¦       ¦   gw.svg
+¦   ¦   ¦       ¦   gy.svg
+¦   ¦   ¦       ¦   hausa.svg
+¦   ¦   ¦       ¦   hk.svg
+¦   ¦   ¦       ¦   hm.svg
+¦   ¦   ¦       ¦   hmong.svg
+¦   ¦   ¦       ¦   hn.svg
+¦   ¦   ¦       ¦   hr.svg
+¦   ¦   ¦       ¦   ht.svg
+¦   ¦   ¦       ¦   hu.svg
+¦   ¦   ¦       ¦   ic.svg
+¦   ¦   ¦       ¦   id-jb.svg
+¦   ¦   ¦       ¦   id-jt.svg
+¦   ¦   ¦       ¦   id.svg
+¦   ¦   ¦       ¦   ie.svg
+¦   ¦   ¦       ¦   il.svg
+¦   ¦   ¦       ¦   im.svg
+¦   ¦   ¦       ¦   in-as.svg
+¦   ¦   ¦       ¦   in-gj.svg
+¦   ¦   ¦       ¦   in-ka.svg
+¦   ¦   ¦       ¦   in-mn.svg
+¦   ¦   ¦       ¦   in-mz.svg
+¦   ¦   ¦       ¦   in-or.svg
+¦   ¦   ¦       ¦   in-tg.svg
+¦   ¦   ¦       ¦   in-tn.svg
+¦   ¦   ¦       ¦   in.svg
+¦   ¦   ¦       ¦   io.svg
+¦   ¦   ¦       ¦   iq-kr.svg
+¦   ¦   ¦       ¦   iq.svg
+¦   ¦   ¦       ¦   ir.svg
+¦   ¦   ¦       ¦   is.svg
+¦   ¦   ¦       ¦   it-21.svg
+¦   ¦   ¦       ¦   it-23.svg
+¦   ¦   ¦       ¦   it-25.svg
+¦   ¦   ¦       ¦   it-32.svg
+¦   ¦   ¦       ¦   it-34.svg
+¦   ¦   ¦       ¦   it-36.svg
+¦   ¦   ¦       ¦   it-42.svg
+¦   ¦   ¦       ¦   it-45.svg
+¦   ¦   ¦       ¦   it-52.svg
+¦   ¦   ¦       ¦   it-55.svg
+¦   ¦   ¦       ¦   it-57.svg
+¦   ¦   ¦       ¦   it-62.svg
+¦   ¦   ¦       ¦   it-65.svg
+¦   ¦   ¦       ¦   it-67.svg
+¦   ¦   ¦       ¦   it-72.svg
+¦   ¦   ¦       ¦   it-75.svg
+¦   ¦   ¦       ¦   it-77.svg
+¦   ¦   ¦       ¦   it-78.svg
+¦   ¦   ¦       ¦   it-82.svg
+¦   ¦   ¦       ¦   it-88.svg
+¦   ¦   ¦       ¦   it.svg
+¦   ¦   ¦       ¦   je.svg
+¦   ¦   ¦       ¦   jm.svg
+¦   ¦   ¦       ¦   jo.svg
+¦   ¦   ¦       ¦   jp.svg
+¦   ¦   ¦       ¦   kanuri.svg
+¦   ¦   ¦       ¦   ke.svg
+¦   ¦   ¦       ¦   kg.svg
+¦   ¦   ¦       ¦   kh.svg
+¦   ¦   ¦       ¦   ki.svg
+¦   ¦   ¦       ¦   kikuyu.svg
+¦   ¦   ¦       ¦   km.svg
+¦   ¦   ¦       ¦   kn.svg
+¦   ¦   ¦       ¦   kongo.svg
+¦   ¦   ¦       ¦   kp.svg
+¦   ¦   ¦       ¦   kr.svg
+¦   ¦   ¦       ¦   kw.svg
+¦   ¦   ¦       ¦   ky.svg
+¦   ¦   ¦       ¦   kz.svg
+¦   ¦   ¦       ¦   la.svg
+¦   ¦   ¦       ¦   lb.svg
+¦   ¦   ¦       ¦   lc.svg
+¦   ¦   ¦       ¦   li.svg
+¦   ¦   ¦       ¦   lk.svg
+¦   ¦   ¦       ¦   lr.svg
+¦   ¦   ¦       ¦   ls.svg
+¦   ¦   ¦       ¦   lt.svg
+¦   ¦   ¦       ¦   lu.svg
+¦   ¦   ¦       ¦   lv.svg
+¦   ¦   ¦       ¦   ly.svg
+¦   ¦   ¦       ¦   ma.svg
+¦   ¦   ¦       ¦   malayali.svg
+¦   ¦   ¦       ¦   maori.svg
+¦   ¦   ¦       ¦   mc.svg
+¦   ¦   ¦       ¦   md.svg
+¦   ¦   ¦       ¦   me.svg
+¦   ¦   ¦       ¦   mf.svg
+¦   ¦   ¦       ¦   mg.svg
+¦   ¦   ¦       ¦   mh.svg
+¦   ¦   ¦       ¦   mk.svg
+¦   ¦   ¦       ¦   ml.svg
+¦   ¦   ¦       ¦   mm.svg
+¦   ¦   ¦       ¦   mn.svg
+¦   ¦   ¦       ¦   mo.svg
+¦   ¦   ¦       ¦   mp.svg
+¦   ¦   ¦       ¦   mq-old.svg
+¦   ¦   ¦       ¦   mq.svg
+¦   ¦   ¦       ¦   mr.svg
+¦   ¦   ¦       ¦   ms.svg
+¦   ¦   ¦       ¦   mt.svg
+¦   ¦   ¦       ¦   mu.svg
+¦   ¦   ¦       ¦   mv.svg
+¦   ¦   ¦       ¦   mw.svg
+¦   ¦   ¦       ¦   mx.svg
+¦   ¦   ¦       ¦   my.svg
+¦   ¦   ¦       ¦   mz.svg
+¦   ¦   ¦       ¦   na.svg
+¦   ¦   ¦       ¦   nc.svg
+¦   ¦   ¦       ¦   ne.svg
+¦   ¦   ¦       ¦   nf.svg
+¦   ¦   ¦       ¦   ng.svg
+¦   ¦   ¦       ¦   ni.svg
+¦   ¦   ¦       ¦   nl-fr.svg
+¦   ¦   ¦       ¦   nl.svg
+¦   ¦   ¦       ¦   no.svg
+¦   ¦   ¦       ¦   northern_cyprus.svg
+¦   ¦   ¦       ¦   np.svg
+¦   ¦   ¦       ¦   nr.svg
+¦   ¦   ¦       ¦   nu.svg
+¦   ¦   ¦       ¦   nz.svg
+¦   ¦   ¦       ¦   occitania.svg
+¦   ¦   ¦       ¦   om.svg
+¦   ¦   ¦       ¦   otomi.svg
+¦   ¦   ¦       ¦   pa.svg
+¦   ¦   ¦       ¦   pe.svg
+¦   ¦   ¦       ¦   pf.svg
+¦   ¦   ¦       ¦   pg.svg
+¦   ¦   ¦       ¦   ph.svg
+¦   ¦   ¦       ¦   pk-jk.svg
+¦   ¦   ¦       ¦   pk-sd.svg
+¦   ¦   ¦       ¦   pk.svg
+¦   ¦   ¦       ¦   pl.svg
+¦   ¦   ¦       ¦   pm.svg
+¦   ¦   ¦       ¦   pn.svg
+¦   ¦   ¦       ¦   pr.svg
+¦   ¦   ¦       ¦   ps.svg
+¦   ¦   ¦       ¦   pt-20.svg
+¦   ¦   ¦       ¦   pt-30.svg
+¦   ¦   ¦       ¦   pt.svg
+¦   ¦   ¦       ¦   pw.svg
+¦   ¦   ¦       ¦   py.svg
+¦   ¦   ¦       ¦   qa.svg
+¦   ¦   ¦       ¦   quechua.svg
+¦   ¦   ¦       ¦   re.svg
+¦   ¦   ¦       ¦   ro.svg
+¦   ¦   ¦       ¦   rs.svg
+¦   ¦   ¦       ¦   ru-ba.svg
+¦   ¦   ¦       ¦   ru-ce.svg
+¦   ¦   ¦       ¦   ru-cu.svg
+¦   ¦   ¦       ¦   ru-da.svg
+¦   ¦   ¦       ¦   ru-dpr.svg
+¦   ¦   ¦       ¦   ru-ko.svg
+¦   ¦   ¦       ¦   ru-lpr.svg
+¦   ¦   ¦       ¦   ru-ta.svg
+¦   ¦   ¦       ¦   ru-ud.svg
+¦   ¦   ¦       ¦   ru.svg
+¦   ¦   ¦       ¦   rw.svg
+¦   ¦   ¦       ¦   sa.svg
+¦   ¦   ¦       ¦   sami.svg
+¦   ¦   ¦       ¦   sb.svg
+¦   ¦   ¦       ¦   sc.svg
+¦   ¦   ¦       ¦   sd.svg
+¦   ¦   ¦       ¦   se.svg
+¦   ¦   ¦       ¦   sg.svg
+¦   ¦   ¦       ¦   sh-ac.svg
+¦   ¦   ¦       ¦   sh-hl.svg
+¦   ¦   ¦       ¦   sh-ta.svg
+¦   ¦   ¦       ¦   sh.svg
+¦   ¦   ¦       ¦   si.svg
+¦   ¦   ¦       ¦   sj.svg
+¦   ¦   ¦       ¦   sk.svg
+¦   ¦   ¦       ¦   sl.svg
+¦   ¦   ¦       ¦   sm.svg
+¦   ¦   ¦       ¦   sn.svg
+¦   ¦   ¦       ¦   so.svg
+¦   ¦   ¦       ¦   somaliland.svg
+¦   ¦   ¦       ¦   south_ossetia.svg
+¦   ¦   ¦       ¦   soviet_union.svg
+¦   ¦   ¦       ¦   sr.svg
+¦   ¦   ¦       ¦   ss.svg
+¦   ¦   ¦       ¦   st.svg
+¦   ¦   ¦       ¦   su.svg
+¦   ¦   ¦       ¦   sv.svg
+¦   ¦   ¦       ¦   sx.svg
+¦   ¦   ¦       ¦   sy.svg
+¦   ¦   ¦       ¦   sz.svg
+¦   ¦   ¦       ¦   ta.svg
+¦   ¦   ¦       ¦   tc.svg
+¦   ¦   ¦       ¦   td.svg
+¦   ¦   ¦       ¦   tf.svg
+¦   ¦   ¦       ¦   tg.svg
+¦   ¦   ¦       ¦   th.svg
+¦   ¦   ¦       ¦   tibet.svg
+¦   ¦   ¦       ¦   tj.svg
+¦   ¦   ¦       ¦   tk.svg
+¦   ¦   ¦       ¦   tl.svg
+¦   ¦   ¦       ¦   tm.svg
+¦   ¦   ¦       ¦   tn.svg
+¦   ¦   ¦       ¦   to.svg
+¦   ¦   ¦       ¦   tr.svg
+¦   ¦   ¦       ¦   transnistria.svg
+¦   ¦   ¦       ¦   tt.svg
+¦   ¦   ¦       ¦   tv.svg
+¦   ¦   ¦       ¦   tw.svg
+¦   ¦   ¦       ¦   tz.svg
+¦   ¦   ¦       ¦   ua.svg
+¦   ¦   ¦       ¦   ug.svg
+¦   ¦   ¦       ¦   uk.svg
+¦   ¦   ¦       ¦   um.svg
+¦   ¦   ¦       ¦   un.svg
+¦   ¦   ¦       ¦   UNK.svg
+¦   ¦   ¦       ¦   us-ak.svg
+¦   ¦   ¦       ¦   us-al.svg
+¦   ¦   ¦       ¦   us-ar.svg
+¦   ¦   ¦       ¦   us-as.svg
+¦   ¦   ¦       ¦   us-az.svg
+¦   ¦   ¦       ¦   us-betsy_ross.svg
+¦   ¦   ¦       ¦   us-ca.svg
+¦   ¦   ¦       ¦   us-co.svg
+¦   ¦   ¦       ¦   us-confederate_battle.svg
+¦   ¦   ¦       ¦   us-dc.svg
+¦   ¦   ¦       ¦   us-fl.svg
+¦   ¦   ¦       ¦   us-ga.svg
+¦   ¦   ¦       ¦   us-gu.svg
+¦   ¦   ¦       ¦   us-hi.svg
+¦   ¦   ¦       ¦   us-in.svg
+¦   ¦   ¦       ¦   us-md.svg
+¦   ¦   ¦       ¦   us-mo.svg
+¦   ¦   ¦       ¦   us-mp.svg
+¦   ¦   ¦       ¦   us-ms.svg
+¦   ¦   ¦       ¦   us-nc.svg
+¦   ¦   ¦       ¦   us-nm.svg
+¦   ¦   ¦       ¦   us-or.svg
+¦   ¦   ¦       ¦   us-pr.svg
+¦   ¦   ¦       ¦   us-ri.svg
+¦   ¦   ¦       ¦   us-sc.svg
+¦   ¦   ¦       ¦   us-tn.svg
+¦   ¦   ¦       ¦   us-tx.svg
+¦   ¦   ¦       ¦   us-um.svg
+¦   ¦   ¦       ¦   us-vi.svg
+¦   ¦   ¦       ¦   us-wa.svg
+¦   ¦   ¦       ¦   us-wi.svg
+¦   ¦   ¦       ¦   us-wy.svg
+¦   ¦   ¦       ¦   us.svg
+¦   ¦   ¦       ¦   uy.svg
+¦   ¦   ¦       ¦   uz.svg
+¦   ¦   ¦       ¦   va.svg
+¦   ¦   ¦       ¦   vc.svg
+¦   ¦   ¦       ¦   ve.svg
+¦   ¦   ¦       ¦   vg.svg
+¦   ¦   ¦       ¦   vi.svg
+¦   ¦   ¦       ¦   vn.svg
+¦   ¦   ¦       ¦   vu.svg
+¦   ¦   ¦       ¦   wf.svg
+¦   ¦   ¦       ¦   wiphala.svg
+¦   ¦   ¦       ¦   ws.svg
+¦   ¦   ¦       ¦   xk.svg
+¦   ¦   ¦       ¦   xx.svg
+¦   ¦   ¦       ¦   ye.svg
+¦   ¦   ¦       ¦   yorubaland.svg
+¦   ¦   ¦       ¦   yt.svg
+¦   ¦   ¦       ¦   yu.svg
+¦   ¦   ¦       ¦   za.svg
+¦   ¦   ¦       ¦   zm.svg
+¦   ¦   ¦       ¦   zw.svg
+¦   ¦   ¦       ¦   
+¦   ¦   ¦       +---language
+¦   ¦   ¦       ¦       aa.svg
+¦   ¦   ¦       ¦       ab.svg
+¦   ¦   ¦       ¦       af.svg
+¦   ¦   ¦       ¦       ak.svg
+¦   ¦   ¦       ¦       am.svg
+¦   ¦   ¦       ¦       an.svg
+¦   ¦   ¦       ¦       ar.svg
+¦   ¦   ¦       ¦       as.svg
+¦   ¦   ¦       ¦       av.svg
+¦   ¦   ¦       ¦       ay.svg
+¦   ¦   ¦       ¦       az.svg
+¦   ¦   ¦       ¦       ba.svg
+¦   ¦   ¦       ¦       be.svg
+¦   ¦   ¦       ¦       bg.svg
+¦   ¦   ¦       ¦       bi.svg
+¦   ¦   ¦       ¦       bm.svg
+¦   ¦   ¦       ¦       bn.svg
+¦   ¦   ¦       ¦       bo.svg
+¦   ¦   ¦       ¦       br.svg
+¦   ¦   ¦       ¦       bs.svg
+¦   ¦   ¦       ¦       ca.svg
+¦   ¦   ¦       ¦       ce.svg
+¦   ¦   ¦       ¦       ceb.svg
+¦   ¦   ¦       ¦       ch.svg
+¦   ¦   ¦       ¦       chm.svg
+¦   ¦   ¦       ¦       ckb.svg
+¦   ¦   ¦       ¦       co.svg
+¦   ¦   ¦       ¦       cs.svg
+¦   ¦   ¦       ¦       cv.svg
+¦   ¦   ¦       ¦       cy.svg
+¦   ¦   ¦       ¦       da.svg
+¦   ¦   ¦       ¦       de.svg
+¦   ¦   ¦       ¦       dv.svg
+¦   ¦   ¦       ¦       dz.svg
+¦   ¦   ¦       ¦       ee.svg
+¦   ¦   ¦       ¦       el.svg
+¦   ¦   ¦       ¦       en-au.svg
+¦   ¦   ¦       ¦       en-ca.svg
+¦   ¦   ¦       ¦       en-gh.svg
+¦   ¦   ¦       ¦       en-hk.svg
+¦   ¦   ¦       ¦       en-ie.svg
+¦   ¦   ¦       ¦       en-in.svg
+¦   ¦   ¦       ¦       en-ke.svg
+¦   ¦   ¦       ¦       en-ng.svg
+¦   ¦   ¦       ¦       en-nz.svg
+¦   ¦   ¦       ¦       en-ph.svg
+¦   ¦   ¦       ¦       en-sg.svg
+¦   ¦   ¦       ¦       en-tz.svg
+¦   ¦   ¦       ¦       en-us.svg
+¦   ¦   ¦       ¦       en-za.svg
+¦   ¦   ¦       ¦       en.svg
+¦   ¦   ¦       ¦       eo.svg
+¦   ¦   ¦       ¦       es-mx.svg
+¦   ¦   ¦       ¦       es.svg
+¦   ¦   ¦       ¦       et.svg
+¦   ¦   ¦       ¦       eu.svg
+¦   ¦   ¦       ¦       fa.svg
+¦   ¦   ¦       ¦       fi.svg
+¦   ¦   ¦       ¦       fil.svg
+¦   ¦   ¦       ¦       fj.svg
+¦   ¦   ¦       ¦       fo.svg
+¦   ¦   ¦       ¦       fr.svg
+¦   ¦   ¦       ¦       fy.svg
+¦   ¦   ¦       ¦       ga.svg
+¦   ¦   ¦       ¦       gd.svg
+¦   ¦   ¦       ¦       gl.svg
+¦   ¦   ¦       ¦       gn.svg
+¦   ¦   ¦       ¦       gu.svg
+¦   ¦   ¦       ¦       gv.svg
+¦   ¦   ¦       ¦       ha.svg
+¦   ¦   ¦       ¦       haw.svg
+¦   ¦   ¦       ¦       he.svg
+¦   ¦   ¦       ¦       hi.svg
+¦   ¦   ¦       ¦       hmn.svg
+¦   ¦   ¦       ¦       ho.svg
+¦   ¦   ¦       ¦       hr.svg
+¦   ¦   ¦       ¦       ht.svg
+¦   ¦   ¦       ¦       hu.svg
+¦   ¦   ¦       ¦       hy.svg
+¦   ¦   ¦       ¦       ia.svg
+¦   ¦   ¦       ¦       id.svg
+¦   ¦   ¦       ¦       ie.svg
+¦   ¦   ¦       ¦       ig.svg
+¦   ¦   ¦       ¦       ilo.svg
+¦   ¦   ¦       ¦       interslavic.svg
+¦   ¦   ¦       ¦       io.svg
+¦   ¦   ¦       ¦       is.svg
+¦   ¦   ¦       ¦       it.svg
+¦   ¦   ¦       ¦       ja.svg
+¦   ¦   ¦       ¦       jv.svg
+¦   ¦   ¦       ¦       ka.svg
+¦   ¦   ¦       ¦       kg.svg
+¦   ¦   ¦       ¦       ki.svg
+¦   ¦   ¦       ¦       kk.svg
+¦   ¦   ¦       ¦       kl.svg
+¦   ¦   ¦       ¦       km.svg
+¦   ¦   ¦       ¦       kn.svg
+¦   ¦   ¦       ¦       ko.svg
+¦   ¦   ¦       ¦       kr.svg
+¦   ¦   ¦       ¦       kri.svg
+¦   ¦   ¦       ¦       ks.svg
+¦   ¦   ¦       ¦       ku.svg
+¦   ¦   ¦       ¦       kv.svg
+¦   ¦   ¦       ¦       kw.svg
+¦   ¦   ¦       ¦       ky.svg
+¦   ¦   ¦       ¦       la.svg
+¦   ¦   ¦       ¦       lb.svg
+¦   ¦   ¦       ¦       lg.svg
+¦   ¦   ¦       ¦       ln.svg
+¦   ¦   ¦       ¦       lo.svg
+¦   ¦   ¦       ¦       lt.svg
+¦   ¦   ¦       ¦       lu.svg
+¦   ¦   ¦       ¦       lus.svg
+¦   ¦   ¦       ¦       lv.svg
+¦   ¦   ¦       ¦       mg.svg
+¦   ¦   ¦       ¦       mh.svg
+¦   ¦   ¦       ¦       mi.svg
+¦   ¦   ¦       ¦       mk.svg
+¦   ¦   ¦       ¦       ml.svg
+¦   ¦   ¦       ¦       mn.svg
+¦   ¦   ¦       ¦       mni.svg
+¦   ¦   ¦       ¦       mr.svg
+¦   ¦   ¦       ¦       mrj.svg
+¦   ¦   ¦       ¦       ms.svg
+¦   ¦   ¦       ¦       mt.svg
+¦   ¦   ¦       ¦       my.svg
+¦   ¦   ¦       ¦       na.svg
+¦   ¦   ¦       ¦       nb.svg
+¦   ¦   ¦       ¦       nd.svg
+¦   ¦   ¦       ¦       ne.svg
+¦   ¦   ¦       ¦       nl.svg
+¦   ¦   ¦       ¦       nn.svg
+¦   ¦   ¦       ¦       no.svg
+¦   ¦   ¦       ¦       non.svg
+¦   ¦   ¦       ¦       nr.svg
+¦   ¦   ¦       ¦       ny.svg
+¦   ¦   ¦       ¦       oc.svg
+¦   ¦   ¦       ¦       om.svg
+¦   ¦   ¦       ¦       or.svg
+¦   ¦   ¦       ¦       os.svg
+¦   ¦   ¦       ¦       oto.svg
+¦   ¦   ¦       ¦       pa.svg
+¦   ¦   ¦       ¦       pap.svg
+¦   ¦   ¦       ¦       pl.svg
+¦   ¦   ¦       ¦       pms.svg
+¦   ¦   ¦       ¦       ps.svg
+¦   ¦   ¦       ¦       pt-br.svg
+¦   ¦   ¦       ¦       pt.svg
+¦   ¦   ¦       ¦       qu.svg
+¦   ¦   ¦       ¦       rm.svg
+¦   ¦   ¦       ¦       rn.svg
+¦   ¦   ¦       ¦       ro.svg
+¦   ¦   ¦       ¦       ru.svg
+¦   ¦   ¦       ¦       rw.svg
+¦   ¦   ¦       ¦       sc.svg
+¦   ¦   ¦       ¦       sd.svg
+¦   ¦   ¦       ¦       se.svg
+¦   ¦   ¦       ¦       sg.svg
+¦   ¦   ¦       ¦       si.svg
+¦   ¦   ¦       ¦       sk.svg
+¦   ¦   ¦       ¦       sl.svg
+¦   ¦   ¦       ¦       sm.svg
+¦   ¦   ¦       ¦       sn.svg
+¦   ¦   ¦       ¦       so.svg
+¦   ¦   ¦       ¦       sq.svg
+¦   ¦   ¦       ¦       sr.svg
+¦   ¦   ¦       ¦       ss.svg
+¦   ¦   ¦       ¦       st.svg
+¦   ¦   ¦       ¦       su.svg
+¦   ¦   ¦       ¦       sv.svg
+¦   ¦   ¦       ¦       sw.svg
+¦   ¦   ¦       ¦       ta.svg
+¦   ¦   ¦       ¦       te.svg
+¦   ¦   ¦       ¦       tg.svg
+¦   ¦   ¦       ¦       th.svg
+¦   ¦   ¦       ¦       ti.svg
+¦   ¦   ¦       ¦       tk.svg
+¦   ¦   ¦       ¦       tl.svg
+¦   ¦   ¦       ¦       tn.svg
+¦   ¦   ¦       ¦       to.svg
+¦   ¦   ¦       ¦       tr.svg
+¦   ¦   ¦       ¦       translingual.svg
+¦   ¦   ¦       ¦       tt.svg
+¦   ¦   ¦       ¦       ty.svg
+¦   ¦   ¦       ¦       udm.svg
+¦   ¦   ¦       ¦       ug.svg
+¦   ¦   ¦       ¦       uk.svg
+¦   ¦   ¦       ¦       ur.svg
+¦   ¦   ¦       ¦       uz.svg
+¦   ¦   ¦       ¦       vi.svg
+¦   ¦   ¦       ¦       vo.svg
+¦   ¦   ¦       ¦       xh.svg
+¦   ¦   ¦       ¦       xx.svg
+¦   ¦   ¦       ¦       yi.svg
+¦   ¦   ¦       ¦       yo.svg
+¦   ¦   ¦       ¦       yua.svg
+¦   ¦   ¦       ¦       zh.svg
+¦   ¦   ¦       ¦       zu.svg
+¦   ¦   ¦       ¦       
+¦   ¦   ¦       +---other
+¦   ¦   ¦               checkered.svg
+¦   ¦   ¦               chequered.svg
+¦   ¦   ¦               earth.svg
+¦   ¦   ¦               jolly_roger.svg
+¦   ¦   ¦               klingon.svg
+¦   ¦   ¦               lgbt-progress.svg
+¦   ¦   ¦               lgbt-transgender.svg
+¦   ¦   ¦               lgbt.svg
+¦   ¦   ¦               mars.svg
+¦   ¦   ¦               nato.svg
+¦   ¦   ¦               olympics.svg
+¦   ¦   ¦               pirate.svg
+¦   ¦   ¦               un.svg
+¦   ¦   ¦               united_nations.svg
+¦   ¦   ¦               
+¦   ¦   +---globes
+¦   ¦           globe-ad.svg
+¦   ¦           globe-ae.svg
+¦   ¦           globe-af.svg
+¦   ¦           globe-ag.svg
+¦   ¦           globe-ai.svg
+¦   ¦           globe-al.svg
+¦   ¦           globe-am.svg
+¦   ¦           globe-ao.svg
+¦   ¦           globe-aq.svg
+¦   ¦           globe-ar.svg
+¦   ¦           globe-as.svg
+¦   ¦           globe-at.svg
+¦   ¦           globe-au.svg
+¦   ¦           globe-aw.svg
+¦   ¦           globe-az.svg
+¦   ¦           globe-ba.svg
+¦   ¦           globe-bb.svg
+¦   ¦           globe-bd.svg
+¦   ¦           globe-be.svg
+¦   ¦           globe-bf.svg
+¦   ¦           globe-bg.svg
+¦   ¦           globe-bh.svg
+¦   ¦           globe-bi.svg
+¦   ¦           globe-bj.svg
+¦   ¦           globe-bl.svg
+¦   ¦           globe-bm.svg
+¦   ¦           globe-bn.svg
+¦   ¦           globe-bo.svg
+¦   ¦           globe-bq.svg
+¦   ¦           globe-br.svg
+¦   ¦           globe-bs.svg
+¦   ¦           globe-bt.svg
+¦   ¦           globe-bv.svg
+¦   ¦           globe-bw.svg
+¦   ¦           globe-by.svg
+¦   ¦           globe-bz.svg
+¦   ¦           globe-ca.svg
+¦   ¦           globe-cc.svg
+¦   ¦           globe-cd.svg
+¦   ¦           globe-cf.svg
+¦   ¦           globe-cg.svg
+¦   ¦           globe-ch.svg
+¦   ¦           globe-ci.svg
+¦   ¦           globe-ck.svg
+¦   ¦           globe-cl.svg
+¦   ¦           globe-cm.svg
+¦   ¦           globe-cn.svg
+¦   ¦           globe-co.svg
+¦   ¦           globe-cr.svg
+¦   ¦           globe-cu.svg
+¦   ¦           globe-cv.svg
+¦   ¦           globe-cw.svg
+¦   ¦           globe-cx.svg
+¦   ¦           globe-cy.svg
+¦   ¦           globe-cz.svg
+¦   ¦           globe-de.svg
+¦   ¦           globe-dj.svg
+¦   ¦           globe-dk.svg
+¦   ¦           globe-dm.svg
+¦   ¦           globe-do.svg
+¦   ¦           globe-dz.svg
+¦   ¦           globe-ec.svg
+¦   ¦           globe-ee.svg
+¦   ¦           globe-eg.svg
+¦   ¦           globe-eh.svg
+¦   ¦           globe-er.svg
+¦   ¦           globe-es.svg
+¦   ¦           globe-et.svg
+¦   ¦           globe-fi.svg
+¦   ¦           globe-fj.svg
+¦   ¦           globe-fk.svg
+¦   ¦           globe-fm.svg
+¦   ¦           globe-fo.svg
+¦   ¦           globe-fr.svg
+¦   ¦           globe-ga.svg
+¦   ¦           globe-gb.svg
+¦   ¦           globe-gd.svg
+¦   ¦           globe-ge.svg
+¦   ¦           globe-gf.svg
+¦   ¦           globe-gg.svg
+¦   ¦           globe-gh.svg
+¦   ¦           globe-gi.svg
+¦   ¦           globe-gl.svg
+¦   ¦           globe-gm.svg
+¦   ¦           globe-gn.svg
+¦   ¦           globe-gp.svg
+¦   ¦           globe-gq.svg
+¦   ¦           globe-gr.svg
+¦   ¦           globe-gs.svg
+¦   ¦           globe-gt.svg
+¦   ¦           globe-gu.svg
+¦   ¦           globe-gw.svg
+¦   ¦           globe-gy.svg
+¦   ¦           globe-hk.svg
+¦   ¦           globe-hm.svg
+¦   ¦           globe-hn.svg
+¦   ¦           globe-hr.svg
+¦   ¦           globe-ht.svg
+¦   ¦           globe-hu.svg
+¦   ¦           globe-id.svg
+¦   ¦           globe-ie.svg
+¦   ¦           globe-il.svg
+¦   ¦           globe-im.svg
+¦   ¦           globe-in.svg
+¦   ¦           globe-io.svg
+¦   ¦           globe-iq.svg
+¦   ¦           globe-ir.svg
+¦   ¦           globe-is.svg
+¦   ¦           globe-it.svg
+¦   ¦           globe-je.svg
+¦   ¦           globe-jm.svg
+¦   ¦           globe-jo.svg
+¦   ¦           globe-jp.svg
+¦   ¦           globe-ke.svg
+¦   ¦           globe-kg.svg
+¦   ¦           globe-kh.svg
+¦   ¦           globe-ki.svg
+¦   ¦           globe-km.svg
+¦   ¦           globe-kn.svg
+¦   ¦           globe-kp.svg
+¦   ¦           globe-kr.svg
+¦   ¦           globe-kw.svg
+¦   ¦           globe-ky.svg
+¦   ¦           globe-kz.svg
+¦   ¦           globe-la.svg
+¦   ¦           globe-lb.svg
+¦   ¦           globe-lc.svg
+¦   ¦           globe-li.svg
+¦   ¦           globe-lk.svg
+¦   ¦           globe-lr.svg
+¦   ¦           globe-ls.svg
+¦   ¦           globe-lt.svg
+¦   ¦           globe-lu.svg
+¦   ¦           globe-lv.svg
+¦   ¦           globe-ly.svg
+¦   ¦           globe-ma.svg
+¦   ¦           globe-mc.svg
+¦   ¦           globe-md.svg
+¦   ¦           globe-me.svg
+¦   ¦           globe-mf.svg
+¦   ¦           globe-mg.svg
+¦   ¦           globe-mh.svg
+¦   ¦           globe-mk.svg
+¦   ¦           globe-ml.svg
+¦   ¦           globe-mm.svg
+¦   ¦           globe-mn.svg
+¦   ¦           globe-mo.svg
+¦   ¦           globe-mp.svg
+¦   ¦           globe-mq.svg
+¦   ¦           globe-mr.svg
+¦   ¦           globe-ms.svg
+¦   ¦           globe-mt.svg
+¦   ¦           globe-mu.svg
+¦   ¦           globe-mv.svg
+¦   ¦           globe-mw.svg
+¦   ¦           globe-mx.svg
+¦   ¦           globe-my.svg
+¦   ¦           globe-mz.svg
+¦   ¦           globe-nan.svg
+¦   ¦           globe-nc.svg
+¦   ¦           globe-ne.svg
+¦   ¦           globe-nf.svg
+¦   ¦           globe-ng.svg
+¦   ¦           globe-ni.svg
+¦   ¦           globe-nl.svg
+¦   ¦           globe-no.svg
+¦   ¦           globe-np.svg
+¦   ¦           globe-nr.svg
+¦   ¦           globe-nu.svg
+¦   ¦           globe-nz.svg
+¦   ¦           globe-om.svg
+¦   ¦           globe-pa.svg
+¦   ¦           globe-pe.svg
+¦   ¦           globe-pf.svg
+¦   ¦           globe-pg.svg
+¦   ¦           globe-ph.svg
+¦   ¦           globe-pk.svg
+¦   ¦           globe-pl.svg
+¦   ¦           globe-pm.svg
+¦   ¦           globe-pn.svg
+¦   ¦           globe-pr.svg
+¦   ¦           globe-ps.svg
+¦   ¦           globe-pt.svg
+¦   ¦           globe-pw.svg
+¦   ¦           globe-py.svg
+¦   ¦           globe-qa.svg
+¦   ¦           globe-re.svg
+¦   ¦           globe-ro.svg
+¦   ¦           globe-rs.svg
+¦   ¦           globe-ru.svg
+¦   ¦           globe-rw.svg
+¦   ¦           globe-sa.svg
+¦   ¦           globe-sb.svg
+¦   ¦           globe-sc.svg
+¦   ¦           globe-sd.svg
+¦   ¦           globe-se.svg
+¦   ¦           globe-sg.svg
+¦   ¦           globe-sh.svg
+¦   ¦           globe-si.svg
+¦   ¦           globe-sj.svg
+¦   ¦           globe-sk.svg
+¦   ¦           globe-sl.svg
+¦   ¦           globe-sm.svg
+¦   ¦           globe-sn.svg
+¦   ¦           globe-so.svg
+¦   ¦           globe-sr.svg
+¦   ¦           globe-ss.svg
+¦   ¦           globe-st.svg
+¦   ¦           globe-sv.svg
+¦   ¦           globe-sx.svg
+¦   ¦           globe-sy.svg
+¦   ¦           globe-sz.svg
+¦   ¦           globe-tc.svg
+¦   ¦           globe-td.svg
+¦   ¦           globe-tf.svg
+¦   ¦           globe-tg.svg
+¦   ¦           globe-th.svg
+¦   ¦           globe-tj.svg
+¦   ¦           globe-tk.svg
+¦   ¦           globe-tl.svg
+¦   ¦           globe-tm.svg
+¦   ¦           globe-tn.svg
+¦   ¦           globe-to.svg
+¦   ¦           globe-tr.svg
+¦   ¦           globe-tt.svg
+¦   ¦           globe-tv.svg
+¦   ¦           globe-tw.svg
+¦   ¦           globe-tz.svg
+¦   ¦           globe-ua.svg
+¦   ¦           globe-ug.svg
+¦   ¦           globe-um.svg
+¦   ¦           globe-us.svg
+¦   ¦           globe-uy.svg
+¦   ¦           globe-uz.svg
+¦   ¦           globe-va.svg
+¦   ¦           globe-vc.svg
+¦   ¦           globe-ve.svg
+¦   ¦           globe-vg.svg
+¦   ¦           globe-vi.svg
+¦   ¦           globe-vn.svg
+¦   ¦           globe-vu.svg
+¦   ¦           globe-wf.svg
+¦   ¦           globe-ws.svg
+¦   ¦           globe-ye.svg
+¦   ¦           globe-yt.svg
+¦   ¦           globe-za.svg
+¦   ¦           globe-zm.svg
+¦   ¦           globe-zw.svg
+¦   ¦           
+¦   +---images
+¦   ¦       Ibercaja-logo-2025.svg
+¦   ¦       
+¦   +---svgs
++---styles
+    ¦   base.scss
+    ¦   components.scss
+    ¦   mixins.scss
+    ¦   theme.scss
+    ¦   variables.scss
+    ¦   
+    +---backup
+    ¦   +---20251007 00.52
+    ¦           theme.scss
+    ¦           
+    +---shared
+            explicaciones.txt
+            _admin-form.scss
+            _admin-modal.scss
+            _admin-paginator.scss
+            _admin-shared.scss
+            _admin-table.scss
+            _admin-toolbar.scss
+            

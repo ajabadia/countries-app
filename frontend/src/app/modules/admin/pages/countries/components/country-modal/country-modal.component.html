@@ -1,0 +1,18 @@
+<app-modal
+  [visible]="visible"
+  [title]="isEditMode ? 'Editar país' : 'Nuevo país'"
+  [acceptLabel]="isEditMode ? 'Guardar' : 'Crear'"
+  [closeLabel]="'Cancelar'"
+  [acceptDisabled]="!form.valid"
+  (accept)="onSave()"
+  (close)="onClose()"
+>
+  <form [formGroup]="form">
+    <label for="name">Nombre</label>
+    <input id="name" formControlName="name" aria-label="Nombre" />
+    <div *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
+      El nombre es obligatorio.
+    </div>
+    <!-- Puedes añadir más campos aquí -->
+  </form>
+</app-modal>

@@ -12,7 +12,7 @@ export class UiIconComponent implements OnInit {
   @Input() icon!: string;
   @Input() type: string = 'system';
   @Input() color?: string;
-  @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl' = 24;
+  @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl'  = 'm';
   @Input() class?: string;
 
   svgContent: SafeHtml | null = null;
@@ -35,7 +35,10 @@ export class UiIconComponent implements OnInit {
       const absNumber = Math.abs(this.size);
       return absNumber > 0 ? absNumber : 24;
     }
-    return this.sizeMap[this.size] ?? 24;
+    return this.size !== undefined && this.sizeMap[this.size as keyof typeof this.sizeMap] !== undefined
+  ? this.sizeMap[this.size as keyof typeof this.sizeMap]
+  : 24;
+
   }
 
   // Asigna la clase por tipo de manera automática

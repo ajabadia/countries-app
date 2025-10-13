@@ -1,6 +1,6 @@
-@import '../../../../../styles/variables';
-
-// Bloque principal
+// ===============================
+// ADMIN PAGINATOR (barra y controles)
+// ===============================
 .paginator {
   display: flex;
   flex-wrap: wrap;
@@ -23,18 +23,15 @@
     &:hover:not([disabled]) {
       background: rgba(0, 64, 192, 0.08);
     }
-
     &[disabled] {
       color: #bbb;
       cursor: not-allowed;
       opacity: 0.5;
     }
-
     &:focus-visible {
       box-shadow: 0 0 0 2px #315cff55;
     }
   }
-
   &__info {
     margin: 0 1em;
     font-family: monospace;
@@ -42,13 +39,11 @@
     letter-spacing: 0.03em;
     font-size: 1.07em;
   }
-
   &__block {
     display: flex;
     align-items: center;
     gap: 0.5rem;
   }
-
   &__select,
   &__input {
     font: inherit;
@@ -57,19 +52,16 @@
     border-radius: 4px;
     appearance: none;
     min-width: 50px;
-
     &:focus {
       outline: 2px solid #2d7fff55;
       border-color: #2d7fff;
     }
   }
-
   &__label {
     font-size: 0.89em;
     margin-left: 1em;
     color: #495057;
   }
-
   &__summary {
     width: 100%;
     margin-top: 0.7em;

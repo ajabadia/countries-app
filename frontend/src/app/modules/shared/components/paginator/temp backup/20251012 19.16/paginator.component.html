@@ -1,0 +1,34 @@
+<nav class="paginator" aria-label="Paginación de tabla">
+  <div class="paginator__block">
+    <button class="paginator__button" (click)="setPage(1)" [disabled]="page === 1" aria-label="Primera página">«</button>
+    <button class="paginator__button" (click)="setPage(page - 1)" [disabled]="page === 1" aria-label="Página anterior">‹</button>
+    <span class="paginator__info">
+      Página <b>{{page}}</b> de <b>{{totalPages}}</b>
+    </span>
+    <button class="paginator__button" (click)="setPage(page + 1)" [disabled]="page === totalPages" aria-label="Página siguiente">›</button>
+    <button class="paginator__button" (click)="setPage(totalPages)" [disabled]="page === totalPages" aria-label="Última página">»</button>
+  </div>
+  <div class="paginator__block">
+    <label class="paginator__label" for="pageSize">Mostrar</label>
+    <select id="pageSize" class="paginator__select" [(ngModel)]="pageSize" (change)="onPageSizeChange($event)">
+      <option *ngFor="let size of pageSizeOptions" [value]="size">{{size}}</option>
+    </select>
+    <span class="paginator__label">por página</span>
+<div class="paginator__block">
+    <label class="paginator__label" for="gotoPage">Ir a página:</label>
+    <input
+      id="gotoPage"
+      class="paginator__input"
+      type="number"
+      min="1"
+      [max]="totalPages"
+      [(ngModel)]="gotoPage"
+      (change)="setPage(gotoPage)"
+    />
+  </div>
+</div>
+  <div class="paginator__summary">
+    Mostrando países del {{startIdx}} al {{endIdx}} de {{totalCountries}}
+  </div>
+</nav>
+
