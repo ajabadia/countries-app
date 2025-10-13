@@ -1,16 +1,14 @@
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
-import { Observable, forkJoin } from 'rxjs';
+import { Observable } from 'rxjs';
 import { map } from 'rxjs/operators';
-
-// USAR SOLO el modelo global y compartido
 import { Country } from 'src/app/modules/shared/models/country.model';
 
 @Injectable({ providedIn: 'root' })
 export class CountriesService {
   constructor(private http: HttpClient) {}
 
-  // --- Contadores para dashboard ---
+  // --- Contadores (No modificados) ---
   getCountriesCount(): Observable<{ total: number }> {
     return this.http.get<{ total: number }>('/api/countries/count');
   }
@@ -30,11 +28,11 @@ export class CountriesService {
     return this.http.get<{ total: number }>('/api/multilingualnames/count');
   }
 
-  // --- Listado con filtros, paginación, orden ---
+  // --- Listado con filtros y paginación ---
   getCountries(params: {
-    search?: string;
     page?: number;
     pageSize?: number;
+    search?: string;
     sortKey?: string;
     sortOrder?: 'asc' | 'desc';
   } = {}): Observable<{ data: Country[]; total: number }> {
@@ -44,6 +42,7 @@ export class CountriesService {
     if (params.pageSize) httpParams = httpParams.set('pageSize', params.pageSize.toString());
     if (params.sortKey) httpParams = httpParams.set('sortKey', params.sortKey);
     if (params.sortOrder) httpParams = httpParams.set('sortOrder', params.sortOrder);
+    
     return this.http.get<{ data: Country[]; total: number }>(
       '/api/countries',
       { params: httpParams }
@@ -51,31 +50,31 @@ export class CountriesService {
   }
 
   // --- CRUD de países ---
-  /** Devuelve el array completo de países para tabla */
-  getAll(): Observable<Country[]> {
-    // Extrae solo el array .data del resultado paginado
-    return this.getCountries().pipe(map(res => res.data));
-  }
-
-  /** Actualiza un país existente */
+  
+  /**
+   * Actualiza un país existente. Coincide con el nombre esperado 'update'.
+   */
   update(country: Country): Observable<any> {
     return this.http.put(`/api/countries/${country.id}`, country);
   }
 
-  /** Crea un país nuevo */
+  /**
+   * Crea un país nuevo. Coincide con el nombre esperado 'create'.
+   */
   create(country: Country): Observable<any> {
     return this.http.post('/api/countries', country);
+  }
+
+  /**
+   * Borra un país por ID.
+   * ✅ AÑADIDO: Este método 'delete' es el que faltaba y soluciona el error TS2339 en el componente.
+   */
+  delete(id: string | number): Observable<any> {
+    return this.http.delete(`/api/countries/${id}`);
   }
 
   /** Borra varios países por id */
   deleteMany(ids: (string | number)[]): Observable<any> {
     return this.http.post('/api/countries/delete-many', { ids });
-    // Alternativa si tu API no soporta el endpoint:
-    // return forkJoin(ids.map(id => this.deleteCountry(id)));
-  }
-
-  /** Borra país individual por id */
-  deleteCountry(id: string): Observable<any> {
-    return this.http.delete(`/api/countries/${id}`);
   }
 }

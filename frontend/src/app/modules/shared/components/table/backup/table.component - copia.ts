@@ -20,14 +20,17 @@ export class TableComponent {
   @Input() items: any[] = [];
   @Input() selectable: boolean = true;
   @Input() selectedItems: any[] = [];
-  @Output() selectionChange = new EventEmitter();
+  @Output() selectionChange = new EventEmitter<any[]>();
   @Output() sortChange = new EventEmitter<{ key: string, order: 'asc' | 'desc' }>();
 
   sortKey: string | null = null;
   sortOrder: 'asc' | 'desc' = 'asc';
 
-  getColStyle(col: Partial<TableColumn>): {[key: string]: string} {
-    const style: {[key: string]: string} = {};
+  /** SELECCIÓN DE FILA con click independiente de los toggles */
+  selectedRow: any = null;
+
+  getColStyle(col: Partial<TableColumn>): { [key: string]: string } {
+    const style: { [key: string]: string } = {};
     if (col.width) style['width'] = col.width;
     if (col.minWidth) style['min-width'] = col.minWidth;
     if (col.maxWidth) style['max-width'] = col.maxWidth;
@@ -72,4 +75,27 @@ export class TableComponent {
     }
     this.sortChange.emit({ key: this.sortKey!, order: this.sortOrder });
   }
+
+  // Click en una fila para seleccionar (si no hay toggles/checkboxes activos)
+  onRowClick(item: any, event: MouseEvent): void {
+    event.stopPropagation();
+    // Solo selecciona si no hay toggles/check seleccionados
+    if (this.selectedItems && this.selectedItems.length > 0) return;
+    this.selectedRow = item;
+    this.selectedItems = [item];
+    this.selectionChange.emit(this.selectedItems);
+  }
+
+  // Click fuera de la tabla: deselecciona fila (pero no desactiva toggles seleccionados)
+  onExternalClick(): void {
+    if (this.selectedItems && this.selectedItems.length > 0) return;
+    this.selectedRow = null;
+    this.selectedItems = [];
+    this.selectionChange.emit(this.selectedItems);
+  }
+
+  isRowSelectable(): boolean {
+    return !this.selectedItems || this.selectedItems.length === 0;
+  }
 }
+

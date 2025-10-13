@@ -1,15 +1,27 @@
-<app-menu-bar
-  [items]="[
-    { label: 'Dashboard', icon: 'icon-dashboard', route: '/admin/dashboard' },
-    { label: 'Países', icon: 'icon-country', route: '/admin/countries' },
-    { label: 'Continentes', icon: 'icon-continents', route: '/admin/continents' },
-    { label: 'Áreas', icon: 'icon-area', route: '/admin/areas' },
-    { label: 'Dependencias', icon: 'icon-dependencies', route: '/admin/dependencies' },
-    { label: 'Lenguajes', icon: 'icon-languages', route: '/admin/languages' },
-    { label: 'Traducciones', icon: 'icon-translations', route: '/admin/translations' }
-  ]"
-  ariaLabel="Menú de administración"
-></app-menu-bar>
-///pruebas esto hay que quitarlo//
-   <app-icon-test></app-icon-test>
-<router-outlet></router-outlet>
+<!-- admin.component.html -->
+
+<!-- Contenedor principal para el layout de administración -->
+<div class="admin-layout">
+  
+  <!-- Menú de navegación principal (app-menu-bar, usa los items pasados en TS) -->
+  <app-menu-bar
+    [items]="[
+      { label: 'Dashboard', icon: 'icon-dashboard', route: '/admin/dashboard' },
+      { label: 'Países', icon: 'icon-country', route: '/admin/countries' },
+      { label: 'Continentes', icon: 'icon-continents', route: '/admin/continents' },
+      { label: 'Áreas', icon: 'icon-area', route: '/admin/areas' },
+      { label: 'Dependencias', icon: 'icon-dependencies', route: '/admin/dependencies' },
+      { label: 'Lenguajes', icon: 'icon-languages', route: '/admin/languages' },
+      { label: 'Traducciones', icon: 'icon-translations', route: '/admin/translations' }
+    ]"
+    ariaLabel="Menú de administración"
+  ></app-menu-bar>
+
+  <!-- Contenido principal: aquí se renderizan los componentes ruteados (Dashboard, Países, etc.) -->
+  <main class="admin-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <!-- Pie de página (asumo que es un componente que quieres incluir en el layout principal) -->
+  <app-footer></app-footer>
+</div>

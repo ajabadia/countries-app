@@ -1,59 +1,117 @@
+<!-- admin-countries.component.html (CORREGIDO) -->
+
 <div class="countries-admin">
-  <!-- Cabecera principal -->
-  <header class="countries-header">
-    <h1>Administración de países</h1>
 
-    <!-- Botón para añadir país -->
-    <button class="add-country-btn" (click)="onAddCountry()">Añadir país</button>
-    <!-- Botón para borrar seleccionados -->
-    <button
-      class="delete-selected-btn"
-      [disabled]="selectedCountries.length === 0"
-      (click)="showConfirmDialog = true"
-    >
-      Borrar seleccionados
-    </button>
-    <!-- Botón para refrescar países -->
-    <button class="refresh-btn" (click)="onRefresh()">Recargar</button>
-    <!-- Input búsqueda robusto para Angular 17+, mantiene ngModel (será seguro si no hay pipes/aserciones en el TS) -->
-    <input
-      type="text"
-      placeholder="Buscar país..."
-      [(ngModel)]="searchTerm"
-      (input)="onSearchChange(searchTerm)"
-      class="search-input"
-    />
-  </header>
+  <!-- CABECERA DE PÁGINA (usa el componente UI-Heading) -->
+  <app-ui-heading
+    [level]="1"
+    text="Países"
+    icon="icon-country"
+    iconPosition="left"
+    color="primary"
+    textAlign="left"
+    ariaLabel="Administración de Países"
+  ></app-ui-heading>
 
-  <!-- Tabla de países: modular, con sorting y selección -->
-<app-country-table
-  [countries]="pagedCountries"
-  [selectedCountries]="selectedCountries"
-  [columns]="columns"
-  [sortKey]="sortKey"
-  [sortOrder]="sortOrder"
-  (rowClick)="onEditCountry($event)"
-  (selectionChange)="onSelectionChange($event)"
-  (sortChange)="onSortChange($event)">
-</app-country-table>
+  <!-- CONTROLES SUPERIORES: Toolbars y buscador -->
+  <div class="table-controls">
+    <div class="controls-left">
+      <!-- Botones de acción masiva (Nuevo, Eliminar) -->
+      <app-toolbar-buttons 
+        *ngIf="toolbarButtons.length > 0" 
+        [buttons]="toolbarButtons">
+      </app-toolbar-buttons>
+    </div>
+    <div class="controls-right">
+      <!-- Componente de caja de búsqueda -->
+      <app-search-box
+        [value]="searchTerm"
+        (valueChange)="onValueChange($event)"
+        placeholder="Buscar país..."
+      ></app-search-box>
+    </div>
+  </div>
 
+  <!-- TABLA DE PAÍSES (Smart Component) -->
+  <app-country-table
+    [countries]="countries"
+    [selectedCountries]="selectedCountries"
+    [columns]="columns"
+    [sortKey]="sortKey || ''"
+    [sortOrder]="sortOrder"
+    (rowClick)="onRowClick($event)"
+    (selectionChange)="onSelectionChange($event)"
+    (sortChange)="onSortChange($event)"
+    (editCountry)="openEditModal($event)"
+  ></app-country-table> <!-- ✅ CORREGIDO: Cierre de etiqueta de apertura -->
 
-  <!-- Modal para edición/creación de país -->
-  <country-modal
-    [form]="countryForm"
-    [visible]="showEditModal"
-    [isEditMode]="isEditMode"
-    (save)="onSaveCountry($event)"
-    (close)="onCloseModal()">
-  </country-modal>
+  <!-- PAGINADOR GLOBAL (Gestionado por este componente) -->
+  <div class="paginator-wrapper">
+    <app-paginator
+      [page]="page"
+      [totalPages]="totalPages"          
+      [totalItems]="totalCountries"
+      [pageSize]="pageSize"
+      [pageSizeOptions]="[10, 25, 50, 100]"
+      (pageChange)="onPageChange($event)"
+      (pageSizeChange)="onPageSizeChange($event)"
+    ></app-paginator> <!-- ✅ CORREGIDO: Cierre de etiqueta de apertura -->
+  </div>
 
-  <!-- Diálogo de confirmación de borrado -->
-  <app-confirm-dialog
-    [visible]="showConfirmDialog"
-    [title]="'Eliminar países'"
-    [message]="'¿Seguro que quieres eliminar ' + selectedCountries.length + ' países seleccionados?'"
-    [data]="selectedCountries"
-    (confirm)="onConfirmDelete()"
-    (cancel)="onCancelDelete()"
-  ></app-confirm-dialog>
+</div>
 
+<!-- MODAL DE CREAR/EDITAR (usa app-modal) -->
+<app-modal
+  *ngIf="showEditModal"
+  [visible]="showEditModal"
+  [title]="editMode ? 'Editar país' : 'Nuevo país'"
+  [subtitle]="editMode && pais ? pais.defaultname : ''"
+  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+  [acceptDisabled]="countryForm.invalid"
+  [icon]="editMode ? 'icon-edit' : 'icon-add'"
+  [showClose]="true"
+  (accept)="saveCountry()"
+  (close)="closeCountryModal()"
+>
+  <!-- FORMULARIO reactivo, renderizado en el slot de contenido de la modal -->
+  <form [formGroup]="countryForm" (ngSubmit)="saveCountry()" class="modal-form">
+    <!-- Mensaje de error general -->
+    <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
+    
+    <!-- Campos del formulario: Se necesitan los campos alpha2may, alpha3may, numeric y defaultname -->
+    <div class="form-field">
+      <label class="field-label" for="defaultname">Nombre</label>
+      <input id="defaultname" class="field-input field-large" formControlName="defaultname" type="text" placeholder="Nombre oficial" />
+      <!-- Mensajes de error específicos del campo -->
+    </div>
+    
+    <div class="form-field">
+      <label class="field-label" for="alpha2may">Código Alpha-2 (2 letras)</label>
+      <input id="alpha2may" class="field-input field-small" formControlName="alpha2may" type="text" placeholder="ES" />
+    </div>
+
+    <div class="form-field">
+      <label class="field-label" for="alpha3may">Código Alpha-3 (3 letras)</label>
+      <input id="alpha3may" class="field-input field-medium" formControlName="alpha3may" type="text" placeholder="ESP" />
+    </div>
+
+    <div class="form-field">
+      <label class="field-label" for="numeric">Código Numérico (3 dígitos)</label>
+      <input id="numeric" class="field-input field-medium" formControlName="numeric" type="text" placeholder="724" />
+    </div>
+    
+    <!-- Añade el campo oculto para el ID si es edición -->
+    <input type="hidden" formControlName="id" />
+
+  </form>
+</app-modal>
+
+<!-- DIÁLOGO DE CONFIRMACIÓN DE BORRADO (usa app-confirm-dialog) -->
+<app-confirm-dialog
+  [visible]="showConfirmDelete"
+  title="Confirmar eliminación"
+  message="¿Estás seguro de que quieres eliminar el país: {{ pais?.defaultname }}?"
+  variant="warning"
+  (confirm)="eliminarPais()"
+  (cancel)="cancelarEliminar()"
+></app-confirm-dialog>

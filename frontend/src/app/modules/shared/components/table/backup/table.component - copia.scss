@@ -138,6 +138,16 @@ app-flag-icon {
   font-weight: 500;
 }
 
+
+
+/* === para la selección de registros ===== */
+
+tr.selected {
+  background: var(--color-primary-h7, #e7f2fa);
+  box-shadow: 0 2px 8px rgba(11,122,208,0.07);
+}
+
+
 /* ============== RESPONSIVE ============= */
 
 @media (max-width: 900px) {

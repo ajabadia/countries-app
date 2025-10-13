@@ -1,202 +1,196 @@
-
-// admin-countries.component.ts
-
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+// Importamos HttpErrorResponse para tipar el error correctamente (soluciona TS7006)
+import { HttpErrorResponse } from '@angular/common/http'; 
 import { Country } from 'src/app/modules/shared/models/country.model';
-import { CountriesService } from '../../../../services/countries.service';
-import { COUNTRY_TABLE_COLUMNS } from './country-table.columns';
-
+import { CountriesService } from 'src/app/services/countries.service';
+import { COUNTRY_TABLE_COLUMNS } from './country-table.columns'; 
 
 @Component({
   selector: 'app-admin-countries',
   templateUrl: './admin-countries.component.html',
-  styleUrls: ['./admin-countries.component.scss'],
+  styleUrls: ['./admin-countries.component.scss']
 })
 export class AdminCountriesComponent implements OnInit {
-  // ==== Estados y colecciones principales ====
-  countries: Country[] = [];
-  pagedCountries: Country[] = [];
-  selectedCountries: Country[] = [];
-  editingCountry: Country | null = null;
-// columnas
-  columns = COUNTRY_TABLE_COLUMNS;
-  // ==== Formulario reactivo para el modal ====
-  countryForm: FormGroup;
+  // --- Estado principal y configuración de tabla ---
+  countries: Country[] = [];              // Array visible en la tabla
+  selectedCountries: Country[] = [];      // Array de países seleccionados
+  // Asignamos las columnas exportadas
+  columns: any[] = COUNTRY_TABLE_COLUMNS;                    
+  page = 1;                               // Página actual
+  pageSize = 10;                          // Tamaño de página
+  totalCountries = 0;                     // Total de países (para el paginador)
+  totalPages: number = 1;                 // Total de páginas (calculado)
+  sortKey: string | null = null;          // Clave de ordenación
+  sortOrder: 'asc' | 'desc' = 'asc';      // Sentido de orden
+  searchTerm = '';                        // Buscador actual
+  
+  // Configuración de botones (Ejemplo: Añadir, Borrar)
+  toolbarButtons: any[] = []; 
 
-  // ==== Estados de la interfaz (modals, paginación, etc) ====
-  showEditModal = false;
-  isEditMode = false;
-  showConfirmDialog = false;
-  searchTerm = '';
-  page = 1;
-  // Cambia perPage por pageSize para correspondencia directa con paginador
-  pageSize: number = 25;
-  totalPages = 1;
-  totalCountries: number = 0; // Número total tras filtros
+  // --- Modal y formulario reactivo ---
+  // ✅ CORREGIDO: Uso de '!' para inicialización diferida en ngOnInit (Soluciona TS2564)
+  countryForm!: FormGroup;                 
+  showEditModal = false;                  
+  editMode = false;                       
+  pais: Country | null = null;            
+  errorMsg = '';                          
+  showConfirmDelete = false;              
 
-  // ==== Ordenación ====
-  sortKey: string = 'name';
-  sortOrder: 'asc' | 'desc' = 'asc';
+  constructor(private countriesService: CountriesService, private fb: FormBuilder) { }
 
-  constructor(
-    private fb: FormBuilder,
-    private countriesService: CountriesService
-  ) {
-    // Inicializamos el formulario básico (puedes ampliarlo)
+  ngOnInit(): void {
+    this.initForm();
+    this.fetchCountries();
+    this.initializeToolbarButtons();
+  }
+
+  /** Inicializa los botones de la toolbar (Nuevo, Eliminar Múltiple) */
+  private initializeToolbarButtons(): void {
+    this.toolbarButtons = [
+      { 
+        icon: 'icon-add', 
+        label: 'Nuevo País', 
+        color: 'main', 
+        action: () => this.openCreateModal(),
+        disabled: false
+      },
+      { 
+        icon: 'icon-delete', 
+        label: 'Eliminar Seleccionados', 
+        color: 'danger', 
+        action: () => this.openBulkDeleteModal(),
+        // Se deshabilita si no hay países seleccionados
+        disabled: this.selectedCountries.length === 0 
+      }
+    ];
+  }
+
+
+  /** Inicializa el formulario reactivo, con o sin datos de un país para edición */
+  private initForm(country?: Country) {
     this.countryForm = this.fb.group({
-      name: ['', Validators.required],
-      code: ['', Validators.required],
-      // ...otros campos...
+      id: [country ? country.id : null],
+      alpha2may: [country ? country.alpha2may : '', [Validators.required, Validators.maxLength(2)]],
+      alpha3may: [country ? country.alpha3may : '', [Validators.required, Validators.maxLength(3)]],
+      numeric: [country ? country.numeric : '', [Validators.required, Validators.maxLength(3)]],
+      defaultname: [country ? country.defaultname : '', Validators.required]
     });
   }
 
-  // ===============================
-  //           LIFECYCLE
-  // ===============================
-  ngOnInit() {
-    this.loadCountries();
-  }
-
-  // ===============================
-  //         CARGA Y LISTADO
-  // ===============================
-
-  /** Carga los países desde el backend */
-  loadCountries() {
-    this.countriesService.getAll().subscribe((data: Country[]) => {
-      this.countries = data;
-      this.applyFilterSortAndPaging();
+  /** Carga los países desde el servicio, aplicando filtros y paginación */
+  fetchCountries() {
+    this.countriesService.getCountries({
+      page: this.page,
+      pageSize: this.pageSize,
+      search: this.searchTerm,
+      sortKey: this.sortKey || undefined,
+      sortOrder: this.sortOrder
+    }).subscribe({
+      next: (res) => {
+        this.countries = res.data;
+        this.totalCountries = res.total;
+        this.totalPages = Math.ceil(this.totalCountries / this.pageSize);
+        // Actualizar el estado de los botones tras recarga
+        this.initializeToolbarButtons();
+      },
+      error: (err: HttpErrorResponse) => { 
+        this.errorMsg = err.error?.message || 'Error al cargar países.'; 
+      }
     });
   }
 
-  /** Aplica filtro, orden y paginación al listado ya cargado */
-  applyFilterSortAndPaging() {
-    // Filtrado
-let filtered = this.countries.filter(country =>
-  (
-    (country['defaultname'] || '') +
-    ' ' + (country['alpha2may'] || '') +
-    ' ' + (country['numeric'] || '') +
-    ' ' + (country['id'] || '') +
-    ' ' + (country['alpha3may'] || '')
-  ).toLowerCase().includes(this.searchTerm.toLowerCase())
-);
+  /** Handler: guardar país (crear o actualizar) */
+  saveCountry() {
+    if (this.countryForm.invalid) return;
+    const country: Country = this.countryForm.value;
+    
+    // ✅ CORREGIDO: Uso de `update` y `create` (Soluciona TS2339)
+    const save$ = this.editMode
+      ? this.countriesService.update(country) 
+      : this.countriesService.create(country); 
 
-
-    // Ordenación
-    filtered = filtered.sort((a, b) => {
-      const aValue = a[this.sortKey] ?? '';
-      const bValue = b[this.sortKey] ?? '';
-      return this.sortOrder === 'asc'
-        ? String(aValue).localeCompare(String(bValue))
-        : String(bValue).localeCompare(String(aValue));
-    });
-    // Paginación local usando pageSize en vez de perPage
-    this.totalPages = Math.ceil(filtered.length / this.pageSize);
-    const start = (this.page - 1) * this.pageSize;
-    this.pagedCountries = filtered.slice(start, start + this.pageSize);
-    this.totalCountries = filtered.length; // <-- Actualiza aquí
-  }
-
-  // ===============================
-  //         INTERACCIONES UI
-  // ===============================
-
-  /** Al cambiar el término de búsqueda (llamado desde ngModel y handleSearchInput) */
-
-onSearchChange(term: string) {
-  this.searchTerm = term;
-  this.page = 1;
-  this.applyFilterSortAndPaging();
-}
-
-  /** Compatible: método seguro para Angular 17+ si decides usar $event */
-  handleSearchInput(event: Event) {
-    this.onSearchChange((event.target as HTMLInputElement).value);
-  }
-
-  /** Recarga todos los datos */
-  onRefresh() {
-    this.loadCountries();
-  }
-
-  /** Prepara modal para crear país */
-  onAddCountry() {
-    this.editingCountry = null;
-    this.isEditMode = false;
-    this.countryForm.reset();
-    this.showEditModal = true;
-  }
-
-  /** Prepara modal para editar país */
-  onEditCountry(country: Country) {
-    this.editingCountry = { ...country };
-    this.isEditMode = true;
-    this.countryForm.patchValue(this.editingCountry);
-    this.showEditModal = true;
-  }
-
-  /** Llama cuando se guarda desde la modal (crear/editar) */
-  onSaveCountry(data: any) {
-    const isEdit = !!this.editingCountry;
-    const action$ = isEdit
-      ? this.countriesService.update({ ...this.editingCountry, ...data })
-      : this.countriesService.create(data);
-
-    action$.subscribe(() => {
-      this.showEditModal = false;
-      this.loadCountries();
+    save$.subscribe({
+      next: () => {
+        this.showEditModal = false;
+        this.fetchCountries();  
+      },
+      // ✅ CORREGIDO: Tipado de error explícito (Soluciona TS7006)
+      error: (err: HttpErrorResponse) => { 
+        this.errorMsg = err.error?.message || 'Error al guardar'; 
+      }
     });
   }
 
   /** Cierra el modal de edición/creación */
-  onCloseModal() {
-    this.showEditModal = false;
+  closeCountryModal() {
+    this.showEditModal = false; 
+    this.editMode = false;
+    this.errorMsg = ''; 
+    this.countryForm.reset();
   }
 
-  /** Al cambiar selección de la tabla */
-  onSelectionChange(selected: Country[]) {
-    this.selectedCountries = selected;
-  }
-
-  /** Al ordenar columnas en la tabla */
-  onSortChange({ key, order }: { key: string; order: 'asc' | 'desc' }) {
-    this.sortKey = key;
-    this.sortOrder = order;
-    this.applyFilterSortAndPaging();
-  }
-
-  /** Cambio de página */
-  onPageChange(newPage: number) {
-    this.page = newPage;
-    this.applyFilterSortAndPaging();
-  }
-
-  /** Cambio de tamaño de página (paginador) */
-  onPageSizeChange(event: number) {
-    this.pageSize = event;
-    this.page = 1; // Reinicia a la primera página
-    this.applyFilterSortAndPaging();
-  }
-
-  // ===============================
-  //    CONFIRMACIÓN Y BORRADO
-  // ===============================
-
-  /** Confirma borrado múltiple */
-  onConfirmDelete() {
-    this.countriesService
-      .deleteMany(this.selectedCountries.map((c) => c.id))
-      .subscribe(() => {
-        this.showConfirmDialog = false;
-        this.selectedCountries = [];
-        this.loadCountries();
+  /** Lanza la acción de borrado tras la confirmación */
+  eliminarPais() {
+    if (this.pais) {
+      // ✅ CORREGIDO: Uso de 'delete' y conversión a string (Soluciona TS2345)
+      this.countriesService.delete(this.pais.id.toString()).subscribe({
+        next: () => {
+          this.fetchCountries();
+          this.showConfirmDelete = false;
+          this.pais = null;
+        },
+        error: (err: HttpErrorResponse) => { this.errorMsg = err.error?.message || 'Error al eliminar'; }
       });
+    }
   }
 
-  /** Cancela ventana de borrado múltiple */
-  onCancelDelete() {
-    this.showConfirmDialog = false;
+  // --- Handlers de Interacción ---
+
+  cancelarEliminar(){ this.showConfirmDelete = false; }
+  onRowClick(country: Country) { console.log('Row clicked:', country); }
+  
+  onSelectionChange(selected: Country[]) { 
+    this.selectedCountries = selected; 
+    // Asegura que los botones de la toolbar se actualicen inmediatamente
+    this.initializeToolbarButtons();
+  }
+  
+  onSortChange(sortEvent: { key: string, order: 'asc' | 'desc' }) { 
+    this.sortKey = sortEvent.key;
+    this.sortOrder = sortEvent.order;
+    this.fetchCountries();
+  }
+  
+  onValueChange(searchTerm: string) { this.searchTerm = searchTerm; this.page = 1; this.fetchCountries(); }
+  onPageChange(newPage: number) { this.page = newPage; this.fetchCountries(); }
+  onPageSizeChange(newSize: number) { this.pageSize = newSize; this.page = 1; this.fetchCountries(); }
+  
+  /** Abre el modal para crear un nuevo país */
+  openCreateModal() {
+    this.editMode = false;
+    this.pais = null;
+    this.initForm(); 
+    this.showEditModal = true;
+  }
+
+  /** Abre el modal para editar un país */
+  openEditModal(country: Country) {
+    this.editMode = true;
+    this.pais = country;
+    this.initForm(country); 
+    this.showEditModal = true;
+  }
+  
+  /** Abre el modal de confirmación para borrar el país actualmente seleccionado */
+  openDeleteModal(country: Country) {
+    this.pais = country;
+    this.showConfirmDelete = true;
+  }
+
+  /** Abre el modal para borrado múltiple (Si es necesario) */
+  openBulkDeleteModal() {
+    // Implementar si tienes un diálogo de borrado múltiple
+    console.log('Borrado múltiple de:', this.selectedCountries);
   }
 }
