@@ -19,9 +19,10 @@ export interface ToolbarButtonConfig {
 }
 
 @Component({
-  selector: 'app-toolbar-buttons',
-  templateUrl: './toolbar-buttons.component.html',
-  styleUrls: ['./toolbar-buttons.component.scss']
+    selector: 'app-toolbar-buttons',
+    templateUrl: './toolbar-buttons.component.html',
+    styleUrls: ['./toolbar-buttons.component.scss'],
+    standalone: false
 })
 export class ToolbarButtonsComponent {
   // ✅ 4. Usamos la interfaz en el Input

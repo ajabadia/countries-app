@@ -12,9 +12,10 @@ export interface MenuBarItem {
 }
 
 @Component({
-  selector: 'app-menu-bar',
-  templateUrl: './menu-bar.component.html',
-  styleUrls: ['./menu-bar.component.scss']
+    selector: 'app-menu-bar',
+    templateUrl: './menu-bar.component.html',
+    styleUrls: ['./menu-bar.component.scss'],
+    standalone: false
 })
 export class MenuBarComponent {
   @Input() items: MenuBarItem[] = [];

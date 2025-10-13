@@ -3,9 +3,10 @@ import { SelectionService } from 'src/app/modules/shared/components/services/sel
 import { TableColumn } from 'src/app/modules/shared/models/table-column.model'; 
 
 @Component({
-  selector: 'app-table',
-  templateUrl: './table.component.html',
-  styleUrls: ['./table.component.scss']
+    selector: 'app-table',
+    templateUrl: './table.component.html',
+    styleUrls: ['./table.component.scss'],
+    standalone: false
 })
 export class TableComponent {
   // === Inputs ===

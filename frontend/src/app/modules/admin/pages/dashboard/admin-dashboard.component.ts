@@ -3,9 +3,10 @@ import { Component, OnInit } from '@angular/core';
 import { CountriesService } from 'src/app/services/countries.service';
 
 @Component({
-  selector: 'app-admin-dashboard',
-  templateUrl: './admin-dashboard.component.html',
-  styleUrls: ['./admin-dashboard.component.scss']
+    selector: 'app-admin-dashboard',
+    templateUrl: './admin-dashboard.component.html',
+    styleUrls: ['./admin-dashboard.component.scss'],
+    standalone: false
 })
 export class AdminDashboardComponent implements OnInit {
   countriesCount: number | null = null;

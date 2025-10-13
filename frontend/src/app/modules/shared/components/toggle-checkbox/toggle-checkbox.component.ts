@@ -4,9 +4,10 @@ import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, Eleme
 export type ToggleState = 'checked' | 'unchecked' | 'indeterminate';
 
 @Component({
-  selector: 'app-toggle-checkbox',
-  templateUrl: './toggle-checkbox.component.html',
-  styleUrls: ['./toggle-checkbox.component.scss']
+    selector: 'app-toggle-checkbox',
+    templateUrl: './toggle-checkbox.component.html',
+    styleUrls: ['./toggle-checkbox.component.scss'],
+    standalone: false
 })
 export class ToggleCheckboxComponent implements AfterViewInit, OnChanges {
   // Estado externo ("checked", "unchecked", "indeterminate")

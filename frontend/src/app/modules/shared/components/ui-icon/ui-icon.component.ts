@@ -6,10 +6,11 @@ import { Observable } from 'rxjs';
 import { IconService, UiIconType, UiIconRender } from 'src/app/services/icon.service';
 
 @Component({
-  selector: 'app-ui-icon',
-  templateUrl: './ui-icon.component.html',
-  styleUrls: ['./ui-icon.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush
+    selector: 'app-ui-icon',
+    templateUrl: './ui-icon.component.html',
+    styleUrls: ['./ui-icon.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
+    standalone: false
 })
 export class UiIconComponent implements OnInit {
   @Input({ required: true }) icon!: string;

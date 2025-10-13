@@ -8,9 +8,10 @@ import { CountriesService } from 'src/app/services/countries.service';
 import { COUNTRY_TABLE_COLUMNS } from './country-table.columns';
 
 @Component({
-  selector: 'app-admin-countries',
-  templateUrl: './admin-countries.component.html',
-  styleUrls: ['./admin-countries.component.scss']
+    selector: 'app-admin-countries',
+    templateUrl: './admin-countries.component.html',
+    styleUrls: ['./admin-countries.component.scss'],
+    standalone: false
 })
 export class AdminCountriesComponent implements OnInit, OnDestroy { // Implementamos OnDestroy
   

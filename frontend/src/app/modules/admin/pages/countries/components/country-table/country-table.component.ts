@@ -11,9 +11,10 @@ import Swal from 'sweetalert2';
 import { ApiResponse } from 'src/app/core/models/api-response.model';
 
 @Component({
-  selector: 'app-country-table',
-  templateUrl: './country-table.component.html',
-  styleUrls: ['./country-table.component.scss']
+    selector: 'app-country-table',
+    templateUrl: './country-table.component.html',
+    styleUrls: ['./country-table.component.scss'],
+    standalone: false
 })
 export class CountryTableComponent implements OnInit {
   countries: Country[] = [];

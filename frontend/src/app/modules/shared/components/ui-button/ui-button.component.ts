@@ -4,9 +4,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
-  selector: 'app-ui-button',
-  templateUrl: './ui-button.component.html',
-  styleUrls: ['./ui-button.component.scss']
+    selector: 'app-ui-button',
+    templateUrl: './ui-button.component.html',
+    styleUrls: ['./ui-button.component.scss'],
+    standalone: false
 })
 export class UiButtonComponent {
   // --- Entradas de Configuración con Valores por Defecto ---

@@ -5,18 +5,19 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
-  selector: 'app-modal',
-  templateUrl: './modal.component.html',
-  styleUrls: ['./modal.component.scss'],
-  animations: [
-    // Animación de Fade-in / Fade-out para el modal y el fondo
-    trigger('fade', [
-      state('void', style({ opacity: 0 })),
-      transition(':enter, :leave', [
-        animate('200ms ease-in-out')
-      ])
-    ])
-  ]
+    selector: 'app-modal',
+    templateUrl: './modal.component.html',
+    styleUrls: ['./modal.component.scss'],
+    animations: [
+        // Animación de Fade-in / Fade-out para el modal y el fondo
+        trigger('fade', [
+            state('void', style({ opacity: 0 })),
+            transition(':enter, :leave', [
+                animate('200ms ease-in-out')
+            ])
+        ])
+    ],
+    standalone: false
 })
 export class ModalComponent {
   // --- Entradas de Visibilidad y Comportamiento ---

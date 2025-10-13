@@ -1,9 +1,10 @@
 import { Component, Input } from '@angular/core';
 
 @Component({
-  selector: 'app-logo',
-  templateUrl: './logo.component.html',
-  styleUrls: []
+    selector: 'app-logo',
+    templateUrl: './logo.component.html',
+    styleUrls: [],
+    standalone: false
 })
 export class LogoComponent {
   @Input() src = 'assets/images/Ibercaja-logo-2025.svg';

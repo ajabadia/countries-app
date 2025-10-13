@@ -8,9 +8,10 @@ import { Component, Input, Output, EventEmitter } from '@angular/core';
  * Todos los textos y props son agnósticos.
  */
 @Component({
-  selector: 'app-paginator',
-  templateUrl: './paginator.component.html',
-  styleUrls: ['./paginator.component.scss']
+    selector: 'app-paginator',
+    templateUrl: './paginator.component.html',
+    styleUrls: ['./paginator.component.scss'],
+    standalone: false
 })
 export class PaginatorComponent {
   /** Página actual */

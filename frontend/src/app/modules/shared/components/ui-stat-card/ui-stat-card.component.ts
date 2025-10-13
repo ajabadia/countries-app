@@ -5,9 +5,10 @@ import { Router } from '@angular/router';
 import { UiIconType } from 'src/app/services/icon.service'; // Importamos el tipo
 
 @Component({
-  selector: 'app-ui-stat-card',
-  templateUrl: './ui-stat-card.component.html',
-  styleUrls: ['./ui-stat-card.component.scss']
+    selector: 'app-ui-stat-card',
+    templateUrl: './ui-stat-card.component.html',
+    styleUrls: ['./ui-stat-card.component.scss'],
+    standalone: false
 })
 export class UiStatCardComponent {
   @Input({ required: true }) label!: string;

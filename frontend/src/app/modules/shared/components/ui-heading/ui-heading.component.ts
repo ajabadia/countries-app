@@ -4,9 +4,10 @@ import { Component, Input } from '@angular/core';
 import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
-  selector: 'app-ui-heading',
-  templateUrl: './ui-heading.component.html',
-  styleUrls: ['./ui-heading.component.scss'],
+    selector: 'app-ui-heading',
+    templateUrl: './ui-heading.component.html',
+    styleUrls: ['./ui-heading.component.scss'],
+    standalone: false
 })
 export class UiHeadingComponent {
   // --- Entradas de Configuración ---

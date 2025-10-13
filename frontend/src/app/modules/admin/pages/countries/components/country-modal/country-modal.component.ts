@@ -7,9 +7,10 @@ import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
 import { Country } from '../../models/country.model';
 
 @Component({
-  selector: 'app-country-modal',
-  templateUrl: './country-modal.component.html',
-  styleUrls: ['./country-modal.component.scss'],
+    selector: 'app-country-modal',
+    templateUrl: './country-modal.component.html',
+    styleUrls: ['./country-modal.component.scss'],
+    standalone: false
 })
 export class CountryModalComponent implements OnInit {
   @Input() country!: Country;
