@@ -1,326 +1,78 @@
-@import 'src/styles/variables';
-@import 'src/styles/mixins';
+/* modal.component.scss */
 
-// --- FONDO OSCURECIDO MODAL ---
-.modal-backdrop {
-  position: fixed;
-  inset: 0;
-  background: rgba(35,48,137,0.19); // un poco más suave
+:host {
+  // Asegura que la modal siempre esté por encima del resto
+  position: relative;
   z-index: 2000;
 }
 
-// --- CONTENEDOR PRINCIPAL MODAL ---
- 
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(35, 48, 137, 0.19);
+  z-index: 1;
+}
+
 .modal-container {
   position: fixed;
-  z-index: 2100;
+  z-index: 2;
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
   background: var(--color-surface, #fff);
   border-radius: 18px;
-
-  width: 80vw;
-  height: 80vh;
-  max-width: 95vw;
-  max-height: 95vh;
-  min-width: 320px;
-  min-height: 140px;
-
-  box-shadow: 0 7px 24px 0 rgba(60,75,100,0.14), 0 2px 12px rgba(0,0,0,0.12);
+  width: clamp(320px, 80vw, 900px); // Ancho flexible con mínimo y máximo
+  max-height: 90vh;
+  box-shadow: 0 7px 24px rgba(60, 75, 100, 0.14), 0 2px 12px rgba(0, 0, 0, 0.12);
   display: flex;
   flex-direction: column;
   overflow: hidden;
-
-  @media (max-width: 700px) {
-    width: 98vw;
-    height: 98vh;
-    max-width: 100vw;
-    max-height: 100vh;
-    min-width: 0;
-    min-height: 0;
-  }
 }
 
-
-// --- CABECERA DEL MODAL ---
+// -- Secciones del Modal --
 .modal-header {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 0.9em;
-  padding: 1.1em 1.3em;
-  background: var(--color-primary, #1976d2);
-  color: #fff;
+  // Sobrescribimos estilos de app-ui-heading para que encaje en el modal
+  &.ui-heading {
+    padding: 1.1em 1.3em;
+    background: var(--color-primary, #1976d2);
+    color: #fff;
+    margin-bottom: 0; // Eliminamos el margen inferior por defecto de los headings
+    display: flex;
+    align-items: center;
+    width: 100%;
+  }
 
-  &.align-center {
-    justify-content: center;
-  }
-  &.align-right {
-    justify-content: flex-end;
-  }
-  .modal-header-icon img {
-    vertical-align: middle;
-    height: 2em;
-    width: auto;
-    filter: drop-shadow(0 1px 3px rgba(0,0,0,0.06));
-  }
-  .modal-title {
-    font-size: 1.23em;
-    font-weight: 700;
-    letter-spacing: 0.018em;
-  }
-  .modal-subtitle {
-    display: block;
-    margin-top: 0.19em;
-    font-size: 1em;
-    color: #89b8fd;
-    font-weight: 400;
-  }
+  // Posicionamiento del botón de cerrar
   .modal-close {
     margin-left: auto;
-    font-size: 1.4em;
+    font-size: 1.6em;
     background: none;
     border: none;
     cursor: pointer;
     color: inherit;
-    opacity: 0.82;
+    opacity: 0.8;
     line-height: 1;
     transition: opacity 0.15s;
-    &:hover { opacity: 1; }
+    padding: 0 0.25em;
+
+    &:hover {
+      opacity: 1;
+    }
   }
 }
 
-// --- CONTENIDO PRINCIPAL ---
 .modal-body {
-  flex: 1 1 auto;
-  padding: 2em 1.6em 1.2em 1.6em;
-  background: var(--modal-body-bg, #fff);
-  display: flex;
-  flex-direction: column;
-  align-items: center; /* Centra verticalmente el grupo de campos si hay espacio */
-  
-.modal-form-row {
-  display: flex;
-  flex-direction: row;
-  align-items: center; // centra verticalmente label e input
-  width: 420px;        // puedes ajustar a lo que prefieras
-  margin-bottom: 1.2rem;
+  flex-grow: 1; // Permite que el cuerpo ocupe el espacio disponible
+  padding: 1.5rem 2rem;
+  overflow-y: auto; // Añade scroll si el contenido es muy largo
 }
 
-.modal-form-label {
-  flex: 0 0 140px;     // ancho fijo para etiquetas, ajusta a tu literal más largo
-  text-align: right;
-  margin-right: 16px;
-  font-weight: 500;
-}
-
-.modal-form-input {
-  flex: 1 1 auto;
-  min-width: 120px;
-  max-width: 300px;
-  padding: 0.5rem 0.7rem;
-  border-radius: 6px;
-  border: 1px solid #c2c2c2;
-}
-
-@media (max-width: 600px) {
-  .modal-form-row {
-    width: 95vw;
-    flex-direction: column;
-    align-items: stretch;
-    padding: 1.2em 0.4em;
-  }
-  .modal-form-label {
-    text-align: left;
-    margin-bottom: 2px;
-    margin-right: 0;
-  }
-}
-  
-}
-
-// --- FOOTER/BOTONES ---
 .modal-footer {
-  flex: 0 0 auto;
+  flex-shrink: 0; // Evita que el footer se encoja
   padding: 1em 1.3em;
   display: flex;
-  gap: 1.2em;
+  gap: 1em;
   justify-content: flex-end;
   border-top: 1px solid #eaeaea;
   background: var(--color-footer-bg, #f7f8fb);
-}
-
-.modal-btn {
-  padding: 0.68em 1.3em;
-  border-radius: .4em;
-  border: 0;
-  font-weight: 600;
-  font-size: 1.04em;
-  cursor: pointer;
-  transition: background 0.13s, color 0.13s, box-shadow 0.15s;
-  &--accept {
-    background: var(--color-primary, #227bff);
-    color: #fff;
-    &:hover:not(:disabled) { background: #195dc8; }
-    &:disabled { background: #d4e0fa; color: #7da2e7; }
-  }
-  &--cancel {
-    background: #f5f5f5;
-    color: #235;
-
-    &:hover:not(:disabled) { background: #ececec; }
-    &:disabled { opacity: 0.42; color: #aaa; }
-  }
-}
-
-// --- MODOS Y PERSONALIZACIONES ---
-.modal--transparent {
-  background: rgba(255,255,255,0.80) !important;
-  box-shadow: 0 5px 22px 0 rgba(38,60,120,0.09);
-}
-
-
-// --- BOTÓN DE CERRAR EN CABECERA ---
-.modal-close-btn {
-  background: none;
-  border: none;
-  color: inherit;
-  font-size: 2rem;
-  line-height: 1;
-  cursor: pointer;
-  margin-left: 16px;
-  padding: 0 8px;
-  transition: color .2s;
-  border-radius: 4px;
-  &:hover { color: var(--color-accent, #ff9800); background: rgba(0,0,0,0.06); }
-}
-
-// --- CONTENIDO DEL MODAL ---
-.modal-body {
-  flex: 1 1 auto;
-  padding: 1.2rem 1.5rem;
-  overflow-y: auto;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  min-height: 0;
-}
-
-// Centrado vertical si se usa
-.modal-body-centerer {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  min-height: 100%;
-  width: 100%;
-}
-
-
-// --- PIE/MODAL FOOTER ---
-.modal-footer {
-  flex: 0 0 auto;
-  display: flex;
-  justify-content: flex-end;
-  gap: 1.1rem;
-  padding: 1rem 2rem 1.2rem 2rem;
-  border-top: 1px solid #eee;
-  background: var(--color-footer-bg, #f7faff);
-}
-
-// Estilos genéricos de formularios para modales reutilizables
-.modal-form {
-  display: flex;
-  flex-direction: column;
-  gap: 0.7em;
-
-  .form-field {
-    display: flex;
-    flex-direction: column;
-    width: 100%;
-    margin-bottom: 1em;
-
-    label,
-    .field-label {
-      text-align: left;
-      padding-right: 0;
-      margin-bottom: .18em;
-      font-weight: 600;
-      font-size: .96em;
-      color: #257bff;
-      letter-spacing: 0.01em;
-    }
-    input {
-      padding: 0.62em 1.14em;
-      border-radius: 0.33em;
-      border: 1.5px solid #dde7fa;
-      font-size: 1em;
-      background: #f8fbff;
-      color: #222;
-      transition: border .17s, box-shadow .17s;
-
-      &:focus {
-        border: 1.7px solid #257bff;
-        outline: none;
-        background: #fff;
-        box-shadow: 0 0 0 2px #daf0ff47;
-      }
-      &.ng-invalid.ng-touched {
-        border-color: #e84c3d;
-        background: #fff6f6;
-      }
-    }
-    .error-msg {
-      margin-top: .21em;
-      font-size: .92em;
-      color: #e84c3d;
-      min-height: 1.05em;
-      background: transparent;
-      font-weight: 500;
-    }
-  }
-}
-
-
-
-.modal-btn {
-  @include button-base;
-  min-width: 100px;
-  font-weight: 500;
-  padding: 0.7em 1.4em;
-  border: none;
-  border-radius: 0.4em;
-  font-size: 1rem;
-  cursor: pointer;
-  
-  &--accept {
-    @include button-variant('primary');
-    background: #2466c8;
-    color: #fff;
-  }
-  &--close {
-    @include button-variant('secondary');
-    background: #eee;
-    color: #444;
-  }
-}
-
-
-.modal-header app-ui-heading .ui-heading__icon svg,
-.modal-header app-ui-heading .ui-heading__icon img {
-  color: inherit;
-  fill: currentColor;
-  filter: none;
-}
-
-
-@media (max-width: 800px) {
-  .modal-container {
-    width: 98vw;
-    height: 98vh;
-  }
-  .modal-body {
-    padding: 1em .4em;
-  }
 }

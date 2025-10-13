@@ -1,8 +1,4 @@
-<!-- admin-countries.component.html (CORREGIDO) -->
-
 <div class="countries-admin">
-
-  <!-- CABECERA DE PÁGINA (usa el componente UI-Heading) -->
   <app-ui-heading
     [level]="1"
     text="Países"
@@ -13,17 +9,14 @@
     ariaLabel="Administración de Países"
   ></app-ui-heading>
 
-  <!-- CONTROLES SUPERIORES: Toolbars y buscador -->
   <div class="table-controls">
     <div class="controls-left">
-      <!-- Botones de acción masiva (Nuevo, Eliminar) -->
       <app-toolbar-buttons 
         *ngIf="toolbarButtons.length > 0" 
         [buttons]="toolbarButtons">
       </app-toolbar-buttons>
     </div>
     <div class="controls-right">
-      <!-- Componente de caja de búsqueda -->
       <app-search-box
         [value]="searchTerm"
         (valueChange)="onValueChange($event)"
@@ -32,7 +25,6 @@
     </div>
   </div>
 
-  <!-- TABLA DE PAÍSES (Smart Component) -->
   <app-country-table
     [countries]="countries"
     [selectedCountries]="selectedCountries"
@@ -43,9 +35,8 @@
     (selectionChange)="onSelectionChange($event)"
     (sortChange)="onSortChange($event)"
     (editCountry)="openEditModal($event)"
-  ></app-country-table> <!-- ✅ CORREGIDO: Cierre de etiqueta de apertura -->
+  ></app-country-table>
 
-  <!-- PAGINADOR GLOBAL (Gestionado por este componente) -->
   <div class="paginator-wrapper">
     <app-paginator
       [page]="page"
@@ -55,12 +46,10 @@
       [pageSizeOptions]="[10, 25, 50, 100]"
       (pageChange)="onPageChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
-    ></app-paginator> <!-- ✅ CORREGIDO: Cierre de etiqueta de apertura -->
+    ></app-paginator>
   </div>
-
 </div>
 
-<!-- MODAL DE CREAR/EDITAR (usa app-modal) -->
 <app-modal
   *ngIf="showEditModal"
   [visible]="showEditModal"
@@ -69,44 +58,32 @@
   [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
   [acceptDisabled]="countryForm.invalid"
   [icon]="editMode ? 'icon-edit' : 'icon-add'"
-  [showClose]="true"
+  [showCancel]="true"
   (accept)="saveCountry()"
   (close)="closeCountryModal()"
 >
-  <!-- FORMULARIO reactivo, renderizado en el slot de contenido de la modal -->
   <form [formGroup]="countryForm" (ngSubmit)="saveCountry()" class="modal-form">
-    <!-- Mensaje de error general -->
     <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
-    
-    <!-- Campos del formulario: Se necesitan los campos alpha2may, alpha3may, numeric y defaultname -->
     <div class="form-field">
       <label class="field-label" for="defaultname">Nombre</label>
       <input id="defaultname" class="field-input field-large" formControlName="defaultname" type="text" placeholder="Nombre oficial" />
-      <!-- Mensajes de error específicos del campo -->
     </div>
-    
     <div class="form-field">
       <label class="field-label" for="alpha2may">Código Alpha-2 (2 letras)</label>
       <input id="alpha2may" class="field-input field-small" formControlName="alpha2may" type="text" placeholder="ES" />
     </div>
-
     <div class="form-field">
       <label class="field-label" for="alpha3may">Código Alpha-3 (3 letras)</label>
       <input id="alpha3may" class="field-input field-medium" formControlName="alpha3may" type="text" placeholder="ESP" />
     </div>
-
     <div class="form-field">
       <label class="field-label" for="numeric">Código Numérico (3 dígitos)</label>
       <input id="numeric" class="field-input field-medium" formControlName="numeric" type="text" placeholder="724" />
     </div>
-    
-    <!-- Añade el campo oculto para el ID si es edición -->
     <input type="hidden" formControlName="id" />
-
   </form>
 </app-modal>
 
-<!-- DIÁLOGO DE CONFIRMACIÓN DE BORRADO (usa app-confirm-dialog) -->
 <app-confirm-dialog
   [visible]="showConfirmDelete"
   title="Confirmar eliminación"

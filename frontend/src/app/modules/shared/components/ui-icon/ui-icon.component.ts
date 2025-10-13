@@ -25,6 +25,7 @@ export class UiIconComponent implements OnInit {
   public svgContent$!: Observable<SafeHtml>;
   public imagePath: string = '';
 
+  // El mapa ahora devuelve strings con la unidad 'px' incluida
   private readonly sizeMap: Record<string, string> = {
     xs: '16px', s: '20px', m: '24px', l: '32px', xl: '48px',
   };
@@ -42,13 +43,15 @@ export class UiIconComponent implements OnInit {
 
   /**
    * Devuelve el valor de tamaño para CSS.
+   * Ahora es más inteligente:
+   * - Si es un número, le añade 'px'.
+   * - Si es un preset ('xs', 's'...), busca en el mapa.
+   * - Si es otro string ('1em', '3rem'...), lo devuelve directamente.
    */
   get computedSize(): string {
     if (typeof this.size === 'number') {
       return `${this.size}px`;
     }
-    // Si es un string de preset ('xs', 's'...), busca en el mapa.
-    // Si es otro string ('1em', '3rem'...), lo devuelve directamente.
     return this.sizeMap[this.size] || this.size;
   }
 }

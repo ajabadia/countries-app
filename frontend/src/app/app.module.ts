@@ -2,25 +2,25 @@
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+// ✅ 1. Importa el módulo de animaciones
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
 import { AppComponent } from './app.component';
 import { SharedModule } from './modules/shared/shared.module';
 
-// ¡IMPORTANTE! Se eliminan todas las importaciones de componentes de 'admin/' y 'public/'
-// ya que están declarados en sus módulos perezosos correspondientes.
-
 @NgModule({
-  // Solo se declara el componente raíz
   declarations: [
     AppComponent, 
   ],
   imports: [
-    BrowserModule, 
+    BrowserModule,
+    // ✅ 2. Añade BrowserAnimationsModule a la lista de imports
+    BrowserAnimationsModule, 
     AppRoutingModule, 
-    SharedModule, // Asumo que SharedModule contiene componentes usados por AppComponent
-    HttpClientModule // Necesario para servicios globales como CountriesService
+    SharedModule,
+    HttpClientModule
   ],
   providers: [],
   bootstrap: [AppComponent]

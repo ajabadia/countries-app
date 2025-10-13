@@ -3,25 +3,22 @@
   [ngClass]="[type, class || '']"
   [ngStyle]="{
     'color': color,
-    'width.px': computedSize,
-    'height.px': computedSize
+    'width': computedSize,
+    'height': computedSize
   }"
   [attr.title]="icon"
 >
   <ng-container [ngSwitch]="renderAs">
-    
     <ng-container *ngSwitchCase="'svg'">
       <span 
         *ngIf="svgContent$ | async as svgContent" 
         [innerHTML]="svgContent"
       ></span>
     </ng-container>
-
     <img
       *ngSwitchCase="'image'" 
       [src]="imagePath" 
       [alt]="icon" 
     />
-  
   </ng-container>
 </span>

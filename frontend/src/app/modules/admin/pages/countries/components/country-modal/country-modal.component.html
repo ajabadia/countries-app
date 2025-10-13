@@ -2,7 +2,7 @@
   [visible]="visible"
   [title]="isEditMode ? 'Editar país' : 'Nuevo país'"
   [acceptLabel]="isEditMode ? 'Guardar' : 'Crear'"
-  [closeLabel]="'Cancelar'"
+  [cancelLabel]="'Cancelar'"
   [acceptDisabled]="!form.valid"
   (accept)="onSave()"
   (close)="onClose()"
@@ -13,6 +13,5 @@
     <div *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
       El nombre es obligatorio.
     </div>
-    <!-- Puedes añadir más campos aquí -->
   </form>
 </app-modal>

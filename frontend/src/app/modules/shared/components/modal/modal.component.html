@@ -1,62 +1,54 @@
-<!-- Fondo gris traslúcido -->
 <div 
-  class="modal-backdrop"
   *ngIf="visible"
-  (click)="closeOnBackdrop && onBackdropClick($event)">
+  class="modal-backdrop"
+  [@fade]
+  (click)="onBackdropClick($event)">
 </div>
 
-<!-- Contenedor centrado de la modal -->
 <div
-  class="modal-container"
   *ngIf="visible"
-  [ngClass]="'modal--' + color"
+  class="modal-container"
+  [@fade]
   role="dialog"
   aria-modal="true"
+  [attr.aria-labelledby]="'modal-title-' + title"
 >
-  <!-- Cabecera -->
-  <div class="modal-header" [ngClass]="'align-' + titleAlign">
-    <ng-container *ngIf="icon && iconPosition === 'left'">
-      <span class="modal-header-icon" [ngClass]="'icon-size-' + iconSize">
-        <img [src]="'assets/icons/' + icon + '.svg'" alt="" />
-      </span>
-    </ng-container>
-    <div class="modal-title" [ngClass]="'text-' + titleColor">
-      {{ title }}
-      <ng-container *ngIf="subtitle">
-        <span class="modal-subtitle">{{ subtitle }}</span>
-      </ng-container>
-    </div>
-    <ng-container *ngIf="showClose">
-      <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">
-        ×
-      </button>
-    </ng-container>
-  </div>
+  <app-ui-heading
+    [id]="'modal-title-' + title"
+    class="modal-header"
+    [level]="3"
+    [text]="title"
+    [subtitle]="subtitle"
+    [textAlign]="titleAlign"
+    [icon]="icon"
+    [iconType]="iconType"
+    [iconSize]="iconSize"
+    color="primary" 
+  >
+    <button *ngIf="showCancel" type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">
+      ×
+    </button>
+  </app-ui-heading>
 
-  <!-- Cuerpo/modal body -->
   <div class="modal-body">
     <ng-content></ng-content>
   </div>
 
-  <!-- Footer/botones -->
-  <div class="modal-footer" *ngIf="showAccept || showClose">
-    <button 
-      *ngIf="showClose"
-      type="button"
-      class="btn modal-btn modal-btn--cancel"
-      (click)="onClose()"
-      [disabled]="false"
+  <div class="modal-footer" *ngIf="showAccept || showCancel">
+    <app-ui-button
+      *ngIf="showCancel"
+      color="surface"
+      (onClick)="onClose()"
     >
-      {{ closeLabel }}
-    </button>
-    <button
+      {{ cancelLabel }}
+    </app-ui-button>
+    <app-ui-button
       *ngIf="showAccept"
-      type="button"
-      class="btn modal-btn modal-btn--accept"
+      color="primary"
       [disabled]="acceptDisabled"
-      (click)="onAccept()"
+      (onClick)="onAccept()"
     >
       {{ acceptLabel }}
-    </button>
+    </app-ui-button>
   </div>
 </div>

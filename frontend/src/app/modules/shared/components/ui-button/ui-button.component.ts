@@ -1,91 +1,54 @@
-import { Component, Input, Output, EventEmitter, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// ui-button.component.ts
+
+import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
   selector: 'app-ui-button',
   templateUrl: './ui-button.component.html',
   styleUrls: ['./ui-button.component.scss']
 })
-export class UiButtonComponent implements OnInit, OnChanges {
-
+export class UiButtonComponent {
+  // --- Entradas de Configuración con Valores por Defecto ---
   @Input() type: 'button' | 'submit' = 'button';
   @Input() disabled = false;
   @Input() active = false;
   @Input() fullWidth = false;
   @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' = 'primary';
-
-  // Iconografía
+  @Input() loading = false;
+  
+  // --- Entradas de Iconografía ---
   @Input() icon?: string;
   @Input() iconPosition: 'left' | 'right' | 'top' | 'only' = 'left';
-  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
+  @Input() iconType: UiIconType = 'system';
+  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | string = '1em'; // '1em' para heredar tamaño
 
-  // Texto del botón
-  @Input() textSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
-
-  // Accesibilidad
+  // --- Accesibilidad ---
   @Input() ariaLabel?: string;
 
-  // Loading state
-  @Input() loading: boolean = false;
-
+  // --- Eventos ---
   @Output() onClick = new EventEmitter<MouseEvent>();
 
-  svgContent: SafeHtml | null = null;
-  private readonly iconSizes = { xs: 16, s: 20, m: 24, l: 32, xl: 40 };
-  private readonly textSizes = { xs: '0.75rem', s: '0.875rem', m: '1rem', l: '1.25rem', xl: '1.5rem' };
+  // ❌ ELIMINADO: HttpClient, DomSanitizer, OnInit, OnChanges, loadSvg(), getIconStyle(), getTextStyle().
 
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
-
-  ngOnInit() {
-    this.loadSvg();
-  }
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['icon'] && !changes['icon'].isFirstChange()) {
-      this.loadSvg();
-    }
-  }
-
-  private loadSvg() {
-    if (this.icon) {
-      this.http.get(`/assets/icons/${this.icon}.svg`, { responseType: 'text' }).subscribe({
-        next: svg => this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svg),
-        error: () => this.svgContent = null
-      });
-    } else {
-      this.svgContent = null;
-    }
-  }
-
-  getIconStyle() {
-    const size = typeof this.iconSize === 'number'
-      ? `${this.iconSize}px`
-      : `${this.iconSizes[this.iconSize] ?? this.iconSizes.m}px`;
+  /**
+   * Genera dinámicamente el objeto de clases para [ngClass].
+   */
+  get buttonClasses() {
     return {
-      width: size,
-      height: size,
-      minWidth: size,
-      minHeight: size,
-      verticalAlign: this.iconPosition === 'top' ? 'middle' : 'text-bottom'
+      'ui-button': true,
+      [`ui-button--${this.color}`]: true,
+      'ui-button--full-width': this.fullWidth,
+      'ui-button--active': this.active,
+      'ui-button--has-icon': !!this.icon,
+      [`ui-button--icon-${this.iconPosition}`]: !!this.icon,
+      'ui-button--icon-only': this.iconPosition === 'only',
     };
   }
-  getTextStyle() {
-    const size = typeof this.textSize === 'number'
-      ? `${this.textSize}px`
-      : this.textSizes[this.textSize] ?? this.textSizes.m;
-    return { fontSize: size };
-  }
-  getButtonClasses(): string {
-    return [
-      'ui-button',
-      `ui-button--${this.color}`,
-      this.fullWidth ? 'ui-button--full-width' : '',
-      this.active ? 'ui-button--active' : '',
-      this.icon ? 'ui-button--has-icon' : '',
-      this.icon ? `ui-button--icon-${this.iconPosition}` : '',
-      this.iconPosition === 'only' ? 'ui-button--icon-only' : ''
-    ].filter(Boolean).join(' ');
-  }
+
+  /**
+   * Emite el evento de clic solo si el botón no está deshabilitado o cargando.
+   */
   handleClick(event: MouseEvent) {
     if (!this.disabled && !this.loading) {
       this.onClick.emit(event);

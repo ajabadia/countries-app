@@ -1,34 +1,24 @@
 <button
   [attr.type]="type"
-  [class]="getButtonClasses()"
+  [ngClass]="buttonClasses"
   [disabled]="disabled || loading"
   [attr.aria-label]="ariaLabel"
   (click)="handleClick($event)"
 >
   <span *ngIf="loading" class="ui-button__spinner" aria-hidden="true"></span>
-  <ng-container *ngIf="icon && (iconPosition === 'left' || iconPosition === 'top' || iconPosition === 'only')">
-    <span
-      class="ui-button__icon"
-      [ngStyle]="getIconStyle()"
-      [innerHTML]="svgContent"
-      *ngIf="svgContent"
-      aria-hidden="true"
-    ></span>
-  </ng-container>
-  <span
-    class="ui-button__text"
-    [ngStyle]="getTextStyle()"
+
+  <app-ui-icon
+    *ngIf="icon && !loading"
+    class="ui-button__icon"
+    [icon]="icon"
+    [type]="iconType"
+    [size]="iconSize"
+  ></app-ui-icon>
+  
+  <span 
     *ngIf="iconPosition !== 'only' && !loading"
+    class="ui-button__text"
   >
     <ng-content></ng-content>
   </span>
-  <ng-container *ngIf="icon && iconPosition === 'right'">
-    <span
-      class="ui-button__icon"
-      [ngStyle]="getIconStyle()"
-      [innerHTML]="svgContent"
-      *ngIf="svgContent"
-      aria-hidden="true"
-    ></span>
-  </ng-container>
 </button>
