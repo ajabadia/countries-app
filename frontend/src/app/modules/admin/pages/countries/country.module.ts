@@ -1,37 +1,34 @@
+// src/app/modules/admin/pages/countries/country.module.ts
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule, ReactiveFormsModule } from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
-// Importa SharedModule si usas componentes compartidos como modals, botones o iconos.
-import { SharedModule } from 'src/app/modules/shared/shared.module';
-
-// Importa aquí todos tus componentes country
+// Importaciones relativas correctas según tu estructura de archivos
+import { AdminCountriesComponent } from './admin-countries.component';
 import { CountryTableComponent } from './components/country-table/country-table.component';
 import { CountryModalComponent } from './components/country-modal/country-modal.component';
-// IMPORTANTE: el nombre y path deben coincidir exactamente con tu componente tabla hijo.
-import { HtmlCountryTableComponent } from './components/country-table/html-country-table/html-country-table.component';
+
+// Importamos SharedModule para tener acceso a componentes/directivas comunes.
+import { SharedModule } from 'src/app/shared/shared.module';
 
 @NgModule({
   declarations: [
-    CountryTableComponent,      // Componente padre (gestiona lógica y muestra la tabla hijo)
-    CountryModalComponent,      // Componente modal para países
-    HtmlCountryTableComponent,  // Componente hijo desacoplado para la tabla de países
-
-    // añade aquí otros relacionados, como country-confirm-dialog si lo creas igual de modular
+    // Aquí se declaran TODOS los componentes que pertenecen a este módulo.
+    AdminCountriesComponent,
+    CountryTableComponent,
+    CountryModalComponent
   ],
   imports: [
     CommonModule,
-    FormsModule,
-    ReactiveFormsModule,
-    SharedModule
-    // importa aquí SharedModule si usas componentes compartidos dentro (botones, modals, inputs...)
+    SharedModule,
+    ReactiveFormsModule, // Necesario para los formularios reactivos en la modal.
+    NgbModule,           // ¡CLAVE! Importar NgbModule aquí resuelve los errores de inyección de NgbModal.
   ],
   exports: [
-    CountryTableComponent,
-    CountryModalComponent,
-    // Si necesitas exponer la tabla hija fuera (raro, si solo la usas adentro puedes quitarla)
-    HtmlCountryTableComponent
-    // y cualquiera que necesites usar fuera de este módulo
+    // Exportamos el componente "página" para que AdminModule pueda utilizarlo en su enrutamiento.
+    AdminCountriesComponent
   ]
 })
-export class CountryModule {}
+export class CountryModule { }

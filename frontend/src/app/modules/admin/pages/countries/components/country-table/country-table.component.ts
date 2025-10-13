@@ -1,11 +1,14 @@
-// src/app/modules/country/components/country-table/country-table.component.ts
+// src/app/modules/admin/pages/countries/components/country-table/country-table.component.ts
+
 import { Component, OnInit } from '@angular/core';
 import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
 import { Country } from '../../models/country.model';
-import { CountriesService } from 'src/app/services/countries.service';
-import { countryTableColumns } from '../../country-table.columns';
+import { CountriesService } from 'src/app/core/services/countries.service';
+// ¡CORREGIDO! La ruta y el nombre de la importación son ahora correctos.
+import { countryTableColumns } from '../../config/country-table.columns';
 import { CountryModalComponent } from '../country-modal/country-modal.component';
 import Swal from 'sweetalert2';
+import { ApiResponse } from 'src/app/core/models/api-response.model';
 
 @Component({
   selector: 'app-country-table',
@@ -19,57 +22,74 @@ export class CountryTableComponent implements OnInit {
 
   constructor(
     private countriesService: CountriesService,
-    private modalService: NgbModal // <-- Inyecta el servicio de modales
+    private modalService: NgbModal
   ) { }
 
   ngOnInit(): void {
     this.loadCountries();
   }
 
-  loadCountries() {
-    this.countriesService.getAll().subscribe(response => {
+  loadCountries(): void {
+    // ¡CORREGIDO! Se añade el tipado a la respuesta para evitar errores de 'any'.
+    this.countriesService.getAll().subscribe((response: ApiResponse<Country>) => {
       this.countries = response.data;
       this.total = response.total;
     });
   }
-  
-  openModal(country?: Country) {
-    const modalRef = this.modalService.open(CountryModalComponent);
+
+  async openModal(country?: Country) {
+    const modalRef = this.modalService.open(CountryModalComponent, { centered: true });
     modalRef.componentInstance.country = country;
 
-    modalRef.result.then((result) => {
-      if (country) { // Si había un país, es una actualización
-        this.countriesService.update(country.id, result).subscribe(() => this.handleSuccess('País actualizado'));
-      } else { // Si no, es una creación
-        this.countriesService.create(result).subscribe(() => this.handleSuccess('País creado'));
+    try {
+      const result: Country = await modalRef.result;
+
+      if (this.isCountry(result)) {
+        if (country) { // Si el país existe, actualizamos
+          this.countriesService.update(country.id, result).subscribe(() => this.handleSuccess('País actualizado correctamente'));
+        } else { // Si no, creamos uno nuevo
+          this.countriesService.create(result).subscribe(() => this.handleSuccess('País creado correctamente'));
+        }
       }
-    }).catch(() => {}); // El catch vacío es para evitar errores en consola cuando se cierra la modal sin guardar
+    } catch (error) {
+      // Este bloque se ejecuta cuando la modal se cierra sin guardar (ESC, click fuera, etc).
+      // Lo dejamos vacío para que no aparezca un error en la consola.
+    }
   }
 
-  deleteCountry(country: Country) {
+  // Una pequeña función de guarda para asegurar que el resultado de la modal es un objeto Country válido.
+  private isCountry(result: any): result is Country {
+    return result && typeof result.id === 'string' && typeof result.defaultname === 'string';
+  }
+
+  deleteCountry(country: Country): void {
     Swal.fire({
       title: '¿Estás seguro?',
-      text: `Se eliminará el país "${country.defaultname}"`,
+      text: `Esta acción no se puede deshacer. Se eliminará el país "${country.defaultname}".`,
       icon: 'warning',
       showCancelButton: true,
-      confirmButtonText: 'Sí, eliminar',
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#6c757d',
+      confirmButtonText: 'Sí, ¡eliminar!',
       cancelButtonText: 'Cancelar'
     }).then((result) => {
       if (result.isConfirmed) {
         this.countriesService.delete(country.id).subscribe(() => {
-          this.handleSuccess('País eliminado');
+          this.handleSuccess('País eliminado correctamente');
         });
       }
     });
   }
 
-  private handleSuccess(message: string) {
+  private handleSuccess(message: string): void {
     Swal.fire({
       icon: 'success',
       title: message,
       showConfirmButton: false,
-      timer: 1500
+      timer: 1500,
+      position: 'top-end',
+      toast: true
     });
-    this.loadCountries(); // Recarga la tabla
+    this.loadCountries();
   }
 }
