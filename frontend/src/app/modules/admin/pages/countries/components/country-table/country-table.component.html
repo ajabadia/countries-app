@@ -9,22 +9,28 @@
   <table class="table admin-table">
     <thead>
       <tr>
-        <th *ngFor="let col of columns">{{ col.header }}</th>
+        @for (col of columns; track col) {
+          <th>{{ col.header }}</th>
+        }
         <th>Acciones</th>
       </tr>
     </thead>
     <tbody>
-      <tr *ngFor="let country of countries">
-        <td *ngFor="let col of columns">{{ country[col.field] }}</td>
-        <td>
-          <button class="btn btn-sm btn-icon" (click)="openModal(country)">
-            <i class="fas fa-pencil-alt"></i>
-          </button>
-          <button class="btn btn-sm btn-icon btn-danger" (click)="deleteCountry(country)">
-            <i class="fas fa-trash-alt"></i>
-          </button>
-        </td>
-      </tr>
+      @for (country of countries; track country) {
+        <tr>
+          @for (col of columns; track col) {
+            <td>{{ country[col.field] }}</td>
+          }
+          <td>
+            <button class="btn btn-sm btn-icon" (click)="openModal(country)">
+              <i class="fas fa-pencil-alt"></i>
+            </button>
+            <button class="btn btn-sm btn-icon btn-danger" (click)="deleteCountry(country)">
+              <i class="fas fa-trash-alt"></i>
+            </button>
+          </td>
+        </tr>
+      }
     </tbody>
   </table>
 </div>

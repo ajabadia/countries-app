@@ -8,10 +8,11 @@
 
   <div class="table-controls">
     <div class="controls-left">
-      <app-toolbar-buttons
-        *ngIf="toolbarButtons.length > 0"
-        [buttons]="toolbarButtons">
-      </app-toolbar-buttons>
+      @if (toolbarButtons.length > 0) {
+        <app-toolbar-buttons
+          [buttons]="toolbarButtons">
+        </app-toolbar-buttons>
+      }
     </div>
     <div class="controls-right">
       <app-search-box
@@ -45,21 +46,22 @@
   </div>
 </div>
 
-<app-modal
-  *ngIf="showEditModal"
-  [visible]="showEditModal"
-  [title]="editMode ? 'Editar país' : 'Nuevo país'"
-  [subtitle]="editMode && pais ? pais.defaultname : ''"
-  [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
-  [acceptDisabled]="countryForm.invalid"
-  [icon]="editMode ? 'icon-edit' : 'icon-add'"
-  [showCancel]="true"
-  (accept)="saveCountry()"
-  (close)="closeCountryModal()"
->
-  <form [formGroup]="countryForm" class="modal-form">
+@if (showEditModal) {
+  <app-modal
+    [visible]="showEditModal"
+    [title]="editMode ? 'Editar país' : 'Nuevo país'"
+    [subtitle]="editMode && pais ? pais.defaultname : ''"
+    [acceptLabel]="editMode ? 'Guardar' : 'Crear'"
+    [acceptDisabled]="countryForm.invalid"
+    [icon]="editMode ? 'icon-edit' : 'icon-add'"
+    [showCancel]="true"
+    (accept)="saveCountry()"
+    (close)="closeCountryModal()"
+    >
+    <form [formGroup]="countryForm" class="modal-form">
     </form>
-</app-modal>
+  </app-modal>
+}
 
 <app-confirm-dialog
   [visible]="showConfirmDelete"

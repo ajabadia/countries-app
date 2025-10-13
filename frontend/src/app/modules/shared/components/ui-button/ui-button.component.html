@@ -4,21 +4,25 @@
   [disabled]="disabled || loading"
   [attr.aria-label]="ariaLabel"
   (click)="handleClick($event)"
->
-  <span *ngIf="loading" class="ui-button__spinner" aria-hidden="true"></span>
-
-  <app-ui-icon
-    *ngIf="icon && !loading"
-    class="ui-button__icon"
-    [icon]="icon"
-    [type]="iconType"
-    [size]="iconSize"
-  ></app-ui-icon>
-  
-  <span 
-    *ngIf="iconPosition !== 'only' && !loading"
-    class="ui-button__text"
   >
-    <ng-content></ng-content>
-  </span>
+  @if (loading) {
+    <span class="ui-button__spinner" aria-hidden="true"></span>
+  }
+
+  @if (icon && !loading) {
+    <app-ui-icon
+      class="ui-button__icon"
+      [icon]="icon"
+      [type]="iconType"
+      [size]="iconSize"
+    ></app-ui-icon>
+  }
+
+  @if (iconPosition !== 'only' && !loading) {
+    <span
+      class="ui-button__text"
+      >
+      <ng-content></ng-content>
+    </span>
+  }
 </button>

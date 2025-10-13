@@ -4,36 +4,44 @@
 <table class="admin-table">
   <thead>
     <tr>
-      <th *ngIf="selectable">
-        <app-toggle-checkbox
-          [state]="generalToggleState"
-          (stateChange)="onGeneralToggle($event)">
-        </app-toggle-checkbox>
-      </th>
-      <th *ngFor="let col of columns"
+      @if (selectable) {
+        <th>
+          <app-toggle-checkbox
+            [state]="generalToggleState"
+            (stateChange)="onGeneralToggle($event)">
+          </app-toggle-checkbox>
+        </th>
+      }
+      @for (col of columns; track col) {
+        <th
           [ngStyle]="getColStyle(col)"
           (click)="onSort(col)"
           [class.sortable]="col.sortable">
-        {{ col.label }}
-      </th>
+          {{ col.label }}
+        </th>
+      }
     </tr>
   </thead>
   <tbody>
-    <tr
-      *ngFor="let row of items"
-      [class.row-selected]="isSelected(row)"
-      (click)="onRowClick(row, $event)">
-      <td *ngIf="selectable">
-        <app-toggle-checkbox
-          [state]="rowToggleState(row)"
-          (stateChange)="onRowToggle(row)">
-        </app-toggle-checkbox>
-      </td>
-<td *ngFor="let col of columns">
-  {{ row[col.key] }}
-</td>
- 
-    </tr>
+    @for (row of items; track row) {
+      <tr
+        [class.row-selected]="isSelected(row)"
+        (click)="onRowClick(row, $event)">
+        @if (selectable) {
+          <td>
+            <app-toggle-checkbox
+              [state]="rowToggleState(row)"
+              (stateChange)="onRowToggle(row)">
+            </app-toggle-checkbox>
+          </td>
+        }
+        @for (col of columns; track col) {
+          <td>
+            {{ row[col.key] }}
+          </td>
+        }
+      </tr>
+    }
   </tbody>
 </table>
 
