@@ -1,27 +1,50 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { FormGroup } from '@angular/forms';
+// src/app/modules/country/components/country-modal/country-modal.component.ts
+import { Component, Input, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { NgbActiveModal } from '@ng-bootstrap/ng-bootstrap';
+import { Country } from 'src/app/core/models/country.model';
 
 @Component({
-  selector: 'country-modal',
+  selector: 'app-country-modal',
   templateUrl: './country-modal.component.html',
-  styleUrls: ['./country-modal.component.scss']
+  styleUrls: ['./country-modal.component.scss'],
 })
-export class CountryModalComponent {
-  @Input() form!: FormGroup;
-  @Input() visible: boolean = false;
-  @Input() isEditMode: boolean = false;
+export class CountryModalComponent implements OnInit {
+  @Input() country!: Country;
+  
+  countryForm!: FormGroup;
+  isEditMode: boolean = false;
+  modalTitle: string = '';
 
-  @Output() save = new EventEmitter<any>();
-  @Output() close = new EventEmitter<void>();
+  constructor(
+    public activeModal: NgbActiveModal,
+    private fb: FormBuilder
+  ) {}
 
-  // Emitimos sólo si el form es válido
-  onSave() {
-    if (this.form.valid) {
-      this.save.emit(this.form.value);
-    }
+  ngOnInit(): void {
+    this.isEditMode = !!this.country;
+    this.modalTitle = this.isEditMode ? `Editar País: ${this.country.defaultname}` : 'Crear Nuevo País';
+    this.buildForm();
   }
 
-  onClose() {
-    this.close.emit();
+  private buildForm(): void {
+    this.countryForm = this.fb.group({
+      id: [
+        { value: this.country?.id || '', disabled: this.isEditMode },
+        [Validators.required, Validators.minLength(2), Validators.maxLength(2), Validators.pattern('^[a-zA-Z]+$')]
+      ],
+      defaultname: [this.country?.defaultname || '', [Validators.required]],
+      alpha2may: [this.country?.alpha2may || '', [Validators.required, Validators.minLength(2), Validators.maxLength(2)]],
+      alpha3may: [this.country?.alpha3may || '', [Validators.required, Validators.minLength(3), Validators.maxLength(3)]],
+      numeric: [this.country?.numeric || '', [Validators.required, Validators.pattern('^[0-9]+$')]],
+    });
+  }
+
+  save(): void {
+    if (this.countryForm.invalid) {
+      this.countryForm.markAllAsTouched();
+      return;
+    }
+    this.activeModal.close(this.countryForm.getRawValue());
   }
 }

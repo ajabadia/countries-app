@@ -3,16 +3,13 @@
     [level]="1"
     text="Países"
     icon="icon-country"
-    iconPosition="left"
     color="primary"
-    textAlign="left"
-    ariaLabel="Administración de Países"
   ></app-ui-heading>
 
   <div class="table-controls">
     <div class="controls-left">
-      <app-toolbar-buttons 
-        *ngIf="toolbarButtons.length > 0" 
+      <app-toolbar-buttons
+        *ngIf="toolbarButtons.length > 0"
         [buttons]="toolbarButtons">
       </app-toolbar-buttons>
     </div>
@@ -31,7 +28,6 @@
     [columns]="columns"
     [sortKey]="sortKey || ''"
     [sortOrder]="sortOrder"
-    (rowClick)="onRowClick($event)"
     (selectionChange)="onSelectionChange($event)"
     (sortChange)="onSortChange($event)"
     (editCountry)="openEditModal($event)"
@@ -40,10 +36,9 @@
   <div class="paginator-wrapper">
     <app-paginator
       [page]="page"
-      [totalPages]="totalPages"          
+      [totalPages]="totalPages"
       [totalItems]="totalCountries"
       [pageSize]="pageSize"
-      [pageSizeOptions]="[10, 25, 50, 100]"
       (pageChange)="onPageChange($event)"
       (pageSizeChange)="onPageSizeChange($event)"
     ></app-paginator>
@@ -62,26 +57,8 @@
   (accept)="saveCountry()"
   (close)="closeCountryModal()"
 >
-  <form [formGroup]="countryForm" (ngSubmit)="saveCountry()" class="modal-form">
-    <div *ngIf="errorMsg" class="error-msg">{{ errorMsg }}</div>
-    <div class="form-field">
-      <label class="field-label" for="defaultname">Nombre</label>
-      <input id="defaultname" class="field-input field-large" formControlName="defaultname" type="text" placeholder="Nombre oficial" />
-    </div>
-    <div class="form-field">
-      <label class="field-label" for="alpha2may">Código Alpha-2 (2 letras)</label>
-      <input id="alpha2may" class="field-input field-small" formControlName="alpha2may" type="text" placeholder="ES" />
-    </div>
-    <div class="form-field">
-      <label class="field-label" for="alpha3may">Código Alpha-3 (3 letras)</label>
-      <input id="alpha3may" class="field-input field-medium" formControlName="alpha3may" type="text" placeholder="ESP" />
-    </div>
-    <div class="form-field">
-      <label class="field-label" for="numeric">Código Numérico (3 dígitos)</label>
-      <input id="numeric" class="field-input field-medium" formControlName="numeric" type="text" placeholder="724" />
-    </div>
-    <input type="hidden" formControlName="id" />
-  </form>
+  <form [formGroup]="countryForm" class="modal-form">
+    </form>
 </app-modal>
 
 <app-confirm-dialog

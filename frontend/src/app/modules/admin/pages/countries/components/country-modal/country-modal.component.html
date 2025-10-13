@@ -1,17 +1,40 @@
-<app-modal
-  [visible]="visible"
-  [title]="isEditMode ? 'Editar país' : 'Nuevo país'"
-  [acceptLabel]="isEditMode ? 'Guardar' : 'Crear'"
-  [cancelLabel]="'Cancelar'"
-  [acceptDisabled]="!form.valid"
-  (accept)="onSave()"
-  (close)="onClose()"
->
-  <form [formGroup]="form">
-    <label for="name">Nombre</label>
-    <input id="name" formControlName="name" aria-label="Nombre" />
-    <div *ngIf="form.controls['name'].invalid && form.controls['name'].touched">
-      El nombre es obligatorio.
+<div class="modal-header">
+  <h4 class="modal-title" id="modal-basic-title">{{ modalTitle }}</h4>
+  <button type="button" class="btn-close" aria-label="Close" (click)="activeModal.dismiss()"></button>
+</div>
+
+<div class="modal-body">
+  <form [formGroup]="countryForm" id="countryForm" (ngSubmit)="save()">
+    <div class="mb-3">
+      <label for="id" class="form-label">Código ID (2 letras)</label>
+      <input type="text" id="id" class="form-control" formControlName="id" 
+             [class.is-invalid]="countryForm.get('id')?.invalid && countryForm.get('id')?.touched">
+      <div *ngIf="countryForm.get('id')?.errors?.['required']" class="invalid-feedback">El ID es obligatorio.</div>
+    </div>
+    <div class="mb-3">
+      <label for="defaultname" class="form-label">Nombre</label>
+      <input type="text" id="defaultname" class="form-control" formControlName="defaultname"
+             [class.is-invalid]="countryForm.get('defaultname')?.invalid && countryForm.get('defaultname')?.touched">
+    </div>
+    <div class="mb-3">
+      <label for="alpha2may" class="form-label">Código Alpha-2</label>
+      <input type="text" id="alpha2may" class="form-control" formControlName="alpha2may"
+             [class.is-invalid]="countryForm.get('alpha2may')?.invalid && countryForm.get('alpha2may')?.touched">
+    </div>
+    <div class="mb-3">
+      <label for="alpha3may" class="form-label">Código Alpha-3</label>
+      <input type="text" id="alpha3may" class="form-control" formControlName="alpha3may"
+             [class.is-invalid]="countryForm.get('alpha3may')?.invalid && countryForm.get('alpha3may')?.touched">
+    </div>
+    <div class="mb-3">
+      <label for="numeric" class="form-label">Código Numérico</label>
+      <input type="text" id="numeric" class="form-control" formControlName="numeric"
+             [class.is-invalid]="countryForm.get('numeric')?.invalid && countryForm.get('numeric')?.touched">
     </div>
   </form>
-</app-modal>
+</div>
+
+<div class="modal-footer">
+  <button type="button" class="btn btn-outline-secondary" (click)="activeModal.dismiss()">Cancelar</button>
+  <button type="submit" form="countryForm" class="btn btn-primary" [disabled]="countryForm.invalid">Guardar</button>
+</div>

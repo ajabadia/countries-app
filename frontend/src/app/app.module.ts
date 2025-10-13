@@ -2,8 +2,8 @@
 
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
-// ✅ 1. Importa el módulo de animaciones
-import { BrowserAnimationsModule } from '@angular/platform-browser/animations'; 
+// ✅ 1. Importa el módulo de animaciones del navegador
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { HttpClientModule } from '@angular/common/http';
 import { AppRoutingModule } from './app-routing.module';
 
@@ -12,13 +12,13 @@ import { SharedModule } from './modules/shared/shared.module';
 
 @NgModule({
   declarations: [
-    AppComponent, 
+    AppComponent,
   ],
   imports: [
     BrowserModule,
     // ✅ 2. Añade BrowserAnimationsModule a la lista de imports
-    BrowserAnimationsModule, 
-    AppRoutingModule, 
+    BrowserAnimationsModule,
+    AppRoutingModule,
     SharedModule,
     HttpClientModule
   ],

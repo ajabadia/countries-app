@@ -1,23 +1,30 @@
-<app-html-country-table
-  [countries]="countries"
-  [selectedCountries]="selectedCountries"
-  [columns]="columns"
-  [sortKey]="sortKey"
-  [sortOrder]="sortOrder"
-  (rowClick)="onRowClick($event)"
-  (selectionChange)="onSelectionChange($event)"
-  (sortChange)="onSortChange($event)"
-  (selectCountry)="onSelectCountry($event)"
-  (editCountry)="onEditCountry($event)">
-</app-html-country-table>
+<div class="admin-content">
+  <div class="admin-toolbar">
+    <h1>Países</h1>
+    <button class="btn btn-primary" (click)="openModal()">
+      <i class="fas fa-plus"></i> Nuevo País
+    </button>
+  </div>
 
-<!-- PAGINADOR GLOBAL FUERA DE LA TABLA -->
-<app-paginator
-  [page]="page"
-  [totalPages]="totalPages"
-  [pageSize]="perPage"
-  [totalItems]="totalItems"
-  [pageSizeOptions]="[10, 25, 50, 100]"
-  (pageChange)="onPageChange($event)"
-  (pageSizeChange)="onPageSizeChange($event)">
-</app-paginator>
+  <table class="table admin-table">
+    <thead>
+      <tr>
+        <th *ngFor="let col of columns">{{ col.header }}</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let country of countries">
+        <td *ngFor="let col of columns">{{ country[col.field] }}</td>
+        <td>
+          <button class="btn btn-sm btn-icon" (click)="openModal(country)">
+            <i class="fas fa-pencil-alt"></i>
+          </button>
+          <button class="btn btn-sm btn-icon btn-danger" (click)="deleteCountry(country)">
+            <i class="fas fa-trash-alt"></i>
+          </button>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

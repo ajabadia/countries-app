@@ -1,65 +1,75 @@
-import { Component, Input, Output, EventEmitter } from '@angular/core';
-import { Country } from 'src/app/modules/shared/models/country.model';
-
-/**
- * Componente padre que gestiona datos, filtros y acciones,
- * delegando la tabla internamente a un hijo (html-country-table),
- * y gestionando aquí sólo la lógica externa (paginación, barra, etc.)
- */
+// src/app/modules/country/components/country-table/country-table.component.ts
+import { Component, OnInit } from '@angular/core';
+import { NgbModal } from '@ng-bootstrap/ng-bootstrap';
+import { Country } from '../../models/country.model';
+import { CountriesService } from 'src/app/services/countries.service';
+import { countryTableColumns } from '../../country-table.columns';
+import { CountryModalComponent } from '../country-modal/country-modal.component';
+import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-country-table',
   templateUrl: './country-table.component.html',
   styleUrls: ['./country-table.component.scss']
 })
-export class CountryTableComponent {
-  // ==== ESTADO PRINCIPAL DE LA TABLA (se pasa desde admin) ====
-  @Input() countries: Country[] = [];
-  @Input() selectedCountries: Country[] = [];
-  @Input() columns: any[] = [];
-  @Input() sortKey: string = '';
-  @Input() sortOrder: 'asc' | 'desc' = 'asc';
-    // Paginación (añade estos)
-  page: number = 1;
-  perPage: number = 25;
-  totalPages: number = 1;
-  totalItems: number = 0; // Calcula según countries o toda la fuente de datos
+export class CountryTableComponent implements OnInit {
+  countries: Country[] = [];
+  total = 0;
+  columns = countryTableColumns;
 
-  // ==== EVENTOS REENVIADOS HACIA ARRIBA ====
-  @Output() rowClick = new EventEmitter<Country>();
-  @Output() selectionChange = new EventEmitter<Country[]>();
-  @Output() sortChange = new EventEmitter<{ key: string, order: 'asc' | 'desc' }>();
-  @Output() selectCountry = new EventEmitter<{ country: Country, selected: boolean }>();
-  @Output() editCountry = new EventEmitter<Country>();
+  constructor(
+    private countriesService: CountriesService,
+    private modalService: NgbModal // <-- Inyecta el servicio de modales
+  ) { }
 
+  ngOnInit(): void {
+    this.loadCountries();
+  }
 
-
-
-  /** Handler: click en fila */
-  onRowClick(country: Country) { this.rowClick.emit(country); }
-
-  /** Handler: cambio en selección múltiple */
-  onSelectionChange(selected: Country[]) { this.selectionChange.emit(selected); }
-
-  /** Handler: cambio en ordenación */
-  onSortChange(e: { key: string, order: 'asc' | 'desc' }) { this.sortChange.emit(e); }
-
-  /** Handler: selección individual */
-  onSelectCountry(e: { country: Country, selected: boolean }) { this.selectCountry.emit(e); }
-
-  /** Handler: edición de país */
-  onEditCountry(country: Country) { this.editCountry.emit(country); }
-
+  loadCountries() {
+    this.countriesService.getAll().subscribe(response => {
+      this.countries = response.data;
+      this.total = response.total;
+    });
+  }
   
-  onPageChange(newPage: number) {
-  this.page = newPage;
-  // Si necesitas emitir a un padre o recargar, llama al método adecuado aquí
-}
-onPageSizeChange(newSize: number) {
-  this.perPage = newSize;
-  this.page = 1;
-  // Igual, recarga/actualiza si usas datos desde servidor o filtrado fuera
-}
+  openModal(country?: Country) {
+    const modalRef = this.modalService.open(CountryModalComponent);
+    modalRef.componentInstance.country = country;
 
+    modalRef.result.then((result) => {
+      if (country) { // Si había un país, es una actualización
+        this.countriesService.update(country.id, result).subscribe(() => this.handleSuccess('País actualizado'));
+      } else { // Si no, es una creación
+        this.countriesService.create(result).subscribe(() => this.handleSuccess('País creado'));
+      }
+    }).catch(() => {}); // El catch vacío es para evitar errores en consola cuando se cierra la modal sin guardar
+  }
 
+  deleteCountry(country: Country) {
+    Swal.fire({
+      title: '¿Estás seguro?',
+      text: `Se eliminará el país "${country.defaultname}"`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Sí, eliminar',
+      cancelButtonText: 'Cancelar'
+    }).then((result) => {
+      if (result.isConfirmed) {
+        this.countriesService.delete(country.id).subscribe(() => {
+          this.handleSuccess('País eliminado');
+        });
+      }
+    });
+  }
+
+  private handleSuccess(message: string) {
+    Swal.fire({
+      icon: 'success',
+      title: message,
+      showConfirmButton: false,
+      timer: 1500
+    });
+    this.loadCountries(); // Recarga la tabla
+  }
 }
