@@ -1,119 +1,46 @@
-import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// ui-heading.component.ts
+
+import { Component, Input } from '@angular/core';
+import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
   selector: 'app-ui-heading',
   templateUrl: './ui-heading.component.html',
-  styleUrls: ['./ui-heading.component.scss']
+  styleUrls: ['./ui-heading.component.scss'],
 })
-export class UiHeadingComponent implements OnInit, OnChanges {
-
+export class UiHeadingComponent {
+  // --- Entradas de Configuración ---
   @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 1;
-  @Input() subtitle?: string;
-  @Input() title: string = '';
-  @Input() titleColor?: string;
-  @Input() customClass?: string;
-  @Input() desc?: string;
   @Input() text: string = '';
+  @Input() subtitle?: string;
   @Input() textAlign: 'left' | 'center' | 'right' = 'left';
   @Input() color: 'primary' | 'secondary' | 'accent' | 'text' | 'muted' | 'transparent' = 'text';
-  @Input() icon?: string;
-  @Input() iconPosition: 'left' | 'right' | 'top' | 'bottom' = 'left';
-  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
-  @Input() iconColor?: string;
-  @Input() iconLabel?: string;
-  @Input() iconAriaLabel?: string;
-  @Input() textSize?: 'xs' | 's' | 'm' | 'l' | 'xl' | 'xxl' | number;
-  @Input() ariaLabel?: string;
-  @Input() allowHtml: boolean = false;
-  @Input() headingLevel: 'h1' | 'h2' | 'h3' | 'h4' | 'h5' | 'h6' | 'div' = 'h2';
-  @Input() headingClass?: string;
 
-  // Añadidos para evitar errores y permitir personalización
-  /** Clase CSS opcional para el icono, útil como [class] en app-ui-icon */
+  // --- Entradas para el Icono ---
+  @Input() icon?: string;
+  @Input() iconPosition: 'left' | 'right' = 'left';
+  // ✅ El tamaño ahora puede ser 'inherit' para que coincida con el texto
+  @Input() iconSize: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'inherit';
+  @Input() iconType: UiIconType = 'system';
+  @Input() iconColor?: string;
   @Input() iconClass?: string;
 
-  /** Color opcional para el subtítulo, útil como [ngStyle]="{ color: subtitleColor }" */
-  @Input() subtitleColor?: string;
-
-  svgContent: SafeHtml | null = null;
-
-  private readonly iconSizes = { xs: 16, s: 20, m: 24, l: 32, xl: 40 };
-
-  private readonly textSizes = {
-    xs: '0.75rem',
-    s: '0.875rem',
-    m: '1rem',
-    l: '1.25rem',
-    xl: '1.5rem',
-    xxl: '2rem'
-  };
-
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
-
-  ngOnInit() {
-    this.loadSvg();
-  }
-
-  ngOnChanges(changes: SimpleChanges) {
-    if (changes['icon'] && !changes['icon'].isFirstChange()) {
-      this.loadSvg();
-    }
-  }
-
-  private loadSvg() {
-    if (this.icon) {
-      this.http.get(`/assets/icons/${this.icon}.svg`, { responseType: 'text' }).subscribe({
-        next: svg => this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svg),
-        error: () => this.svgContent = null
-      });
-    } else {
-      this.svgContent = null;
-    }
-  }
-
-  getIconStyle() {
-    let size: string;
-    if (this.iconSize) {
-      size = typeof this.iconSize === 'number'
-        ? `${this.iconSize}px`
-        : `${this.iconSizes[this.iconSize] ?? this.iconSizes.m}px`;
-    } else if (this.textSize) {
-      size = typeof this.textSize === 'number'
-        ? `${this.textSize}px`
-        : this.textSizes[this.textSize] ?? this.textSizes.m;
-    } else {
-      size = `${this.iconSizes.m}px`;
-    }
-
+  // --- Entradas de Accesibilidad y Clases ---
+  @Input() ariaLabel?: string;
+  @Input() customClass?: string;
+  
+  /**
+   * Genera un objeto de clases para [ngClass] de forma dinámica.
+   */
+  get headingClasses() {
     return {
-      width: size,
-      height: size,
-      minWidth: size,
-      minHeight: size,
-      verticalAlign: this.iconPosition === 'top' || this.iconPosition === 'bottom' ? 'middle' : 'text-bottom'
+      'ui-heading': true,
+      [`ui-heading--level-${this.level}`]: true,
+      [`ui-heading--color-${this.color}`]: true,
+      [`ui-heading--align-${this.textAlign}`]: true,
+      'ui-heading--has-icon': !!this.icon,
+      [`ui-heading--icon-${this.iconPosition}`]: !!this.icon,
+      [this.customClass || '']: !!this.customClass,
     };
-  }
-
-  getTextStyle() {
-    if (this.textSize) {
-      const size = typeof this.textSize === 'number'
-        ? `${this.textSize}px`
-        : this.textSizes[this.textSize] ?? this.textSizes.m;
-      return { fontSize: size };
-    }
-    return {};
-  }
-
-  getHeadingClasses(): string {
-    return [
-      'ui-heading',
-      `ui-heading--level-${this.level}`,
-      `ui-heading--color-${this.color}`,
-      `ui-heading--align-${this.textAlign}`,
-      this.icon ? 'ui-heading--has-icon' : '',
-      this.icon ? `ui-heading--icon-${this.iconPosition}` : ''
-    ].filter(Boolean).join(' ');
   }
 }

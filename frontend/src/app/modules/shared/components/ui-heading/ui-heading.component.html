@@ -1,71 +1,38 @@
 <ng-container [ngSwitch]="level">
-
-  <h1 *ngSwitchCase="1" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h1 *ngSwitchCase="1" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h1>
-  <h2 *ngSwitchCase="2" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h2 *ngSwitchCase="2" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h2>
-  <h3 *ngSwitchCase="3" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h3 *ngSwitchCase="3" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h3>
-  <h4 *ngSwitchCase="4" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h4 *ngSwitchCase="4" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h4>
-  <h5 *ngSwitchCase="5" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h5 *ngSwitchCase="5" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h5>
-  <h6 *ngSwitchCase="6" [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <h6 *ngSwitchCase="6" [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </h6>
-  <div *ngSwitchDefault [ngClass]="headingClass">
-    <ng-container *ngTemplateOutlet="mainContent"></ng-container>
+  <div *ngSwitchDefault [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
+    <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
   </div>
 </ng-container>
 
-<ng-template #mainContent>
-  <span
-    *ngIf="icon && iconPosition === 'left'"
-    class="ui-heading__icon ui-heading__icon--left"
-  >
-    <app-ui-icon
-      [icon]="icon"
-      [size]="iconSize"
-      [color]="iconColor"
-      [ariaLabel]="iconAriaLabel"
-      [attr.data-testid]="iconLabel"
-      [class]="iconClass"
-    ></app-ui-icon>
-  </span>
-  <span
-    *ngIf="icon && iconPosition === 'right'"
-    class="ui-heading__icon ui-heading__icon--right"
-  >
-    <app-ui-icon
-      [icon]="icon"
-      [size]="iconSize"
-      [color]="iconColor"
-      [ariaLabel]="iconAriaLabel"
-      [attr.data-testid]="iconLabel"
-      [class]="iconClass"
-    ></app-ui-icon>
-  </span>
-  <span
-    class="ui-heading__text"
-    [ngStyle]="{ color: color }"
-  >
-    <ng-container *ngIf="allowHtml; else plainText">
-      <span [innerHTML]="text"></span>
-    </ng-container>
-    <ng-template #plainText>
-      {{ text }}
-    </ng-template>
-  </span>
-  <small
-    *ngIf="subtitle"
-    class="ui-heading__subtitle"
-    [ngStyle]="{ color: subtitleColor }"
-  >
-    {{ subtitle }}
-  </small>
+<ng-template #contentTpl>
+  <app-ui-icon
+    *ngIf="icon"
+    class="ui-heading__icon"
+    [icon]="icon"
+    [type]="iconType"
+    [size]="iconSize === 'inherit' ? '1em' : iconSize"
+    [color]="iconColor"
+    [class]="iconClass"
+  ></app-ui-icon>
+
+  <span class="ui-heading__text">{{ text }}</span>
+  <small *ngIf="subtitle" class="ui-heading__subtitle">{{ subtitle }}</small>
 </ng-template>

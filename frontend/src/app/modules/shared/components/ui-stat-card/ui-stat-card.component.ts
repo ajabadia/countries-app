@@ -2,8 +2,7 @@
 
 import { Component, Input, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
-// ✅ 1. Importamos el tipo estricto para los iconos
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from 'src/app/services/icon.service'; // Importamos el tipo
 
 @Component({
   selector: 'app-ui-stat-card',
@@ -15,13 +14,9 @@ export class UiStatCardComponent {
   @Input({ required: true }) value!: string | number;
   @Input() icon?: string;
   @Input() detailRoute?: string;
-  
-  // ✅ 2. Usamos el tipo estricto 'UiIconType'
-  @Input() iconType: UiIconType = 'system';
+  @Input() iconType: UiIconType = 'system'; // Usamos el tipo estricto con valor por defecto
   @Input() iconClass: string = '';
   @Input() iconColor: string = '';
-
-  // ✅ 3. El tamaño ahora se pasa directamente al componente hijo 'app-ui-icon'
   @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
 
   // ❌ ELIMINADO: Ya no necesitamos HttpClient, DomSanitizer, ngOnInit,

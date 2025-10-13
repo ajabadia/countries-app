@@ -1,15 +1,18 @@
 // src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component.ts
 
 import { Component, Input } from '@angular/core';
-import { UiIconType } from 'src/app/services/icon.service'; // Importamos el tipo estricto
+// ✅ 1. Importamos el tipo estricto desde el servicio de iconos
+import { UiIconType } from 'src/app/services/icon.service';
 
+// ✅ 2. Definimos una interfaz más robusta para los botones
 export interface ToolbarButtonConfig {
   icon: string;
   label: string;
   action: () => void;
   color: 'main' | 'edit' | 'danger' | string;
   disabled?: boolean;
-  iconType?: UiIconType; // Usamos el tipo estricto
+  // ✅ 3. Usamos el tipo estricto 'UiIconType' en lugar de 'string'
+  iconType?: UiIconType;
   iconSize?: number | 'xs' | 's' | 'm' | 'l' | 'xl';
   iconColor?: string;
   iconClass?: string;
@@ -21,6 +24,7 @@ export interface ToolbarButtonConfig {
   styleUrls: ['./toolbar-buttons.component.scss']
 })
 export class ToolbarButtonsComponent {
+  // ✅ 4. Usamos la interfaz en el Input
   @Input() buttons: ToolbarButtonConfig[] = [];
 
   ejecutarAccion(btn: ToolbarButtonConfig) {

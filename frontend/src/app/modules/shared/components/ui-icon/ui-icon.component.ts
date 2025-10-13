@@ -12,28 +12,21 @@ import { IconService, UiIconType, UiIconRender } from 'src/app/services/icon.ser
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiIconComponent implements OnInit {
-  // --- Inputs del Componente con Valores por Defecto ---
   @Input({ required: true }) icon!: string;
-  
-  // ✅ El tipo por defecto ahora es 'system'
   @Input() type: UiIconType = 'system';
+  @Input() color?: string;
   
-  // ✅ El tamaño por defecto es 'm'
-  @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl' = 'm';
+  // ✅ CORREGIDO: El tipo ahora acepta cualquier string para máxima flexibilidad (ej: '1em', '32px')
+  @Input() size: number | string = 'm'; 
   
-  // ✅ El modo de renderizado por defecto es 'svg'
+  @Input() class?: string;
   @Input() renderAs: UiIconRender = 'svg';
 
-  // --- Inputs Opcionales (pueden ser undefined) ---
-  @Input() color?: string;
-  @Input() class?: string;
-
-  // --- Propiedades Públicas para la Plantilla ---
   public svgContent$!: Observable<SafeHtml>;
   public imagePath: string = '';
 
-  private readonly sizeMap: Record<string, number> = {
-    xs: 16, s: 20, m: 24, l: 32, xl: 48,
+  private readonly sizeMap: Record<string, string> = {
+    xs: '16px', s: '20px', m: '24px', l: '32px', xl: '48px',
   };
 
   constructor(private iconService: IconService) {}
@@ -47,10 +40,15 @@ export class UiIconComponent implements OnInit {
     }
   }
 
-  get computedSize(): number {
+  /**
+   * Devuelve el valor de tamaño para CSS.
+   */
+  get computedSize(): string {
     if (typeof this.size === 'number') {
-      return this.size > 0 ? this.size : 24;
+      return `${this.size}px`;
     }
-    return this.sizeMap[this.size] || 24;
+    // Si es un string de preset ('xs', 's'...), busca en el mapa.
+    // Si es otro string ('1em', '3rem'...), lo devuelve directamente.
+    return this.sizeMap[this.size] || this.size;
   }
 }
