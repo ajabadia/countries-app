@@ -4,20 +4,14 @@
   role="button"
   [attr.aria-label]="label"
   (click)="onClick()"
-  (keydown.enter)="onKeydown()"
-  (keydown.space)="onKeydown()"
 >
-  <span
-    class="ui-stat-card__icon"
-    *ngIf="icon"
-    [ngStyle]="{ width: getIconSizePx() + 'px', height: getIconSizePx() + 'px' }"
-  >
+  <span class="ui-stat-card__icon" *ngIf="icon">
     <app-ui-icon
       [icon]="icon"
-      [type]="iconType || 'system'"
+      [type]="iconType"
       [color]="iconColor || 'var(--color-primary, #10416a)'"
       [class]="iconClass"
-      [size]="getIconSizePx()"
+      [size]="iconSize"
     ></app-ui-icon>
   </span>
 

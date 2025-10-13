@@ -1,6 +1,9 @@
-import { Component, Input, OnInit, ChangeDetectionStrategy, HostBinding } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+// src/app/modules/shared/components/ui-icon/ui-icon.component.ts
+
+import { Component, Input, OnInit, ChangeDetectionStrategy } from '@angular/core';
+import { SafeHtml } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
+import { IconService, UiIconType, UiIconRender } from 'src/app/services/icon.service';
 
 @Component({
   selector: 'app-ui-icon',
@@ -9,86 +12,45 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class UiIconComponent implements OnInit {
-  @Input() icon!: string;
-  @Input() type: string = 'system';
+  // --- Inputs del Componente con Valores por Defecto ---
+  @Input({ required: true }) icon!: string;
+  
+  // ✅ El tipo por defecto ahora es 'system'
+  @Input() type: UiIconType = 'system';
+  
+  // ✅ El tamaño por defecto es 'm'
+  @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl' = 'm';
+  
+  // ✅ El modo de renderizado por defecto es 'svg'
+  @Input() renderAs: UiIconRender = 'svg';
+
+  // --- Inputs Opcionales (pueden ser undefined) ---
   @Input() color?: string;
-  @Input() size: number | 'xs' | 's' | 'm' | 'l' | 'xl'  = 'm';
   @Input() class?: string;
 
-  svgContent: SafeHtml | null = null;
+  // --- Propiedades Públicas para la Plantilla ---
+  public svgContent$!: Observable<SafeHtml>;
+  public imagePath: string = '';
 
-  errorIcon: string = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="currentColor">
-      <line x1="8" y1="8" x2="24" y2="24" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
-      <line x1="24" y1="8" x2="8" y2="24" stroke="currentColor" stroke-width="4" stroke-linecap="round" />
-    </svg>
-  `;
-
-  private readonly sizeMap: Record<'xs' | 's' | 'm' | 'l' | 'xl', number> = {
-    xs: 16, s: 20, m: 24, l: 32, xl: 40
+  private readonly sizeMap: Record<string, number> = {
+    xs: 16, s: 20, m: 24, l: 32, xl: 48,
   };
 
-  private static svgCache = new Map<string, SafeHtml>();
+  constructor(private iconService: IconService) {}
+
+  ngOnInit(): void {
+    if (this.renderAs === 'svg') {
+      this.svgContent$ = this.iconService.getIcon(this.icon, this.type);
+    } else {
+      const [name, extension] = this.icon.split('.');
+      this.imagePath = this.iconService.getIconPath(name, this.type, extension || 'png');
+    }
+  }
 
   get computedSize(): number {
     if (typeof this.size === 'number') {
-      const absNumber = Math.abs(this.size);
-      return absNumber > 0 ? absNumber : 24;
+      return this.size > 0 ? this.size : 24;
     }
-    return this.size !== undefined && this.sizeMap[this.size as keyof typeof this.sizeMap] !== undefined
-  ? this.sizeMap[this.size as keyof typeof this.sizeMap]
-  : 24;
-
-  }
-
-  // Asigna la clase por tipo de manera automática
-  @HostBinding('class')
-  get typeClass(): string {
-    return ['ui-icon', this.type, this.class].filter(Boolean).join(' ');
-  }
-
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer) {}
-
-  ngOnInit(): void {
-    const cacheKey = `${this.type}|${this.icon}|${this.computedSize}|${this.color || ''}`;
-    if (UiIconComponent.svgCache.has(cacheKey)) {
-      this.svgContent = UiIconComponent.svgCache.get(cacheKey)!;
-      return;
-    }
-
-    const path = this.getIconPath();
-    this.http.get(path, { responseType: 'text' }).subscribe({
-      next: svg => {
-        const patched = this.sanitizer.bypassSecurityTrustHtml(this.patchSvg(svg));
-        UiIconComponent.svgCache.set(cacheKey, patched);
-        this.svgContent = patched;
-      },
-      error: () => {
-        const safeErrorIcon = this.sanitizer.bypassSecurityTrustHtml(this.errorIcon);
-        UiIconComponent.svgCache.set(cacheKey, safeErrorIcon);
-        this.svgContent = safeErrorIcon;
-      }
-    });
-  }
-
-  private getIconPath(): string {
-    switch (this.type) {
-      case 'flag-circle': return `assets/icons/flags/circle-flags/${this.icon}.svg`;
-      case 'flag-detail': return `assets/icons/flags/${this.icon}.svg`;
-      case 'flag-language': return `assets/icons/flags/circle-flags/language/${this.icon}.svg`;
-      case 'other-circle': return `assets/icons/flags/circle-flags/other/${this.icon}.svg`;
-      case 'map-globe': return `assets/icons/globes/${this.icon}.svg`;
-      case 'system':
-      default: return `assets/icons/${this.icon}.svg`;
-    }
-  }
-
-  private patchSvg(svg: string): string {
-    svg = svg.replace(/fill="[^\"]*"/g, 'fill="currentColor"');
-    svg = svg.replace(/<svg([^>]*)>/, (match, attrs) => {
-      return match.includes('fill=') ? match : `<svg${attrs} fill="currentColor">`;
-    });
-    svg = svg.replace(/(width|height)="[^\"]*"/g, '');
-    return svg;
+    return this.sizeMap[this.size] || 24;
   }
 }

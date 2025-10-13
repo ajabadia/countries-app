@@ -1,44 +1,30 @@
 :host {
   display: inline-flex;
-  align-items: center;
-  justify-content: center;
   vertical-align: middle;
 }
 
-/* Wrapper icono */
 .ui-icon {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  vertical-align: middle;
-  background: transparent !important;
   transition: color 0.2s;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
+
+  // Los elementos internos (SVG o IMG) deben ocupar todo el espacio
+  & > * {
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
 }
 
-/* SVG interno */
+// El SVG inyectado hereda el color del texto (`currentColor`)
 :host ::ng-deep svg {
-  width: 100% !important;
-  height: 100% !important;
-  display: block;
-  vertical-align: middle;
-  fill: currentColor !important;
+  fill: currentColor;
+  stroke: currentColor;
 }
 
-/* Variantes */
-.ui-icon.system {
-  color: var(--color-primary, #10416a);
-  box-shadow: 0 2px 12px rgba(16,65,106,0.07);
-  border-radius: .5em;
-  background: transparent !important;
-  box-shadow: none !important;
-  border-radius: 0 !important;
-  padding: 0 !important;
-}
-
-.ui-icon.flag-circle {
+// Estilos específicos para variantes que mencionaste
+.flag-circle {
   color: var(--color-flag, #fff);
   background: var(--flag-bg, #11a2ea);
   border: 2.5px solid #c9e7fc;
@@ -47,7 +33,7 @@
   padding: .15em;
 }
 
-.ui-icon.notfound svg {
+.notfound :host ::ng-deep svg {
   opacity: 0.4;
   filter: grayscale(1);
 }

@@ -1,21 +1,9 @@
-﻿const express = require('express');
+﻿// routes/dependencies.js
+const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/dependenciesController');
-const { getDB } = require('../db/database');
+const dependenciesController = require('../controllers/dependenciesController');
 
-router.get('/', ctrl.list);
+router.get('/count', dependenciesController.getCount);
+router.get('/', dependenciesController.getAll);
 
-
-// Endpoint de CONTADOR PURO
-router.get('/count', (req, res) => {
-  const db = getDB();
-  try {
-    const result = db.prepare('SELECT COUNT(*) as total FROM dependencies').get();
-    res.json({ total: result.total });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al contar dependencias: ' + err.message });
-  }
-});
-
-module.exports = router;
-module.exports = router;
+module.exports = router; // <-- Corregido para que solo haya un export

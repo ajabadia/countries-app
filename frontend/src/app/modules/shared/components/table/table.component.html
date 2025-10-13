@@ -26,7 +26,7 @@
       <td *ngIf="selectable">
         <app-toggle-checkbox
           [state]="rowToggleState(row)"
-          (stateChange)="onRowToggle(row, $event)">
+          (stateChange)="onRowToggle(row)">
         </app-toggle-checkbox>
       </td>
 <td *ngFor="let col of columns">

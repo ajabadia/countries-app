@@ -1,20 +1,10 @@
-﻿const express = require('express');
+﻿// routes/multilingualnames.js
+const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/translationsController');
-const { getDB } = require('../db/database');
+// Asegúrate de que el nombre del archivo del controlador coincida
+const multilingualnamesController = require('../controllers/multilingualnamesController'); 
 
-router.get('/', ctrl.list);
-
-// Endpoint de CONTADOR PURO
-router.get('/count', (req, res) => {
-  const db = getDB();
-  try {
-    const result = db.prepare('SELECT COUNT(*) as total FROM multilingualnames').get();
-    res.json({ total: result.total });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al contar multilingualnames: ' + err.message });
-  }
-});
-
+router.get('/count', multilingualnamesController.getCount);
+router.get('/', multilingualnamesController.getAll);
 
 module.exports = router;

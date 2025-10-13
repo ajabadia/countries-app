@@ -1,60 +1,122 @@
+// src/app/modules/shared/components/services/selection/selection.service.ts
 import { Injectable } from '@angular/core';
 
+// T extiende un objeto que debe tener una propiedad 'id' de cualquier tipo.
 @Injectable({
   providedIn: 'root'
 })
-export class SelectionService<T extends { id: string }> {
-  public selected: T[] = [];
+export class SelectionService<T extends { id: any }> {
+  // Almacenamiento optimizado: Map<ID, Objeto T>
+  private selectedMap = new Map<string | number, T>();
   private lastIndex: number | null = null;
   public focusedIndex: number = 0;
 
+  /**
+   * Devuelve los elementos seleccionados como un array (para el consumo del componente).
+   * La selección real se gestiona en el Map.
+   */
+  get selectedArray(): T[] {
+    return Array.from(this.selectedMap.values());
+  }
+  
+  // ===============================================
+  // MANEJO DE SELECCIÓN PRINCIPAL
+  // ===============================================
+
+  /**
+   * Maneja la selección individual y de rango (Shift+Click).
+   */
   select(row: T, list: T[], event?: MouseEvent | { shiftKey?: boolean }) {
     const idx = list.findIndex(x => x.id === row.id);
 
     if (event && event.shiftKey && this.lastIndex !== null) {
-      // Shift: rango
-      const s = Math.min(this.lastIndex, idx);
-      const e = Math.max(this.lastIndex, idx);
-      for (let i = s; i <= e; i++) {
-        const item = list[i];
-        if (!this.selected.some(sel => sel.id === item.id)) {
-          this.selected = [...this.selected, item];
-        }
-      }
+      // 1. Selección de rango (Shift+Click)
+      this.handleRangeSelection(list, idx);
     } else {
-      // Toggle individual
-      const i = this.selected.findIndex(sel => sel.id === row.id);
-      if (i !== -1) {
-        this.selected.splice(i, 1);
-        this.selected = [...this.selected];
-      } else {
-        this.selected = [...this.selected, row];
-      }
-      this.lastIndex = idx;
-      this.focusedIndex = idx;
+      // 2. Toggle individual (Click simple)
+      this.toggle(row);
+    }
+    
+    // Siempre actualiza el último índice y el foco si es una selección simple
+    if (!event || !event.shiftKey) {
+        this.lastIndex = idx;
+        this.focusedIndex = idx;
     }
   }
+  
+  /**
+   * Alterna el estado de selección de una fila.
+   * Optimizado para Map: O(1)
+   */
+  toggle(row: T): void {
+    if (this.selectedMap.has(row.id)) {
+      this.selectedMap.delete(row.id);
+    } else {
+      this.selectedMap.set(row.id, row);
+    }
+  }
+  
+  /**
+   * Lógica de selección de rango (solo llamado internamente por select()).
+   */
+  private handleRangeSelection(list: T[], currentIdx: number): void {
+      if (this.lastIndex === null) return;
 
-  clear() { this.selected = []; }
-  selectAll(list: T[]) { this.selected = [...list]; }
+      const [start, end] = [
+          Math.min(this.lastIndex, currentIdx), 
+          Math.max(this.lastIndex, currentIdx)
+      ];
+      
+      // Itera solo sobre el rango afectado
+      for (let i = start; i <= end; i++) {
+          this.selectedMap.set(list[i].id, list[i]);
+      }
+      
+      this.focusedIndex = currentIdx;
+  }
+  
+  // ===============================================
+  // UTILIDADES
+  // ===============================================
+
+  /** Limpia todas las selecciones. */
+  clear() { 
+    this.selectedMap.clear(); 
+  }
+
+  /** Selecciona todos los elementos de la lista actual. */
+  selectAll(list: T[]) { 
+    this.selectedMap.clear();
+    list.forEach(item => this.selectedMap.set(item.id, item));
+  }
+  
+  /** * Verifica si un elemento está seleccionado. 
+   * Optimizado para Map: O(1)
+   */
+  isSelected(id: string | number): boolean { 
+    return this.selectedMap.has(id); 
+  }
+  
+  // --- Estados de la selección (consumidos por el componente Table) ---
+
+  /** True si todos los elementos de la lista visible están seleccionados. */
+  allSelected(list: T[]): boolean { 
+      return list.length > 0 && list.every(item => this.selectedMap.has(item.id)); 
+  }
+  
+  /** True si algunos, pero no todos, están seleccionados. */
+  someSelected(list: T[]): boolean { 
+      return this.selectedMap.size > 0 && !this.allSelected(list);
+  }
+  
+  /** True si hay al menos una selección. */
+  get anySelected(): boolean { 
+      return this.selectedMap.size > 0; 
+  }
+
+  // --- Accesibilidad/Navegación por teclado ---
   moveFocus(list: T[], step: number) {
     this.focusedIndex = Math.max(0, Math.min(list.length - 1, this.focusedIndex + step));
   }
-  isSelected(id: string) { return this.selected.some(x => x.id === id); }
-  get allSelected() { return (list: T[]) => this.selected.length === list.length; }
-  get someSelected() { return (list: T[]) => this.selected.length > 1 && this.selected.length < list.length; }
-  get anySelected() { return this.selected.length > 0; }
 
-  keyboardHandler(event: KeyboardEvent, list: T[]) {
-    if (event.key === 'ArrowDown') { this.moveFocus(list, +1); event.preventDefault(); }
-    if (event.key === 'ArrowUp')   { this.moveFocus(list, -1); event.preventDefault(); }
-    if (event.key === ' ' || event.key.toLowerCase() === 'space') {
-      const row = list[this.focusedIndex];
-      this.select(row, list, event);
-      event.preventDefault();
-    }
-    if ((event.ctrlKey || event.metaKey) && event.key.toLowerCase() === 'a') {
-      this.selectAll(list); event.preventDefault();
-    }
-  }
 }

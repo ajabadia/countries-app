@@ -1,22 +1,12 @@
-﻿const express = require('express');
+﻿// routes/continents.js
+const express = require('express');
 const router = express.Router();
-const ctrl = require('../controllers/continentsController');
-const { getDB } = require('../db/database');
+const continentsController = require('../controllers/continentsController');
 
-router.get('/', ctrl.list);
-
-
-// Endpoint de CONTADOR PURO
-router.get('/count', (req, res) => {
-  const db = getDB();
-  try {
-    const result = db.prepare('SELECT COUNT(*) as total FROM continents').get();
-    res.json({ total: result.total });
-  } catch (err) {
-    res.status(500).json({ error: 'Error al contar continentes: ' + err.message });
-  }
-});
+router.get('/count', continentsController.getCount);
+router.get('/', continentsController.getAll);
+// Puedes añadir el resto de rutas cuando las necesites
+// router.get('/:id', continentsController.getById);
+// router.post('/', continentsController.create);
 
 module.exports = router;
-
-

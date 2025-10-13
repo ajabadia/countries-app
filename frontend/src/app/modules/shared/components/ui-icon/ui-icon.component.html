@@ -1,17 +1,24 @@
 <span
   class="ui-icon"
+  [ngClass]="[type, class || '']"
   [ngStyle]="{
-    color: color,
-    width: computedSize + 'px',
-    height: computedSize + 'px'
+    'color': color,
+    'width.px': computedSize,
+    'height.px': computedSize
   }"
   [attr.title]="icon"
 >
-  <span
-    *ngIf="svgContent"
-    [innerHTML]="svgContent"
-    [style.width.px]="computedSize"
-    [style.height.px]="computedSize"
-    style="display:inline-block;vertical-align:middle"
-  ></span>
+  <ng-container [ngSwitch]="renderAs">
+    <ng-container *ngSwitchCase="'svg'">
+      <span 
+        *ngIf="svgContent$ | async as svgContent" 
+        [innerHTML]="svgContent"
+      ></span>
+    </ng-container>
+    <img
+      *ngSwitchCase="'image'" 
+      [src]="imagePath" 
+      [alt]="icon" 
+    />
+  </ng-container>
 </span>

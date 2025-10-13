@@ -1,15 +1,6 @@
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
-
-export interface TableColumn {
-  key: string;
-  label: string;
-  sortable?: boolean;
-  width?: string;
-  minWidth?: string;
-  maxWidth?: string;
-  sticky?: 'left' | 'right';
-}
+import { TableColumn } from 'src/app/modules/shared/models/table-column.model'; 
 
 @Component({
   selector: 'app-table',
@@ -17,83 +8,66 @@ export interface TableColumn {
   styleUrls: ['./table.component.scss']
 })
 export class TableComponent {
+  // === Inputs ===
   @Input() columns: TableColumn[] = [];
   @Input() items: any[] = [];
   @Input() selectable: boolean = true;
-  @Input() selection!: SelectionService<any>;
+  @Input({ required: true }) selection!: SelectionService<any>; 
+  
+  // ✅ NUEVO: Inputs para que el componente reciba explícitamente el estado de la ordenación.
+  @Input() sortKey: string | null = null;
+  @Input() sortOrder: 'asc' | 'desc' = 'asc';
+  
+  // === Outputs ===
   @Output() selectionChange = new EventEmitter<any[]>();
   @Output() sortChange = new EventEmitter<{ key: string, order: 'asc' | 'desc' }>();
+  @Output() rowClick = new EventEmitter<any>();
 
-  // Toggle general (cabecera)
+  /** Determina el estado del checkbox de la cabecera. */
   get generalToggleState(): 'checked' | 'unchecked' | 'indeterminate' {
     if (!this.selection || !this.items?.length) return 'unchecked';
-    if (this.selection.selected.length === this.items.length) return 'checked';
-    if (this.selection.selected.length > 0) return 'indeterminate';
+    if (this.selection.allSelected(this.items)) return 'checked';
+    if (this.selection.someSelected(this.items)) return 'indeterminate';
     return 'unchecked';
   }
 
-  onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate') {
-    if (newState === 'checked') {
-      this.selection.selected = [...this.items];
-    } else {
-      this.selection.selected = [];
-    }
-    this.selectionChange.emit([...this.selection.selected]);
-  }
-
-  // Toggle por fila
+  /** Devuelve el estado del toggle para una fila específica. */
   rowToggleState(row: any): 'checked' | 'unchecked' {
-    return this.selection.selected.some(item => item.id === row.id) ? 'checked' : 'unchecked';
+    return this.isSelected(row) ? 'checked' : 'unchecked';
   }
 
-  onRowToggle(row: any, newState: 'checked' | 'unchecked' | 'indeterminate') {
+  /** Handler: Toggle del checkbox de la cabecera. */
+  onGeneralToggle(newState: 'checked' | 'unchecked' | 'indeterminate') {
+    if (!this.selection) return;
     if (newState === 'checked') {
-      // Selección simple
-      if (!this.selection.selected.some(item => item.id === row.id)) {
-        this.selection.selected = [...this.selection.selected, row];
-      }
+      this.selection.selectAll(this.items);
     } else {
-      // Deselección simple
-      this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
+      this.selection.clear();
     }
-    this.selectionChange.emit([...this.selection.selected]);
+    this.selectionChange.emit(this.selection.selectedArray);
   }
 
-  // --- Selección avanzada por click en fila ---
+  /** Handler: Toggle del checkbox de una fila. */
+  onRowToggle(row: any) {
+    if (!this.selection) return;
+    this.selection.toggle(row);
+    this.selectionChange.emit(this.selection.selectedArray);
+  }
+
+  /** Handler: Click en la fila (maneja selección y navegación). */
   onRowClick(row: any, event: MouseEvent): void {
-    if (event.ctrlKey || event.metaKey) {
-      // Toggle el elemento (Ctrl/Cmd)
-      if (this.selection.selected.some(item => item.id === row.id)) {
-        this.selection.selected = this.selection.selected.filter(item => item.id !== row.id);
-      } else {
-        this.selection.selected = [...this.selection.selected, row];
-      }
-    } else if (event.shiftKey) {
-      // Selección por rango (Shift)
-      const lastSelectedIndex = this.items.findIndex(item => item.id === this.selection.selected[this.selection.selected.length - 1]?.id);
-      const thisIndex = this.items.findIndex(item => item.id === row.id);
-
-      if (lastSelectedIndex !== -1) {
-        const [start, end] = [lastSelectedIndex, thisIndex].sort((a, b) => a - b);
-        const range = this.items.slice(start, end + 1);
-        // Combina actuales más el rango
-        const newSelection = [
-          ...this.selection.selected,
-          ...range.filter(r => !this.selection.selected.some(item => item.id === r.id))
-        ];
-        this.selection.selected = Array.from(new Set(newSelection.map(item => item.id)))
-          .map(id => this.items.find(item => item.id === id));
-      } else {
-        this.selection.selected = [row];
-      }
-    } else {
-      // Selección simple
-      this.selection.selected = [row];
-    }
-    this.selectionChange.emit([...this.selection.selected]);
+    this.rowClick.emit(row);
+    if (!this.selectable || !this.selection) return;
+    this.selection.select(row, this.items, event);
+    this.selectionChange.emit(this.selection.selectedArray);
   }
 
-  // Estilos de columna sticky/ancho
+  /** Comprueba si la fila está seleccionada. */
+  isSelected(row: any): boolean {
+    return this.selection && this.selection.isSelected(row.id);
+  }
+
+  /** Devuelve estilos de columna para sticky/ancho. */
   getColStyle(col: TableColumn): { [key: string]: string } {
     const style: { [key: string]: string } = {};
     if (col.width) style['width'] = col.width;
@@ -106,15 +80,13 @@ export class TableComponent {
     return style;
   }
 
-  // Ordenación (llama evento al padre)
+  /** Ordenación (emite el evento al padre). */
   onSort(col: TableColumn): void {
     if (!col.sortable) return;
-    // Alternancia asc/desc opcional, aquí solo ejemplo
-    this.sortChange.emit({ key: col.key, order: 'asc' });
-  }
-
-  // Aplica la clase 'row-selected' y el tabindex/focus para accesibilidad
-  isSelected(row: any): boolean {
-    return this.selection.selected.some(item => item.id === row.id);
+    
+    // ✅ CORREGIDO: Ahora usa los Inputs que recibe del padre, no un acceso inseguro.
+    const newOrder: 'asc' | 'desc' = (this.sortKey === col.key && this.sortOrder === 'asc') ? 'desc' : 'asc';
+    
+    this.sortChange.emit({ key: col.key, order: newOrder });
   }
 }
