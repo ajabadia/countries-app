@@ -1,6 +1,6 @@
+// src/app/modules/admin/admin-routing.module.ts
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-
 import { AdminComponent } from './admin/admin.component';
 import { AdminDashboardComponent } from './pages/dashboard/admin-dashboard.component';
 import { AdminCountriesComponent } from './pages/countries/admin-countries.component';
@@ -12,8 +12,7 @@ import { AdminTranslationsComponent } from './pages/translations/admin-translati
 
 const routes: Routes = [
   {
-    path: '',
-    component: AdminComponent,
+    path: '', component: AdminComponent,
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
       { path: 'dashboard', component: AdminDashboardComponent },

@@ -1,73 +1,58 @@
 // src/app/modules/shared/components/modal/modal.component.ts
 
-import { Component, Input, Output, EventEmitter, HostListener } from '@angular/core';
+import { Component, Input, Output, EventEmitter, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { trigger, state, style, animate, transition } from '@angular/animations';
+import { CommonModule } from '@angular/common';
+import { UiHeadingComponent } from '../ui-heading/ui-heading.component';
+import { UiButtonComponent } from '../ui-button/ui-button.component';
 import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
-    selector: 'app-modal',
-    templateUrl: './modal.component.html',
-    styleUrls: ['./modal.component.scss'],
-    animations: [
-        // Animación de Fade-in / Fade-out para el modal y el fondo
-        trigger('fade', [
-            state('void', style({ opacity: 0 })),
-            transition(':enter, :leave', [
-                animate('200ms ease-in-out')
-            ])
-        ])
-    ],
-    standalone: false
+  selector: 'app-modal',
+  standalone: true,
+  imports: [ CommonModule, UiHeadingComponent, UiButtonComponent ],
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  animations: [
+    trigger('fade', [
+      state('void', style({ opacity: 0 })),
+      transition(':enter, :leave', [ animate('200ms ease-in-out') ])
+    ])
+  ],
 })
 export class ModalComponent {
-  // --- Entradas de Visibilidad y Comportamiento ---
   @Input() visible = false;
   @Input() closeOnBackdrop = true;
-
-  // --- Entradas para la Cabecera (delegadas a app-ui-heading) ---
   @Input() title: string = '';
   @Input() subtitle?: string;
   @Input() icon?: string;
   @Input() iconType: UiIconType = 'system';
-  @Input() iconSize: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'l';
+  @Input() iconSize: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | string = 'l'; // ✅ CORREGIDO: Acepta 'string'
   @Input() titleAlign: 'left' | 'center' | 'right' = 'left';
-
-  // --- Entradas para el Footer (delegadas a app-ui-button) ---
   @Input() showAccept = true;
   @Input() acceptLabel = 'Aceptar';
   @Input() acceptDisabled = false;
-  
-  // ✅ CORREGIDO: Nombres de propiedades actualizados
-  @Input() showCancel = true; 
+  @Input() showCancel = true;
   @Input() cancelLabel = 'Cancelar';
 
-  // --- Eventos de Salida ---
   @Output() accept = new EventEmitter<void>();
   @Output() close = new EventEmitter<void>();
 
-  /**
-   * Mejora UX: Permite cerrar el modal presionando la tecla Escape.
-   */
   @HostListener('document:keydown.escape', ['$event'])
   onKeydownHandler(event: KeyboardEvent) {
-    if (this.visible) {
-      this.onClose();
-    }
+    if (this.visible) this.onClose();
   }
 
-  onAccept() {
-    if (!this.acceptDisabled) {
-      this.accept.emit();
-    }
+  onAccept(): void {
+    if (!this.acceptDisabled) this.accept.emit();
   }
 
-  onClose() {
+  onClose(): void {
     this.close.emit();
   }
 
-  onBackdropClick(event: MouseEvent) {
-    if (this.closeOnBackdrop && event.target && (event.target as HTMLElement).classList.contains('modal-backdrop')) {
-      this.onClose();
-    }
+  onBackdropClick(): void { // ✅ CORREGIDO: No recibe argumentos
+    if (this.closeOnBackdrop) this.onClose();
   }
 }

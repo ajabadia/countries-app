@@ -1,11 +1,11 @@
 import { Component } from '@angular/core';
+import { SharedModule } from 'src/app/modules/shared/shared.module';
 
 @Component({
-    selector: 'app-admin-dependencies',
-    templateUrl: './admin-dependencies.component.html',
-    styleUrls: ['./admin-dependencies.component.scss'],
-    standalone: false
+  selector: 'app-dependencies-areas',
+  standalone: true,
+  imports: [ SharedModule ],
+  templateUrl: './admin-dependencies.component.html',
+  styleUrls: ['./admin-dependencies.component.scss']
 })
-export class AdminDependenciesComponent {
-
-}
+export class AdminDependenciesComponent {}

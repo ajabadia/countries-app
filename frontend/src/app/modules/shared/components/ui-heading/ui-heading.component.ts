@@ -1,37 +1,45 @@
-// ui-heading.component.ts
+// src/app/modules/shared/components/ui-heading/ui-heading.component.ts
 
-import { Component, Input } from '@angular/core';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common'; // Para @if, [ngClass], etc.
 import { UiIconType } from 'src/app/services/icon.service';
 
+// --- Dependencias del Componente Standalone ---
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
+
 @Component({
-    selector: 'app-ui-heading',
-    templateUrl: './ui-heading.component.html',
-    styleUrls: ['./ui-heading.component.scss'],
-    standalone: false
+  selector: 'app-ui-heading',
+  // --- REFACTORIZACIÓN A STANDALONE ---
+  standalone: true,
+  imports: [
+    CommonModule,
+    UiIconComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // ------------------------------------
+  templateUrl: './ui-heading.component.html',
+  styleUrls: ['./ui-heading.component.scss'],
 })
 export class UiHeadingComponent {
-  // --- Entradas de Configuración ---
+  // === Entradas (Inputs) ===
   @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 1;
   @Input() text: string = '';
   @Input() subtitle?: string;
   @Input() textAlign: 'left' | 'center' | 'right' = 'left';
-  @Input() color: 'primary' | 'secondary' | 'accent' | 'text' | 'muted' | 'transparent' = 'text';
+  @Input() color: 'primary' | 'secondary' | 'accent' | 'text' | 'muted' = 'text';
 
-  // --- Entradas para el Icono ---
+  // --- Iconografía ---
   @Input() icon?: string;
   @Input() iconPosition: 'left' | 'right' = 'left';
-  // ✅ El tamaño ahora puede ser 'inherit' para que coincida con el texto
-  @Input() iconSize: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'inherit';
+  @Input() iconSize: string = 'inherit'; // 'inherit' para que el icono tome el tamaño del texto.
   @Input() iconType: UiIconType = 'system';
-  @Input() iconColor?: string;
-  @Input() iconClass?: string;
 
-  // --- Entradas de Accesibilidad y Clases ---
+  // --- Accesibilidad y Estilos ---
   @Input() ariaLabel?: string;
   @Input() customClass?: string;
-  
+
   /**
-   * Genera un objeto de clases para [ngClass] de forma dinámica.
+   * Genera el objeto de clases dinámicamente para [ngClass].
    */
   get headingClasses() {
     return {
@@ -39,7 +47,6 @@ export class UiHeadingComponent {
       [`ui-heading--level-${this.level}`]: true,
       [`ui-heading--color-${this.color}`]: true,
       [`ui-heading--align-${this.textAlign}`]: true,
-      'ui-heading--has-icon': !!this.icon,
       [`ui-heading--icon-${this.iconPosition}`]: !!this.icon,
       [this.customClass || '']: !!this.customClass,
     };

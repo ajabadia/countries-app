@@ -3,20 +3,16 @@
   tabindex="0"
   role="button"
   [attr.aria-label]="label"
-  (click)="onClick()"
-  >
+  (click)="onClick()">
   @if (icon) {
     <span class="ui-stat-card__icon">
       <app-ui-icon
         [icon]="icon"
         [type]="iconType"
-        [color]="iconColor"
-        [class]="iconClass"
-        [size]="iconSize"
-      ></app-ui-icon>
+        [size]="iconSize">
+        </app-ui-icon>
     </span>
   }
-
   <div class="ui-stat-card__content">
     <div class="ui-stat-card__value">{{ value }}</div>
     <div class="ui-stat-card__label">{{ label }}</div>

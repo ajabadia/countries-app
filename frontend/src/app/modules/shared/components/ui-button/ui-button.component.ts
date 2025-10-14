@@ -1,56 +1,46 @@
-// ui-button.component.ts
+// src/app/modules/shared/components/ui-button/ui-button.component.ts
 
-import { Component, Input, Output, EventEmitter } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
-    selector: 'app-ui-button',
-    templateUrl: './ui-button.component.html',
-    styleUrls: ['./ui-button.component.scss'],
-    standalone: false
+  selector: 'app-ui-button',
+  standalone: true,
+  imports: [ CommonModule, UiIconComponent ],
+  templateUrl: './ui-button.component.html',
+  styleUrls: ['./ui-button.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiButtonComponent {
-  // --- Entradas de Configuración con Valores por Defecto ---
   @Input() type: 'button' | 'submit' = 'button';
   @Input() disabled = false;
-  @Input() active = false;
-  @Input() fullWidth = false;
-  @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' = 'primary';
   @Input() loading = false;
-  
-  // --- Entradas de Iconografía ---
+  @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' = 'primary';
+  @Input() variant: 'solid' | 'outline' | 'ghost' | 'link' | 'icon' = 'solid'; // ✅ CORREGIDO: Añadido 'icon'
+  @Input() size: 'sm' | 'md' | 'lg' = 'md';
   @Input() icon?: string;
-  @Input() iconPosition: 'left' | 'right' | 'top' | 'only' = 'left';
+  @Input() iconPosition: 'left' | 'right' | 'only' = 'left';
   @Input() iconType: UiIconType = 'system';
-  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | string = '1em'; // '1em' para heredar tamaño
-
-  // --- Accesibilidad ---
+  @Input() iconSize: string = '1em';
   @Input() ariaLabel?: string;
 
-  // --- Eventos ---
   @Output() onClick = new EventEmitter<MouseEvent>();
 
-  // ❌ ELIMINADO: HttpClient, DomSanitizer, OnInit, OnChanges, loadSvg(), getIconStyle(), getTextStyle().
-
-  /**
-   * Genera dinámicamente el objeto de clases para [ngClass].
-   */
   get buttonClasses() {
     return {
       'ui-button': true,
       [`ui-button--${this.color}`]: true,
-      'ui-button--full-width': this.fullWidth,
-      'ui-button--active': this.active,
-      'ui-button--has-icon': !!this.icon,
-      [`ui-button--icon-${this.iconPosition}`]: !!this.icon,
+      [`ui-button--${this.variant}`]: true,
+      [`ui-button--${this.size}`]: true,
       'ui-button--icon-only': this.iconPosition === 'only',
+      'ui-button--loading': this.loading,
     };
   }
 
-  /**
-   * Emite el evento de clic solo si el botón no está deshabilitado o cargando.
-   */
-  handleClick(event: MouseEvent) {
+  handleClick(event: MouseEvent): void {
+    // ✅ CORREGIDO: 'this.' autocompletado a 'this.loading'
     if (!this.disabled && !this.loading) {
       this.onClick.emit(event);
     }

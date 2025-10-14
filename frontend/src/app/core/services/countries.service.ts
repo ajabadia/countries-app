@@ -1,80 +1,42 @@
+// src/app/core/services/countries.service.ts
+
 import { Injectable } from '@angular/core';
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
-import { map } from 'rxjs/operators';
 import { Country } from 'src/app/modules/shared/models/country.model';
+import { ApiResponse } from '../models/api-response.model';
+import { BaseCrudService } from './base-crud.service';
 
 @Injectable({ providedIn: 'root' })
-export class CountriesService {
+export class CountriesService implements BaseCrudService<Country> {
+  private apiUrl = '/api/countries';
+
   constructor(private http: HttpClient) {}
 
-  // --- Contadores (No modificados) ---
-  getCountriesCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/countries/count');
-  }
-  getAreasCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/areas/count');
-  }
-  getContinentsCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/continents/count');
-  }
-  getLanguagesCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/languages/count');
-  }
-  getDependenciesCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/dependencies/count');
-  }
-  getTranslationsCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('/api/multilingualnames/count');
+  /** ✅ NUEVO: Método unificado para el dashboard */
+  getCount(): Observable<{ total: number }> {
+    return this.http.get<{ total: number }>(`${this.apiUrl}/count`);
   }
 
-  // --- Listado con filtros y paginación ---
-  getCountries(params: {
-    page?: number;
-    pageSize?: number;
-    search?: string;
-    sortKey?: string;
-    sortOrder?: 'asc' | 'desc';
-  } = {}): Observable<{ data: Country[]; total: number }> {
+  getAll(params: any = {}): Observable<ApiResponse<Country>> {
     let httpParams = new HttpParams();
     if (params.search) httpParams = httpParams.set('search', params.search);
     if (params.page) httpParams = httpParams.set('page', params.page.toString());
     if (params.pageSize) httpParams = httpParams.set('pageSize', params.pageSize.toString());
     if (params.sortKey) httpParams = httpParams.set('sortKey', params.sortKey);
     if (params.sortOrder) httpParams = httpParams.set('sortOrder', params.sortOrder);
-    
-    return this.http.get<{ data: Country[]; total: number }>(
-      '/api/countries',
-      { params: httpParams }
-    );
+    return this.http.get<ApiResponse<Country>>(this.apiUrl, { params: httpParams });
   }
 
-  // --- CRUD de países ---
-  
-  /**
-   * Actualiza un país existente. Coincide con el nombre esperado 'update'.
-   */
-  update(country: Country): Observable<any> {
-    return this.http.put(`/api/countries/${country.id}`, country);
+  create(country: Partial<Country>): Observable<Country> {
+    return this.http.post<Country>(this.apiUrl, country);
   }
 
-  /**
-   * Crea un país nuevo. Coincide con el nombre esperado 'create'.
-   */
-  create(country: Country): Observable<any> {
-    return this.http.post('/api/countries', country);
+  update(id: string, country: Partial<Country>): Observable<Country> {
+    return this.http.put<Country>(`${this.apiUrl}/${id}`, country);
   }
 
-  /**
-   * Borra un país por ID.
-   * ✅ AÑADIDO: Este método 'delete' es el que faltaba y soluciona el error TS2339 en el componente.
-   */
-  delete(id: string | number): Observable<any> {
-    return this.http.delete(`/api/countries/${id}`);
-  }
-
-  /** Borra varios países por id */
-  deleteMany(ids: (string | number)[]): Observable<any> {
-    return this.http.post('/api/countries/delete-many', { ids });
+  delete(ids: string[]): Observable<void> {
+    return this.http.delete<void>(this.apiUrl, { body: { ids } });
   }
 }

@@ -1,57 +1,43 @@
 @if (visible) {
-  <div class="confirm-dialog">
+  <div
+    class="confirm-dialog-backdrop"
+    (click)="onCancel()">
+
     <div
-      class="confirm-dialog__modal confirm-dialog__modal--{{variant}}"
+      #dialogModal
+      class="confirm-dialog confirm-dialog--{{variant}}"
       role="dialog"
       aria-modal="true"
-      aria-labelledby="confirm-dialog__title"
-      tabindex="0"
-      (keydown)="onKeydown($event)"
-      (click)="$event.stopPropagation()"
-      >
+      [attr.aria-labelledby]="'dialog-title-' + title"
+      tabindex="-1"
+      (click)="$event.stopPropagation()">
+
       <div class="confirm-dialog__header">
-        @if (variant==='warning') {
-          <span class="confirm-dialog__icon confirm-dialog__icon--warning">
-            <img src="assets/icons/icon-warning.svg" alt="Advertencia" aria-hidden="true">
-          </span>
-        }
-        @if (variant==='info') {
-          <span class="confirm-dialog__icon confirm-dialog__icon--info">
-            <img src="assets/icons/icon-info-circle.svg" alt="Advertencia" aria-hidden="true">
-            <svg aria-hidden="true" width="1em" height="1em"><circle cx="12" cy="12" r="10" fill="#0b7ad0"/><text x="12" y="17" text-anchor="middle" font-size="16" fill="#fff">i</text></svg>
-          </span>
-        }
-        @if (variant==='error') {
-          <span class="confirm-dialog__icon confirm-dialog__icon--error">
-            <img src="assets/icons/icon-error.svg" alt="Advertencia" aria-hidden="true">
-            <svg aria-hidden="true" width="1em" height="1em"><circle cx="12" cy="12" r="10" fill="#dd4c40"/><text x="12" y="17" text-anchor="middle" font-size="16" fill="#fff">!</text></svg>
-          </span>
-        }
-        @if (variant==='success') {
-          <span class="confirm-dialog__icon confirm-dialog__icon--success">
-            <img src="assets/icons/icon-success.svg" alt="Advertencia" aria-hidden="true">
-            <svg aria-hidden="true" width="1em" height="1em"><circle cx="12" cy="12" r="10" fill="#4ab83e"/><text x="12" y="17" text-anchor="middle" font-size="16" fill="#fff">&#x2714;</text></svg>
-          </span>
-        }
-        <span class="confirm-dialog__title" id="confirm-dialog__title">{{ title }}</span>
+        <app-ui-icon
+          class="confirm-dialog__icon"
+          [icon]="iconName"
+          size="1.5em">
+        </app-ui-icon>
+        <span class="confirm-dialog__title" [id]="'dialog-title-' + title">{{ title }}</span>
       </div>
-      <div class="confirm-dialog__msg">
+
+      <div class="confirm-dialog__body">
         {{ message }}
       </div>
+
       <div class="confirm-dialog__actions">
-        <button
-          type="button"
-          class="confirm-dialog__btn confirm-dialog__btn--cancel"
-          (click)="onCancel()"
-          aria-label="Cancelar"
-        >Cancelar</button>
-        <button
-          type="button"
-          class="confirm-dialog__btn confirm-dialog__btn--confirm"
-          (click)="onConfirm()"
-          aria-label="Aceptar"
-        >Aceptar</button>
+        <app-ui-button
+          color="surface"
+          (onClick)="onCancel()">
+          {{ cancelLabel }}
+        </app-ui-button>
+        <app-ui-button
+          color="primary"
+          (onClick)="onConfirm()">
+          {{ confirmLabel }}
+        </app-ui-button>
       </div>
+
     </div>
   </div>
 }

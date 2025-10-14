@@ -1,0 +1,37 @@
+<form [formGroup]="formGroup" class="admin-form">
+  
+  <div class="form-row">
+    <div class="form-field">
+      <label for="id">ID (ISO3)</label>
+      <input id="id" formControlName="id" type="text" placeholder="Ej: ESP">
+      </div>
+    <div class="form-field">
+      <label for="default_name">Nombre</label>
+      <input id="default_name" formControlName="default_name" type="text" placeholder="Ej: España">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="iso2">ISO2</label>
+      <input id="iso2" formControlName="iso2" type="text" placeholder="Ej: ES">
+    </div>
+    <div class="form-field">
+      <label for="numeric_code">Cód. Numérico</label>
+      <input id="numeric_code" formControlName="numeric_code" type="text" placeholder="Ej: 724">
+    </div>
+  </div>
+
+  <div class="form-row">
+    <div class="form-field">
+      <label for="phone_code">Prefijo Teléfono</label>
+      <input id="phone_code" formControlName="phone_code" type="text" placeholder="Ej: +34">
+    </div>
+    <div class="form-field">
+      <label for="capital">Capital</label>
+      <input id="capital" formControlName="capital" type="text" placeholder="Ej: Madrid">
+    </div>
+  </div>
+
+  <button type="submit" style="display: none;"></button>
+</form>

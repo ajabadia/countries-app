@@ -1,39 +1,55 @@
 // src/app/modules/shared/components/ui-stat-card/ui-stat-card.component.ts
 
-import { Component, Input, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
-import { UiIconType } from 'src/app/services/icon.service'; // Importamos el tipo
+import { Component, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule, Router } from '@angular/router'; // ¡NUEVO! Importamos RouterModule
+import { UiIconType } from 'src/app/services/icon.service';
+
+// --- Dependencias del Componente Standalone ---
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
-    selector: 'app-ui-stat-card',
-    templateUrl: './ui-stat-card.component.html',
-    styleUrls: ['./ui-stat-card.component.scss'],
-    standalone: false
+  selector: 'app-ui-stat-card',
+  // --- REFACTORIZACIÓN A STANDALONE ---
+  standalone: true,
+  imports: [
+    CommonModule,
+    RouterModule, // Necesario si la tarjeta va a ser un enlace con [routerLink]
+    UiIconComponent
+  ],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+  // ------------------------------------
+  templateUrl: './ui-stat-card.component.html',
+  styleUrls: ['./ui-stat-card.component.scss'],
 })
 export class UiStatCardComponent {
+  // === Entradas (Inputs) ===
   @Input({ required: true }) label!: string;
   @Input({ required: true }) value!: string | number;
   @Input() icon?: string;
-  @Input() detailRoute?: string;
-  @Input() iconType: UiIconType = 'system'; // Usamos el tipo estricto con valor por defecto
-  @Input() iconClass: string = '';
-  @Input() iconColor: string = '';
-  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | number = 'm';
-
-  // ❌ ELIMINADO: Ya no necesitamos HttpClient, DomSanitizer, ngOnInit,
-  // svgContent, isActive, usaUiIcon() ni getIconSizePx(). El componente es ahora mucho más limpio.
+  @Input() detailRoute?: string | any[]; // MEJORA: Acepta arrays para rutas complejas.
+  @Input() iconType: UiIconType = 'system';
+  @Input() iconSize: string | number = 'l';
 
   constructor(private router: Router) {}
 
+  /**
+   * Gestiona el clic en la tarjeta. Si tiene una ruta, navega.
+   */
   onClick(): void {
     if (this.detailRoute) {
-      this.router.navigate([this.detailRoute]);
+      // Aseguramos que la ruta sea un array para el método navigate.
+      const route = Array.isArray(this.detailRoute) ? this.detailRoute : [this.detailRoute];
+      this.router.navigate(route);
     }
   }
 
+  /**
+   * Mejora de Accesibilidad: Permite activar la tarjeta con Enter o Espacio.
+   */
   @HostListener('keydown.enter')
   @HostListener('keydown.space')
-  onKeydown() {
+  onKeydown(): void {
     this.onClick();
   }
 }

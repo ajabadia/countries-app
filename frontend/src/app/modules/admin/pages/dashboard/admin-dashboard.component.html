@@ -1,80 +1,10 @@
-
-
 <div class="dashboard-admin">
-<app-ui-heading
-  [level]="1"
-  text="Panel de control"
-  icon="icon-dashboard"
-  iconPosition="left"
-  color="primary"
-  textAlign="left"
-  ariaLabel="Entrar a continentes">
- </app-ui-heading>
-
-  <div class="dashboard-admin__cards">
-
-
-    <app-ui-stat-card
-      label="Países"
-      [icon]="'icon-country'"
-      [value]="countriesCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-       iconSize="xl"
-      detailRoute="/admin/countries">
-    </app-ui-stat-card>
-
-    <app-ui-stat-card
-      label="Áreas"
-      [icon]="'icon-area'"
-      [value]="areasCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-      iconSize="l"
-      detailRoute="/admin/areas">
-    </app-ui-stat-card>
-
-    <app-ui-stat-card
-      label="Continentes"
-      [icon]="'icon-continents'"
-      [value]="continentsCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-      iconSize="l"
-      detailRoute="/admin/continents">
-    </app-ui-stat-card>
-
-    <app-ui-stat-card
-      label="Lenguajes"
-      [icon]="'icon-languages'"
-      [value]="languagesCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-      iconSize="l"
-      detailRoute="/admin/languages">
-    </app-ui-stat-card>
-
-    <app-ui-stat-card
-      label="Dependencias"
-      [icon]="'icon-dependencies'"
-      [value]="dependenciesCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-      iconSize="l"
-      detailRoute="/admin/dependencies">
-    </app-ui-stat-card>
-    <app-ui-stat-card
-      label="Traducciones"
-      [icon]="'icon-translations'"
-      [value]="translationsCount ?? '—'"
-      iconType="system"
-      iconColor="#10416a"
-      iconSize="l"
-      detailRoute="/admin/translations">
-    </app-ui-stat-card>
-
-
-    
-  </div>
+  <app-ui-heading
+    [level]="1" text="Panel de control"
+    subtitle="Resumen de registros del sistema"
+    icon="dashboard"
+    iconType="system">
+  </app-ui-heading>
+  <div *ngIf="data$ | async as data" class="dashboard-admin__cards">
+    </div>
 </div>
-

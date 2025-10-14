@@ -1,58 +1,5 @@
 <nav class="paginator" aria-label="Paginación">
 
-  <!-- Bloque: botones de navegación -->
-  <div class="paginator__block">
-    <button class="paginator__button"
-      (click)="setPage(1)"
-      [disabled]="page === 1"
-      aria-label="Primera página">
-      «
-    </button>
-    <button class="paginator__button"
-      (click)="setPage(page - 1)"
-      [disabled]="page === 1"
-      aria-label="Página anterior">
-      ‹
-    </button>
-    <span class="paginator__info">
-      Página <b>{{ page }}</b> de <b>{{ totalPages }}</b>
-    </span>
-    <button class="paginator__button"
-      (click)="setPage(page + 1)"
-      [disabled]="page === totalPages"
-      aria-label="Página siguiente">
-      ›
-    </button>
-    <button class="paginator__button"
-      (click)="setPage(totalPages)"
-      [disabled]="page === totalPages"
-      aria-label="Última página">
-      »
-    </button>
-  </div>
-
-  <!-- Selector de tamaño de página -->
-  <div class="paginator__block">
-    <label class="paginator__label" for="pageSize">
-      Mostrar
-    </label>
-    <select id="pageSize"
-      class="paginator__select"
-      [value]="pageSize"
-      (change)="onPageSizeChange($event)">
-      @for (size of pageSizeOptions; track size) {
-        <option [value]="size">
-          {{ size }}
-        </option>
-      }
-    </select>
-    <span class="paginator__label">
-      por página
-    </span>
-  </div>
-
-
-  <!-- Input rápido de navegación a página -->
   <div class="paginator__block">
     <label class="paginator__label" for="gotoPage">
       Ir a página
@@ -63,17 +10,13 @@
       min="1"
       [max]="totalPages"
       [(ngModel)]="gotoPage"
-      (change)="onGotoPageChange($event)"
-      >
+      (change)="onGotoPage()" (keydown.enter)="onGotoPage()"
+      aria-label="Ir a la página número"/>
   </div>
-
-
-
-
-  <!-- Resumen total de rango mostrado -->
-  <div class="paginator__summary">
-    Mostrando <b>{{ startIdx }}</b>–<b>{{ endIdx }}</b> de <b>{{ totalItems }}</b> elementos
+  
+  <div class="paginator__block paginator__block--stats">
+    <span>
+      Mostrando <b>{{ startIdx }} - {{ endIdx }}</b> de <b>{{ totalItems }}</b>
+    </span>
   </div>
 </nav>
-
-

@@ -1,8 +1,11 @@
+// src/app/modules/shared/shared.module.ts
+
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormsModule } from '@angular/forms';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 
+// --- Importamos todos los componentes standalone ---
 import { HeaderComponent } from './components/header/header.component';
 import { FooterComponent } from './components/footer/footer.component';
 import { LogoComponent } from './components/logo/logo.component';
@@ -20,61 +23,21 @@ import { TableComponent } from './components/table/table.component';
 import { ToggleCheckboxComponent } from './components/toggle-checkbox/toggle-checkbox.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { ConfirmDialogComponent } from './components/confirm-dialog/confirm-dialog.component';
-import { UiIconModule } from './models/ui-icon.module';
+import { UiIconComponent } from './components/ui-icon/ui-icon.component'; // ✅ CORREGIDO: Importamos el componente, no el módulo.
 
-//estos son de pruebas
-import { IconTestComponent } from './pruebas/icon-test/icon-test.component';
+const COMPONENTS = [
+  HeaderComponent, FooterComponent, LogoComponent, CopyrightComponent, UiButtonComponent,
+  AdminMenuComponent, MenuBarComponent, UiHeadingComponent, UiStatCardComponent,
+  ToolbarButtonsComponent, FlagIconComponent, SearchBoxComponent, PaginatorComponent,
+  TableComponent, ToggleCheckboxComponent, ModalComponent, ConfirmDialogComponent,
+  UiIconComponent // ✅ CORREGIDO: Añadido aquí.
+];
 
+const MODULES = [ CommonModule, RouterModule, FormsModule, ReactiveFormsModule ];
 
 @NgModule({
-  declarations: [
-    HeaderComponent,
-    FooterComponent,
-    LogoComponent,
-    CopyrightComponent,
-    UiHeadingComponent,
-    UiButtonComponent,
-    AdminMenuComponent,
-    MenuBarComponent,
-    UiStatCardComponent,
-    ToolbarButtonsComponent,
-    FlagIconComponent,
-    SearchBoxComponent,
-    PaginatorComponent,
-    TableComponent,
-    ToggleCheckboxComponent,
-    ModalComponent,
-    ConfirmDialogComponent,
-    IconTestComponent //<- este es de pruebas
-    
-  ],
-  imports: [
-    CommonModule,
-    RouterModule,
-    FormsModule,
-    UiIconModule  // ✅ Movido aquí desde declarations
-  ],
-  exports: [
-    HeaderComponent,
-    FooterComponent,
-    LogoComponent,
-    CopyrightComponent,
-    MenuBarComponent,
-    UiButtonComponent,
-    UiHeadingComponent,
-    AdminMenuComponent,
-    UiStatCardComponent,
-    ToolbarButtonsComponent,
-    FlagIconComponent,
-    SearchBoxComponent,
-    PaginatorComponent,
-    TableComponent,
-    ToggleCheckboxComponent,
-    FormsModule,
-    ModalComponent,
-    ConfirmDialogComponent,
-    UiIconModule,       
-    IconTestComponent //<- este es de pruebas  
-  ]
+  declarations: [],
+  imports: [ ...COMPONENTS, ...MODULES ],
+  exports: [ ...COMPONENTS, ...MODULES ]
 })
-export class SharedModule {}
+export class SharedModule { }

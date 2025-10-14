@@ -1,56 +1,18 @@
-
-@switch (level) {
-  @case (1) {
-    <h1 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h1>
-  }
-  @case (2) {
-    <h2 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h2>
-  }
-  @case (3) {
-    <h3 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h3>
-  }
-  @case (4) {
-    <h4 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h4>
-  }
-  @case (5) {
-    <h5 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h5>
-  }
-  @case (6) {
-    <h6 [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </h6>
-  }
-  @default {
-    <div [ngClass]="headingClasses" [attr.aria-label]="ariaLabel">
-      <ng-container *ngTemplateOutlet="contentTpl"></ng-container>
-    </div>
-  }
-}
-
 <ng-template #contentTpl>
   @if (icon) {
-    <app-ui-icon
-      class="ui-heading__icon"
-      [icon]="icon"
-      [type]="iconType"
-      [size]="iconSize === 'inherit' ? '1em' : iconSize"
-      [color]="iconColor"
-      [class]="iconClass"
-    ></app-ui-icon>
+    <span class="ui-heading__icon">
+      <app-ui-icon
+        [icon]="icon"
+        [type]="iconType"
+        [size]="iconSize">
+        </app-ui-icon>
+    </span>
   }
-
-  <span class="ui-heading__text">{{ text }}</span>
-  @if (subtitle) {
-    <small class="ui-heading__subtitle">{{ subtitle }}</small>
-  }
+  <span class="ui-heading__content">
+    <span class="ui-heading__text">{{ text }}</span>
+    @if (subtitle) {
+      <span class="ui-heading__subtitle">{{ subtitle }}</span>
+    }
+  </span>
+  <ng-content></ng-content>
 </ng-template>

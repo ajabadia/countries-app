@@ -1,6 +1,11 @@
-import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+// src/app/modules/shared/components/admin-menu/admin-menu.component.ts
 
+import { Component, Input } from '@angular/core';
+import { Router, RouterModule } from '@angular/router'; // Importa RouterModule
+import { CommonModule } from '@angular/common'; // Importa CommonModule para directivas como @for, @if
+import { UiButtonComponent } from '../ui-button/ui-button.component'; // Importa el componente hijo que usa la plantilla
+
+// La interfaz no necesita cambios
 export interface AdminMenuItem {
   label: string;
   icon?: string;
@@ -13,25 +18,29 @@ export interface AdminMenuItem {
 
 @Component({
     selector: 'app-admin-menu',
+    // ¡CLAVE! Se convierte a standalone
+    standalone: true,
+    // ¡CLAVE! Los componentes standalone declaran sus propias dependencias aquí
+    imports: [
+      CommonModule,
+      RouterModule,
+      UiButtonComponent // Añadimos el componente que se usa en el HTML
+    ],
     templateUrl: './admin-menu.component.html',
     styleUrls: ['./admin-menu.component.scss'],
-    standalone: false
 })
 export class AdminMenuComponent {
-  @Input() items: AdminMenuItem[] = [
-    { label: 'Dashboard', icon: 'dashboard', route: '/admin/pages/dashboard' },
-    { label: 'Países', icon: 'flag', route: '/admin/countries' },
-    { label: 'Áreas', icon: 'map', route: '/admin/areas' },
-    { label: 'Idiomas', icon: 'language', route: '/admin/languages' },
-    { label: 'Usuarios', icon: 'user', route: '/admin/users' }
-  ];
-
+  @Input() items: AdminMenuItem[] = []; // El valor por defecto se elimina para que siempre se pase desde fuera
   @Input() footer?: string;
 
   constructor(public router: Router) {}
 
   isActive(item: AdminMenuItem): boolean {
-  return !!(item.active ?? (item.route && this.router.url.startsWith(typeof item.route === 'string' ? item.route : item.route[0])));
-}
-
+    if (!item.route || item.external) {
+      return false;
+    }
+    // Lógica mejorada para comprobar la ruta activa
+    const routeString = Array.isArray(item.route) ? item.route[0] : item.route;
+    return this.router.isActive(routeString, { paths: 'exact', queryParams: 'exact', fragment: 'ignored', matrixParams: 'ignored' });
+  }
 }

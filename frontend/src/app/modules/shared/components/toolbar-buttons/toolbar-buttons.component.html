@@ -1,18 +1,15 @@
 <div class="toolbar-buttons">
-  @for (btn of buttons; track btn) {
+  @for (btn of buttons; track btn.label) {
     <button
       class="tb-btn tb-btn--{{btn.color}}"
       [disabled]="btn.disabled"
-      (click)="ejecutarAccion(btn)">
-      @if (btn.icon) {
+      (click)="executeAction(btn)"> @if (btn.icon) {
         <span class="tb-btn__icon">
           <app-ui-icon
             [icon]="btn.icon"
             [type]="btn.iconType || 'system'"
-            [color]="btn.iconColor"
-            [size]="btn.iconSize || 's'"
-            [class]="btn.iconClass"
-          ></app-ui-icon>
+            [size]="btn.iconSize || 's'">
+          </app-ui-icon>
         </span>
       }
       {{btn.label}}

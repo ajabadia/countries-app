@@ -1,17 +1,17 @@
 // src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component.ts
 
-import { Component, Input } from '@angular/core';
-// ✅ 1. Importamos el tipo estricto desde el servicio de iconos
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
+// ✅ CORREGIDO: Ruta de importación con erratas
 import { UiIconType } from 'src/app/services/icon.service';
 
-// ✅ 2. Definimos una interfaz más robusta para los botones
 export interface ToolbarButtonConfig {
   icon: string;
   label: string;
   action: () => void;
   color: 'main' | 'edit' | 'danger' | string;
   disabled?: boolean;
-  // ✅ 3. Usamos el tipo estricto 'UiIconType' en lugar de 'string'
   iconType?: UiIconType;
   iconSize?: number | 'xs' | 's' | 'm' | 'l' | 'xl';
   iconColor?: string;
@@ -19,16 +19,18 @@ export interface ToolbarButtonConfig {
 }
 
 @Component({
-    selector: 'app-toolbar-buttons',
-    templateUrl: './toolbar-buttons.component.html',
-    styleUrls: ['./toolbar-buttons.component.scss'],
-    standalone: false
+  selector: 'app-toolbar-buttons',
+  standalone: true,
+  imports: [ CommonModule, UiIconComponent ],
+  templateUrl: './toolbar-buttons.component.html',
+  styleUrls: ['./toolbar-buttons.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarButtonsComponent {
-  // ✅ 4. Usamos la interfaz en el Input
   @Input() buttons: ToolbarButtonConfig[] = [];
 
-  ejecutarAccion(btn: ToolbarButtonConfig) {
+  /** ✅ CORREGIDO: El nombre del método es 'executeAction' */
+  executeAction(btn: ToolbarButtonConfig): void {
     if (!btn.disabled && typeof btn.action === 'function') {
       btn.action();
     }

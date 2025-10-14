@@ -2,8 +2,7 @@
   <div
     class="modal-backdrop"
     [@fade]
-    (click)="onBackdropClick($event)">
-  </div>
+    (click)="onBackdropClick()"> </div>
 }
 
 @if (visible) {
@@ -12,8 +11,8 @@
     [@fade]
     role="dialog"
     aria-modal="true"
-    [attr.aria-labelledby]="'modal-title-' + title"
-    >
+    [attr.aria-labelledby]="'modal-title-' + title">
+    
     @if (title) {
       <app-ui-heading
         [id]="'modal-title-' + title"
@@ -25,36 +24,25 @@
         [icon]="icon"
         [iconType]="iconType"
         [iconSize]="iconSize"
-        color="primary"
-        >
+        color="primary">
+        
         @if (showCancel) {
-          <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">
-            ×
-          </button>
+          <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">×</button>
         }
       </app-ui-heading>
     }
+
     <div class="modal-body">
       <ng-content></ng-content>
     </div>
+
     @if (showAccept || showCancel) {
       <div class="modal-footer">
         @if (showCancel) {
-          <app-ui-button
-            color="surface"
-            (onClick)="onClose()"
-            >
-            {{ cancelLabel }}
-          </app-ui-button>
+          <app-ui-button color="surface" (onClick)="onClose()">{{ cancelLabel }}</app-ui-button>
         }
         @if (showAccept) {
-          <app-ui-button
-            color="primary"
-            [disabled]="acceptDisabled"
-            (onClick)="onAccept()"
-            >
-            {{ acceptLabel }}
-          </app-ui-button>
+          <app-ui-button color="primary" [disabled]="acceptDisabled" (onClick)="onAccept()">{{ acceptLabel }}</app-ui-button>
         }
       </div>
     }
