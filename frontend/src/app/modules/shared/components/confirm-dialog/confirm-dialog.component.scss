@@ -1,7 +1,8 @@
-@import 'src/styles/variables';
-@import 'src/styles/mixins';
+// ✅ CORREGIDO: Se usan rutas relativas explícitas para forzar la importación.
+@import '../../../../../styles/variables';
+@import '../../../../../styles/mixins';
 
-.confirm-dialog {
+.confirm-dialog-backdrop {
   position: fixed;
   inset: 0;
   z-index: var(--z-modal, 1050);
@@ -10,48 +11,46 @@
   justify-content: center;
   background: var(--modal-overlay-bg, rgba(35,48,137,0.25));
   backdrop-filter: blur(4px);
+}
 
-  &__modal {
-    @include card-base;
-    background: var(--modal-bg, var(--color-surface));
-    box-shadow: var(--modal-shadow, 0 4px 32px rgba(37,56,137,0.12));
-    border-radius: var(--modal-border-radius, var(--radius-lg));
-    width: 95vw;
-    max-width: 370px;
-    min-width: 280px;
-    padding: var(--space-l) var(--space-m);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    outline: none;
-    @include fade-in;
+.confirm-dialog {
+  @include card-base; // ¡Ahora sí encontrará este mixin!
 
-    @media (max-width: 600px) {
-      max-width: 99vw;
-      padding: var(--space-m) var(--space-sm);
-    }
+  background: var(--modal-bg, var(--color-surface));
+  box-shadow: var(--modal-shadow, 0 4px 32px rgba(37,56,137,0.12));
+  border-radius: var(--modal-border-radius, var(--radius-lg));
+  width: 95vw;
+  max-width: 370px;
+  min-width: 280px;
+  padding: var(--space-l) var(--space-m);
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  outline: none;
 
-    // Variante info
-    &--info {
-      border-left: 4px solid var(--color-info, #0b7ad0);
-      .confirm-dialog__header { color: var(--color-info, #0b7ad0); }
-    }
-    // Variante error
-    &--error {
-      border-left: 4px solid var(--color-error, #dd4c40);
-      .confirm-dialog__header { color: var(--color-error, #dd4c40); }
-    }
-    // Variante success
-    &--success {
-      border-left: 4px solid var(--color-success, #4ab83e);
-      .confirm-dialog__header { color: var(--color-success, #4ab83e); }
-    }
-    // Variante warning
-    &--warning {
-      border-left: 4px solid var(--color-warning, #fdaf3c);
-      .confirm-dialog__header { color: var(--color-warning, #fdaf3c); }
-    }
+  @media (max-width: 600px) {
+    max-width: 99vw;
+    padding: var(--space-m) var(--space-sm);
   }
+
+  // --- Variantes de color ---
+  &--info {
+    border-left: 4px solid var(--color-info, #0b7ad0);
+    .confirm-dialog__header { color: var(--color-info, #0b7ad0); }
+  }
+  &--success {
+    border-left: 4px solid var(--color-success, #4ab83e);
+    .confirm-dialog__header { color: var(--color-success, #4ab83e); }
+  }
+  &--error {
+    border-left: 4px solid var(--color-error, #dd4c40);
+    .confirm-dialog__header { color: var(--color-error, #dd4c40); }
+  }
+  &--warning {
+    border-left: 4px solid var(--color-warning, #fdaf3c);
+    .confirm-dialog__header { color: var(--color-warning, #fdaf3c); }
+  }
+
 
   &__header {
     display: flex;
@@ -59,48 +58,30 @@
     margin-bottom: var(--space-m);
     font-size: var(--font-size-lg);
     font-weight: 600;
-    color: var(--color-primary);
     border-bottom: var(--border-width) solid var(--modal-header-border, #e1e7ef);
     padding-bottom: var(--space-xs);
   }
 
   &__icon {
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 2em;
+    font-size: 1.5em;
     margin-right: var(--space-sm);
-
-    &--info { color: var(--color-info, #0b7ad0); }
-    &--error { color: var(--color-error, #dd4c40); }
-    &--success { color: var(--color-success, #4ab83e); }
-    &--warning { color: var(--color-warning, #fdaf3c); }
+  }
+  
+  &__title {
+    flex: 1;
   }
 
-  &__msg {
-    color: var(--color-text);
+  &__body {
+    padding: var(--space-s) 0;
     font-size: var(--font-size-base);
-    margin-bottom: var(--space-m);
-    word-break: break-word;
+    color: var(--color-text-muted);
+    line-height: 1.6;
   }
 
   &__actions {
     display: flex;
-    gap: var(--space-m);
     justify-content: flex-end;
-    margin-top: var(--space-sm);
+    gap: var(--space-sm);
+    margin-top: var(--space-l);
   }
-
-  &__btn {
-    @include button-base;
-    @include button-size('md');
-
-    &--cancel {
-      @include button-variant('secondary');
-    }
-    &--confirm {
-      @include button-variant('primary');
-    }
-  }
-}
-
+} // ✅ CORREGIDO: Se asegura que todas las llaves estén balanceadas.

@@ -1,32 +1,24 @@
-/* * admin.component.scss
- * Este archivo define el layout base para toda la sección /admin.
- */
+/* admin.component.scss */
 
-// Importa variables, mixins y estilos compartidos globales
-// ✅ CORRECCIÓN FINAL DE RUTA: Subir 4 niveles para llegar a /src/styles/
-// (Desde /src/app/modules/admin/admin/ hasta /src/)
+// ✅ CORREGIDO: Se usan rutas relativas explícitas para forzar la importación.
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
-// Los archivos compartidos están en /src/styles/shared/, así que los importamos desde styles/
 @import '../../../../styles/shared/_admin-shared';
-
 
 .admin-layout {
   display: flex;
   flex-direction: column;
-  min-height: 100vh; // Asegura que el layout ocupa toda la altura de la ventana
+  min-height: 100vh;
   background: var(--color-background, #f4f7fa);
 }
 
 .admin-content {
-  flex: 1 1 auto; // Permite que el contenido ocupe el espacio restante, empujando el footer hacia abajo
+  flex: 1 1 auto;
   width: 100%;
-  // Añadimos un padding para que el router-outlet no esté pegado a los bordes
   padding: 1.5rem 2.5rem; 
   box-sizing: border-box;
 
-  // Adaptación móvil para reducir el padding
-  @include mobile-only {
+  @include mobile-only { // ¡Ahora sí!
     padding: 1rem 1rem;
   }
 }
