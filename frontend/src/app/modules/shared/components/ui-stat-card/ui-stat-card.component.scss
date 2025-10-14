@@ -1,5 +1,10 @@
+//ui-stat-card.component.scss
+/* Importamos variables y mixins para consistencia */
+@use 'src/styles/variables' as v;
+@use 'src/styles/mixins' as m;
+
+/* ---- Contenedor principal corporativo y accesible ---- */
 .ui-stat-card {
-  // ---- Contenedor principal corporativo y accesible ----
   font-family: var(--font-family, 'Inter', 'Roboto', sans-serif);
   background: var(--color-surface, #fff);
   border-radius: var(--radius-md, 9px);
@@ -16,24 +21,24 @@
   cursor: pointer;
   border: none;
   outline: none;
-  transition: box-shadow 0.2s, background 0.2s;
+  @include m.transition(box-shadow, background); /* Usamos mixin para transiciones */
 
-  // ---- ICONO corporativo ----
+  /* ---- ICONO corporativo ---- */
   &__icon {
     margin-bottom: var(--space-m, 1em);
     display: flex;
     align-items: center;
     justify-content: center;
-    // El tamaño lo marca [ngStyle], pero si quieres clases para variantes:
+    /* El tamaño lo marca [ngStyle], pero si quieres clases para variantes: */
     &--xs { width: 32px; height: 32px; }
     &--s  { width: 48px; height: 48px; }
     &--m  { width: 72px; height: 72px; }
     &--l  { width: 96px; height: 96px; }
     &--xl { width: 120px; height: 120px; }
-    // Si sólo usas ngStyle estos no son necesarios
-  background: transparent !important; // <-- obligatorio si hereda fondo de la card o de algún mixin
-  box-shadow: none !important;
-  border-radius: 0 !important;
+    /* Si sólo usas ngStyle estos no son necesarios */
+    background: transparent !important; /* <-- obligatorio si hereda fondo de la card o de algún mixin */
+    box-shadow: none !important;
+    border-radius: 0 !important; /* CORRECCIÓN: Movidas estas declaraciones antes de svg para evitar deprecación */
     svg {
       width: 100% !important;
       height: 100% !important;
@@ -46,7 +51,7 @@
     }
   }
 
-  // ---- LABEL de la tarjeta ----
+  /* ---- LABEL de la tarjeta ---- */
   &__label {
     color: var(--color-tertiary, #727272);
     margin-bottom: 0.25em;
@@ -55,7 +60,7 @@
     font-family: inherit;
   }
 
-  // ---- VALOR principal visual ----
+  /* ---- VALOR principal visual ---- */
   &__value {
     font-size: 2.2em;
     font-weight: 700;
@@ -64,7 +69,7 @@
     font-family: inherit;
   }
 
-  // ---- Interacciones (hover, foco, activo) ----
+  /* ---- Interacciones (hover, foco, activo) ---- */
   &:hover,
   &:focus {
     box-shadow: 0 6px 20px rgba(0,0,0,0.15);
@@ -75,5 +80,12 @@
     background: var(--color-primary-light, #e0eeff);
     box-shadow: 0 2px 6px rgba(0,0,0,0.13);
     outline: 2px solid var(--color-primary, #10416a);
+  }
+
+  /* Estilos responsivos */
+  @media (max-width: 576px) {
+    min-width: 150px;
+    max-width: 280px;
+    padding: var(--space-sm, 0.75em) var(--space-m, 1em);
   }
 }

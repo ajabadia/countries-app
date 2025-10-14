@@ -1,0 +1,254 @@
+// mixins.scss
+// Mixins reutilizables siguiendo metodología BEM
+// --------------------------------------------------------------
+
+// === MIXINS DE RESET ===
+@mixin button-reset {
+  border: none;
+  outline: none;
+  font: inherit;
+  padding: 0;
+  background: none;
+  box-shadow: none;
+  cursor: pointer;
+}
+
+@mixin list-reset {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+// === MIXINS DE TAMAÑO ===
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+// === MIXINS DE BOTONES ===
+@mixin button-base {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 500;
+  border-radius: var(--radius-md);
+  transition: all var(--transition-base);
+  cursor: pointer;
+  text-decoration: none;
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+  }
+}
+
+@mixin button-size($size: 'md') {
+  @if $size == 'xs' {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-s);
+    min-height: 28px;
+    gap: var(--space-xs);
+  } @else if $size == 'sm' {
+    font-size: var(--font-size-sm);
+    padding: var(--space-s) var(--space-sm);
+    min-height: 36px;
+    gap: var(--space-xs);
+  } @else if $size == 'lg' {
+    font-size: var(--font-size-lg);
+    padding: var(--space-m) var(--space-l);
+    min-height: 52px;
+    gap: var(--space-s);
+  } @else if $size == 'xl' {
+    font-size: var(--font-size-xl);
+    padding: var(--space-ml) var(--space-xl);
+    min-height: 60px;
+    gap: var(--space-sm);
+  } @else {
+    // md (default)
+    font-size: var(--font-size-base);
+    padding: var(--space-s) var(--space-m);
+    min-height: 44px;
+    gap: var(--space-xs);
+  }
+}
+
+@mixin button-variant($variant: 'primary') {
+  @if $variant == 'primary' {
+    background: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border: var(--border-width) solid var(--color-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary-dark);
+      border-color: var(--color-primary-dark);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(11, 122, 208, 0.2);
+    }
+  } @else if $variant == 'secondary' {
+    background: var(--color-surface);
+    color: var(--color-text);
+    border: var(--border-width) solid var(--color-border);
+
+    &:hover:not(:disabled) {
+      background: var(--color-secondary-light);
+      border-color: var(--color-secondary);
+    }
+
+    &:focus {
+      box-shadow: 0 0 0 3px rgba(45, 91, 127, 0.1);
+    }
+  } @else if $variant == 'outline' {
+    background: transparent;
+    color: var(--color-primary);
+    border: var(--border-width) solid var(--color-primary);
+
+    &:hover:not(:disabled) {
+      background: var(--color-primary);
+      color: var(--color-primary-contrast);
+    }
+  } @else if $variant == 'ghost' {
+    background: transparent;
+    color: var(--color-primary);
+    border: var(--border-width) solid transparent;
+
+    &:hover:not(:disabled) {
+      background: var(--color-secondary-light);
+    }
+  } @else if $variant == 'danger' {
+    background: var(--color-error);
+    color: var(--color-text-contrast);
+    border: var(--border-width) solid var(--color-error);
+
+    &:hover:not(:disabled) {
+      background: var(--color-error-strong);
+      border-color: var(--color-error-strong);
+    }
+  }
+}
+
+// === MIXINS DE LAYOUT ===
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin container($max-width: var(--container-max-width)) {
+  width: 100%;
+  max-width: $max-width;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: var(--space-m);
+  padding-right: var(--space-m);
+}
+
+// === MIXINS DE FOCUS ===
+@mixin focus-outline($color: var(--color-accent)) {
+  outline: 2px solid $color;
+  outline-offset: 2px;
+  border-radius: var(--radius-xs);
+}
+
+@mixin focus-visible {
+  &:focus-visible {
+    @include focus-outline;
+  }
+}
+
+// === MIXINS DE CARD ===
+@mixin card-base {
+  background: var(--color-surface);
+  border: var(--border-width) solid var(--color-border);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-sm);
+  padding: var(--space-m);
+}
+
+@mixin card-elevated {
+  @include card-base;
+  box-shadow: var(--shadow-md);
+
+  &:hover {
+    box-shadow: var(--shadow-lg);
+    transform: translateY(-1px);
+  }
+}
+
+// === MIXINS DE ESTADO ===
+@mixin state-loading {
+  position: relative;
+  pointer-events: none;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(2px);
+    border-radius: inherit;
+  }
+}
+
+// === MIXINS RESPONSIVE ===
+@mixin mobile-only {
+  @media (max-width: 767px) {
+    @content;
+  }
+}
+
+@mixin tablet-up {
+  @media (min-width: 768px) {
+    @content;
+  }
+}
+
+@mixin desktop-up {
+  @media (min-width: 1024px) {
+    @content;
+  }
+}
+
+@mixin large-up {
+  @media (min-width: 1200px) {
+    @content;
+  }
+}
+
+// === MIXINS DE ANIMACIÓN ===
+@mixin fade-in($duration: var(--transition-base)) {
+  animation: fade-in $duration ease-in-out;
+}
+
+@mixin slide-up($duration: var(--transition-base)) {
+  animation: slide-up $duration ease-out;
+}
+
+// Keyframes para animaciones
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes slide-up {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

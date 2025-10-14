@@ -1,21 +1,10 @@
-// styles.scss
-// Archivo principal de estilos globales con metodología BEM
-// --------------------------------------------------------------
+// src/styles.scss
+/* Importamos archivos modulares para variables, mixins y reset */
+@use 'styles/variables' as v;
+@use 'styles/mixins' as m;
+@use 'styles/reset';
 
-
-// styles.scss
-// Archivo principal de estilos globales con metodología BEM
-// --------------------------------------------------------------
-
-// 1. Importaciones base (usa siempre rutas relativas desde /src)
-@import './styles/variables';
-@import './styles/mixins';
-@import './styles/base';
-@import './styles/theme';
-@import './styles/components';
-
-
-// 2. Utilidades globales con BEM
+/* --- UTILIDADES GLOBALES --- */
 .u-sr-only {
   position: absolute;
   width: 1px;
@@ -28,7 +17,7 @@
   border: 0;
 }
 
-// Utilidades de espaciado
+/* Utilidades de espaciado */
 .u-spacing {
   &--xs { padding: var(--space-xs); }
   &--s { padding: var(--space-s); }
@@ -40,7 +29,7 @@
   &--xxl { padding: var(--space-xxl); }
 }
 
-// Utilidades de color
+/* Utilidades de color */
 .u-text {
   &--primary { color: var(--color-primary) !important; }
   &--accent { color: var(--color-accent) !important; }
@@ -50,7 +39,7 @@
   &--link { color: var(--color-link) !important; }
 }
 
-// Utilidades de tamaño
+/* Utilidades de tamaño */
 .u-size {
   &--xs { font-size: var(--font-size-xs); }
   &--sm { font-size: var(--font-size-sm); }
@@ -59,14 +48,14 @@
   &--xl { font-size: var(--font-size-xl); }
 }
 
-// Ejemplo de uso de mixin global en utilidades (opcional, sólo si tienes utilidades propias aquí)
+/* Ejemplo de uso de mixin global en utilidades (opcional, sólo si tienes utilidades propias aquí) */
 .u-icon {
   display: inline-block;
   vertical-align: middle;
-  @include size(24px);
+  @include m.size(24px); /* CORRECCIÓN: La sintaxis correcta es @include namespace.mixin-name() */
 }
 
-// Utilidades de color
+/* Utilidades de color (unificadas para evitar duplicación) */
 .u-text {
   &--primary { color: var(--color-primary) !important; }
   &--accent { color: var(--color-accent) !important; }
@@ -74,32 +63,10 @@
   &--success { color: var(--color-success) !important; }
   &--error { color: var(--color-error) !important; }
   &--warning { color: var(--color-warning) !important; }
+  &--link { color: var(--color-link) !important; }
 }
 
-.u-bg {
-  &--primary { 
-    background: var(--color-primary-aa) !important; 
-    color: var(--color-primary-contrast) !important; 
-  }
-  &--secondary { 
-    background: var(--color-secondary-aa) !important; 
-    color: var(--color-primary-contrast) !important; 
-  }
-  &--success { 
-    background: var(--color-success) !important; 
-    color: var(--color-text-contrast) !important; 
-  }
-  &--error { 
-    background: var(--color-error) !important; 
-    color: var(--color-text-contrast) !important; 
-  }
-  &--warning { 
-    background: var(--color-warning) !important; 
-    color: var(--color-text-contrast) !important; 
-  }
-}
-
-// 3. Layout principal con BEM
+/* 3. Layout principal con BEM */
 .app {
   min-height: 100vh;
   display: flex;
@@ -158,11 +125,10 @@
   }
 }
 
-
 .page {
   padding-left: 0.25rem;
   padding-right: 0.25rem;
-  // Para que nunca toque el borde, pero sea pequeño
+  /* Para que nunca toque el borde, pero sea pequeño */
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -176,8 +142,6 @@
   box-shadow: 0 0 0 2px #3b78e7;
 }
 
-
-
 @media (max-width: 700px) {
   .page {
     padding-left: 0.5rem;
@@ -185,3 +149,5 @@
     max-width: 100%;
   }
 }
+
+/* CORRECCIÓN: Eliminado @use './styles'; para evitar module loop */

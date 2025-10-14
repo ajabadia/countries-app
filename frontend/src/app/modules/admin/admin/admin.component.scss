@@ -1,14 +1,19 @@
-/* admin.component.scss */
+/* src/app/modules/admin/admin/admin.component.scss */
+/* Importamos solo mixins y variables para evitar module loop */
+@use 'src/styles/variables' as v;
+@use 'src/styles/mixins' as m;
 
-// ✅ CORREGIDO: Se usan rutas relativas explícitas para forzar la importación.
-@import '../../../../styles/variables';
-@import '../../../../styles/mixins';
+.admin-container { /* Ejemplo */
+  @include m.mobile-only {
+    padding: 1rem;
+  }
+}
 
 .admin-layout {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
-  background: var(--color-background, #f4f7fa);
+  background: var(--color-background);
 }
 
 .admin-content {
@@ -17,7 +22,7 @@
   padding: 1.5rem 2.5rem; 
   box-sizing: border-box;
 
-  @include mobile-only { // ¡Ahora sí!
+  @include m.mobile-only {
     padding: 1rem 1rem;
   }
 }
