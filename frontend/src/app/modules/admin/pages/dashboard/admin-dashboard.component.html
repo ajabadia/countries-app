@@ -1,10 +1,49 @@
 <div class="dashboard-admin">
   <app-ui-heading
-    [level]="1" text="Panel de control"
+    [level]="1"
+    text="Panel de control"
     subtitle="Resumen de registros del sistema"
     icon="dashboard"
     iconType="system">
   </app-ui-heading>
-  <div *ngIf="data$ | async as data" class="dashboard-admin__cards">
+
+  <ng-container *ngIf="data$ | async as data; else loadingOrError">
+    <div class="dashboard-admin__cards">
+
+      <app-ui-stat-card
+        label="Países" icon="flag-detail" iconType="system"
+        [value]="data.countries" detailRoute="/admin/countries">
+      </app-ui-stat-card>
+
+      <app-ui-stat-card
+        label="Continentes" icon="map-globe" iconType="system"
+        [value]="data.continents" detailRoute="/admin/continents">
+      </app-ui-stat-card>
+
+      <app-ui-stat-card
+        label="Áreas" icon="area" iconType="system"
+        [value]="data.areas" detailRoute="/admin/areas">
+      </app-ui-stat-card>
+
+      <app-ui-stat-card
+        label="Lenguajes" icon="language" iconType="system"
+        [value]="data.languages" detailRoute="/admin/languages">
+      </app-ui-stat-card>
+
+      <app-ui-stat-card
+        label="Dependencias" icon="dependencies" iconType="system"
+        [value]="data.dependencies" detailRoute="/admin/dependencies">
+      </app-ui-stat-card>
+
+      <app-ui-stat-card
+        label="Traducciones" icon="translate" iconType="system"
+        [value]="data.translations" detailRoute="/admin/translations">
+      </app-ui-stat-card>
+
     </div>
+  </ng-container>
+
+  <ng-template #loadingOrError>
+    <div>Cargando estadísticas... (Si este mensaje persiste, revisa la consola del navegador y la pestaña 'Red' para errores de API).</div>
+  </ng-template>
 </div>
