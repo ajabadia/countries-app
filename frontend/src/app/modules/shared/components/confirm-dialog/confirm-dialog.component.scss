@@ -9,7 +9,10 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: var(--modal-overlay-bg, rgba(35,48,137,0.25));
+  background: var(--modal-overlay-bg, rgba(35, 48, 137, 0.25));
+  
+  // ✅ CORREGIDO: Se añade el prefijo -webkit- para compatibilidad y para que VS Code no se queje.
+  -webkit-backdrop-filter: blur(4px);
   backdrop-filter: blur(4px);
 }
 
@@ -17,7 +20,7 @@
   @include card-base; // ¡Ahora sí encontrará este mixin!
 
   background: var(--modal-bg, var(--color-surface));
-  box-shadow: var(--modal-shadow, 0 4px 32px rgba(37,56,137,0.12));
+  box-shadow: var(--modal-shadow, 0 4px 32px rgba(37, 56, 137, 0.12));
   border-radius: var(--modal-border-radius, var(--radius-lg));
   width: 95vw;
   max-width: 370px;
@@ -50,7 +53,6 @@
     border-left: 4px solid var(--color-warning, #fdaf3c);
     .confirm-dialog__header { color: var(--color-warning, #fdaf3c); }
   }
-
 
   &__header {
     display: flex;

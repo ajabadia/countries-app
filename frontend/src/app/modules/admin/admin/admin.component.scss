@@ -3,7 +3,6 @@
 // ✅ CORREGIDO: Se usan rutas relativas explícitas para forzar la importación.
 @import '../../../../styles/variables';
 @import '../../../../styles/mixins';
-@import '../../../../styles/shared/_admin-shared';
 
 .admin-layout {
   display: flex;
