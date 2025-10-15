@@ -1,18 +1,14 @@
-<ng-template #contentTpl>
-  @if (icon) {
-    <span class="ui-heading__icon">
-      <app-ui-icon
-        [icon]="icon"
-        [type]="iconType"
-        [size]="iconSize">
-        </app-ui-icon>
-    </span>
-  }
-  <span class="ui-heading__content">
-    <span class="ui-heading__text">{{ text }}</span>
-    @if (subtitle) {
-      <span class="ui-heading__subtitle">{{ subtitle }}</span>
-    }
-  </span>
-  <ng-content></ng-content>
-</ng-template>
+<div class="ui-heading">
+  <app-ui-icon *ngIf="icon" [icon]="icon" [type]="iconType" size="lg" class="ui-heading__icon" />
+  <div class="ui-heading__text">
+    <ng-container [ngSwitch]="level">
+      <h1 *ngSwitchCase="1" class="ui-heading__title">{{ title }}</h1>
+      <h2 *ngSwitchCase="2" class="ui-heading__title">{{ title }}</h2>
+      <h3 *ngSwitchCase="3" class="ui-heading__title">{{ title }}</h3>
+      <h4 *ngSwitchCase="4" class="ui-heading__title">{{ title }}</h4>
+      <h5 *ngSwitchCase="5" class="ui-heading__title">{{ title }}</h5>
+      <h6 *ngSwitchCase="6" class="ui-heading__title">{{ title }}</h6>
+    </ng-container>
+    <p *ngIf="subtitle" class="ui-heading__subtitle">{{ subtitle }}</p>
+  </div>
+</div>

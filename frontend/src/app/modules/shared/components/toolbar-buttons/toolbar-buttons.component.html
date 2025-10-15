@@ -2,7 +2,7 @@
   @for (btn of buttons; track btn.label) {
     <button
       class="tb-btn tb-btn--{{btn.color}}"
-      [disabled]="btn.disabled"
+      [disabled]="(btn.disabled$ | async) === true"
       (click)="executeAction(btn)"> @if (btn.icon) {
         <span class="tb-btn__icon">
           <app-ui-icon

@@ -1,46 +1,41 @@
-// src/app/modules/shared/components/admin-menu/admin-menu.component.ts
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Router, RouterModule } from '@angular/router';
 
-import { Component, Input } from '@angular/core';
-import { Router, RouterModule } from '@angular/router'; // Importa RouterModule
-import { CommonModule } from '@angular/common'; // Importa CommonModule para directivas como @for, @if
-import { UiButtonComponent } from '../ui-button/ui-button.component'; // Importa el componente hijo que usa la plantilla
+// Componentes
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
-// La interfaz no necesita cambios
 export interface AdminMenuItem {
   label: string;
+  route?: string | any[];
   icon?: string;
-  route?: any[] | string;
-  active?: boolean;
-  disabled?: boolean;
   external?: boolean;
-  submenu?: AdminMenuItem[];
+  disabled?: boolean;
 }
 
 @Component({
-    selector: 'app-admin-menu',
-    // ¡CLAVE! Se convierte a standalone
-    standalone: true,
-    // ¡CLAVE! Los componentes standalone declaran sus propias dependencias aquí
-    imports: [
-      CommonModule,
-      RouterModule,
-      UiButtonComponent // Añadimos el componente que se usa en el HTML
-    ],
-    templateUrl: './admin-menu.component.html',
-    styleUrls: ['./admin-menu.component.scss'],
+  selector: 'app-admin-menu',
+  standalone: true,
+  imports: [CommonModule, RouterModule, UiIconComponent],
+  templateUrl: './admin-menu.component.html',
+  styleUrls: ['./admin-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminMenuComponent {
-  @Input() items: AdminMenuItem[] = []; // El valor por defecto se elimina para que siempre se pase desde fuera
+  @Input() items: AdminMenuItem[] = [];
   @Input() footer?: string;
 
-  constructor(public router: Router) {}
+  constructor(private router: Router) {}
 
+  /**
+   * Determina si un elemento del menú está activo.
+   * @param item El elemento del menú a comprobar.
+   * @returns {boolean}
+   */
   isActive(item: AdminMenuItem): boolean {
-    if (!item.route || item.external) {
+    if (!item.route || item.disabled) {
       return false;
     }
-    // Lógica mejorada para comprobar la ruta activa
-    const routeString = Array.isArray(item.route) ? item.route[0] : item.route;
-    return this.router.isActive(routeString, { paths: 'exact', queryParams: 'exact', fragment: 'ignored', matrixParams: 'ignored' });
+    return this.router.isActive(this.router.createUrlTree(Array.isArray(item.route) ? item.route : [item.route]), { paths: 'exact', queryParams: 'exact', fragment: 'ignored', matrixParams: 'ignored' });
   }
 }

@@ -1,22 +1,12 @@
-@import "src/styles/shared/admin-shared.scss";
-
-.admin-table {
-  // Hereda todos los estilos .admin-table
-}
-
-.table-controls {
-  // Hereda todos los estilos .table-controls
-}
-
-.field-input {
-  // Hereda estilos globales de admin-form
-}
-
-.paginator {
-  // Hereda estilos globales de paginador
-}
-
-/* Si quieres override local: */
+/*
+ * Los estilos compartidos de admin (.admin-table, .paginator, etc.)
+ * ya están disponibles globalmente gracias a la importación en styles.scss.
+ *
+ * Aquí solo se deben definir estilos específicos para ESTE componente
+ * o sobreescrituras (overrides) muy concretas.
+*/
+ 
+/* Ejemplo de override local: */
 .admin-table tbody tr.selected {
   background: #e7f2fa;
 }

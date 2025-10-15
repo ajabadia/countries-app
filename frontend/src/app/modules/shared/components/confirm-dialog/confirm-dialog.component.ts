@@ -1,11 +1,10 @@
 // src/app/modules/shared/components/confirm-dialog/confirm-dialog.component.ts
 
-import { Component, Input, Output, EventEmitter, HostListener, ChangeDetectionStrategy, ElementRef, ViewChild, OnChanges, SimpleChanges } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
 // --- Dependencias del Componente Standalone ---
-import { UiButtonComponent } from '../ui-button/ui-button.component';
-import { UiIconComponent } from '../ui-icon/ui-icon.component'; // ¡NUEVO! Para los iconos del diálogo.
+import { ModalComponent } from '../modal/modal.component'; // 1. Importamos el ModalComponent genérico
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -13,15 +12,30 @@ import { UiIconComponent } from '../ui-icon/ui-icon.component'; // ¡NUEVO! Para
   standalone: true,
   imports: [
     CommonModule,
-    UiButtonComponent, // Importamos el botón para el footer.
-    UiIconComponent    // Importamos el componente de icono para el header.
+    ModalComponent, // 2. Usaremos el modal como base
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // ------------------------------------
-  templateUrl: './confirm-dialog.component.html',
-  styleUrls: ['./confirm-dialog.component.scss'],
+  // 3. La plantilla ahora es inline y mucho más simple
+  template: `
+    <app-modal
+      [visible]="visible"
+      [title]="title"
+      [subtitle]="message"
+      [icon]="iconName"
+      iconType="system"
+      iconSize="l"
+      titleAlign="center"
+      [acceptLabel]="confirmLabel"
+      [cancelLabel]="cancelLabel"
+      (accept)="onConfirm()"
+      (close)="onCancel()">
+    </app-modal>
+  `,
+  // 4. Ya no necesitamos estilos propios, los hereda del modal genérico.
+  styleUrls: [],
 })
-export class ConfirmDialogComponent implements OnChanges {
+export class ConfirmDialogComponent {
   // === Entradas (Inputs) ===
   @Input() visible: boolean = false;
   @Input() title: string = 'Confirmar Acción';
@@ -33,8 +47,6 @@ export class ConfirmDialogComponent implements OnChanges {
   // === Salidas (Outputs) ===
   @Output() confirm = new EventEmitter<void>();
   @Output() cancel = new EventEmitter<void>();
-
-  @ViewChild('dialogModal') dialogModal?: ElementRef<HTMLDivElement>;
 
   /**
    * MEJORA: Mapeo de variantes a nombres de iconos.
@@ -50,33 +62,11 @@ export class ConfirmDialogComponent implements OnChanges {
     return iconMap[this.variant];
   }
 
-  /**
-   * Cuando el diálogo se hace visible, automáticamente le damos el foco
-   * para mejorar la accesibilidad por teclado.
-   */
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['visible'] && this.visible) {
-      setTimeout(() => this.dialogModal?.nativeElement.focus(), 0);
-    }
-  }
-
   onConfirm(): void {
     this.confirm.emit();
   }
 
   onCancel(): void {
     this.cancel.emit();
-  }
-
-  /**
-   * Gestiona el cierre con la tecla 'Escape'.
-   */
-  @HostListener('keydown.escape', ['$event'])
-  onKeydownHandler(event: KeyboardEvent) {
-    // Solo actúa si el modal está visible para no interferir con otros elementos.
-    if (this.visible) {
-      event.stopPropagation(); // Evita que el evento se propague a otros listeners.
-      this.onCancel();
-    }
   }
 }

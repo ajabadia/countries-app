@@ -1,0 +1,36 @@
+<div class="admin-page-container">
+  <app-ui-heading
+    title="Administración de Países"
+    subtitle="Gestiona la información de los países"
+    icon="globe-alt">
+  </app-ui-heading>
+
+  <!-- ✅ El contenedor principal ahora usa el pipe async -->
+  <ng-container *ngIf="response$ | async as response; else loadingOrErrorTemplate">
+    <div class="admin-toolbar">
+      <!-- ✅ El SearchBox emite el evento (valueChange) -->
+      <app-search-box (valueChange)="onSearchChange($event)" placeholder="Buscar país..."></app-search-box>
+    </div>
+
+    <!-- ✅ La tabla recibe los datos y emite el evento de ordenación -->
+    <app-table
+      [items]="response.data"
+      [columns]="tableColumns"
+      (sortChange)="onSortChange($event)">
+    </app-table>
+
+    <!-- ✅ El paginador recibe el estado y emite el evento de cambio de página -->
+    <app-paginator
+      [currentPage]="page$.value"
+      [pageSize]="pageSize$.value"
+      [totalItems]="response.total"
+      (pageChange)="onPageChange($event)">
+    </app-paginator>
+  </ng-container>
+  
+  <!-- ✅ Plantilla para mostrar mientras se carga o si hay un error -->
+  <ng-template #loadingOrErrorTemplate>
+    <div *ngIf="isLoading; else errorTemplate" class="loading-overlay">Cargando...</div>
+    <ng-template #errorTemplate><div>Error al cargar los datos.</div></ng-template>
+  </ng-template>
+</div>

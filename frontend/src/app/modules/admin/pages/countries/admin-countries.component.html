@@ -1,56 +1,55 @@
-<div class="admin-page-container">
-  
+<div class="admin-page-container" *ngIf="response$ | async as response; else loading">
+
   <app-ui-heading
     [level]="1"
-    [text]="'Administración de ' + entityNamePlural"
-    [subtitle]="'Gestiona la información de los ' + entityNamePlural.toLowerCase()"
+    [title]="'Administración de ' + entityNamePlural"
+    [subtitle]="'Gestiona la información de los ' + entityNamePlural.toLowerCase()" 
     icon="flag-detail">
   </app-ui-heading>
 
-  <ng-container *ngIf="response$ | async as response">
-    <div class="admin-toolbar">
-      <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>
-      <app-search-box (valueChange)="onSearchChange($event)" [placeholder]="'Buscar ' + entityName.toLowerCase() + '...'"></app-search-box>
-    </div>
+  <div class="admin-toolbar">
+    <app-toolbar-buttons [buttons]="toolbarButtons"></app-toolbar-buttons>
+    <app-search-box (valueChange)="onSearchChange($event)" [placeholder]="'Buscar ' + entityName.toLowerCase() + '...'"></app-search-box>
+  </div>
 
-    <app-table
-      [items]="response.data"
-      [columns]="tableColumns"
-      [selection]="selection"
-      [sortKey]="(sort$ | async)?.key ?? null"
-      [sortOrder]="(sort$ | async)?.order ?? 'asc'"
-      (sortChange)="onSortChange($event)">
-    </app-table>
+  <app-table
+    [items]="response.data"
+    [columns]="tableColumns"
+    [selection]="selection" 
+    [sortKey]="(sort$ | async)?.key ?? null"
+    [sortOrder]="(sort$ | async)?.direction ?? 'asc'"
+    (sortChange)="onSortChange($event)">
+  </app-table>
 
-    <app-paginator
-      [page]="(page$ | async) ?? 1"
-      [pageSize]="(pageSize$ | async) ?? 10"
-      [totalItems]="response.total"
-      [totalPages]="response.totalPages"
-      (pageChange)="onPageChange($event)"
-      (pageSizeChange)="onPageSizeChange($event)">
-    </app-paginator>
-  </ng-container>
-
-  <div *ngIf="isLoading" class="loading-overlay">Cargando...</div>
+  <!-- ✅ FIX: El input del paginador se llama 'currentPage', no 'page'. -->
+  <app-paginator
+    [currentPage]="(page$ | async) ?? 1"
+    [pageSize]="(pageSize$ | async) ?? 10"
+    [totalItems]="response.total"
+    (pageChange)="onPageChange($event)">
+  </app-paginator>
 </div>
+
+<ng-template #loading>
+  <div class="loading-overlay">Cargando...</div>
+</ng-template>
 
 <app-modal
   [visible]="isModalVisible"
   [title]="editingEntity ? 'Editar ' + entityName : 'Añadir Nuevo ' + entityName"
-  [subtitle]="editingEntity ? editingEntity['default_name'] : ''" icon="flag-detail"
+  [subtitle]="editingEntity ? editingEntity['defaultname'] : ''" icon="flag-detail"
   (accept)="onSave()"
   (close)="closeModal()"
   [acceptDisabled]="form.invalid">
   
-  <app-country-form [formGroup]="form" [isEditMode]="!!editingEntity"></app-country-form>
+  <app-country-form [formGroup]="form"></app-country-form>
 </app-modal>
 
 <app-confirm-dialog
   [visible]="isConfirmDialogVisible"
   title="Confirmar Eliminación"
   [message]="'¿Estás seguro de que quieres eliminar ' + selection.count + ' ' + (selection.count === 1 ? entityName : entityNamePlural) + '? Esta acción no se puede deshacer.'"
-  variant="error"
+  severity="error"
   confirmLabel="Sí, eliminar"
   (confirm)="onConfirmDelete()"
   (cancel)="closeConfirmDialog()">

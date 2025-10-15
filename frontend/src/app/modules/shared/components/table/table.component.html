@@ -1,83 +1,48 @@
 <div class="table-container">
-  <table class="admin-table">
-    <thead class="admin-table__header">
+  <table class="table">
+    <thead>
       <tr>
-        @if (selectable) {
-          <th class="admin-table__checkbox-cell">
-            <app-toggle-checkbox
-              [state]="generalToggleState"
-              (stateChange)="onGeneralToggle($event)">
-            </app-toggle-checkbox>
+        @for (column of columns; track column.key) {
+          <th 
+            [style.width]="column.width" 
+            [style.min-width]="column.minWidth"
+            [class.sortable]="column.sortable"
+            (click)="column.sortable && onSort(column.key)">
+            {{ column.label }}
+            @if (column.sortable) {
+              <app-ui-icon 
+                class="sort-icon"
+                [icon]="sortKey === column.key ? (sortOrder === 'asc' ? 'arrow-up' : 'arrow-down') : 'arrows-up-down'" />
+            }
           </th>
         }
-
-        @for (col of columns; track col.key) {
-          <th
-            [style.width]="col.width"
-            [style.min-width]="col.minWidth"
-            [class.sortable]="col.sortable"
-            (click)="onSort(col)"
-            scope="col">
-            <div class="admin-table__header-content">
-              <span>{{ col.label }}</span>
-              @if (col.sortable && sortKey === col.key) {
-                <app-ui-icon
-                  class="admin-table__sort-icon"
-                  [icon]="sortOrder === 'asc' ? 'arrow-up' : 'arrow-down'"
-                  size="0.8em">
-                </app-ui-icon>
-              }
-            </div>
-          </th>
-        }
+        <!-- Cabecera para la columna de acciones -->
+        <th class="actions-header">Acciones</th>
       </tr>
     </thead>
-    <tbody class="admin-table__body">
-      @if (!items || items.length === 0) {
-        <tr>
-          <td [attr.colspan]="columns.length + (selectable ? 1 : 0)" class="admin-table__no-data">
-            No hay datos para mostrar.
-          </td>
-        </tr>
+    <tbody>
+      @if (items.length === 0) {
+        <tr><td [attr.colspan]="columns.length + 1" class="no-data-cell">No hay datos para mostrar.</td></tr>
       } @else {
-        @for (row of items; track row.id) {
-          <tr
-            [class.row-selected]="isSelected(row)"
-            (click)="onRowClick(row, $event)">
-            
-            @if (selectable) {
-              <td class="admin-table__checkbox-cell">
-                <app-toggle-checkbox
-                  [state]="rowToggleState(row)"
-                  (stateChange)="onRowToggle(row)">
-                </app-toggle-checkbox>
-              </td>
-            }
-
-            @for (col of columns; track col.key) {
+        @for (item of items; track item.id) {
+          <tr>
+            @for (column of columns; track column.key) {
               <td>
-                <ng-container [ngSwitch]="col.cellType">
-                  
-                  <ng-template [ngSwitchCase]="'flag'">
-                    <app-flag-icon [iso2]="getNestedValue(row, col.key)" size="s"></app-flag-icon>
-                  </ng-template>
-
-                  <ng-template [ngSwitchCase]="'date'">
-                    {{ getNestedValue(row, col.key) | date:(col.dateFormat || 'dd/MM/yyyy') }}
-                  </ng-template>
-
-                  <ng-template ngSwitchDefault>
-                    {{ getNestedValue(row, col.key) }}
-                  </ng-template>
-
+                <ng-container [ngSwitch]="column.cellType || 'text'">
+                  <!-- Puedes añadir más tipos de celda aquí -->
+                  <span *ngSwitchCase="'text'">{{ getCellValue(item, column.key) }}</span>
+                  <!-- Ejemplo para un futuro 'flag' cellType -->
+                  <!-- <app-flag-icon *ngSwitchCase="'flag'" [countryCode]="getCellValue(item, column.key)" /> -->
                 </ng-container>
               </td>
             }
+            <td class="actions-cell">
+              <button (click)="onAction('edit', item)" class="action-button"><app-ui-icon icon="pencil" /></button>
+              <button (click)="onAction('delete', item)" class="action-button action-button--danger"><app-ui-icon icon="trash" /></button>
+            </td>
           </tr>
         }
       }
     </tbody>
   </table>
 </div>
-
-

@@ -1,92 +1,63 @@
-﻿// controllers/areasController.js
-const { getDB } = require('../db/database');
-const TABLE_NAME = 'areas';
+﻿﻿﻿﻿// controllers/areasController.js
+const asyncHandler = require('express-async-handler');
+const areasService = require('../services/areasService');
 
 // GET /api/areas/count
-function getCount(req, res, next) {
-  const db = getDB();
-  try {
-    const result = db.prepare(`SELECT COUNT(*) as total FROM ${TABLE_NAME}`).get();
-    res.json({ total: result.total || 0 });
-  } catch (err) {
-    next(err);
-  }
-}
+const getCount = asyncHandler(async (req, res) => {
+  const result = areasService.getCount();
+  res.json(result);
+});
 
 // GET /api/areas
-function getAll(req, res, next) {
-  const db = getDB();
-  try {
-    const rows = db.prepare(`SELECT id, defaultname FROM ${TABLE_NAME} ORDER BY id`).all();
-    // Preparamos para el futuro: la respuesta siempre debe ser un objeto { data, total }
-    res.json({ data: rows, total: rows.length });
-  } catch (err) {
-    next(err);
-  }
-}
+const getAll = asyncHandler(async (req, res) => {
+  const result = areasService.getAll(['id', 'defaultname'], 'id');
+  res.json(result);
+});
 
 // GET /api/areas/:id
-function getById(req, res, next) {
-  const db = getDB();
-  try {
-    const row = db.prepare(`SELECT id, defaultname FROM ${TABLE_NAME} WHERE id = ?`).get(req.params.id);
-    if (!row) {
-      return res.status(404).json({ error: 'Área no encontrada' });
-    }
-    res.json(row);
-  } catch (err) {
-    next(err);
+const getById = asyncHandler(async (req, res) => {
+  const area = areasService.getById(req.params.id, ['id', 'defaultname']);
+  if (!area) {
+    return res.status(404).json({ error: 'Área no encontrada' });
   }
-}
+  res.json(area);
+});
 
 // POST /api/areas
-function create(req, res, next) {
+const create = asyncHandler(async (req, res) => {
   const { id, defaultname } = req.body;
+  // La validación simple se mantiene en el controlador
   if (!id || !defaultname) {
     return res.status(400).json({ error: 'Los campos id y defaultname son obligatorios' });
   }
-  const db = getDB();
-  try {
-    db.prepare(`INSERT INTO ${TABLE_NAME} (id, defaultname) VALUES (?, ?)`).run(id, defaultname);
-    const newItem = db.prepare(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`).get(id);
-    res.status(201).json(newItem);
-  } catch (err) {
-    next(err);
-  }
-}
+  areasService.create({ id, defaultname });
+  const newItem = areasService.getById(id);
+  res.status(201).json(newItem);
+});
 
 // PUT /api/areas/:id
-function update(req, res, next) {
+const update = asyncHandler(async (req, res) => {
   const { defaultname } = req.body;
+  // La validación simple se mantiene en el controlador
   if (!defaultname) {
     return res.status(400).json({ error: 'El campo defaultname es obligatorio' });
   }
-  const db = getDB();
-  try {
-    const info = db.prepare(`UPDATE ${TABLE_NAME} SET defaultname = ? WHERE id = ?`).run(defaultname, req.params.id);
-    if (info.changes === 0) {
-      return res.status(404).json({ error: 'Área no encontrada' });
-    }
-    const updatedItem = db.prepare(`SELECT * FROM ${TABLE_NAME} WHERE id = ?`).get(req.params.id);
-    res.json(updatedItem);
-  } catch (err) {
-    next(err);
+  const info = areasService.update(req.params.id, { defaultname });
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Área no encontrada' });
   }
-}
+  const updatedItem = areasService.getById(req.params.id);
+  res.json(updatedItem);
+});
 
 // DELETE /api/areas/:id
-function remove(req, res, next) {
-  const db = getDB();
-  try {
-    const info = db.prepare(`DELETE FROM ${TABLE_NAME} WHERE id = ?`).run(req.params.id);
-    if (info.changes === 0) {
-      return res.status(404).json({ error: 'Área no encontrada' });
-    }
-    res.status(204).end();
-  } catch (err) {
-    next(err);
+const remove = asyncHandler(async (req, res) => {
+  const info = areasService.remove(req.params.id);
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Área no encontrada' });
   }
-}
+  res.status(204).end();
+});
 
 module.exports = {
   getCount,

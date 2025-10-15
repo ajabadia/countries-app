@@ -1,17 +1,25 @@
-// src/app/modules/shared/components/table/table.component.ts
-
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, booleanAttribute } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
-import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
-import { ToggleCheckboxComponent, ToggleState } from '../toggle-checkbox/toggle-checkbox.component';
+
+// Componentes y Modelos
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
-import { FlagIconComponent } from '../flag-icon/flag-icon.component';
+import { TableColumn } from 'src/app/services/table-column.model';
+import { SelectionService } from 'src/app/services/selection.service';
+
+export interface SortChangeEvent {
+  key: string;
+  direction: 'asc' | 'desc';
+}
+
+export interface ActionEvent {
+  action: string;
+  item: any;
+}
 
 @Component({
   selector: 'app-table',
   standalone: true,
-  imports: [ CommonModule, ToggleCheckboxComponent, UiIconComponent, FlagIconComponent ],
+  imports: [CommonModule, UiIconComponent],
   templateUrl: './table.component.html',
   styleUrls: ['./table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -19,64 +27,64 @@ import { FlagIconComponent } from '../flag-icon/flag-icon.component';
 export class TableComponent {
   @Input() columns: TableColumn[] = [];
   @Input() items: any[] = [];
-  @Input() selectable: boolean = true;
-  @Input({ required: true }) selection!: SelectionService<any>;
+  @Input({ transform: booleanAttribute })
+  @Input() selection?: SelectionService<any>;
   @Input() sortKey: string | null = null;
   @Input() sortOrder: 'asc' | 'desc' = 'asc';
 
-  @Output() selectionChange = new EventEmitter<any[]>();
-  @Output() sortChange = new EventEmitter<{ key: string, order: 'asc' | 'desc' }>();
-  @Output() rowClick = new EventEmitter<any>();
+  @Output() sortChange = new EventEmitter<SortChangeEvent>();
+  @Output() action = new EventEmitter<ActionEvent>();
 
-  get generalToggleState(): ToggleState {
-    if (!this.selection || !this.items?.length) return 'unchecked';
-    if (this.selection.allSelected(this.items)) return 'checked';
-    if (this.selection.someSelected(this.items)) return 'indeterminate';
-    return 'unchecked';
-  }
-
-  rowToggleState(row: any): 'checked' | 'unchecked' {
-    return this.isSelected(row) ? 'checked' : 'unchecked';
-  }
-
-  /** ✅ CORREGIDO: El tipo del argumento es ahora 'ToggleState' */
-  onGeneralToggle(state: ToggleState) {
-    if (!this.selection) return;
-    if (state === 'checked') {
-      this.selection.selectAll(this.items);
+  /**
+   * Maneja el clic en una cabecera de columna para ordenar.
+   * @param key La clave de la columna.
+   */
+  onSort(key: string): void {
+    if (this.sortKey === key) {
+      // Si se hace clic en la misma columna, se invierte el orden
+      const newDirection = this.sortOrder === 'asc' ? 'desc' : 'asc';
+      this.sortChange.emit({ key, direction: newDirection });
     } else {
-      this.selection.clear();
+      // Si se hace clic en una nueva columna, se ordena ascendentemente por defecto
+      this.sortChange.emit({ key, direction: 'asc' });
     }
-    this.selectionChange.emit(this.selection.selectedArray);
   }
 
-  onRowToggle(row: any) {
+  /**
+   * Emite un evento de acción.
+   * @param actionName El nombre de la acción (ej: 'edit', 'delete').
+   * @param item El objeto de la fila.
+   */
+  onAction(actionName: string, item: any): void {
+    this.action.emit({ action: actionName, item });
+  }
+
+  /**
+   * Obtiene de forma segura el valor de una propiedad, incluso si está anidada.
+   * Por ejemplo, para una clave 'country.name', obtendrá el valor correcto.
+   * @param item El objeto de la fila.
+   * @param key La clave de la propiedad.
+   * @returns El valor de la propiedad.
+   */
+  getCellValue(item: any, key: string): any {
+    // Reemplazo simple de lodash.get para evitar la dependencia
+    return key.split('.').reduce((o, i) => (o ? o[i] : undefined), item);
+  }
+
+  /**
+   * Maneja el clic en una fila para la selección.
+   * @param item El objeto de la fila.
+   * @param event El evento del ratón.
+   */
+  onRowClick(item: any, event: MouseEvent): void {
     if (!this.selection) return;
-    this.selection.toggle(row);
-    this.selectionChange.emit(this.selection.selectedArray);
-  }
 
-  onRowClick(row: any, event: MouseEvent): void {
-    this.rowClick.emit(row);
-    if (!this.selectable || !this.selection) return;
-    if ((event.target as HTMLElement).closest('app-toggle-checkbox')) {
-      return;
-    }
-    this.selection.select(row, this.items, event);
-    this.selectionChange.emit(this.selection.selectedArray);
-  }
+    // ✅ FIX 1: Proporcionar la función `getKey` que espera el servicio de selección.
+    // Asumimos que cada 'item' tiene una propiedad 'id' única.
+    const getKey = (i: any) => i.id;
 
-  isSelected(row: any): boolean {
-    return this.selection?.isSelected(row.id) ?? false;
-  }
-
-  onSort(col: TableColumn): void {
-    if (!col.sortable) return;
-    let newOrder: 'asc' | 'desc' = (this.sortKey === col.key && this.sortOrder === 'asc') ? 'desc' : 'asc';
-    this.sortChange.emit({ key: col.key, order: newOrder });
-  }
-
-  getNestedValue(item: any, key: string): any {
-    return key.split('.').reduce((obj, k) => (obj && obj[k] !== undefined) ? obj[k] : undefined, item);
+    // ✅ FIX 2: Usar la API actualizada de SelectionService.
+    if (event.ctrlKey || event.metaKey) this.selection.toggle(item, getKey);
+    else this.selection.set([item]);
   }
 }

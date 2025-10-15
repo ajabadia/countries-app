@@ -1,52 +1,42 @@
-﻿// controllers/continentsController.js
-const { getDB } = require('../db/database');
-const TABLE_NAME = 'continents';
+﻿﻿﻿﻿// controllers/continentsController.js
+const asyncHandler = require('express-async-handler');
+const continentsService = require('../services/continentsService');
 
 // GET /api/continents/count
-function getCount(req, res, next) {
-  const db = getDB();
-  try {
-    const result = db.prepare(`SELECT COUNT(*) as total FROM ${TABLE_NAME}`).get();
-    res.json({ total: result.total || 0 });
-  } catch (err) {
-    next(err);
-  }
-}
+const getCount = asyncHandler(async (req, res) => {
+  const result = continentsService.getCount();
+  res.json(result);
+});
 
 // GET /api/continents
-function getAll(req, res, next) {
-  const db = getDB();
-  try {
-    const rows = db.prepare(`SELECT id, defaultname FROM ${TABLE_NAME} ORDER BY id`).all();
-    res.json({ data: rows, total: rows.length });
-  } catch (err) {
-    next(err);
-  }
-}
+const getAll = asyncHandler(async (req, res) => {
+  const result = continentsService.getAll(['id', 'defaultname'], 'id');
+  res.json(result);
+});
 
 // GET /api/continents/:id
-function getById(req, res, next) {
-    // Lógica para obtener por ID (preparada para el futuro)
-    res.status(501).json({ message: 'No implementado' });
-}
+const getById = asyncHandler(async (req, res) => {
+  const continent = continentsService.getById(req.params.id, ['id', 'defaultname']);
+  if (!continent) {
+    return res.status(404).json({ error: 'Continente no encontrado' });
+  }
+  res.json(continent);
+});
 
 // POST /api/continents
-function create(req, res, next) {
-    // Lógica para crear (preparada para el futuro)
-    res.status(501).json({ message: 'No implementado' });
-}
+const create = (req, res) => res.status(501).json({ message: 'No implementado' });
 
 // PUT /api/continents/:id
-function update(req, res, next) {
-    // Lógica para actualizar (preparada para el futuro)
-    res.status(501).json({ message: 'No implementado' });
-}
+const update = (req, res) => res.status(501).json({ message: 'No implementado' });
 
 // DELETE /api/continents/:id
-function remove(req, res, next) {
-    // Lógica para borrar (preparada para el futuro)
-    res.status(501).json({ message: 'No implementado' });
-}
+const remove = asyncHandler(async (req, res) => {
+  const info = continentsService.remove(req.params.id);
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Continente no encontrado para borrar' });
+  }
+  res.status(204).end();
+});
 
 module.exports = {
   getCount,

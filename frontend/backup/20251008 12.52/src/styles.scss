@@ -2,13 +2,6 @@
 // Archivo principal de estilos globales con metodología BEM
 // --------------------------------------------------------------
 
-
-// 777777777777777
-
-// styles.scss
-// Archivo principal de estilos globales con metodología BEM
-// --------------------------------------------------------------
-
 // 1. Importaciones base (usa siempre rutas relativas desde /src)
 @import './styles/variables';
 @import './styles/mixins';
@@ -43,12 +36,8 @@
 
 // Utilidades de color
 .u-text {
-  &--primary { color: var(--color-primary) !important; }
-  &--accent { color: var(--color-accent) !important; }
-  &--success { color: var(--color-success) !important; }
-  &--error { color: var(--color-error) !important; }
-  &--muted { color: var(--color-text-muted) !important; }
-  &--link { color: var(--color-link) !important; }
+  &--link { color: var(--color-link) !important; } // Link es específico, lo mantenemos
+  // Los demás colores se definen abajo, eliminamos duplicados.
 }
 
 // Utilidades de tamaño
@@ -71,7 +60,6 @@
 .u-text {
   &--primary { color: var(--color-primary) !important; }
   &--accent { color: var(--color-accent) !important; }
-  &--muted { color: var(--color-text-muted) !important; }
   &--success { color: var(--color-success) !important; }
   &--error { color: var(--color-error) !important; }
   &--warning { color: var(--color-warning) !important; }
@@ -161,18 +149,11 @@
 
 
 .page {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  // Para que nunca toque el borde, pero sea pequeño
-  max-width: 1200px;
+  width: 100%;
+  max-width: var(--container-max-width, 1200px);
   margin-left: auto;
   margin-right: auto;
+  padding-left: var(--space-sm); // Usamos variables para consistencia
+  padding-right: var(--space-sm);
   box-sizing: border-box;
-}
-@media (max-width: 700px) {
-  .page {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    max-width: 100%;
-  }
 }

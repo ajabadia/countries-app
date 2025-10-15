@@ -3,6 +3,7 @@
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnChanges, SimpleChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { PageChangeEvent } from './paginator.model';
 
 @Component({
   selector: 'app-paginator',
@@ -13,46 +14,53 @@ import { FormsModule } from '@angular/forms';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class PaginatorComponent implements OnChanges {
-  @Input() page: number = 1;
-  @Input() totalPages: number = 1;
+  @Input() currentPage: number = 1;
   @Input() totalItems: number = 0;
   @Input() pageSize: number = 10;
   @Input() pageSizeOptions: number[] = [10, 25, 50, 100];
 
-  @Output() pageChange = new EventEmitter<number>();
-  @Output() pageSizeChange = new EventEmitter<number>();
+  // ✅ MEJORA: Un solo evento para todos los cambios de paginación.
+  @Output() pageChange = new EventEmitter<PageChangeEvent>();
 
   public gotoPage: number = 1;
+  public totalPages: number = 0; // ✅ MEJORA: El componente lo calcula solo.
 
   ngOnChanges(changes: SimpleChanges): void {
-    if (changes['page']) {
-      this.gotoPage = this.page;
+    // Mantenemos sincronizado el input de "ir a" con la página actual.
+    if (changes['currentPage']) {
+      this.gotoPage = this.currentPage;
     }
+    this.recalculateTotalPages();
   }
 
   get startIdx(): number {
-    return this.totalItems > 0 ? (this.page - 1) * this.pageSize + 1 : 0;
+    return this.totalItems > 0 ? (this.currentPage - 1) * this.pageSize + 1 : 0;
   }
   get endIdx(): number {
-    return Math.min(this.page * this.pageSize, this.totalItems);
+    return Math.min(this.currentPage * this.pageSize, this.totalItems);
   }
 
-  /** ✅ CORREGIDO: Método setPage restaurado */
-  setPage(newPage: number): void {
+  goToPage(newPage: number): void {
     const newValidPage = Math.max(1, Math.min(newPage, this.totalPages));
-    if (this.page !== newValidPage) {
-      this.pageChange.emit(newValidPage);
+    if (this.currentPage !== newValidPage) {
+      this.emitPageChange(newValidPage, this.pageSize);
     }
   }
 
-  /** ✅ CORREGIDO: Método onPageSizeChange restaurado */
-  onPageSizeChange(event: Event): void {
-    const newSize = Number((event.target as HTMLSelectElement).value);
-    this.pageSizeChange.emit(newSize);
+  onPageSizeChange(newSize: number): void {
+    // Al cambiar el tamaño, volvemos a la primera página para evitar inconsistencias.
+    this.emitPageChange(1, newSize);
   }
 
-  /** ✅ CORREGIDO: Método onGotoPage restaurado */
   onGotoPage(): void {
-    this.setPage(this.gotoPage);
+    this.goToPage(this.gotoPage);
+  }
+
+  private emitPageChange(page: number, pageSize: number): void {
+    this.pageChange.emit({ page, pageSize });
+  }
+
+  private recalculateTotalPages(): void {
+    this.totalPages = this.totalItems > 0 ? Math.ceil(this.totalItems / this.pageSize) : 0;
   }
 }

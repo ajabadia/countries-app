@@ -1,7 +1,7 @@
 //ui-stat-card.component.scss
 /* Importamos variables y mixins para consistencia */
-@use 'src/styles/variables' as v;
-@use 'src/styles/mixins' as m;
+@use "src/styles/variables" as v;
+@use "src/styles/mixins" as m;
 
 /* ---- Contenedor principal corporativo y accesible ---- */
 .ui-stat-card {
@@ -21,7 +21,8 @@
   cursor: pointer;
   border: none;
   outline: none;
-  @include m.transition(box-shadow, background); /* Usamos mixin para transiciones */
+  // ✅ FIX: Reemplazamos el mixin por la propiedad estándar de CSS.
+  transition: box-shadow 0.2s ease-in-out, background-color 0.2s ease-in-out;
 
   /* ---- ICONO corporativo ---- */
   &__icon {
@@ -29,16 +30,18 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    /* ✅ FIX: Declaraciones movidas antes de CUALQUIER regla anidada para evitar la advertencia de deprecación. */
+    background: transparent !important; /* <-- obligatorio si hereda fondo de la card o de algún mixin */
+    box-shadow: none !important;
+    border-radius: 0 !important;
+
     /* El tamaño lo marca [ngStyle], pero si quieres clases para variantes: */
     &--xs { width: 32px; height: 32px; }
     &--s  { width: 48px; height: 48px; }
     &--m  { width: 72px; height: 72px; }
     &--l  { width: 96px; height: 96px; }
     &--xl { width: 120px; height: 120px; }
-    /* Si sólo usas ngStyle estos no son necesarios */
-    background: transparent !important; /* <-- obligatorio si hereda fondo de la card o de algún mixin */
-    box-shadow: none !important;
-    border-radius: 0 !important; /* CORRECCIÓN: Movidas estas declaraciones antes de svg para evitar deprecación */
+    
     svg {
       width: 100% !important;
       height: 100% !important;

@@ -1,41 +1,33 @@
 // ui-stat-card.component.ts
 
-import { Component, Input, OnInit } from '@angular/core';
-import { Router } from '@angular/router';
-import { HttpClient } from '@angular/common/http';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
+import { UiIconType } from 'src/app/services/icon.service';
 
 @Component({
   selector: 'app-ui-stat-card',
+  standalone: true,
+  imports: [CommonModule, RouterModule, UiIconComponent],
   templateUrl: './ui-stat-card.component.html',
-  styleUrls: ['./ui-stat-card.component.scss']
+  styleUrls: ['./ui-stat-card.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiStatCardComponent implements OnInit {
+export class UiStatCardComponent {
   @Input() label!: string;
   @Input() value!: string | number;
-  @Input() icon?: string; // nombre svg
-  @Input() detailRoute?: string; // NUEVO
+  @Input() icon?: string;
+  @Input() iconType: UiIconType = 'system';
+  @Input() detailRoute?: string | any[];
+  @Input.transform(Number)
+  @Input() valueFontSize: number = 2.2; // en 'rem'
 
-  svgContent: SafeHtml | null = null;
-  isActive = false;
-
-  constructor(private http: HttpClient, private sanitizer: DomSanitizer, private router: Router) {}
-
-  ngOnInit() {
-    if (this.icon) {
-      this.http.get(`/assets/icons/${this.icon}.svg`, { responseType: 'text' }).subscribe({
-        next: svg => this.svgContent = this.sanitizer.bypassSecurityTrustHtml(svg),
-        error: () => this.svgContent = null
-      });
-    }
-  }
-    onClick(): void {
-    if (this.detailRoute) {
-      this.router.navigate([this.detailRoute]);
-    }
+  /**
+   * Determina si el componente debe actuar como un enlace.
+   * @returns {boolean}
+   */
+  get isLink(): boolean {
+    return !!this.detailRoute;
   }
 }
-
-
-
-

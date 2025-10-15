@@ -29,17 +29,6 @@
     background: transparent;
     border: none;
 
-    // Activo
-    &--active .admin-menu__link,
-    &--active .admin-menu__label,
-    .admin-menu__link--active {
-      font-weight: 900;
-      color: var(--color-primary-dark, #073864);
-      background: var(--color-background, #fff);
-      border-bottom: 3px solid var(--color-primary, #0b7ad0);
-      box-shadow: 0 2px 8px 0 rgba(11, 122, 208, 0.09);
-    }
-
     // Deshabilitado
     &--disabled .admin-menu__link,
     .admin-menu__link--disabled {
@@ -64,18 +53,28 @@
     transition: color 0.14s, background 0.2s, border-bottom 0.18s, box-shadow 0.15s;
     outline: none;
 
-    &:hover:not(.admin-menu__link--disabled),
-    &:focus-visible:not(.admin-menu__link--disabled) {
+    // ✅ MEJORA: Usamos :not([aria-disabled]) para un selector más robusto
+    &:hover:not([aria-disabled="true"]),
+    &:focus-visible:not([aria-disabled="true"]) {
       color: var(--color-primary-dark, #073864);
       background: var(--color-primary-h7, #e7f2fa);
       box-shadow: 0 4px 18px 0 rgba(11, 122, 208, 0.13);
       border-bottom: 3px solid var(--color-primary, #0b7ad0);
       text-decoration: none;
     }
-    &:active:not(.admin-menu__link--disabled) {
+    &:active:not([aria-disabled="true"]) {
       color: var(--color-primary-dark, #073864);
       background: var(--color-primary-h8, #f8fbfd);
       box-shadow: 0 6px 16px 0 rgba(11, 122, 208, 0.16);
+    }
+
+    // ✅ MEJORA: El estado activo lo gestiona routerLinkActive
+    &--active {
+      font-weight: 900;
+      color: var(--color-primary-dark, #073864);
+      background: var(--color-background, #fff);
+      border-bottom: 3px solid var(--color-primary, #0b7ad0);
+      box-shadow: 0 2px 8px 0 rgba(11, 122, 208, 0.09);
     }
   }
 

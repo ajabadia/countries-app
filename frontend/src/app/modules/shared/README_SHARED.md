@@ -1,27 +1,27 @@
-# SharedModule
+# Carpeta Compartida (Shared)
 
-> Fecha de definición: 2025-10-10 16:55 CEST
+> Fecha de revisión: 2025-10-11 10:30 CEST
 
-El **SharedModule** concentra todos los componentes, utilidades y módulos comunes/reutilizables de la aplicación. Permite importar una única vez este módulo en cualquier otro módulo funcional (feature module) para acceder a una interfaz consistente, componentes de la UI y utilidades compartidas.
+La carpeta **Shared** concentra todos los componentes, servicios y utilidades comunes/reutilizables de la aplicación. La mayoría de estos componentes son **Standalone**, lo que permite una importación granular y un mejor control de dependencias.
 
 ---
 
 ## Estructura
 
-**Ruta principal**: `src/app/modules/shared/`
+**Ruta principal**: `src/app/shared/` (o `src/app/modules/shared/`)
 
-### Componentes declarados/exportados:
+### Componentes Standalone disponibles:
 - HeaderComponent  
 - FooterComponent  
 - LogoComponent  
 - CopyrightComponent
 - MenuBarComponent
 - UiButtonComponent
+- UiIconComponent
 - UiHeadingComponent
 - AdminMenuComponent
 - UiStatCardComponent
 - ToolbarButtonsComponent
-- FlagIconComponent
 - SearchBoxComponent
 - PaginatorComponent
 - TableComponent
@@ -29,22 +29,17 @@ El **SharedModule** concentra todos los componentes, utilidades y módulos comun
 - ModalComponent
 - ConfirmDialogComponent
 
-### Módulos importados:
-- CommonModule  
-- RouterModule  
-- FormsModule
-
 ---
 
-## Cómo usar este módulo
+## Cómo usar los componentes Standalone
 
-1. **Importa `SharedModule`** en cualquier módulo funcional donde necesites algún componente, servicio o pipe común:
+1. **Importa el componente** directamente en el array `imports` de otro componente Standalone o de un `NgModule`.
 
 ```typescript
-import { SharedModule } from '../shared/shared.module';
+import { UiButtonComponent } from 'src/app/shared/components/ui-button/ui-button.component';
 
 @NgModule({
-  imports: [SharedModule],
+  imports: [UiButtonComponent], // O en los imports de un componente Standalone
 })
 export class FeatureModule { }
 ```

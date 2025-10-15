@@ -1,12 +1,21 @@
-<button
-  class="ui-stat-card"
-  [ngClass]="{ 'active': isActive }"
-  (click)="onClick()"
-  type="button"
-  tabindex="0"
-  [attr.aria-label]="label"
->
-  <span class="ui-stat-card__icon" *ngIf="svgContent" [innerHTML]="svgContent"></span>
+<!-- 
+  Usamos un contenedor con la clase base y luego un `<a>` o `<div>` dentro.
+  Esto permite que los estilos de la tarjeta se apliquen consistentemente, 
+  independientemente de si es un enlace o no.
+-->
+<div class="ui-stat-card" [class.ui-stat-card--link]="isLink">
+  <a *ngIf="isLink; else content" [routerLink]="detailRoute" class="ui-stat-card__content">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </a>
+  <ng-template #content>
+    <div class="ui-stat-card__content">
+      <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+    </div>
+  </ng-template>
+</div>
+
+<ng-template #cardContent>
+  <app-ui-icon *ngIf="icon" [icon]="icon" [type]="iconType" size="xl" class="ui-stat-card__icon" />
   <span class="ui-stat-card__label">{{ label }}</span>
-  <span class="ui-stat-card__value">{{ value }}</span>
-</button>
+  <span class="ui-stat-card__value" [style.fontSize.rem]="valueFontSize">{{ value }}</span>
+</ng-template>

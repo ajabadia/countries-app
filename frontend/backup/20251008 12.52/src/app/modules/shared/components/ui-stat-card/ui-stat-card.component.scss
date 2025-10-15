@@ -1,66 +1,49 @@
-
-
 .ui-stat-card {
-  background: var(--color-surface, #fff);
-  border-radius: var(--radius-md, 9px);
-  box-shadow: 0 3px 10px rgba(0,0,0,0.07);
-  padding: var(--space-m, 1em) var(--space-l, 2em) var(--space-xl, 2em);
-  min-width: 180px;
-  max-width: 320px;              // Opcional para limitar en grid
-  margin: auto;                  // En grid, para centrar
-  display: flex;
-  flex-direction: column;
-  align-items: center;           // Centrado horizontal
-  justify-content: center;       // Centrado vertical si defines altura fija
-  text-align: center;
-  cursor: pointer;
-  border: none;
-  outline: none;
-  transition: box-shadow 0.2s, background 0.2s;
+  // El contenedor principal solo define el borde y el radio
+  border-radius: var(--radius-md);
+  border: 1px solid var(--color-border);
+  background: var(--color-surface-soft);
+  transition: border-color var(--transition-speed, 0.2s), box-shadow var(--transition-speed, 0.2s);
+  height: 100%; // Ocupa todo el alto de la celda de la cuadrícula
+
+  // El contenido interno (sea <a> o <div>) tiene el padding y el layout
+  &__content {
+    padding: var(--space-l);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+  }
+
   &__icon {
-    margin-bottom: var(--space-s, 0.5em);
-    svg {
-      width: 40px; height: 40px;
-      fill: var(--color-primary, #10416a);
-      color: var(--color-primary, #10416a);
-    }
+    // app-ui-icon ya tiene sus propios estilos, solo ajustamos el margen
+    margin-bottom: var(--space-m);
+    color: var(--color-primary); // El icono tomará este color
   }
+
   &__label {
-    color: var(--color-tertiary, #727272);
-    margin-bottom: 0.25em;
-    font-size: 1em; font-weight: 600;
+    color: var(--color-text-muted);
+    margin-bottom: var(--space-sm);
+    font-size: var(--font-size-base);
+    font-weight: 600;
+    line-height: 1.2;
   }
+
   &__value {
-    font-size: 2.2em; font-weight: 700;
-    color: var(--color-primary, #10416a);
+    font-size: 2.2rem; // Valor por defecto, se puede sobreescribir con [valueFontSize]
+    font-weight: 700;
+    color: var(--color-text-emphasis);
     letter-spacing: 0.03em;
+    line-height: 1;
   }
-  &:hover,
-  &:focus {
-    box-shadow: 0 6px 20px rgba(0,0,0,0.15);
-    background: var(--color-surface-hover, #e5f1fb);
-  }
-  &:active,
-  &.active {
-    background: var(--color-primary-light, #e0eeff);
-    box-shadow: 0 2px 6px rgba(0,0,0,0.13);
-    outline: 2px solid var(--color-primary, #10416a);
-  }
-}
 
-.ui-stat-card__icon svg {
-  width: 100% !important;
-  height: 100% !important;
-  max-width: 72px;  // Puedes ajustar aquí el tamaño máximo que quieres
-  max-height: 72px;
-  display: block;
-}
-
-.ui-stat-card__icon {
-  width: 72px;      // O el que quieras como "icono XL"
-  height: 72px;
-  margin-bottom: var(--space-m, 1em);
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  // Estilos específicos cuando la tarjeta es un enlace
+  &--link:hover {
+    border-color: var(--color-primary);
+    box-shadow: var(--shadow-soft);
+  }
 }

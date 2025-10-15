@@ -40,6 +40,11 @@ export class IconService {
    * Si no, hace una petición HTTP, lo cachea y lo devuelve.
    */
   public getIcon(name: string, type: UiIconType): Observable<SafeHtml> {
+    // ✅ MEJORA: Si no hay nombre de icono, no intentes cargarlo.
+    if (!name) {
+      return of(this.sanitizer.bypassSecurityTrustHtml(''));
+    }
+
     const path = this.getIconPath(name, type);
     
     // Si la ruta ya está en el caché, devolvemos el Observable cacheado
@@ -79,8 +84,25 @@ export class IconService {
    * Procesa el SVG crudo para hacerlo compatible con CSS (currentColor).
    */
   private patchSvg(svg: string): string {
-    svg = svg.replace(/fill="[^"]*"/g, 'fill="currentColor"');
-    svg = svg.replace(/stroke="[^"]*"/g, 'stroke="currentColor"');
-    return svg;
+    // ✅ MEJORA: Reemplazo selectivo para no destruir iconos complejos.
+    // Esta función solo reemplazará los atributos que NO sean 'none' o 'transparent'.
+    const patchAttribute = (attr: 'fill' | 'stroke', svgContent: string): string => {
+      const regex = new RegExp(`${attr}="([^"]*)"`, 'g');
+      
+      return svgContent.replace(regex, (match, color) => {
+        const lowerColor = color.toLowerCase();
+        if (lowerColor === 'none' || lowerColor === 'transparent') {
+          // Si el color es 'none' o 'transparent', lo dejamos como está.
+          return match; 
+        }
+        // Para cualquier otro color, lo reemplazamos con currentColor.
+        return `${attr}="currentColor"`;
+      });
+    };
+
+    let patchedSvg = patchAttribute('fill', svg);
+    patchedSvg = patchAttribute('stroke', patchedSvg);
+    
+    return patchedSvg;
   }
 }

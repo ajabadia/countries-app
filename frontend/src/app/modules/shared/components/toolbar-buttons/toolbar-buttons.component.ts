@@ -5,16 +5,18 @@ import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
 // ✅ CORREGIDO: Ruta de importación con erratas
 import { UiIconType } from 'src/app/services/icon.service';
+import { Observable } from 'rxjs';
 
 export interface ToolbarButtonConfig {
   icon: string;
   label: string;
   action: () => void;
   color: 'main' | 'edit' | 'danger' | string;
-  disabled?: boolean;
+  disabled$?: Observable<boolean>;
   iconType?: UiIconType;
   iconSize?: number | 'xs' | 's' | 'm' | 'l' | 'xl';
   iconColor?: string;
+  id?: string;
   iconClass?: string;
 }
 
@@ -31,7 +33,7 @@ export class ToolbarButtonsComponent {
 
   /** ✅ CORREGIDO: El nombre del método es 'executeAction' */
   executeAction(btn: ToolbarButtonConfig): void {
-    if (!btn.disabled && typeof btn.action === 'function') {
+    if (typeof btn.action === 'function') {
       btn.action();
     }
   }

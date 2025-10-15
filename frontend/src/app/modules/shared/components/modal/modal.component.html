@@ -1,38 +1,39 @@
+<!-- 1. Unificamos todo en un solo bloque @if para evitar redundancia -->
 @if (visible) {
-  <div
-    class="modal-backdrop"
-    [@fade]
-    (click)="onBackdropClick()"> </div>
-}
-
-@if (visible) {
-  <div
-    class="modal-container"
-    [@fade]
-    role="dialog"
-    aria-modal="true"
-    [attr.aria-labelledby]="'modal-title-' + title">
-    
-    @if (title) {
+  <!-- ng-container es un agrupador que no añade elementos extra al DOM -->
+  <ng-container>
+    <div
+      class="modal-backdrop"
+      [@fade]
+      (click)="onBackdropClick()"></div>
+    <div
+      class="modal-container"
+      [@fade]
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="title ? 'modal-title-' + title : null"
+      aria-describedby="modal-body-content">
+      
+      @if (title) {
       <app-ui-heading
         [id]="'modal-title-' + title"
         class="modal-header"
         [level]="3"
-        [text]="title"
-        [subtitle]="subtitle"
-        [textAlign]="titleAlign"
         [icon]="icon"
-        [iconType]="iconType"
-        [iconSize]="iconSize"
+        [subtitle]="subtitle"
         color="primary">
-        
+        <!-- ✅ FIX: El título se pasa por proyección de contenido, no por el input [text]. -->
+        {{ title }}
+
         @if (showCancel) {
-          <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">×</button>
+          <!-- 2. Usamos &times; que es más semántico para un botón de cierre -->
+          <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">&times;</button>
         }
       </app-ui-heading>
     }
 
-    <div class="modal-body">
+    <!-- 3. Añadimos un ID para usarlo con aria-describedby -->
+    <div class="modal-body" id="modal-body-content">
       <ng-content></ng-content>
     </div>
 
@@ -46,5 +47,6 @@
         }
       </div>
     }
-  </div>
+    </div>
+  </ng-container>
 }

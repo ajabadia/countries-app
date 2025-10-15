@@ -1,17 +1,24 @@
-// src/app/modules/shared/components/copyright/copyright.component.ts
-
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+import { CommonModule } from '@angular/common';
 
 @Component({
-    selector: 'app-copyright',
-    standalone: true,
-    imports: [], // No necesita nada porque solo usa {{ }}
-    templateUrl: './copyright.component.html',
-    styleUrls: [],
-    changeDetection: ChangeDetectionStrategy.OnPush
+  selector: 'app-copyright',
+  standalone: true,
+  imports: [CommonModule],
+  templateUrl: './copyright.component.html',
+  styleUrls: ['./copyright.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class CopyrightComponent {
-  private readonly currentYear = new Date().getFullYear();
+  /**
+   * Texto personalizado para el copyright. Si no se proporciona,
+   * se usará un texto por defecto.
+   */
+  @Input() text?: string;
 
-  @Input() text: string = `(c) Alejandro Abadía ${this.currentYear}`;
+  public readonly currentYear = new Date().getFullYear();
+
+  get copyrightText(): string {
+    return this.text ?? `© ${this.currentYear} Mi Aplicación. Todos los derechos reservados.`;
+  }
 }

@@ -4,7 +4,7 @@ import { Routes } from '@angular/router';
 
 // --- Importamos los componentes Layout y de Página ---
 import { AdminComponent } from './admin/admin.component';
-import { AdminDashboardComponent } from './pages/dashboard/admin-dashboard.component';
+import { DashboardComponent } from './pages/dashboard/dashboard.component';
 import { AdminCountriesComponent } from './pages/countries/admin-countries.component';
 import { AdminContinentsComponent } from './pages/continents/admin-continents.component';
 import { AdminAreasComponent } from './pages/areas/admin-areas.component';
@@ -19,7 +19,7 @@ export const ADMIN_ROUTES: Routes = [
     component: AdminComponent, // El componente 'AdminComponent' actúa como layout/contenedor
     children: [
       { path: '', redirectTo: 'dashboard', pathMatch: 'full' },
-      { path: 'dashboard', component: AdminDashboardComponent },
+      { path: 'dashboard', component: DashboardComponent },
       { path: 'countries', component: AdminCountriesComponent },
       { path: 'continents', component: AdminContinentsComponent },
       { path: 'areas', component: AdminAreasComponent },

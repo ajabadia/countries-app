@@ -1,30 +1,67 @@
-﻿// controllers/languagesController.js
-const { getDB } = require('../db/database');
-const TABLE_NAME = 'languages';
+﻿﻿﻿﻿// controllers/languagesController.js
+const asyncHandler = require('express-async-handler');
+const languagesService = require('../services/languagesService');
 
-function getCount(req, res, next) {
-  const db = getDB();
-  try {
-    const result = db.prepare(`SELECT COUNT(*) as total FROM ${TABLE_NAME}`).get();
-    res.json({ total: result.total || 0 });
-  } catch (err) {
-    next(err);
+const getCount = asyncHandler(async (req, res) => {
+  const result = languagesService.getCount();
+  res.json(result);
+});
+
+const getAll = asyncHandler(async (req, res) => {
+  // Seleccionamos las columnas específicas que nos interesan
+  const result = languagesService.getAll(['id', 'name', 'active'], 'id');
+  res.json(result);
+});
+
+const getById = asyncHandler(async (req, res) => {
+  const language = languagesService.getById(req.params.id);
+  if (!language) {
+    return res.status(404).json({ error: 'Idioma no encontrado' });
   }
-}
+  res.json(language);
+});
 
-function getAll(req, res, next) {
-  const db = getDB();
-  try {
-    const rows = db.prepare(`SELECT id, name, active FROM ${TABLE_NAME} ORDER BY id`).all();
-    res.json({ data: rows, total: rows.length });
-  } catch (err) {
-    next(err);
+const create = asyncHandler(async (req, res) => {
+  const { id, name, active } = req.body;
+  if (!id || !name) {
+    return res.status(400).json({ error: 'Los campos id y name son obligatorios' });
   }
-}
+  languagesService.create({ id, name, active: active ?? 0 });
+  const newItem = languagesService.getById(id);
+  res.status(201).json(newItem);
+});
 
-// ... (Puedes añadir aquí el resto de funciones CRUD: getById, create, update, remove) ...
+const update = asyncHandler(async (req, res) => {
+  const { name, active } = req.body;
+  const dataToUpdate = {};
+  if (name !== undefined) dataToUpdate.name = name;
+  if (active !== undefined) dataToUpdate.active = active;
+
+  if (Object.keys(dataToUpdate).length === 0) {
+    return res.status(400).json({ error: 'Se requiere al menos un campo (name o active) para actualizar' });
+  }
+
+  const info = languagesService.update(req.params.id, dataToUpdate);
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Idioma no encontrado' });
+  }
+  const updatedItem = languagesService.getById(req.params.id);
+  res.json(updatedItem);
+});
+
+const remove = asyncHandler(async (req, res) => {
+  const info = languagesService.remove(req.params.id);
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Idioma no encontrado para borrar' });
+  }
+  res.status(204).end();
+});
 
 module.exports = {
   getCount,
   getAll,
+  getById,
+  create,
+  update,
+  remove,
 };

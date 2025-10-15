@@ -1,16 +1,9 @@
-// src/app/services/countries.service.ts
+// src/app/core/services/translations.service.ts
+
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { BaseCountService } from './base-count.service';
 
 @Injectable({ providedIn: 'root' })
-export class CountriesService {
-  constructor(private http: HttpClient) {}
-
-  // Cambia la URL si NO tienes proxy.conf.json
-  getCountriesCount(): Observable<{ total: number }> {
-    return this.http.get<{ total: number }>('http://localhost:3000/api/translations/count');
-    // Si tienes proxy, deja la ruta así:
-    // return this.http.get<{ total: number }>('/api/countries/count');
-  }
+export class TranslationsService extends BaseCountService {
+  protected override apiUrl = '/api/multilingualnames'; // Según tu backend-tree.txt
 }

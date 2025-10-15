@@ -1,0 +1,15 @@
+.dashboard-grid {
+  display: grid;
+  // Crea columnas de tamaño mínimo 220px, que crecen para ocupar el espacio.
+  // Se ajustarán automáticamente al ancho de la pantalla.
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: var(--space-l); // Espacio consistente entre tarjetas
+  padding-top: var(--space-l);
+}
+
+// En pantallas muy pequeñas, forzamos una sola columna para mejor legibilidad.
+@media (max-width: 500px) {
+  .dashboard-grid {
+    grid-template-columns: 1fr;
+  }
+}

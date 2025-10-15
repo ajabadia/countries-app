@@ -17,8 +17,6 @@
 placeholder="Buscar país...">
 </app-search-box>
 
-text
-
 ---
 
 ## Inputs
@@ -63,8 +61,6 @@ text
 placeholder="Filtra países...">
 </app-search-box>
 
-text
-
 ---
 
 ## Accesibilidad
@@ -100,8 +96,6 @@ right: 0.7em;
 // ...
 }
 
-text
-
 ---
 
 ## Ejemplo de test unitario (spec)
@@ -113,8 +107,6 @@ input.dispatchEvent(new Event('input'));
 fixture.detectChanges();
 expect(component.valueChange.emit).toHaveBeenCalledWith('hola');
 });
-
-text
 
 ---
 
