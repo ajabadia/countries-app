@@ -1,1 +1,15 @@
-<app-logo src="assets/images/Ibercaja-logo-2025.svg" alt="Ibercaja Logo" [width]="160"></app-logo>
+<header class="header">
+  <div class="header__container">
+    <div class="header__brand">
+      <!-- Aquí podrías poner un logo -->
+      <a class="header__brand-link" routerLink="/">CountriesApp</a>
+    </div>
+    <nav class="header__nav">
+      @for (link of navLinks; track link.path) {
+        <app-ui-button variant="ghost" color="secondary" routerLinkActive="ui-button--active" [routerLink]="link.path">
+          {{ link.label }}
+        </app-ui-button>
+      }
+    </nav>
+  </div>
+</header>

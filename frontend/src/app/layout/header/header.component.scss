@@ -1,0 +1,29 @@
+@use 'src/styles/mixins' as m;
+
+.header {
+  height: var(--header-height);
+  background-color: var(--color-surface);
+  box-shadow: var(--shadow-base);
+  display: flex;
+  align-items: center;
+
+  &__container {
+    @include m.container;
+    @include m.flex-between;
+  }
+
+  &__brand {
+    font-size: var(--font-size-xl);
+    font-weight: 700;
+  }
+
+  &__brand-link {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+
+  &__nav {
+    display: flex;
+    gap: var(--space-s);
+  }
+}

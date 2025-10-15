@@ -5,6 +5,11 @@ import { CommonModule } from '@angular/common';
 import { UiIconType } from '@services/icon.service';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
+// ✅ MEJORA: Exportamos los tipos para que otros componentes (como toolbar-buttons) puedan usarlos.
+export type ButtonColor = 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' | 'light';
+export type ButtonVariant = 'solid' | 'outline' | 'ghost' | 'link' | 'icon';
+export type ButtonSize = 'xs' | 's' | 'm' | 'l' | 'xl';
+
 @Component({
   selector: 'app-ui-button',
   standalone: true,
@@ -17,9 +22,9 @@ export class UiButtonComponent {
   @Input() type: 'button' | 'submit' = 'button';
   @Input() disabled = false;
   @Input() loading = false;
-  @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' | 'light' = 'primary';
-  @Input() variant: 'solid' | 'outline' | 'ghost' | 'link' | 'icon' = 'solid'; // ✅ CORREGIDO: Añadido 'icon'
-  @Input() size: 'xs' | 's' | 'm' | 'l' | 'xl' = 'm';
+  @Input() color: ButtonColor = 'primary';
+  @Input() variant: ButtonVariant = 'solid';
+  @Input() size: ButtonSize = 'm';
   @Input() icon?: string;
   @Input() iconPosition: 'left' | 'right' | 'top' | 'bottom' | 'only' = 'left';
   @Input() iconType: UiIconType = 'system';

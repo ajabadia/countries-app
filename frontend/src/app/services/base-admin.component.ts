@@ -55,9 +55,9 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   public toolbarButtons: ToolbarButton[] = [
     // ✅ MEJORA: Los botones ahora usan observables para su estado 'disabled'.
     // Esto asegura que la UI reaccione a los cambios en la selección.
-    { id: 'new', label: 'Nuevo', icon: 'plus-circle', action: () => this.onNew(), color: 'main' }, // 'color' es requerido
-    { id: 'edit', label: 'Editar', icon: 'pencil', action: () => this.onEdit(), disabled$: this.selection.hasOne$.pipe(map(hasOne => !hasOne)), color: 'edit' },
-    { id: 'delete', label: 'Eliminar', icon: 'trash', action: () => this.onDelete(), disabled$: this.selection.isEmpty$, color: 'danger' },
+    { id: 'new', label: 'Nuevo', icon: 'plus-circle', action: () => this.onNew(), color: 'primary', variant: 'solid' },
+    { id: 'edit', label: 'Editar', icon: 'pencil', action: () => this.onEdit(), disabled$: this.selection.hasOne$.pipe(map(hasOne => !hasOne)), color: 'secondary', variant: 'solid' },
+    { id: 'delete', label: 'Eliminar', icon: 'trash', action: () => this.onDelete(), disabled$: this.selection.isEmpty$, color: 'danger', variant: 'solid' },
   ];
 
   ngOnInit(): void {

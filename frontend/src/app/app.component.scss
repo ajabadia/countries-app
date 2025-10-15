@@ -1,0 +1,24 @@
+/* app.component.scss */
+@use 'src/styles/mixins' as m;
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+  background-color: var(--color-background);
+}
+
+.app-header {
+  // Los estilos de la cabecera se gestionan en su propio componente (layout/header)
+  // para mantener la encapsulación.
+}
+
+.app-content {
+  // ✅ REUTILIZACIÓN: Usamos el mixin de contenedor para centrar el contenido
+  // y aplicar los paddings estándar del sistema de diseño.
+  @include m.container;
+  flex-grow: 1; // Asegura que el contenido principal ocupe el espacio disponible.
+  padding-top: var(--space-l);
+  padding-bottom: var(--space-l);
+}
+

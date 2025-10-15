@@ -1,39 +1,52 @@
 // src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component.ts
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { UiIconComponent } from '../ui-icon/ui-icon.component';
-import { UiIconType } from '@services/icon.service';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { UiButtonComponent, ButtonColor, ButtonVariant, ButtonSize } from '../ui-button/ui-button.component';
+import { UiIconType } from '@services/icon.service';
 
 export interface ToolbarButtonConfig {
-  icon: string;
+  id: string;
   label: string;
-  action: () => void;
-  color: 'main' | 'edit' | 'danger' | string;
-  disabled$?: Observable<boolean>;
+  icon?: string;
+  // ✅ ESTANDARIZACIÓN: Ahora admite todas las propiedades de ui-button
+  color?: ButtonColor;
+  variant?: ButtonVariant;
+  size?: ButtonSize;
+  iconPosition?: 'left' | 'right' | 'top' | 'bottom';
   iconType?: UiIconType;
-  iconSize?: 'xs' | 's' | 'm' | 'l' | 'xl' | string;
-  iconColor?: string;
-  id?: string;
-  iconClass?: string;
+  textAlign?: 'left' | 'center' | 'right';
+  action: () => void;
+  disabled$?: Observable<boolean>;
 }
 
 @Component({
   selector: 'app-toolbar-buttons',
   standalone: true,
-  imports: [ CommonModule, UiIconComponent ],
-  templateUrl: './toolbar-buttons.component.html',
+  imports: [ CommonModule, UiButtonComponent ],
+  template: `
+    <div class="toolbar-buttons">
+      @for (button of buttons; track button.id) {
+        <app-ui-button
+          (onClick)="button.action()"
+          [disabled]="(button.disabled$ | async) ?? false"
+          [color]="button.color || 'primary'"
+          [variant]="button.variant || 'solid'"
+          [size]="button.size || 'm'"
+          [icon]="button.icon"
+          [iconPosition]="button.iconPosition || 'left'"
+          [iconType]="button.iconType || 'system'"
+          [textAlign]="button.textAlign || 'center'"
+          [attr.data-cy]="'toolbar-button-' + button.id">
+          {{ button.label }}
+        </app-ui-button> 
+      }
+    </div>
+  `,
   styleUrls: ['./toolbar-buttons.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class ToolbarButtonsComponent {
   @Input() buttons: ToolbarButtonConfig[] = [];
-
-  /** ✅ CORREGIDO: El nombre del método es 'executeAction' */
-  executeAction(btn: ToolbarButtonConfig): void {
-    if (typeof btn.action === 'function') {
-      btn.action();
-    }
-  }
 }
