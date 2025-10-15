@@ -1,26 +1,64 @@
-<!-- ✅ Añadimos el encabezado con el título y el icono solicitados -->
-<app-ui-heading title="Pruebas" icon="icon-flask"></app-ui-heading>
+<div class="test-section">
+  <app-ui-heading title="Pruebas de Componentes" icon="icon-flask" [level]="2"></app-ui-heading>
 
-<p>Esta es la página de pruebas. Aquí puedes experimentar con componentes.</p>
+  <div class="test-subsection">
+    <h3>Botones Activos</h3>
+    <div class="button-group">
+      <app-ui-button color="primary" icon="icon-country" iconType="system" iconPosition="left" size="l" routerLink="." textAlign="left" style="width: 250px;">
+        Alinear Izquierda (L)
+      </app-ui-button>
+      <app-ui-button color="secondary" icon="icon-country" iconType="system" iconPosition="right" size="m" routerLink="." class="ui-button--active" textAlign="right" style="width: 250px;">
+        Alinear Derecha (M)
+      </app-ui-button>
+      <app-ui-button color="success" icon="icon-country" iconType="system" iconPosition="top" size="s" routerLink=".">
+        Arriba (S)
+      </app-ui-button>
+      <app-ui-button color="warning" icon="icon-country" iconType="system" iconPosition="bottom" size="m" routerLink=".">
+        Abajo (M)
+      </app-ui-button>
+      <app-ui-button color="danger" icon="icon-country" iconType="system" routerLink=".">
+        Peligro (Color Forzado)
+      </app-ui-button>
+      <app-ui-button color="light" icon="icon-country" iconType="system" routerLink=".">
+        Light
+      </app-ui-button>
+      <app-ui-button color="light" icon="icon-delete" iconType="system" routerLink="." style="font-size: var(--font-size-xl); width: 250px;">
+        Light (Texto XL)
+      </app-ui-button>
+      <app-ui-button color="light" icon="icon-delete" iconType="system" routerLink="." style="font-size: var(--font-size-xl); color: pink; width: 250px;">
+        Light (Texto Rosa)
+      </app-ui-button>
+    </div>
+  </div>
 
-<!-- ✅ Añadimos el componente de icono directamente -->
-<div class="test-icon-container">
-  <p>Probando <strong>app-ui-icon</strong> directamente:</p>
-  <app-ui-icon icon="icon-flask" size="xl"></app-ui-icon>
+  <div class="test-subsection">
+    <h3>Botones Inactivos (Disabled)</h3>
+    <div class="button-group">
+      <app-ui-button color="primary" icon="icon-country" iconType="system" iconPosition="left" [disabled]="true">
+        Izquierda
+      </app-ui-button>
+      <app-ui-button color="secondary" icon="icon-country" iconType="system" iconPosition="top" [disabled]="true">
+        Arriba
+      </app-ui-button>
+      <app-ui-button color="success" icon="icon-country" iconType="system" iconPosition="right" [disabled]="true">
+        Derecha
+      </app-ui-button>
+      <app-ui-button color="warning" icon="icon-country" iconType="system" iconPosition="bottom" [disabled]="true">
+        Abajo
+      </app-ui-button>
+      <app-ui-button color="danger" [disabled]="true">
+        Sin Icono
+      </app-ui-button>
+    </div>
+  </div>
 </div>
 
-<!-- ✅ Añadimos el nuevo encabezado centrado y con el icono a la derecha -->
-<app-ui-heading
-  title="pruebas"
-  [level]="1"
-  icon="icon-flask"
-  align="center"
-  iconPosition="right"
-></app-ui-heading>
-
-<h1>H1</h1>
-<h2>H2</h2>
-<h3>H3</h3>
-<h4>H4</h4>
-<h5>H5</h5>
-<h6>H6</h6> 
+<div class="test-section">
+  <app-ui-heading title="Pruebas de Encabezados" [level]="2"></app-ui-heading>
+  <h1>H1</h1>
+  <h2>H2</h2>
+  <h3>H3</h3>
+  <h4>H4</h4>
+  <h5>H5</h5>
+  <h6>H6</h6>
+</div>

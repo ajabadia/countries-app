@@ -17,26 +17,45 @@ export class UiButtonComponent {
   @Input() type: 'button' | 'submit' = 'button';
   @Input() disabled = false;
   @Input() loading = false;
-  @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' = 'primary';
+  @Input() color: 'primary' | 'secondary' | 'accent' | 'danger' | 'surface' | 'success' | 'warning' | 'info' | 'icon' | 'light' = 'primary';
   @Input() variant: 'solid' | 'outline' | 'ghost' | 'link' | 'icon' = 'solid'; // ✅ CORREGIDO: Añadido 'icon'
-  @Input() size: 'sm' | 'md' | 'lg' = 'md';
+  @Input() size: 'xs' | 's' | 'm' | 'l' | 'xl' = 'm';
   @Input() icon?: string;
-  @Input() iconPosition: 'left' | 'right' | 'only' = 'left';
+  @Input() iconPosition: 'left' | 'right' | 'top' | 'bottom' | 'only' = 'left';
   @Input() iconType: UiIconType = 'system';
-  @Input() iconSize: string = '1em';
+  @Input() textAlign: 'left' | 'center' | 'right' = 'center';
   @Input() ariaLabel?: string;
 
   @Output() onClick = new EventEmitter<MouseEvent>();
 
+  /**
+   * ✅ MEJORA: El tamaño del icono ahora es dinámico y depende del tamaño del botón.
+   * Esto asegura coherencia visual sin necesidad de pasar un tamaño manualmente.
+   */
+  get iconSize(): string {
+    // ✅ CORRECCIÓN: Traducimos el tamaño del botón al tamaño que espera ui-icon.
+    // Ahora ambos componentes "hablan el mismo idioma".
+    if (this.size === 'xl') return 'xl';
+    if (this.size === 'l') return 'l';
+    if (this.size === 's') return 's';
+    if (this.size === 'xs') return 'xs';
+    return 'm'; // m (default)
+  }
+
   get buttonClasses() {
-    return {
+    const classes: { [key: string]: boolean } = {
       'ui-button': true,
       [`ui-button--${this.color}`]: true,
       [`ui-button--${this.variant}`]: true,
       [`ui-button--${this.size}`]: true,
       'ui-button--icon-only': this.iconPosition === 'only',
       'ui-button--loading': this.loading,
+      'ui-button--reverse': this.iconPosition === 'right',
+      'ui-button--icon-top': this.iconPosition === 'top',
+      'ui-button--icon-bottom': this.iconPosition === 'bottom',
+      [`ui-button--align-${this.textAlign}`]: true,
     };
+    return classes;
   }
 
   handleClick(event: MouseEvent): void {

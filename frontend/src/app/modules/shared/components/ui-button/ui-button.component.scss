@@ -1,4 +1,5 @@
 /* ui-button.component.scss */
+@use 'src/styles/mixins' as m;
 
 .ui-button {
   display: inline-flex;
@@ -12,42 +13,88 @@
   transition: all 0.2s;
   cursor: pointer;
   outline: none;
-  border: 1px solid transparent;
-  padding: 0.5rem 1rem;
-  background: var(--color-primary, #10416a);
-  color: var(--color-primary-contrast, #fff);
   text-decoration: none;
+  padding: 0.5rem 1rem;
+
+  // ✅ MEJORA: Usamos variables locales para gestionar los colores.
+  // Esto permite que los estilos en línea (style="...") los sobrescriban fácilmente.
+  --_bg: var(--color-primary);
+  --_color: var(--color-primary-contrast);
+  --_border: transparent;
+
+  background-color: var(--_bg);
+  color: var(--_color);
+  border: 1px solid var(--_border);
 
   // --- Variantes de Color ---
-  &--primary { background: var(--color-primary); color: var(--color-primary-contrast); }
-  &--secondary { background: var(--color-secondary); color: var(--color-primary-contrast); }
-  // ... (puedes añadir el resto de tus colores aquí) ...
-  &--danger { background: var(--color-error); color: var(--color-primary-contrast); }
-  &--icon { background: none; color: var(--color-text); border-color: transparent; }
+  &--primary {
+    --_bg: var(--color-primary);
+    --_color: var(--color-primary-contrast);
+    --_border: var(--color-primary);
+    &:hover:not(:disabled) { --_bg: var(--color-primary-dark); --_border: var(--color-primary-dark); }
+    &:active:not(:disabled) { --_bg: var(--color-primary-darker); --_border: var(--color-primary-darker); }
+  }
+  &--secondary {
+    --_bg: var(--color-secondary);
+    --_color: var(--color-primary-contrast);
+    --_border: var(--color-secondary);
+    &:hover:not(:disabled) { --_bg: var(--color-secondary-dark); --_border: var(--color-secondary-dark); }
+  }
+  &--success {
+    --_bg: var(--color-success);
+    --_color: var(--color-primary-contrast);
+    --_border: var(--color-success);
+    &:hover:not(:disabled) { --_bg: #3a9d30; --_border: #3a9d30; }
+  }
+  &--warning {
+    --_bg: var(--color-warning);
+    --_color: var(--color-primary-contrast);
+    --_border: var(--color-warning);
+    &:hover:not(:disabled) { --_bg: #d99a34; --_border: #d99a34; }
+  }
+  &--danger {
+    --_bg: var(--color-error);
+    --_color: var(--color-primary-contrast);
+    --_border: var(--color-error);
+    &:hover:not(:disabled) { --_bg: var(--color-quaternary-red-dark); --_border: var(--color-quaternary-red-dark); }
+  }
+  &--light {
+    --_bg: var(--color-surface);
+    --_color: var(--color-text);
+    --_border: var(--color-border);
+    &:hover:not(:disabled) { --_bg: var(--color-tertiary-lighter); }
+  }
+  &--icon {
+    --_bg: transparent;
+    --_color: var(--color-text);
+    --_border: transparent;
+  }
 
   // --- Modificadores de Estado y Forma ---
   &--active { box-shadow: 0 0 0 2px var(--color-primary); }
   &--full-width { width: 100%; }
-  
+
   &[disabled] {
     opacity: 0.6;
     cursor: not-allowed;
   }
 
-  // --- Posicionamiento del Icono con Flexbox ---
-  &--icon-right { flex-direction: row-reverse; }
+  // --- Modificadores de Posición del Icono ---
+  &--reverse { flex-direction: row-reverse; } // Para iconPosition: 'right'
   &--icon-top { flex-direction: column; }
-  
+  &--icon-bottom { flex-direction: column-reverse; }
+
+  // --- Modificadores de Alineación de Texto ---
+  &--align-left { justify-content: flex-start; }
+  &--align-center { justify-content: center; }
+  &--align-right { justify-content: flex-end; }
+
   &--icon-only {
     padding: 0.5rem;
     min-width: 2.25rem;
   }
 
   // --- Elementos Internos ---
-  &__icon {
-    display: inline-flex;
-  }
-  
   &__spinner {
     width: 1em;
     height: 1em;

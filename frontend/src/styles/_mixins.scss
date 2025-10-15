@@ -105,30 +105,30 @@
   }
 }
 
-@mixin button-size($size: 'md') {
+@mixin button-size($size: 'm') {
   @if $size == 'xs' {
-    font-size: var(--font-size-xs);
+    font-size: inherit;
     padding: var(--space-xs) var(--space-s);
     min-height: 28px;
     gap: var(--space-xs);
-  } @else if $size == 'sm' {
-    font-size: var(--font-size-sm);
+  } @else if $size == 's' {
+    font-size: inherit;
     padding: var(--space-s) var(--space-sm);
     min-height: 36px;
     gap: var(--space-xs);
-  } @else if $size == 'lg' {
-    font-size: var(--font-size-lg);
+  } @else if $size == 'l' {
+    font-size: inherit;
     padding: var(--space-m) var(--space-l);
     min-height: 52px;
     gap: var(--space-s);
   } @else if $size == 'xl' {
-    font-size: var(--font-size-xl);
+    font-size: inherit;
     padding: var(--space-ml) var(--space-xl);
     min-height: 60px;
     gap: var(--space-sm);
   } @else {
-    // md (default)
-    font-size: var(--font-size-base);
+    // m (default)
+    font-size: inherit;
     padding: var(--space-s) var(--space-m);
     min-height: 44px;
     gap: var(--space-xs);
