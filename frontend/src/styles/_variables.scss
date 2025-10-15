@@ -5,29 +5,50 @@
 :root {
   // === PALETA DE COLORES CORPORATIVA ===
 
-  // 1. Azul Primario (Dominante)
+  // --- 1. Azul Primario (Dominante) ---
+  --color-primary-darker: #073864;
+  --color-primary-dark: #095ca3;
   --color-primary: #0b7ad0;
-  --color-primary-dark: #073864;
-  --color-primary-light: #e7f2fa; // Tono más claro de la gama
+  --color-primary-light: #6eb5e9;
+  --color-primary-lighter: #e7f2fa; // Tono más claro de la gama
   --color-primary-contrast: #ffffff;
 
+  // Gama de azules para headings (de oscuro a claro)
+  --color-heading-h1: var(--color-primary-darker); // El más oscuro
+  --color-heading-h2: #145698;
+  --color-heading-h3: var(--color-primary); // El primario
+  --color-heading-h4: #187ac6;
+  --color-heading-h5: #2499e4;
+  --color-heading-h6: #5fcaff;
+  --color-heading-h7: #bde6ff;
+  --color-heading-h8: #e7f2fa; // El más claro
+
   // 2. Azul Secundario
+  --color-secondary-dark: #1c3a51;
   --color-secondary: #2d5b7f;
-  --color-secondary-light: #eaeff2;
+  --color-secondary-light: #8eabc2;
+  --color-secondary-lighter: #eaeff2;
 
   // 3. Negro Terciario
+  --color-tertiary-dark: #1a1d1f;
   --color-tertiary: #33393e;
-  --color-tertiary-light: #ebebec;
+  --color-tertiary-light: #999c9e;
+  --color-tertiary-lighter: #ebebec;
 
   // 4. Rojo Cuaternario
+  --color-quaternary-red-dark: #b33d33;
   --color-quaternary-red: #dd4c40;
-  --color-quaternary-red-light: #fcedec;
+  --color-quaternary-red-light: #eeb2ad;
+  --color-quaternary-red-lighter: #fcedec;
+
+  // 5. Blanco Quinario (usado para fondos muy sutiles)
+  --color-quinary-white: #fbf9f9; // Ajustado a un blanco roto para diferenciarlo del rojo
 
   // === COLORES DE SISTEMA (Verificación, Alertas) ===
-  --color-success: #4ab83e;
+  --color-success: #4ab83e; // Verificación
   --color-error: #d83838;
-  --color-warning: #fdaf3c;
-  --color-info: #0b7ad0;
+  --color-warning: #fdaf3c; // Alerta
+  --color-info: var(--color-primary); // Información
 
   // === COLORES ALTERNATIVOS (Acentos) ===
   --color-accent: #fdaf3c; // Principal
@@ -37,12 +58,16 @@
   --color-accent-yellow: #efe258;
 
   // === COLORES DE SUPERFICIE Y TEXTO ===
-  --color-background: #f3f7fe; // Fondo principal de la app
+  // Paleta de fondos
+  --color-background-deep: #638da8;
+  --color-background-medium: #d3dee6;
+  --color-background-soft: #dce3ef;
+  --color-background-light: #f3f7fe;
+  --color-background: var(--color-background-light); // Fondo principal de la app
   --color-surface: #ffffff;
   --color-surface-soft: #f8fbfd;
   --color-border: #e6e8ea;
-
-  --color-text: #33393e; // Usamos el negro terciario para el texto principal
+  --color-text: var(--color-tertiary); // Usamos el negro terciario para el texto principal
   --color-text-contrast: #ffffff;
   --color-text-muted: #69707a;
   --color-link: var(--color-primary);
@@ -123,12 +148,12 @@
 
 // === TEMA OSCURO ===
 [data-theme='dark'] {
+  // Re-mapeamos las variables para el tema oscuro
   --color-primary: #6ab2f4;
-  --color-primary-dark: #052650;
+  --color-primary-dark: #8ccaff;
   --color-primary-contrast: #ffffff;
 
   --color-secondary: #a5bedc;
-  --color-secondary-light: #232331;
 
   --color-background: #181a20;
   --color-surface: #232331;

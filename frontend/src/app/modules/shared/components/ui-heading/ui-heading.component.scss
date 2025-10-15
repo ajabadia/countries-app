@@ -1,35 +1,46 @@
 // d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.scss
 
-// ✅ CORRECCIÓN: Importamos los mixins que contienen los placeholders de estilo.
 @use 'src/styles/mixins' as m;
 
+// El contenedor principal del heading. Ocupa el 100% del ancho y alinea el contenido interno.
 .ui-heading {
-  display: flex;
-  align-items: center;
-  gap: var(--space-m);
-  margin-bottom: var(--space-l);
+  // El contenedor principal solo se encarga del ancho y el margen.
+  // El margen inferior lo hereda el hN de los mixins.
+  width: 100%;
 
-  // ✅ MEJORA: Permite invertir el orden para poner el icono a la derecha.
-  &.reverse {
-    flex-direction: row-reverse;
-  }
-
-  &__icon {
-    color: var(--color-text-muted);
-  }
-
-  // ✅ MEJORA: Hacemos que los títulos hereden los estilos base de h1, h2, etc.
-  // Esto asegura consistencia visual con el resto de la aplicación.
+  // ✅ CORRECCIÓN: El título (h1, h2, etc.) es ahora el contenedor flex
+  // y el que recibe los estilos de fondo y color.
   &__title {
-    // Hereda los estilos base usando el placeholder.
-    .ui-heading--level-1 & { @extend %h1-base; }
-    .ui-heading--level-2 & { @extend %h2-base; }
-    .ui-heading--level-3 & { @extend %h3-base; }
-    .ui-heading--level-4 & { @extend %h4-base; }
-    .ui-heading--level-5 & { @extend %h5-base; }
-    .ui-heading--level-6 & { @extend %h6-base; }
+    margin: 0;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: var(--space-s); // Espacio entre icono y texto
 
-    // Sobrescribimos o añadimos estilos específicos si es necesario.
-    margin: 0; // Por ejemplo, quitamos el margen que suelen tener los h1.
+    // --- Modificadores de Alineación (aplicados al título/hN) ---
+    &--align-left {
+      justify-content: flex-start;
+    }
+    &--align-center {
+      justify-content: center;
+    }
+    &--align-right {
+      justify-content: flex-end;
+    }
+
+    // Modificador para la posición del icono
+    &--reverse {
+      flex-direction: row-reverse;
+    }
   }
+
+  // Aplicamos los estilos base a la clase correspondiente dentro del título.
+  .ui-heading--level-1 & .ui-heading__title { @extend %h1-base; }
+  .ui-heading--level-2 & .ui-heading__title { @extend %h2-base; }
+  .ui-heading--level-3 & .ui-heading__title { @extend %h3-base; }
+  .ui-heading--level-4 & .ui-heading__title { @extend %h4-base; }
+  .ui-heading--level-5 & .ui-heading__title { @extend %h5-base; }
+  .ui-heading--level-6 & .ui-heading__title { @extend %h6-base; }
+  .ui-heading--level-7 & .ui-heading__title { @extend %h7-base; }
+  .ui-heading--level-8 & .ui-heading__title { @extend %h8-base; }
 }

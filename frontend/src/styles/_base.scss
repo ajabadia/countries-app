@@ -1,4 +1,5 @@
 // src/styles/_base.scss
+@use 'mixins' as m;
 
 // --- Estilos base para HTML y Body ---
 html, body {
@@ -15,7 +16,24 @@ a {
   color: var(--color-link);
   text-decoration: none;
   transition: color 0.2s;
-  &:hover, &:focus {
+
+  &:hover {
     color: var(--color-accent);
   }
+
+  // ✅ MEJORA DE ACCESIBILIDAD: Usamos :focus-visible para mostrar el outline
+  // solo a usuarios que navegan con teclado, evitando el anillo visual al hacer clic.
+  @include m.focus-visible;
 }
+
+// --- Estilos Globales para Encabezados ---
+// Aplicamos los estilos corporativos definidos en los placeholders
+// directamente a las etiquetas HTML para consistencia global.
+h1 { @extend %h1-base; }
+h2 { @extend %h2-base; }
+h3 { @extend %h3-base; }
+h4 { @extend %h4-base; }
+h5 { @extend %h5-base; }
+h6 { @extend %h6-base; }
+// No extendemos h7 y h8 ya que no son etiquetas HTML estándar,
+// pero están disponibles para usar con el componente ui-heading.

@@ -39,39 +39,52 @@
 
 %h1-base {
   @extend %heading-common;
-  background: var(--color-primary-dark);
+  background: var(--color-heading-h1);
   font-size: var(--font-size-3xl);
 }
 
 %h2-base {
   @extend %heading-common;
-  background: var(--color-primary);
+  background: var(--color-heading-h2);
   font-size: var(--font-size-2xl);
 }
 
 %h3-base {
   @extend %heading-common;
-  background: var(--color-secondary);
+  background: var(--color-heading-h3);
   font-size: var(--font-size-xl);
 }
 
 %h4-base {
   @extend %heading-common;
-  background: var(--color-tertiary);
+  background: var(--color-heading-h4);
   font-size: var(--font-size-lg);
 }
 
 %h5-base {
   @extend %heading-common;
-  background: var(--color-text-muted);
+  background: var(--color-heading-h5);
   font-size: var(--font-size-base);
 }
 
 %h6-base {
   @extend %heading-common;
-  background: var(--color-tertiary-light);
+  background: var(--color-heading-h6);
   font-size: var(--font-size-sm);
-  color: var(--color-text); // El fondo es claro, cambiamos el color del texto
+}
+
+%h7-base {
+  @extend %heading-common;
+  background: var(--color-heading-h7);
+  font-size: var(--font-size-sm);
+  color: var(--color-text); // Fondo claro, texto oscuro
+}
+
+%h8-base {
+  @extend %heading-common;
+  background: var(--color-heading-h8);
+  font-size: var(--font-size-xs);
+  color: var(--color-text); // Fondo claro, texto oscuro
 }
 
 // === MIXINS DE BOTONES ===

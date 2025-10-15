@@ -1,40 +1,48 @@
-// d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.ts
-
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
   selector: 'app-ui-heading',
   standalone: true,
-  imports: [CommonModule, UiIconComponent],
-  template: `
-    <div class="ui-heading" [class.reverse]="iconPosition === 'right'" [style.justify-content]="align">
-      @if (icon) { <!-- USO DIRECTO Y CORRECTO: Pasamos el icono y su tipo a ui-icon -->
-        <app-ui-icon [icon]="icon" [type]="iconType" size="l" class="ui-heading__icon" />
-      }
-      <div class="ui-heading__text-content">
-        <!-- Renderiza el nivel de encabezado correcto (h1, h2, etc.) -->
-        <ng-container [ngSwitch]="level">
-          <h1 *ngSwitchCase="1" class="ui-heading__title">{{ title }}</h1>
-          <h2 *ngSwitchCase="2" class="ui-heading__title">{{ title }}</h2>
-          <h3 *ngSwitchCase="3" class="ui-heading__title">{{ title }}</h3>
-        </ng-container>
-        @if (subtitle) {
-          <p class="ui-heading__subtitle">{{ subtitle }}</p>
-        }
-      </div>
-    </div>
-  `,
+  imports: [
+    CommonModule, // ✅ Para usar *ngIf, [ngClass], [ngSwitch], etc.
+    UiIconComponent, // ✅ Para poder usar <app-ui-icon>
+  ],
+  templateUrl: './ui-heading.component.html',
   styleUrls: ['./ui-heading.component.scss'],
-  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiHeadingComponent {
-  @Input() title: string | null = '';
-  @Input() icon?: string | null = '';
-  @Input() iconType: 'system' | 'flag-circle' = 'system'; // Por defecto, es un icono de sistema.
-  @Input() level: 1 | 2 | 3 = 1;
+  @Input() title: string = '';
+  @Input() level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 1;
+  @Input() subtitle: string | null = null; // ✅ CORRECCIÓN: Aceptamos 'null' para ser compatible con el modal.
+  @Input() icon?: string;
   @Input() align: 'left' | 'center' | 'right' = 'left';
   @Input() iconPosition: 'left' | 'right' = 'left';
-  @Input() subtitle: string | null = null;
+
+  /**
+   * Calcula las clases CSS para el elemento del título (h1, h2, etc.).
+   * Esto nos permite aplicar dinámicamente la alineación y la posición del icono.
+   */
+  get titleClasses(): string[] {
+    return [
+      `ui-heading__title--align-${this.align}`,
+      this.iconPosition === 'right' ? 'ui-heading__title--reverse' : '',
+    ];
+  }
+
+  get iconSize(): string {
+    // Hacemos que el tamaño del icono sea relativo al nivel del encabezado.
+    switch (this.level) {
+      case 1: return 'xl';
+      case 2: return 'l';
+      case 3: return 'l';
+      case 4: return 'm';
+      case 5: return 'm';
+      case 6: return 's';
+      case 7: return 's';
+      case 8: return 'xs';
+      default: return 'm';
+    }
+  }
 }
