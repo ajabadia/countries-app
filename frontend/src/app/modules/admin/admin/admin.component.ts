@@ -1,19 +1,18 @@
 // src/app/modules/admin/admin/admin.component.ts
 
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router'; // Necesario para <router-outlet>
-import { SharedModule } from '../../shared/shared.module'; // Para usar <app-menu-bar>, <app-footer>, etc.
+import { RouterModule } from '@angular/router';
+import { MenuBarComponent } from '../../shared/components/menu-bar/menu-bar.component';
+import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { ADMIN_ROUTES } from '@config/route-config';
 
 @Component({
   selector: 'app-admin',
-  // --- REFACTORIZACIÓN A STANDALONE ---
   standalone: true,
-  imports: [
-    RouterModule,
-    SharedModule
-  ],
-  // ------------------------------------
+  imports: [RouterModule, MenuBarComponent, FooterComponent],
   templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss'],
+  styleUrls: ['./admin.component.scss']
 })
-export class AdminComponent {}
+export class AdminComponent {
+  public readonly adminMenuItems = ADMIN_ROUTES;
+}

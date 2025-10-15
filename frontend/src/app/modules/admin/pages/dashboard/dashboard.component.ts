@@ -7,15 +7,15 @@ import { UiStatCardComponent } from '../../../shared/components/ui-stat-card/ui-
 import { UiHeadingComponent } from '../../../shared/components/ui-heading/ui-heading.component'; // ✅ Importado
 
 // Servicios   
-import { CountriesService } from 'src/app/services/countries.service';
-import { LanguagesService } from 'src/app/services/languages.service';
-import { AreasService } from 'src/app/services/areas.service';
-import { DependenciesService } from 'src/app/services/dependencies.service';
-import { ContinentsService } from 'src/app/services/continents.service';
-import { TranslationsService } from 'src/app/services/translations.service';
+import { CountriesService } from '@services/countries.service';
+import { LanguagesService } from '@services/languages.service';
+import { AreasService } from '@services/areas.service';
+import { DependenciesService } from '@services/dependencies.service';
+import { ContinentsService } from '@services/continents.service';
+import { TranslationsService } from '@services/translations.service';
 
 // Modelo de respuesta genérico
-import { CountResponse } from 'src/app/services/api-response.model';
+import { CountResponse } from '@services/api-response.model';
 
 @Component({
   selector: 'app-dashboard',
@@ -35,12 +35,12 @@ export class DashboardComponent {
   private translationsService = inject(TranslationsService);
   
   // ✅ MEJORA: Observables que llaman a la API y extraen el total.
-  public countriesCount$: Observable<number | null> = this.countriesService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
-  public languagesCount$: Observable<number | null> = this.languagesService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
-  public areasCount$: Observable<number | null> = this.areasService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
-  public dependenciesCount$: Observable<number | null> = this.dependenciesService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
-  public continentsCount$: Observable<number | null> = this.continentsService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
-  public translationsCount$: Observable<number | null> = this.translationsService.getCount().pipe(map(res => res.total), catchError(() => of(null)));
+  public countriesCount$: Observable<number | null> = this.countriesService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
+  public languagesCount$: Observable<number | null> = this.languagesService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
+  public areasCount$: Observable<number | null> = this.areasService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
+  public dependenciesCount$: Observable<number | null> = this.dependenciesService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
+  public continentsCount$: Observable<number | null> = this.continentsService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
+  public translationsCount$: Observable<number | null> = this.translationsService.getCount().pipe(map((res: CountResponse) => res.total), catchError(() => of(null)));
 
   // El constructor puede permanecer vacío, la magia ocurre con los observables y el async pipe.
 }

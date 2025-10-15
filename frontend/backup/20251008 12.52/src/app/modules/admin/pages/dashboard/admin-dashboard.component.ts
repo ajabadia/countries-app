@@ -1,5 +1,5 @@
 // src/app/modules/admin/components/admin-dashboard/admin-dashboard.component.ts
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CountriesService } from 'src/app/services/countries.service';
 
 @Component({

@@ -1,35 +1,15 @@
-<app-ui-heading title="Dashboard Principal" subtitle="Resumen de entidades del sistema" icon="home" />
+<!-- src/app/modules/admin/pages/dashboard/dashboard.component.html -->
 
-<div class="dashboard-grid">
-  <app-ui-stat-card 
-    label="Países Registrados"
-    [value]="(countriesCount$ | async) ?? '—'"
-    icon="globe-alt"
-    iconType="system"
-    detailRoute="/admin/countries"
-  />
+<app-ui-heading
+  [level]="1"
+  title="Panel de Administración"
+  icon="dashboard"
+  iconPosition="left">
+</app-ui-heading>
 
-  <app-ui-stat-card 
-    label="Idiomas Disponibles"
-    [value]="(languagesCount$ | async) ?? '—'"
-    icon="language"
-    iconType="system"
-    detailRoute="/admin/languages"
-  />
-
-  <app-ui-stat-card 
-    label="Áreas Geográficas"
-    [value]="(areasCount$ | async) ?? '—'"
-    icon="map"
-    iconType="system"
-    detailRoute="/admin/areas"
-  />
-
-  <app-ui-stat-card 
-    label="Dependencias"
-    [value]="(dependenciesCount$ | async) ?? '—'"
-    icon="puzzle-piece"
-    iconType="system"
-    detailRoute="/admin/dependencies"
-  />
+<div class="stats-grid">
+  @for (card of statCards; track card.title) {
+    <app-ui-stat-card [routerLink]="card.route" [label]="card.title" [value]="(card.count$ | async) ?? 0" [icon]="card.icon">
+    </app-ui-stat-card>
+  }
 </div>

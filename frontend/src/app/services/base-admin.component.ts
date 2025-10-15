@@ -1,21 +1,24 @@
 // src/app/modules/admin/pages/base-admin.component.ts
 
+import { Router } from '@angular/router';
 import { Directive, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { BehaviorSubject, Observable, Subject, switchMap, tap, catchError, of, combineLatest, map } from 'rxjs';
 
 // Interfaces y Modelos
-import { ApiResponse } from 'src/app/services/api-response.model';
-import { PageChangeEvent } from 'src/app/modules/shared/components/paginator/paginator.model';
-import { SortChangeEvent } from 'src/app/modules/shared/components/table/table.component';
-import { TableColumn } from 'src/app/services/table-column.model';
-import { ToolbarButtonConfig as ToolbarButton } from 'src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component';
-import { BaseCrudService } from 'src/app/services/base-crud.service';
-import { SelectionService } from 'src/app/services/selection.service';
+import { ApiResponse } from '@services/api-response.model';
+import { PageChangeEvent } from '@shared/components/paginator/paginator.model';
+import { SortChangeEvent } from '@shared/components/table/table.component';
+import { TableColumn } from '@services/table-column.model';
+import { ToolbarButtonConfig as ToolbarButton } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
+import { BaseCrudService } from '@services/base-crud.service';
+import { SelectionService } from '@services/selection.service'; // La ruta ya es correcta, confirmamos consistencia
+import { ALL_ROUTES_MAP } from '@config/route-config';
 
 @Directive()
 export abstract class BaseAdminComponent<T extends { id: string | number }> implements OnInit {
   // --- Inyección de dependencias ---
+  protected router = inject(Router);
   protected fb = inject(FormBuilder);
 
   // --- Propiedades abstractas (a implementar por la clase hija) ---
@@ -24,6 +27,10 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   public abstract entityNamePlural: string;
   public abstract tableColumns: TableColumn[];
   public abstract form: FormGroup;
+
+  // --- Propiedades para el encabezado de la página ---
+  public pageTitle = '';
+  public pageIcon? = '';
 
   // --- Estado reactivo para la tabla y paginación ---
   public readonly page$ = new BehaviorSubject<number>(1);
@@ -54,6 +61,8 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   ];
 
   ngOnInit(): void {
+    this.setPageMetadata();
+
     // Combina todos los streams de estado para recargar los datos
     const params$ = combineLatest({
       page: this.page$,
@@ -87,6 +96,16 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
     this.refresh$.next();
   }
 
+  /**
+   * Establece el título y el icono de la página basándose en la URL actual.
+   */
+  private setPageMetadata(): void {
+    const currentRouteConfig = ALL_ROUTES_MAP.get(this.router.url);
+    if (currentRouteConfig) {
+      this.pageTitle = currentRouteConfig.label;
+      this.pageIcon = currentRouteConfig.icon;
+    }
+  }
   // --- Métodos de eventos de la UI ---
   onSearchChange(searchTerm: string | null): void {
     this.page$.next(1);

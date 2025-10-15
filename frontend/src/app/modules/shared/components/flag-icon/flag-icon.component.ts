@@ -3,7 +3,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario para [ngClass], [ngStyle], etc.
 import { UiIconComponent } from '../ui-icon/ui-icon.component'; // 1. Importamos el componente de icono base
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from '@services/icon.service';
 
 @Component({
   selector: 'app-flag-icon',
@@ -18,8 +18,7 @@ import { UiIconType } from 'src/app/services/icon.service';
       [icon]="iso2"
       [type]="iconServiceType"
       [size]="size"
-      [ngClass]="{ 'grayscale': grayscale }"
-      render="image">
+      [ngClass]="{ 'grayscale': grayscale }">
     </app-ui-icon>
   `,
   styleUrls: ['./flag-icon.component.scss'],

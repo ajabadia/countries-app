@@ -1,7 +1,7 @@
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from '@services/icon.service';
 
 @Component({
   selector: 'app-ui-heading',

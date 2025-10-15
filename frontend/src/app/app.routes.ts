@@ -14,8 +14,12 @@ export const routes: Routes = [
   },
   {
     path: 'admin',
-    // ✅ CAMBIO CLAVE: Cargamos directamente el array de rutas de administración.
-    loadChildren: () => import('./modules/admin/admin.routes').then(r => r.ADMIN_ROUTES)
+    // ✅ REFACTORIZACIÓN FINAL: Cargamos el componente layout y sus rutas hijas directamente.
+    // Esto nos permite eliminar AdminModule por completo.
+    loadComponent: () => import('./modules/admin/admin/admin.component').then(c => c.AdminComponent),
+    loadChildren: () => import('./modules/admin/admin.routes').then(r => r.ADMIN_ROUTES),
+    // NOTA: Para que esto funcione, AdminComponent también debe ser standalone.
+    // Si aún no lo es, lo haremos en el siguiente paso.
   },
   {
     path: '**',

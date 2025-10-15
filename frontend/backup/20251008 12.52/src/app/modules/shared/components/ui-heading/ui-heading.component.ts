@@ -1,19 +1,22 @@
 import { Component, Input, OnInit, OnChanges, SimpleChanges } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { NgIf } from '@angular/common';
 
 @Component({
   selector: 'app-ui-heading',
   templateUrl: './ui-heading.component.html',
-  styleUrls: ['./ui-heading.component.scss']
+  styleUrls: ['./ui-heading.component.scss'],
+  standalone: true,
+  imports: [NgIf]
 })
 export class UiHeadingComponent implements OnInit, OnChanges {
 
   // Tipo de heading (h1, h2, h3, etc.)
-  @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 1;
+  @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 2;
 
   // Texto del heading
-  @Input() text: string = '';
+  @Input() text: string = ''; // ✅ Este es el input que el compilador no encuentra
 
   // Alineación del texto
   @Input() textAlign: 'left' | 'center' | 'right' = 'left';

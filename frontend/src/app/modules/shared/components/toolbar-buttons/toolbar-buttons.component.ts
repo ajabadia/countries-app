@@ -3,8 +3,7 @@
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
-// ✅ CORREGIDO: Ruta de importación con erratas
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from '@services/icon.service';
 import { Observable } from 'rxjs';
 
 export interface ToolbarButtonConfig {
@@ -14,7 +13,7 @@ export interface ToolbarButtonConfig {
   color: 'main' | 'edit' | 'danger' | string;
   disabled$?: Observable<boolean>;
   iconType?: UiIconType;
-  iconSize?: number | 'xs' | 's' | 'm' | 'l' | 'xl';
+  iconSize?: 'xs' | 's' | 'm' | 'l' | 'xl' | string;
   iconColor?: string;
   id?: string;
   iconClass?: string;

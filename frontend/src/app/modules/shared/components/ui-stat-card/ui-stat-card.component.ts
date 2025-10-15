@@ -3,10 +3,10 @@
 import { Component, Input, HostListener, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Router } from '@angular/router'; // ¡NUEVO! Importamos RouterModule
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from '@services/icon.service';
 
 // --- Dependencias del Componente Standalone ---
-import { UiIconComponent } from '../ui-icon/ui-icon.component';
+import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
 
 @Component({
   selector: 'app-ui-stat-card',
@@ -28,8 +28,9 @@ export class UiStatCardComponent {
   @Input({ required: true }) value!: string | number;
   @Input() icon?: string;
   @Input() detailRoute?: string | any[]; // MEJORA: Acepta arrays para rutas complejas.
-  @Input() iconType: UiIconType = 'system';
-  @Input() iconSize: string | number = 'l';
+  @Input() iconType: UiIconType = 'system'; // TODO: Revisar si UiIconType se importa correctamente
+  @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | string | number = 'm';
+
 
   constructor(private router: Router) {}
 

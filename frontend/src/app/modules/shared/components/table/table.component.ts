@@ -3,8 +3,9 @@ import { CommonModule } from '@angular/common';
 
 // Componentes y Modelos
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
-import { TableColumn } from 'src/app/services/table-column.model';
-import { SelectionService } from 'src/app/services/selection.service';
+import { TableColumn } from '@services/table-column.model';
+import { SelectionService } from '@services/selection.service';
+
 
 export interface SortChangeEvent {
   key: string;

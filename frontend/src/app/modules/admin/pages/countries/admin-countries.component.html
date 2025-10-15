@@ -3,8 +3,7 @@
   <app-ui-heading
     [level]="1"
     [title]="'Administración de ' + entityNamePlural"
-    [subtitle]="'Gestiona la información de los ' + entityNamePlural.toLowerCase()" 
-    icon="flag-detail">
+    icon="globe">
   </app-ui-heading>
 
   <div class="admin-toolbar">
@@ -37,7 +36,7 @@
 <app-modal
   [visible]="isModalVisible"
   [title]="editingEntity ? 'Editar ' + entityName : 'Añadir Nuevo ' + entityName"
-  [subtitle]="editingEntity ? editingEntity['defaultname'] : ''" icon="flag-detail"
+  [subtitle]="editingEntity ? editingEntity['defaultname'] : ''" icon="globe"
   (accept)="onSave()"
   (close)="closeModal()"
   [acceptDisabled]="form.invalid">

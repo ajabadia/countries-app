@@ -35,12 +35,6 @@
 }
 
 // Utilidades de color
-.u-text {
-  &--link { color: var(--color-link) !important; } // Link es específico, lo mantenemos
-  // Los demás colores se definen abajo, eliminamos duplicados.
-}
-
-// Utilidades de tamaño
 .u-size {
   &--xs { font-size: var(--font-size-xs); }
   &--sm { font-size: var(--font-size-sm); }
@@ -59,6 +53,7 @@
 // Utilidades de color
 .u-text {
   &--primary { color: var(--color-primary) !important; }
+  &--link { color: var(--color-link) !important; }
   &--accent { color: var(--color-accent) !important; }
   &--success { color: var(--color-success) !important; }
   &--error { color: var(--color-error) !important; }
@@ -149,11 +144,10 @@
 
 
 .page {
-  width: 100%;
   max-width: var(--container-max-width, 1200px);
   margin-left: auto;
   margin-right: auto;
-  padding-left: var(--space-sm); // Usamos variables para consistencia
+  padding-left: var(--space-sm);
   padding-right: var(--space-sm);
   box-sizing: border-box;
 }

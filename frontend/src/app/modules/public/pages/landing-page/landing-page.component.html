@@ -8,3 +8,11 @@
   ariaLabel="Entrar a información general de normativas FATCA/CRS">
  </app-ui-heading>
 
+ <div class="stats-grid">
+  <app-ui-stat-card label="Países" [value]="(countriesCount$ | async) ?? 0" icon="globe">
+  </app-ui-stat-card>
+  <app-ui-stat-card label="Continentes" [value]="(continentsCount$ | async) ?? 0" icon="compass">
+  </app-ui-stat-card>
+  <app-ui-stat-card label="Lenguajes" [value]="(languagesCount$ | async) ?? 0" icon="language">
+  </app-ui-stat-card>
+</div>

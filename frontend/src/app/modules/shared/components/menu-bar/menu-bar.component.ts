@@ -2,8 +2,8 @@
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common'; // Necesario para @if, @for, etc.
-import { RouterModule } from '@angular/router';   // Necesario para [routerLink] y routerLinkActive.
-import { UiIconComponent } from '../ui-icon/ui-icon.component'; // ¡NUEVO! Importamos nuestro componente de iconos.
+import { RouterModule } from '@angular/router'; // Necesario para [routerLink] y routerLinkActive.
+import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component'; // ¡NUEVO! Importamos nuestro componente de iconos.
 
 /**
  * Interfaz que define la estructura de un elemento del menú.
@@ -27,7 +27,7 @@ export interface MenuBarItem {
   imports: [
     CommonModule,
     RouterModule,
-    UiIconComponent // 3. Importamos el componente de iconos para usarlo en la plantilla.
+    UiIconComponent, // 3. Importamos el componente de iconos para usarlo en la plantilla.
   ],
   // --------------------
   templateUrl: './menu-bar.component.html',

@@ -5,7 +5,7 @@ import { trigger, state, style, animate, transition } from '@angular/animations'
 import { CommonModule } from '@angular/common';
 import { UiHeadingComponent } from '../ui-heading/ui-heading.component';
 import { UiButtonComponent } from '../ui-button/ui-button.component';
-import { UiIconType } from 'src/app/services/icon.service';
+import { UiIconType } from '@services/icon.service';
 
 @Component({
   selector: 'app-modal',

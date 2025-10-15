@@ -1,126 +1,125 @@
 // src/app/modules/admin/pages/base-crud.component.ts
 
-import { Component, inject, OnInit, Type } from '@angular/core';
-import { BehaviorSubject, Observable, combineLatest, of } from 'rxjs';
-import { switchMap, catchError, finalize, map } from 'rxjs/operators';
-import { FormGroup } from '@angular/forms';
-import { BaseCrudService } from 'src/app/core/services/base-crud.service';
-import { SelectionService } from 'src/app/modules/shared/components/services/selection/selection.service';
-import { ApiResponse } from 'src/app/core/models/api-response.model';
-import { TableColumn } from 'src/app/modules/shared/models/table-column.model';
-import { ToolbarButtonConfig } from 'src/app/modules/shared/components/toolbar-buttons/toolbar-buttons.component';
+import { Router } from '@angular/router';
+import { Directive, OnInit, inject, Type } from '@angular/core';
+import { FormBuilder, FormGroup } from '@angular/forms';
+import { BehaviorSubject, Observable, Subject, switchMap, tap, catchError, of, combineLatest, map } from 'rxjs';
+
+// Interfaces y Modelos
+import { BaseCrudService } from '@services/base-crud.service';
+import { SelectionService } from '@services/selection.service';
+import { ApiResponse } from '@services/api-response.model';
+import { TableColumn } from '@services/table-column.model';
+import { ToolbarButtonConfig as ToolbarButton } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
+import { PageChangeEvent } from '@shared/components/paginator/paginator.model';
+import { SortChangeEvent } from '@shared/components/table/table.component';
+import { ALL_ROUTES_MAP } from '@config/route-config';
 
 @Component({ template: '' })
-export abstract class BaseCrudComponent<T extends { id: any; default_name?: string }> implements OnInit {
-  
-  protected abstract service: BaseCrudService<T>;
+export abstract class BaseCrudComponent<T extends { id: any }> implements OnInit {
+  // --- Inyección de dependencias ---
+  protected router = inject(Router);
+  protected fb = inject(FormBuilder);
+
+  // --- Propiedades abstractas (a implementar por la clase hija) ---
+  protected abstract entityService: BaseCrudService<T, Partial<T>>;
   public abstract form: FormGroup;
   public abstract entityName: string;
   public abstract entityNamePlural: string;
-  public abstract formComponent: Type<any>;
   public abstract tableColumns: TableColumn[];
-  
-  public selection = inject(SelectionService<T>);
 
+  // --- Propiedades para el encabezado de la página ---
+  public pageTitle = '';
+  public pageIcon? = '';
+
+  // --- Estado reactivo para la tabla y paginación ---
+  public readonly page$ = new BehaviorSubject<number>(1);
+  public readonly pageSize$ = new BehaviorSubject<number>(10);
+  public readonly search$ = new BehaviorSubject<string | null>(null);
+  public readonly sort$ = new BehaviorSubject<SortChangeEvent>({ key: 'id', direction: 'asc' });
+  private readonly refresh$ = new Subject<void>();
+
+  // --- Flujo de datos principal ---
+  public response$!: Observable<ApiResponse<T> | null>;
+  public isLoading = true;
+
+  // --- Gestión de selección ---
+  public selection = new SelectionService<T>();
+
+  // --- Gestión de modales ---
   public isModalVisible = false;
   public isConfirmDialogVisible = false;
   public editingEntity: T | null = null;
-  public isLoading = false;
-  
-  protected refresh$ = new BehaviorSubject<void>(undefined);
-  public page$ = new BehaviorSubject<number>(1);
-  public pageSize$ = new BehaviorSubject<number>(10);
-  public sort$ = new BehaviorSubject<{ key: string, order: 'asc' | 'desc' }>({ key: 'default_name', order: 'asc' });
-  public search$ = new BehaviorSubject<string>('');
 
-  public response$: Observable<ApiResponse<T>>;
-  public toolbarButtons: ToolbarButtonConfig[] = [];
-
-  constructor() {
-    this.response$ = combineLatest([this.page$, this.pageSize$, this.sort$, this.search$, this.refresh$]).pipe(
-      switchMap(([page, pageSize, sort, search]) => {
-        this.isLoading = true;
-        return (this.service.getAll({ page, pageSize, sortKey: sort.key, sortOrder: sort.order, search }) as Observable<any>).pipe(
-          map(response => {
-            // ✅ ROBUSTEZ: Comprueba si la respuesta es un array o un objeto ApiResponse
-            if (Array.isArray(response)) {
-              // Si es un array simple, lo envolvemos en la estructura que espera el frontend
-              return { data: response, total: response.length, totalPages: 1, currentPage: 1 };
-            }
-            // Si ya tiene la estructura correcta, lo devolvemos tal cual
-            return response;
-          }),
-          finalize(() => this.isLoading = false),
-          catchError(() => of({ data: [], total: 0, totalPages: 1, currentPage: 1 }))
-        );
-      })
-    );
-  }
+  // --- Configuración de la Toolbar ---
+  public toolbarButtons: ToolbarButton[] = [
+    { id: 'new', label: 'Nuevo', icon: 'plus-circle', action: () => this.onNew(), color: 'main' },
+    { id: 'edit', label: 'Editar', icon: 'pencil', action: () => this.onEdit(), disabled$: this.selection.hasOne$.pipe(map(hasOne => !hasOne)), color: 'edit' },
+    { id: 'delete', label: 'Eliminar', icon: 'trash', action: () => this.onDelete(), disabled$: this.selection.isEmpty$, color: 'danger' },
+  ];
 
   ngOnInit(): void {
-    this.updateToolbarButtons();
-    this.selection.selectionChanged.subscribe(() => this.updateToolbarButtons());
+    this.setPageMetadata();
+
+    const params$ = combineLatest({
+      page: this.page$,
+      pageSize: this.pageSize$,
+      search: this.search$,
+      sort: this.sort$,
+    });
+
+    this.response$ = this.refresh$.pipe(
+      tap(() => this.isLoading = true),
+      switchMap(() => params$.pipe(
+        switchMap(params => this.entityService.getAll({
+          page: params.page,
+          pageSize: params.pageSize,
+          search: params.search,
+          sortKey: params.sort.key,
+          sortOrder: params.sort.direction,
+        }))
+      )),
+      catchError(() => of(null)),
+      tap(() => this.isLoading = false)
+    );
+
+    this.refresh$.next();
   }
 
-  protected updateToolbarButtons(): void {
-    this.toolbarButtons = [
-      { label: `Añadir Nuevo`, icon: 'plus-circle', action: () => this.onAddNew(), color: 'primary' },
-      { label: 'Editar', icon: 'pencil', action: () => this.onEdit(), color: 'secondary', disabled: this.selection.count !== 1 },
-      { label: 'Eliminar', icon: 'trash', action: () => this.onDelete(), color: 'danger', disabled: this.selection.count === 0 }
-    ];
-  }
-
-  public onSortChange(sort: { key: string, order: 'asc' | 'desc' }): void { this.sort$.next(sort); }
-  public onPageChange(page: number): void { this.page$.next(page); }
-  public onPageSizeChange(pageSize: number): void { this.page$.next(1); this.pageSize$.next(pageSize); }
-  public onSearchChange(term: string): void { this.page$.next(1); this.search$.next(term); }
-
-  public onAddNew(): void {
-    this.editingEntity = null;
-    this.form.reset();
-    this.isModalVisible = true;
-  }
-
-  public onEdit(): void {
-    this.editingEntity = this.selection.selectedArray[0];
-    if (this.editingEntity) {
-      this.form.patchValue(this.editingEntity);
+  private setPageMetadata(): void {
+    const currentRouteConfig = ALL_ROUTES_MAP.get(this.router.url);
+    if (currentRouteConfig) {
+      this.pageTitle = currentRouteConfig.label;
+      this.pageIcon = currentRouteConfig.icon;
     }
+  }
+
+  onSearchChange(searchTerm: string | null): void { this.page$.next(1); this.search$.next(searchTerm); this.refresh$.next(); }
+  onPageChange(event: PageChangeEvent): void { this.page$.next(event.page); this.pageSize$.next(event.pageSize); this.refresh$.next(); }
+  onSortChange(event: SortChangeEvent): void { this.sort$.next(event); this.refresh$.next(); }
+
+  onNew(): void { this.editingEntity = null; this.form.reset(); this.isModalVisible = true; }
+
+  onEdit(entity?: T): void {
+    const entityToEdit = entity || this.selection.first;
+    if (!entityToEdit) return;
+    this.editingEntity = entityToEdit;
+    this.form.patchValue(entityToEdit);
     this.isModalVisible = true;
+    this.selection.clear();
   }
+  onDelete(): void { if (this.selection.count === 0) return; this.isConfirmDialogVisible = true; }
 
-  public onSave(): void {
+  onSave(): void {
     if (!this.form.valid) return;
-    const entityData = this.form.getRawValue();
-    const operation$ = this.editingEntity
-      ? this.service.update(this.editingEntity.id, entityData)
-      : this.service.create(entityData);
-
-    operation$.subscribe(() => {
-      this.closeModal();
-      this.refresh$.next();
-    });
+    const id = this.editingEntity?.id;
+    const operation$ = id ? this.entityService.update(id, this.form.value) : this.entityService.create(this.form.value);
+    operation$.subscribe(() => { this.closeModal(); this.refresh$.next(); this.selection.clear(); });
   }
-  
-  public closeModal(): void {
-    this.isModalVisible = false;
-    this.editingEntity = null;
+  onConfirmDelete(): void {
+    const ids = this.selection.selected.map((item: T) => item.id);
+    this.entityService.delete(ids).subscribe(() => { this.closeConfirmDialog(); this.refresh$.next(); this.selection.clear(); });
   }
-
-  public onDelete(): void {
-    this.isConfirmDialogVisible = true;
-  }
-
-  public onConfirmDelete(): void {
-    const idsToDelete = this.selection.selectedArray.map(c => c.id);
-    this.service.delete(idsToDelete).subscribe(() => {
-      this.closeConfirmDialog();
-      this.refresh$.next();
-      this.selection.clear();
-    });
-  }
-
-  public closeConfirmDialog(): void {
-    this.isConfirmDialogVisible = false;
-  }
+  closeModal(): void { this.isModalVisible = false; this.editingEntity = null; }
+  closeConfirmDialog(): void { this.isConfirmDialogVisible = false; }
 }
