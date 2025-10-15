@@ -24,10 +24,29 @@ const getById = asyncHandler(async (req, res) => {
 });
 
 // POST /api/continents
-const create = (req, res) => res.status(501).json({ message: 'No implementado' });
+const create = asyncHandler(async (req, res) => {
+  const { id, defaultname } = req.body;
+  if (!id || !defaultname) {
+    return res.status(400).json({ error: 'Los campos id y defaultname son obligatorios' });
+  }
+  continentsService.create({ id, defaultname });
+  const newItem = continentsService.getById(id);
+  res.status(201).json(newItem);
+});
 
 // PUT /api/continents/:id
-const update = (req, res) => res.status(501).json({ message: 'No implementado' });
+const update = asyncHandler(async (req, res) => {
+  const { defaultname } = req.body;
+  if (!defaultname) {
+    return res.status(400).json({ error: 'El campo defaultname es obligatorio' });
+  }
+  const info = continentsService.update(req.params.id, { defaultname });
+  if (info.changes === 0) {
+    return res.status(404).json({ error: 'Continente no encontrado' });
+  }
+  const updatedItem = continentsService.getById(req.params.id);
+  res.json(updatedItem);
+});
 
 // DELETE /api/continents/:id
 const remove = asyncHandler(async (req, res) => {

@@ -1,6 +1,6 @@
-﻿﻿﻿﻿// controllers/areasController.js
+﻿﻿﻿﻿﻿﻿// controllers/areasController.js
 const asyncHandler = require('express-async-handler');
-const areasService = require('../services/areasService');
+const areasService = require('../services/areasService.js');
 
 // GET /api/areas/count
 const getCount = asyncHandler(async (req, res) => {

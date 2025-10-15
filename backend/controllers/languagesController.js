@@ -50,11 +50,18 @@ const update = asyncHandler(async (req, res) => {
 });
 
 const remove = asyncHandler(async (req, res) => {
-  const info = languagesService.remove(req.params.id);
-  if (info.changes === 0) {
-    return res.status(404).json({ error: 'Idioma no encontrado para borrar' });
+  try {
+    const info = languagesService.remove(req.params.id);
+    if (info.changes === 0) {
+      return res.status(404).json({ error: 'Idioma no encontrado para borrar' });
+    }
+    res.status(204).end();
+  } catch (error) {
+    if (error.code === 'SQLITE_CONSTRAINT_FOREIGNKEY') {
+      return res.status(409).json({ error: 'No se puede borrar el idioma porque está en uso.' });
+    }
+    throw error;
   }
-  res.status(204).end();
 });
 
 module.exports = {
