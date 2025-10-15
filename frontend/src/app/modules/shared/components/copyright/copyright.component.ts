@@ -19,6 +19,6 @@ export class CopyrightComponent {
   public readonly currentYear = new Date().getFullYear();
 
   get copyrightText(): string {
-    return this.text ?? `© ${this.currentYear} Mi Aplicación. Todos los derechos reservados.`;
+    return this.text ?? `© ${this.currentYear} CountriesApp. Todos los derechos reservados.`;
   }
 }

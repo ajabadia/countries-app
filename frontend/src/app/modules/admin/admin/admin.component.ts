@@ -2,14 +2,13 @@
 
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MenuBarComponent } from '../../shared/components/menu-bar/menu-bar.component';
-import { FooterComponent } from '../../shared/components/footer/footer.component';
+import { MenuBarComponent } from '@shared/components/menu-bar/menu-bar.component';
 import { ADMIN_ROUTES } from '@config/route-config';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [RouterModule, MenuBarComponent, FooterComponent],
+  imports: [RouterModule, MenuBarComponent],
   templateUrl: './admin.component.html',
   styleUrls: ['./admin.component.scss']
 })

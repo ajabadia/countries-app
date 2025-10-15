@@ -1,7 +1,7 @@
 // src/app/modules/shared/components/header/header.component.ts
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { LogoComponent } from '../logo/logo.component'; // Importamos el componente hijo
+import { LogoComponent } from '@shared/components/logo/logo.component'; // ✅ CORRECCIÓN: Usamos el alias @shared
 
 @Component({
     selector: 'app-header',
@@ -11,7 +11,7 @@ import { LogoComponent } from '../logo/logo.component'; // Importamos el compone
     imports: [
       LogoComponent
     ],
-    templateUrl: './header.component.html',
+    template: `<app-logo [width]="160"></app-logo>`,
     // No tiene estilos, se puede omitir.
     styles: [],
     // ✅ OPTIMIZACIÓN: OnPush es ideal para componentes contenedores simples.

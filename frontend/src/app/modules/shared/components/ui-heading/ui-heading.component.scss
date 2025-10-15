@@ -1,33 +1,19 @@
+// d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.scss
+
 .ui-heading {
   display: flex;
   align-items: center;
-  gap: var(--space-l);
-  margin-bottom: var(--space-xl);
-  padding-bottom: var(--space-m);
-  border-bottom: 1px solid var(--color-border);
+  gap: var(--space-m);
+  margin-bottom: var(--space-l);
 
   &__icon {
-    color: var(--color-primary);
-    flex-shrink: 0;
-    // El tamaño se controla con el input `size` de app-ui-icon
-  }
-
-  &__text {
-    flex-grow: 1;
+    color: var(--color-text-muted);
   }
 
   &__title {
+    font-size: var(--font-size-xxl);
+    font-weight: var(--font-weight-bold);
+    color: var(--color-text-default);
     margin: 0;
-    font-size: var(--font-size-3xl);
-    font-weight: 700;
-    color: var(--color-text-emphasis);
-    line-height: 1.2;
-  }
-
-  &__subtitle {
-    margin: var(--space-xs) 0 0;
-    font-size: var(--font-size-lg);
-    font-weight: 400;
-    color: var(--color-text-muted);
   }
 }

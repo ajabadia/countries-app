@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 
 // --- Dependencias del Componente Standalone ---
 import { ModalComponent } from '../modal/modal.component'; // 1. Importamos el ModalComponent genérico
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -12,7 +13,8 @@ import { ModalComponent } from '../modal/modal.component'; // 1. Importamos el M
   standalone: true,
   imports: [
     CommonModule,
-    ModalComponent, // 2. Usaremos el modal como base
+    ModalComponent,
+    UiIconComponent, // Añadido para poder usar <app-ui-icon>
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // ------------------------------------
@@ -20,16 +22,17 @@ import { ModalComponent } from '../modal/modal.component'; // 1. Importamos el M
   template: `
     <app-modal
       [visible]="visible"
-      [title]="title"
-      [subtitle]="message"
-      [icon]="iconName"
-      iconType="system"
-      iconSize="l"
       titleAlign="center"
       [acceptLabel]="confirmLabel"
       [cancelLabel]="cancelLabel"
       (accept)="onConfirm()"
       (close)="onCancel()">
+      <!-- Proyectamos el contenido personalizado en el modal -->
+      <div class="confirm-dialog-content">
+        <app-ui-icon [icon]="iconName" type="system" size="l"></app-ui-icon>
+        <h2 class="title">{{ title }}</h2>
+        <p class="message">{{ message }}</p>
+      </div>
     </app-modal>
   `,
   // 4. Ya no necesitamos estilos propios, los hereda del modal genérico.

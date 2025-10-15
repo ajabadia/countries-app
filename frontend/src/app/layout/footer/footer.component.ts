@@ -1,7 +1,7 @@
 // src/app/modules/shared/components/footer/footer.component.ts
 
 import { Component, ChangeDetectionStrategy } from '@angular/core';
-import { CopyrightComponent } from '../copyright/copyright.component'; // Importamos el componente hijo
+import { CopyrightComponent } from '@shared/components/copyright/copyright.component'; // ✅ CORRECCIÓN: Usamos el alias @shared
 
 @Component({
     selector: 'app-footer',
@@ -10,7 +10,7 @@ import { CopyrightComponent } from '../copyright/copyright.component'; // Import
       CopyrightComponent // Importamos el componente que usa su plantilla
     ],
     templateUrl: './footer.component.html',
-    styles: [],
+    styleUrls: ['./footer.component.scss'],
     changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FooterComponent {

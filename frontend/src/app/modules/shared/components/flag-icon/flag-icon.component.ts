@@ -15,7 +15,7 @@ import { UiIconType } from '@services/icon.service';
   // 3. La plantilla ahora es inline y delega todo a app-ui-icon
   template: `
     <app-ui-icon
-      [icon]="iso2"
+      [icon]="icon"
       [type]="iconServiceType"
       [size]="size"
       [ngClass]="{ 'grayscale': grayscale }">
@@ -26,7 +26,7 @@ import { UiIconType } from '@services/icon.service';
 })
 export class FlagIconComponent {
   // --- Entradas (Inputs) ---
-  @Input({ required: true }) iso2: string = '';
+  @Input({ required: true }) icon: string = '';
   @Input() size: 'xs' | 's' | 'm' | 'l' | 'xl' | string = 'm';
   @Input() grayscale = false;
   @Input() iconType: 'country' | 'language' | 'other' = 'country';

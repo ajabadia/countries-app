@@ -25,7 +25,7 @@ export class ModalComponent {
   @Input() visible = false;
   @Input() closeOnBackdrop = true;
   @Input() title: string = '';
-  @Input() subtitle?: string;
+  @Input() subtitle: string | null = null;
   @Input() icon?: string;
   @Input() iconType: UiIconType = 'system';
   @Input() iconSize: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | string = 'l'; // ✅ CORREGIDO: Acepta 'string'

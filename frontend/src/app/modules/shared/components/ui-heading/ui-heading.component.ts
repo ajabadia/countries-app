@@ -1,22 +1,38 @@
-import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
+// d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.ts
+
+import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
-import { UiIconType } from '@services/icon.service';
 
 @Component({
   selector: 'app-ui-heading',
   standalone: true,
   imports: [CommonModule, UiIconComponent],
-  templateUrl: './ui-heading.component.html',
+  template: `
+    <div class="ui-heading">
+      @if (icon) { <!-- USO DIRECTO Y CORRECTO: Pasamos el icono y su tipo a ui-icon -->
+        <app-ui-icon [icon]="icon" [type]="iconType" size="l" class="ui-heading__icon" />
+      }
+      <div class="ui-heading__text-content">
+        <!-- Renderiza el nivel de encabezado correcto (h1, h2, etc.) -->
+        <ng-container [ngSwitch]="level">
+          <h1 *ngSwitchCase="1" class="ui-heading__title">{{ title }}</h1>
+          <h2 *ngSwitchCase="2" class="ui-heading__title">{{ title }}</h2>
+          <h3 *ngSwitchCase="3" class="ui-heading__title">{{ title }}</h3>
+        </ng-container>
+        @if (subtitle) {
+          <p class="ui-heading__subtitle">{{ subtitle }}</p>
+        }
+      </div>
+    </div>
+  `,
   styleUrls: ['./ui-heading.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiHeadingComponent {
-  @Input() title!: string;
-  @Input() subtitle?: string;
-  @Input() icon?: string;
-  @Input() iconType: UiIconType = 'system';
-
-  /** Nivel semántico del encabezado (h1, h2, etc.) */
-  @Input() level: 1 | 2 | 3 | 4 | 5 | 6 = 1;
+  @Input() title: string | null = '';
+  @Input() icon?: string | null = '';
+  @Input() iconType: 'system' | 'flag-circle' = 'system'; // Por defecto, es un icono de sistema.
+  @Input() level: 1 | 2 | 3 = 1;
+  @Input() subtitle: string | null = null;
 }

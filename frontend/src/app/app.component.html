@@ -1,13 +1,13 @@
-
+<div class="app-container">
   <app-header></app-header>
-<app-menu-bar
-  [items]="[
-    { label: 'Inicio', icon: 'icon-home', route: '/public' },
-    { label: 'Público', icon: 'icon-user', route: '/public' },
-    { label: 'Administración', icon: 'icon-table', route: '/admin', badge: 3 }
-  ]"
-  ariaLabel="Menú principal"
-></app-menu-bar>
-<router-outlet></router-outlet>
-   <app-footer></app-footer>
-
+  
+  <main class="app-content">
+    <!-- 
+      Aquí se renderizará el componente de la ruta activa.
+      Ej: PublicComponent o AdminComponent, que a su vez tienen su propio <router-outlet> y <app-menu-bar>.
+    -->
+    <router-outlet></router-outlet>
+  </main>
+  
+  <app-footer></app-footer>
+</div>

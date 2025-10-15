@@ -1,0 +1,13 @@
+<div class="public-layout">
+  <!-- 
+    Menú de navegación para la sección pública.
+    Se alimenta de la propiedad 'publicMenuItems' del componente.
+  -->
+  <app-menu-bar [items]="publicMenuItems" ariaLabel="Menú de navegación principal"></app-menu-bar>
+
+  <!-- 
+    Este router-outlet cargará las páginas hijas de la sección pública,
+    como LandingPageComponent o CountriesComponent.
+  -->
+  <router-outlet></router-outlet>
+</div>

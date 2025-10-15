@@ -1,30 +1,25 @@
+<!-- d:/desarrollos/countries2/frontend/src/app/modules/shared/components/menu-bar/menu-bar.component.html -->
+
 <nav class="menu-bar" [attr.aria-label]="ariaLabel">
-  <ul class="menu-bar__list" role="menubar">
-    @for (item of items; track item.label) {
-      <li
-        class="menu-bar__item"
+  <ul class="menu-bar__list">
+    <!-- 
+      Iteramos sobre la lista de 'items' que se recibe por @Input.
+      Cada 'item' se convierte en un elemento de la lista de navegación.
+    -->
+    @for (item of items; track item.route) {
+      <li 
+        class="menu-bar__item" 
         [class.menu-bar__item--disabled]="item.disabled"
-        routerLinkActive="menu-bar__item--active"
-        [routerLinkActiveOptions]="{ exact: true }"
-        role="none">
-        <a
+        routerLinkActive="menu-bar__item--active">
+        <a 
+          [routerLink]="item.route" 
           class="menu-bar__link"
-          [routerLink]="!item.external ? item.route : null"
-          [href]="item.external ? item.route : undefined"
-          [target]="item.external ? '_blank' : undefined" [attr.rel]="item.external ? 'noopener' : null"
-          [attr.aria-disabled]="item.disabled"
-          [attr.tabindex]="item.disabled ? -1 : 0"
-          role="menuitem"
-        >
+          routerLinkActive="menu-bar__link--active"
+          [routerLinkActiveOptions]="{ exact: true }">
           @if (item.icon) {
-            <span class="menu-bar__icon" aria-hidden="true">
-              <app-ui-icon [icon]="item.icon" type="system" size="1.2em"></app-ui-icon>
-            </span>
+            <app-ui-icon [icon]="item.icon" class="menu-bar__icon"></app-ui-icon>
           }
           <span class="menu-bar__label">{{ item.label }}</span>
-          @if (item.badge) {
-            <span class="menu-bar__badge">{{ item.badge }}</span>
-          }
         </a>
       </li>
     }
