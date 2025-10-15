@@ -1,6 +1,6 @@
 // mixins.scss
 // Mixins reutilizables siguiendo metodología BEM
-// --------------------------------------------------------------
+// -------------------------------------------------------------------
 
 // === MIXINS DE RESET ===
 @mixin button-reset {
@@ -23,6 +23,55 @@
 @mixin size($width, $height: $width) {
   width: $width;
   height: $height;
+}
+
+// === PLACEHOLDERS DE ENCABEZADO ===
+// Definen los estilos base para los encabezados. Se usan con @extend
+// para evitar duplicar código CSS.
+%heading-common {
+  font-family: var(--font-main);
+  font-weight: bold;
+  color: var(--color-primary-contrast);
+  box-shadow: var(--shadow-sm);
+  padding: 0.4em 1em;
+  border-radius: var(--radius-md) var(--radius-md) 0 0;
+}
+
+%h1-base {
+  @extend %heading-common;
+  background: var(--color-primary-dark);
+  font-size: var(--font-size-3xl);
+}
+
+%h2-base {
+  @extend %heading-common;
+  background: var(--color-primary);
+  font-size: var(--font-size-2xl);
+}
+
+%h3-base {
+  @extend %heading-common;
+  background: var(--color-secondary);
+  font-size: var(--font-size-xl);
+}
+
+%h4-base {
+  @extend %heading-common;
+  background: var(--color-tertiary);
+  font-size: var(--font-size-lg);
+}
+
+%h5-base {
+  @extend %heading-common;
+  background: var(--color-text-muted);
+  font-size: var(--font-size-base);
+}
+
+%h6-base {
+  @extend %heading-common;
+  background: var(--color-tertiary-light);
+  font-size: var(--font-size-sm);
+  color: var(--color-text); // El fondo es claro, cambiamos el color del texto
 }
 
 // === MIXINS DE BOTONES ===
@@ -250,5 +299,30 @@
   to {
     opacity: 1;
     transform: translateY(0);
+  }
+}
+
+// === MIXINS RESPONSIVE (BREAKPOINTS) ===
+@mixin mobile {
+  @media (max-width: #{var(--breakpoint-sm)} - 1px) {
+    @content;
+  }
+}
+
+@mixin tablet {
+  @media (min-width: var(--breakpoint-sm)) and (max-width: #{var(--breakpoint-md)} - 1px) {
+    @content;
+  }
+}
+
+@mixin tablet-and-up {
+  @media (min-width: var(--breakpoint-sm)) {
+    @content;
+  }
+}
+
+@mixin desktop {
+  @media (min-width: var(--breakpoint-md)) {
+    @content;
   }
 }

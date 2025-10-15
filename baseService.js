@@ -26,8 +26,9 @@ class BaseService {
   /**
    * Obtiene todos los registros de la tabla.
    * @param {string[]} columns - Las columnas a seleccionar.
-   * @param {string} orderBy - La columna por la que ordenar.
-   * @returns {{data: any[], total: number}}
+   * @param {string} [orderBy='id'] - La columna por la que ordenar.
+   * @template T
+   * @returns {{data: T[], total: number}}
    */
   getAll(columns = ['*'], orderBy = 'id') {
     const cols = columns.join(', ');
@@ -38,8 +39,9 @@ class BaseService {
   /**
    * Obtiene un registro por su ID.
    * @param {number | string} id - El ID del registro.
-   * @param {string[]} columns - Las columnas a seleccionar.
-   * @returns {any | null}
+   * @param {string[]} [columns=['*']] - Las columnas a seleccionar.
+   * @template T
+   * @returns {T | null}
    */
   getById(id, columns = ['*']) {
     const cols = columns.join(', ');

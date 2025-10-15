@@ -1,5 +1,6 @@
 // src/app/app.routes.ts
 
+import { TestComponent } from './modules/test/test.component';
 import { Routes } from '@angular/router';
 import { PublicComponent } from './modules/public/public.component';
 import { AdminComponent } from './modules/admin/admin/admin.component';
@@ -30,6 +31,12 @@ export const routes: Routes = [
     path: '',
     redirectTo: '/public',
     pathMatch: 'full',
+  },
+
+  {
+    // ✅ RUTA DE PRUEBAS: Carga el componente de test directamente.
+    path: 'test',
+    component: TestComponent,
   },
 
   // --- Ruta comodín (opcional pero recomendado) ---

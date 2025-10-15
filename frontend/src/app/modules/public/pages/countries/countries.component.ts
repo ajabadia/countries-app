@@ -14,7 +14,7 @@ import { SearchBoxComponent } from '@shared/components/search-box/search-box.com
   imports: [
     CommonModule,
     UiHeadingComponent,
-    SearchBoxComponent,
+    // SearchBoxComponent, // Eliminado temporalmente para quitar el warning
   ],
   templateUrl: './countries.component.html',
   styleUrls: ['./countries.component.scss'], // Asumo que existe un archivo de estilos

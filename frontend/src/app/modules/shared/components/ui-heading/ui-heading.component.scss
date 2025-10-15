@@ -1,19 +1,35 @@
 // d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.scss
 
+// ✅ CORRECCIÓN: Importamos los mixins que contienen los placeholders de estilo.
+@use 'src/styles/mixins' as m;
+
 .ui-heading {
   display: flex;
   align-items: center;
   gap: var(--space-m);
   margin-bottom: var(--space-l);
 
+  // ✅ MEJORA: Permite invertir el orden para poner el icono a la derecha.
+  &.reverse {
+    flex-direction: row-reverse;
+  }
+
   &__icon {
     color: var(--color-text-muted);
   }
 
+  // ✅ MEJORA: Hacemos que los títulos hereden los estilos base de h1, h2, etc.
+  // Esto asegura consistencia visual con el resto de la aplicación.
   &__title {
-    font-size: var(--font-size-xxl);
-    font-weight: var(--font-weight-bold);
-    color: var(--color-text-default);
-    margin: 0;
+    // Hereda los estilos base usando el placeholder.
+    .ui-heading--level-1 & { @extend %h1-base; }
+    .ui-heading--level-2 & { @extend %h2-base; }
+    .ui-heading--level-3 & { @extend %h3-base; }
+    .ui-heading--level-4 & { @extend %h4-base; }
+    .ui-heading--level-5 & { @extend %h5-base; }
+    .ui-heading--level-6 & { @extend %h6-base; }
+
+    // Sobrescribimos o añadimos estilos específicos si es necesario.
+    margin: 0; // Por ejemplo, quitamos el margen que suelen tener los h1.
   }
 }

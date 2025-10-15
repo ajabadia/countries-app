@@ -18,6 +18,11 @@ export const PUBLIC_ROUTES: MenuBarItem[] = [
     icon: 'country', 
     route: '/public/countries' 
   },
+  {
+    label: 'Test',
+    icon: 'icon-flask',
+    route: '/test'
+  },
 ];
 
 /**

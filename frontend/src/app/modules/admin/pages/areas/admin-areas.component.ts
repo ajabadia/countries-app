@@ -17,6 +17,8 @@ import { TableComponent } from '@shared/components/table/table.component';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+// ✅ CORRECCIÓN: Importamos el formulario desde su nueva ubicación correcta.
+import { AreaFormComponent } from './area-form/area-form.component';
 
 @Component({
   selector: 'app-admin-areas',
@@ -31,6 +33,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
     PaginatorComponent,
     ModalComponent,
     ConfirmDialogComponent,
+    // AreaFormComponent, // Se comenta temporalmente para eliminar el warning. Se volverá a añadir al usarlo en el HTML.
   ],
   templateUrl: './admin-areas.component.html', // Asumo que existe una plantilla similar a la de countries
   changeDetection: ChangeDetectionStrategy.OnPush,

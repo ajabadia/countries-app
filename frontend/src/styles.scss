@@ -1,8 +1,9 @@
 // src/styles.scss
 /* Importamos archivos modulares para variables, mixins y reset */
 @use 'styles/variables' as v;
-@use 'styles/mixins' as m;
 @use 'styles/reset';
+@use 'styles/mixins' as m;
+@use 'styles/base';
 /* 1. Importamos TODOS los estilos compartidos de admin en un solo lugar */
 @use 'styles/shared/admin';
 
@@ -34,12 +35,13 @@
 
 /* Utilidades de color */
 .u-text {
-  &--primary { color: var(--color-primary) !important; }
-  &--accent { color: var(--color-accent) !important; }
-  &--success { color: var(--color-success) !important; }
-  &--error { color: var(--color-error) !important; }
-  &--muted { color: var(--color-text-muted) !important; }
-  &--link { color: var(--color-link) !important; }
+  &--primary { color: var(--color-primary) !important; } // Tono principal
+  &--accent { color: var(--color-accent) !important; } // Tono de resalte
+  &--success { color: var(--color-success) !important; } // Verde
+  &--error { color: var(--color-error) !important; } // Rojo
+  &--warning { color: var(--color-warning) !important; } // Amarillo/Naranja
+  &--muted { color: var(--color-text-muted) !important; } // Gris apagado
+  &--link { color: var(--color-link) !important; } // Color de enlace
 }
 
 /* Utilidades de tamaño */
@@ -49,6 +51,30 @@
   &--md { font-size: var(--font-size-base); }
   &--lg { font-size: var(--font-size-lg); }
   &--xl { font-size: var(--font-size-xl); }
+}
+
+/* Utilidades de fondo con colores corporativos */
+.u-bg {
+  &--primary {
+    background: var(--color-primary) !important;
+    color: var(--color-primary-contrast) !important;
+  }
+  &--secondary {
+    background: var(--color-secondary) !important;
+    color: var(--color-primary-contrast) !important;
+  }
+  &--success {
+    background: var(--color-success) !important;
+    color: var(--color-text-contrast) !important;
+  }
+  &--error {
+    background: var(--color-error) !important;
+    color: var(--color-text-contrast) !important;
+  }
+  &--warning {
+    background: var(--color-warning) !important;
+    color: var(--color-text-contrast) !important;
+  }
 }
 
 /* Ejemplo de uso de mixin global en utilidades (opcional, sólo si tienes utilidades propias aquí) */
@@ -125,13 +151,6 @@
   margin-left: auto;
   margin-right: auto;
   box-sizing: border-box;
-}
-
-[aria-selected='true'] {
-  font-weight: 600;
-}
-[tabindex='0'] {
-  box-shadow: 0 0 0 2px #3b78e7;
 }
 
 @media (max-width: 700px) {

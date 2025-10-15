@@ -9,7 +9,7 @@ import { UiIconComponent } from '../ui-icon/ui-icon.component';
   standalone: true,
   imports: [CommonModule, UiIconComponent],
   template: `
-    <div class="ui-heading">
+    <div class="ui-heading" [class.reverse]="iconPosition === 'right'" [style.justify-content]="align">
       @if (icon) { <!-- USO DIRECTO Y CORRECTO: Pasamos el icono y su tipo a ui-icon -->
         <app-ui-icon [icon]="icon" [type]="iconType" size="l" class="ui-heading__icon" />
       }
@@ -34,5 +34,7 @@ export class UiHeadingComponent {
   @Input() icon?: string | null = '';
   @Input() iconType: 'system' | 'flag-circle' = 'system'; // Por defecto, es un icono de sistema.
   @Input() level: 1 | 2 | 3 = 1;
+  @Input() align: 'left' | 'center' | 'right' = 'left';
+  @Input() iconPosition: 'left' | 'right' = 'left';
   @Input() subtitle: string | null = null;
 }

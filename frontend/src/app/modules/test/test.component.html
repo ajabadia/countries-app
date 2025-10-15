@@ -1,0 +1,19 @@
+<!-- ✅ Añadimos el encabezado con el título y el icono solicitados -->
+<app-ui-heading title="Pruebas" icon="icon-flask"></app-ui-heading>
+
+<p>Esta es la página de pruebas. Aquí puedes experimentar con componentes.</p>
+
+<!-- ✅ Añadimos el componente de icono directamente -->
+<div class="test-icon-container">
+  <p>Probando <strong>app-ui-icon</strong> directamente:</p>
+  <app-ui-icon icon="icon-flask" size="xl"></app-ui-icon>
+</div>
+
+<!-- ✅ Añadimos el nuevo encabezado centrado y con el icono a la derecha -->
+<app-ui-heading
+  title="pruebas"
+  [level]="1"
+  icon="icon-flask"
+  align="center"
+  iconPosition="right"
+></app-ui-heading>
