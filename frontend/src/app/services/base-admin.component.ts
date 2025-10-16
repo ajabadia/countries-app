@@ -14,6 +14,9 @@ import { ToolbarButtonConfig as ToolbarButton } from '@shared/components/toolbar
 import { BaseCrudService } from '@services/base-crud.service';
 import { SelectionService } from '@services/selection.service'; // La ruta ya es correcta, confirmamos consistencia
 import { ALL_ROUTES_MAP } from '@config/route-config';
+// He corregido la ruta de importación del formulario de área.
+// Asumo que existe un AdminAreasComponent que lo usará.
+import { AreaFormComponent } from '@shared/components/area-form/area-form.component';
 
 @Directive()
 export abstract class BaseAdminComponent<T extends { id: string | number }> implements OnInit {
@@ -25,7 +28,7 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   protected abstract entityService: BaseCrudService<T, Partial<T>>;
   public abstract entityName: string;
   public abstract entityNamePlural: string;
-  public abstract tableColumns: TableColumn[];
+  public abstract tableColumns: TableColumn<T>[];
   public abstract form: FormGroup;
 
   // --- Propiedades para el encabezado de la página ---
@@ -103,7 +106,7 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
     const currentRouteConfig = ALL_ROUTES_MAP.get(this.router.url);
     if (currentRouteConfig) {
       this.pageTitle = currentRouteConfig.label;
-      this.pageIcon = currentRouteConfig.icon;
+      this.pageIcon = currentRouteConfig.name;
     }
   }
   // --- Métodos de eventos de la UI ---

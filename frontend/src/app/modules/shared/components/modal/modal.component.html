@@ -19,15 +19,21 @@
         [id]="'modal-title-' + title"
         class="modal-header"
         [level]="3"
-        [icon]="icon"
-        [subtitle]="subtitle"
-        color="primary">
+        [name]="name"
+        [subtitle]="subtitle ?? null" 
+        color="primary" 
+        variant="solid">
         <!-- ✅ FIX: El título se pasa por proyección de contenido, no por el input [text]. -->
         {{ title }}
 
         @if (showCancel) {
-          <!-- 2. Usamos &times; que es más semántico para un botón de cierre -->
-          <button type="button" class="modal-close" (click)="onClose()" aria-label="Cerrar">&times;</button>
+          <app-ui-button
+            class="modal-close"
+            (onClick)="onClose()"
+            icon="x"
+            variant="icon"
+            aria-label="Cerrar">
+          </app-ui-button>
         }
       </app-ui-heading>
     }
@@ -38,14 +44,8 @@
     </div>
 
     @if (showAccept || showCancel) {
-      <div class="modal-footer">
-        @if (showCancel) {
-          <app-ui-button color="surface" (onClick)="onClose()">{{ cancelLabel }}</app-ui-button>
-        }
-        @if (showAccept) {
-          <app-ui-button color="primary" [disabled]="acceptDisabled" (onClick)="onAccept()">{{ acceptLabel }}</app-ui-button>
-        }
-      </div>
+      <!-- ✅ REFACTORIZACIÓN: Usamos toolbar-buttons para unificar la gestión de botones. -->
+      <app-toolbar-buttons class="modal-footer" [buttons]="footerButtons"></app-toolbar-buttons>
     }
     </div>
   </ng-container>

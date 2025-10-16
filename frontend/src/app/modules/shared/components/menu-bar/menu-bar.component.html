@@ -16,8 +16,8 @@
           class="menu-bar__link"
           routerLinkActive="menu-bar__link--active"
           [routerLinkActiveOptions]="{ exact: true }">
-          @if (item.icon) {
-            <app-ui-icon [icon]="item.icon" class="menu-bar__icon"></app-ui-icon>
+          @if (item.name) {
+            <app-ui-icon [name]="item.name" class="menu-bar__icon"></app-ui-icon>
           }
           <span class="menu-bar__label">{{ item.label }}</span>
         </a>

@@ -6,6 +6,8 @@ import { CommonModule } from '@angular/common';
 // --- Dependencias del Componente Standalone ---
 import { ModalComponent } from '../modal/modal.component'; // 1. Importamos el ModalComponent genérico
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
+import { UiIconType } from '@services/icon.service';
+import { ButtonSize } from '../ui-button/ui-button.component';
 
 @Component({
   selector: 'app-confirm-dialog',
@@ -29,7 +31,7 @@ import { UiIconComponent } from '../ui-icon/ui-icon.component';
       (close)="onCancel()">
       <!-- Proyectamos el contenido personalizado en el modal -->
       <div class="confirm-dialog-content">
-        <app-ui-icon [icon]="iconName" type="system" size="l"></app-ui-icon>
+        <app-ui-icon [name]="iconName" [type]="iconType" [size]="iconSize" />
         <h2 class="title">{{ title }}</h2>
         <p class="message">{{ message }}</p>
       </div>
@@ -46,6 +48,8 @@ export class ConfirmDialogComponent {
   @Input() confirmLabel: string = 'Aceptar';
   @Input() cancelLabel: string = 'Cancelar';
   @Input() variant: 'info' | 'success' | 'error' | 'warning' = 'info';
+  @Input() iconType: UiIconType = 'system';
+  @Input({ alias: 'iconSize' }) iconSize: ButtonSize = 'l';
 
   // === Salidas (Outputs) ===
   @Output() confirm = new EventEmitter<void>();

@@ -44,7 +44,7 @@ export class AdminDependenciesComponent extends BaseAdminComponent<any> {
   public override entityNamePlural = 'Dependencias';
 
   // Configuramos las columnas que mostrará la tabla
-  public override tableColumns: TableColumn[] = [
+  public override tableColumns: TableColumn<any>[] = [
     { key: 'name', label: 'Nombre', sortable: true },
   ];
 

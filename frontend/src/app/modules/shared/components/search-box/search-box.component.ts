@@ -1,10 +1,11 @@
 // src/app/modules/shared/components/search-box/search-box.component.ts
 
 import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, OnDestroy, OnInit } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Para @if
-import { FormsModule } from '@angular/forms';   // Para [(ngModel)]
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
 import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
   selector: 'app-search-box',
@@ -12,11 +13,30 @@ import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
   standalone: true,
   imports: [
     CommonModule,
-    FormsModule
+    FormsModule,
+    UiIconComponent, // Añadido para usar los iconos estandarizados
   ],
   changeDetection: ChangeDetectionStrategy.OnPush,
   // ------------------------------------
-  templateUrl: './search-box.component.html',
+  // ✅ MEJORA: Plantilla inline usando app-ui-icon y adaptada para el debounce.
+  template: `
+    <div class="search-box-wrapper">
+      <app-ui-icon name="search" type="system" class="icon-search"></app-ui-icon>
+      <input
+        type="text"
+        [ngModel]="value"
+        (ngModelChange)="onInputChange($event)"
+        [placeholder]="placeholder"
+        class="search-input"
+        aria-label="Search"
+      />
+      @if (value) {
+        <button (click)="clear()" class="btn-clear" aria-label="Clear search">
+          <app-ui-icon name="x" type="system"></app-ui-icon>
+        </button>
+      }
+    </div>
+  `,
   styleUrls: ['./search-box.component.scss'],
 })
 export class SearchBoxComponent implements OnInit, OnDestroy {
@@ -66,7 +86,7 @@ export class SearchBoxComponent implements OnInit, OnDestroy {
    * En lugar de emitir directamente, pasa el valor al Subject.
    */
   onInputChange(newValue: string): void {
-    this.searchSubject.next(newValue);
+    this.searchSubject.next(newValue ?? '');
   }
 
   /**

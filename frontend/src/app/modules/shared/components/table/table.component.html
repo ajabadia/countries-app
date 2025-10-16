@@ -2,46 +2,62 @@
   <table class="table">
     <thead>
       <tr>
-        @for (column of columns; track column.key) {
+        <!-- ✅ REFACTOR: Columna para el checkbox de selección de cabecera -->
+        @if (selection) {
+          <th class="selection-cell">
+            <app-toggle-checkbox
+              [state]="headerCheckboxState"
+              (click)="onToggleAll()"
+              aria-label="Seleccionar todo">
+            </app-toggle-checkbox>
+          </th>
+        }
+        @for (col of columns; track col.key) {
           <th 
-            [style.width]="column.width" 
-            [style.min-width]="column.minWidth"
-            [class.sortable]="column.sortable"
-            (click)="column.sortable && onSort(column.key)">
-            {{ column.label }}
-            @if (column.sortable) {
+            [style.width]="col.width" 
+            [style.min-width]="col.minWidth"
+            [class.sortable]="col.sortable"
+            (click)="onSort(col.key, col.sortable)">
+            {{ col.label }}
+            @if (col.sortable) {
               <app-ui-icon 
                 class="sort-icon"
-                [icon]="sortKey === column.key ? (sortOrder === 'asc' ? 'arrow-up' : 'arrow-down') : 'arrows-up-down'" />
+                [name]="sortKey === col.key ? (sortOrder === 'asc' ? 'arrow-up' : 'arrow-down') : 'arrows-up-down'" />
             }
           </th>
         }
         <!-- Cabecera para la columna de acciones -->
-        <th class="actions-header">Acciones</th>
+        <th class="actions-cell"></th>
       </tr>
     </thead>
     <tbody>
-      @if (items.length === 0) {
-        <tr><td [attr.colspan]="columns.length + 1" class="no-data-cell">No hay datos para mostrar.</td></tr>
-      } @else {
-        @for (item of items; track item.id) {
-          <tr>
-            @for (column of columns; track column.key) {
-              <td>
-                <ng-container [ngSwitch]="column.cellType || 'text'">
-                  <!-- Puedes añadir más tipos de celda aquí -->
-                  <span *ngSwitchCase="'text'">{{ getCellValue(item, column.key) }}</span>
-                  <!-- Ejemplo para un futuro 'flag' cellType -->
-                  <!-- <app-flag-icon *ngSwitchCase="'flag'" [countryCode]="getCellValue(item, column.key)" /> -->
-                </ng-container>
-              </td>
-            }
-            <td class="actions-cell">
-              <button (click)="onAction('edit', item)" class="action-button"><app-ui-icon icon="pencil" /></button>
-              <button (click)="onAction('delete', item)" class="action-button action-button--danger"><app-ui-icon icon="trash" /></button>
+      @for (item of items; track item.id) {
+        <tr (click)="onRowClick(item, $event)" [class.selected]="selection?.has(item.id)">
+          <!-- ✅ REFACTOR: Celda para el checkbox de selección de fila -->
+          @if (selection) {
+            <td class="selection-cell" (click)="$event.stopPropagation()">
+              <app-toggle-checkbox [state]="selection.has(item.id) ? 'on' : 'off'"></app-toggle-checkbox>
             </td>
-          </tr>
-        }
+          }
+          @for (col of columns; track col.key) {
+            <td>
+              @switch (col.type) {
+                @case ('flag') {
+                  <app-flag-icon [name]="getCellValue(item, col.key)"></app-flag-icon>
+                }
+                @default {
+                  {{ getCellValue(item, col.key) }}
+                }
+              }
+            </td>
+          }
+          <td class="actions-cell" (click)="$event.stopPropagation()">
+            <app-ui-button (click)="onAction('edit', item)" variant="icon" icon="pencil" aria-label="Editar"></app-ui-button>
+            <app-ui-button (click)="onAction('delete', item)" variant="icon" icon="trash" color="danger" aria-label="Eliminar"></app-ui-button>
+          </td>
+        </tr>
+      } @empty {
+        <tr><td [attr.colspan]="columns.length + (selection ? 2 : 1)" class="no-data-cell">No hay datos para mostrar.</td></tr>
       }
     </tbody>
   </table>

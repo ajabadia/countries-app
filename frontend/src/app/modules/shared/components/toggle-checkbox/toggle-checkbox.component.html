@@ -1,13 +1,15 @@
-<label class="toggle"
-  [class.toggle--checked]="state === 'checked'"
-  [class.toggle--indeterminate]="state === 'indeterminate'">
-  <input
-    #checkbox
-    type="checkbox"
-    [checked]="state === 'checked'"
-    (change)="toggle()"
-    tabindex="0"
-    aria-label="Activar/Desactivar"
-  />
-  <span class="slider"></span>
-</label>
+<!-- El contenedor principal gestiona el clic y la accesibilidad -->
+<div class="toggle-checkbox" [attr.aria-checked]="state === 'on' ? 'true' : (state === 'intermediate' ? 'mixed' : 'false')">
+  <!-- El icono cambia según el estado -->
+  @switch (state) {
+    @case ('on') {
+      <app-ui-icon name="check-square" size="m"></app-ui-icon>
+    }
+    @case ('intermediate') {
+      <app-ui-icon name="minus-square" size="m"></app-ui-icon>
+    }
+    @default {
+      <app-ui-icon name="square" size="m"></app-ui-icon>
+    }
+  }
+</div>

@@ -26,9 +26,11 @@ export class UiStatCardComponent {
   // === Entradas (Inputs) ===
   @Input({ required: true }) label!: string;
   @Input({ required: true }) value!: string | number;
-  @Input() icon?: string;
+  // ✅ CORRECCIÓN: Renombramos 'icon' a 'name' para alinear con la API de ui-icon.
+  @Input() name?: string;
   @Input() detailRoute?: string | any[]; // MEJORA: Acepta arrays para rutas complejas.
   @Input() iconType: UiIconType = 'system'; // TODO: Revisar si UiIconType se importa correctamente
+  @Input() iconColor?: string;
   @Input() iconSize: 'xs' | 's' | 'm' | 'l' | 'xl' | string | number = 'm';
 
 

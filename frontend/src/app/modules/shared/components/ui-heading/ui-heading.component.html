@@ -7,23 +7,23 @@
   <!-- El ng-container ahora renderiza la etiqueta hN correcta, que actúa como contenedor flex. -->
   <ng-container [ngSwitch]="level">
     <h1 *ngSwitchCase="1" class="ui-heading__title" [ngClass]="titleClasses">
-      <app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" />
+      <app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" />
       <span>{{ title }}</span>
     </h1>
     <h2 *ngSwitchCase="2" class="ui-heading__title" [ngClass]="titleClasses">
-      <app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" />
+      <app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" />
       <span>{{ title }}</span>
     </h2>
     <h3 *ngSwitchCase="3" class="ui-heading__title" [ngClass]="titleClasses">
-      <app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" />
+      <app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" />
       <span>{{ title }}</span>
     </h3>
     <!-- ... y así sucesivamente para los demás niveles -->
-    <h4 *ngSwitchCase="4" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" /><span>{{ title }}</span></h4>
-    <h5 *ngSwitchCase="5" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" /><span>{{ title }}</span></h5>
-    <h6 *ngSwitchCase="6" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" /><span>{{ title }}</span></h6>
-    <div *ngSwitchCase="7" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" /><span>{{ title }}</span></div>
-    <div *ngSwitchCase="8" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="icon" [icon]="icon" [size]="iconSize" /><span>{{ title }}</span></div>
+    <h4 *ngSwitchCase="4" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" /><span>{{ title }}</span></h4>
+    <h5 *ngSwitchCase="5" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" /><span>{{ title }}</span></h5>
+    <h6 *ngSwitchCase="6" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" /><span>{{ title }}</span></h6>
+    <div *ngSwitchCase="7" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" /><span>{{ title }}</span></div>
+    <div *ngSwitchCase="8" class="ui-heading__title" [ngClass]="titleClasses"><app-ui-icon *ngIf="name" [name]="name" [size]="iconSize" /><span>{{ title }}</span></div>
   </ng-container>
 
 </div>

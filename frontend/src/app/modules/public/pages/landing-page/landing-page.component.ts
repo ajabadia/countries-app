@@ -25,8 +25,7 @@ const getCount = (service: BaseCrudService<any, any>): Observable<number> => {
   imports: [
     CommonModule,
     UiHeadingComponent,
-    UiStatCardComponent // Añadimos la tarjeta de estadística para usarla en la plantilla
-  ],
+     ],
   templateUrl: './landing-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })

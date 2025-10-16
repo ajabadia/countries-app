@@ -33,12 +33,6 @@ export const routes: Routes = [
     pathMatch: 'full',
   },
 
-  {
-    // ✅ RUTA DE PRUEBAS: Carga el componente de test directamente.
-    path: 'test',
-    component: TestComponent,
-  },
-
   // --- Ruta comodín (opcional pero recomendado) ---
   // Redirige a la página de inicio si la URL no coincide con ninguna ruta.
   {

@@ -10,7 +10,7 @@ import { UiIconComponent } from '../ui-icon/ui-icon.component';
  */
 export interface MenuBarItem {
   label: string;
-  icon?: string;
+  name?: string; // Changed from icon to name for consistency
   route: string | any[];
   disabled?: boolean;
   badge?: string | number;

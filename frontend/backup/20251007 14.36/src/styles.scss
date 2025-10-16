@@ -67,16 +67,6 @@
   @include size(24px);
 }
 
-// Utilidades de color
-.u-text {
-  &--primary { color: var(--color-primary) !important; }
-  &--accent { color: var(--color-accent) !important; }
-  &--muted { color: var(--color-text-muted) !important; }
-  &--success { color: var(--color-success) !important; }
-  &--error { color: var(--color-error) !important; }
-  &--warning { color: var(--color-warning) !important; }
-}
-
 .u-bg {
   &--primary { 
     background: var(--color-primary-aa) !important; 

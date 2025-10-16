@@ -33,6 +33,26 @@ export class SelectionService<T> {
     this._selected.next(items);
   }
 
+  public select(items: T[], getKey: (i: T) => any): void {
+    const currentSelection = new Map(this.selected.map(i => [getKey(i), i]));
+    items.forEach(item => {
+      if (!currentSelection.has(getKey(item))) {
+        currentSelection.set(getKey(item), item);
+      }
+    });
+    this.set(Array.from(currentSelection.values()));
+  }
+
+  public deselect(items: T[], getKey: (i: T) => any): void {
+    const currentSelection = new Map(this.selected.map(i => [getKey(i), i]));
+    items.forEach(item => {
+      if (currentSelection.has(getKey(item))) {
+        currentSelection.delete(getKey(item));
+      }
+    });
+    this.set(Array.from(currentSelection.values()));
+  }
+
   public toggle(item: T, getKey: (i: T) => any): void {
     const current = this.selected;
     const key = getKey(item);
@@ -40,6 +60,18 @@ export class SelectionService<T> {
 
     index > -1 ? current.splice(index, 1) : current.push(item);
     this.set([...current]);
+  }
+
+  /**
+   * Comprueba si un elemento está seleccionado basándose en su clave.
+   * @param key La clave del elemento a comprobar.
+   * @returns `true` si el elemento está seleccionado.
+   */
+  public has(key: any): boolean {
+    // Para mejorar el rendimiento en selecciones grandes, podríamos usar un Map o Set.
+    // Por ahora, un findIndex es suficiente.
+    // Asumimos que la clave es el `id`.
+    return this.selected.findIndex(i => (i as any).id === key) > -1;
   }
 
   public clear(): void {

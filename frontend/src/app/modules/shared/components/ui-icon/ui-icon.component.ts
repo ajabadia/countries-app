@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { IconService, UiIconType } from '@services/icon.service';
+import { ButtonSize } from '../ui-button/ui-button.component';
 
 @Component({
     selector: 'app-ui-icon',
@@ -32,27 +33,33 @@ export class UiIconComponent implements OnChanges {
   private iconService = inject(IconService);
 
   // --- Entradas (Inputs) ---
-  // ✅ CORRECCIÓN: Se restauran las propiedades de entrada que se habían perdido.
-  @Input({ required: true }) icon!: string;
+  // ✅ API ESTANDARIZADA: Usamos 'name' como input principal y añadimos 'color'.
+  @Input({ required: true }) name!: string;
   @Input() type: UiIconType = 'system';
-  @Input() size: 'inherit' | 'xs' | 's' | 'm' | 'l' | 'xl' | string = 'inherit';
+  @Input() size: ButtonSize | 'inherit' | string = 'm';
+  @Input() color?: string;
 
   // --- Propiedades internas ---
   public svgContent$: Observable<SafeHtml> = of('');
 
-  // --- Bindeo de estilos al Host para el tamaño ---
+  // --- Vinculación de estilos al Host para controlar tamaño y color ---
   @HostBinding('style.--icon-size')
   get sizeStyle(): string {
-    const sizeMap: { [key: string]: string } = { xs: '1rem', s: '1.25rem', m: '1.5rem', l: '2rem', xl: '2.5rem' };
-    return sizeMap[this.size] || (typeof this.size === 'string' ? this.size : `${this.size}px`);
+    // Usamos las variables CSS globales para los tamaños predefinidos.
+    const predefinedSizes = ['xs', 's', 'm', 'l', 'xl'];
+    if (predefinedSizes.includes(this.size)) {
+      return `var(--icon-size-${this.size})`;
+    }
+    return this.size === 'inherit' ? 'inherit' : this.size;
+  }
+
+  @HostBinding('style.color') get iconColor() {
+    return this.color;
   }
 
   ngOnChanges(changes: SimpleChanges): void {
-    // ✅ MEJORA: Reaccionamos a los cambios en los inputs para recargar el icono.
-    if (changes['icon'] || changes['type']) {
-      if (this.icon) {
-        this.svgContent$ = this.iconService.getIcon(this.icon, this.type);
-      }
+    if (changes['name'] || changes['type']) {
+      this.svgContent$ = this.iconService.getIcon(this.name, this.type);
     }
   }
 }

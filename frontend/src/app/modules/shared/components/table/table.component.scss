@@ -54,25 +54,8 @@
     color: var(--color-text-muted);
   }
 
-  .actions-header, .actions-cell {
+  .selection-cell, .actions-cell {
+    width: 1%; // Ocupan el mínimo espacio posible
     text-align: right;
-  }
-
-  .action-button {
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: var(--color-text-muted);
-    padding: var(--space-sm);
-    border-radius: var(--radius-sm);
-
-    &:hover {
-      background: var(--color-surface-hover);
-      color: var(--color-primary);
-    }
-
-    &--danger:hover {
-      color: var(--color-error);
-    }
   }
 }

@@ -31,33 +31,15 @@
 
 // -- Secciones del Modal --
 .modal-header {
-  // Sobrescribimos estilos de app-ui-heading para que encaje en el modal
-  &.ui-heading {
-    padding: 1.1em 1.3em;
-    background: var(--color-primary, #1976d2);
-    color: #fff;
-    margin-bottom: 0; // Eliminamos el margen inferior por defecto de los headings
-    display: flex;
-    align-items: center;
-    width: 100%;
-  }
+  // Usamos las propiedades de ui-heading, solo ajustamos el espaciado y la posición del botón.
+  padding: var(--space-m) var(--space-l);
+  display: flex;
+  align-items: center;
+  width: 100%;
 
   // Posicionamiento del botón de cerrar
   .modal-close {
     margin-left: auto;
-    font-size: 1.6em;
-    background: none;
-    border: none;
-    cursor: pointer;
-    color: inherit;
-    opacity: 0.8;
-    line-height: 1;
-    transition: opacity 0.15s;
-    padding: 0 0.25em;
-
-    &:hover {
-      opacity: 1;
-    }
   }
 }
 

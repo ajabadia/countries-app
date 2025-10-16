@@ -1,9 +1,10 @@
 // src/app/modules/shared/components/flag-icon/flag-icon.component.ts
 
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Necesario para [ngClass], [ngStyle], etc.
+import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '../ui-icon/ui-icon.component'; // 1. Importamos el componente de icono base
 import { UiIconType } from '@services/icon.service';
+import { ButtonSize } from '../ui-button/ui-button.component';
 
 @Component({
   selector: 'app-flag-icon',
@@ -15,9 +16,10 @@ import { UiIconType } from '@services/icon.service';
   // 3. La plantilla ahora es inline y delega todo a app-ui-icon
   template: `
     <app-ui-icon
-      [icon]="icon"
+      [name]="name"
       [type]="iconServiceType"
       [size]="size"
+      [color]="color"
       [ngClass]="{ 'grayscale': grayscale }">
     </app-ui-icon>
   `,
@@ -25,9 +27,10 @@ import { UiIconType } from '@services/icon.service';
   changeDetection: ChangeDetectionStrategy.OnPush
 })
 export class FlagIconComponent {
-  // --- Entradas (Inputs) ---
-  @Input({ required: true }) icon: string = '';
-  @Input() size: 'xs' | 's' | 'm' | 'l' | 'xl' | string = 'm';
+  // ✅ API ALINEADA: Usamos 'name' en lugar de 'icon' para consistencia.
+  @Input({ required: true }) name: string = '';
+  @Input() size: ButtonSize = 'm';
+  @Input() color?: string; // Añadido para compatibilidad total con la API de ui-icon
   @Input() grayscale = false;
   @Input() iconType: 'country' | 'language' | 'other' = 'country';
 

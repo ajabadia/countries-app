@@ -28,7 +28,7 @@ const getCount = (service: BaseCrudService<any, any>): Observable<number> => {
 interface StatCard {
   title: string;
   count$: Observable<number>;
-  icon: string;
+  name: string; // ✅ CORRECCIÓN: Renombramos 'icon' a 'name' para alinear con ui-stat-card
   route: string;
 }
 
@@ -48,11 +48,11 @@ interface StatCard {
 export class AdminDashboardComponent {
   // ✅ MEJORA: Agrupamos la información de las tarjetas en un array para un template más limpio.
   public statCards: StatCard[] = [
-    { title: 'Países', count$: getCount(inject(CountriesService)), icon: 'globe', route: '/admin/countries' },
-    { title: 'Lenguajes', count$: getCount(inject(LanguagesService)), icon: 'language', route: '/admin/languages' },
-    { title: 'Áreas', count$: getCount(inject(AreasService)), icon: 'map', route: '/admin/areas' },
-    { title: 'Dependencias', count$: getCount(inject(DependenciesService)), icon: 'puzzle', route: '/admin/dependencies' },
-    { title: 'Continentes', count$: getCount(inject(ContinentsService)), icon: 'compass', route: '/admin/continents' },
-    { title: 'Traducciones', count$: getCount(inject(TranslationsService)), icon: 'translate', route: '/admin/translations' },
+    { title: 'Países', count$: getCount(inject(CountriesService)), name: 'globe', route: '/admin/countries' },
+    { title: 'Lenguajes', count$: getCount(inject(LanguagesService)), name: 'language', route: '/admin/languages' },
+    { title: 'Áreas', count$: getCount(inject(AreasService)), name: 'map', route: '/admin/areas' },
+    { title: 'Dependencias', count$: getCount(inject(DependenciesService)), name: 'puzzle', route: '/admin/dependencies' },
+    { title: 'Continentes', count$: getCount(inject(ContinentsService)), name: 'compass', route: '/admin/continents' },
+    { title: 'Traducciones', count$: getCount(inject(TranslationsService)), name: 'translate', route: '/admin/translations' },
   ];
 }

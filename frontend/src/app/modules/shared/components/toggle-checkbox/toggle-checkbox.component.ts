@@ -1,62 +1,47 @@
 // src/app/modules/shared/components/toggle-checkbox/toggle-checkbox.component.ts
 
-import { Component, Input, Output, EventEmitter, ViewChild, AfterViewInit, ElementRef, OnChanges, SimpleChanges, ChangeDetectionStrategy } from '@angular/core';
-import { CommonModule } from '@angular/common'; // Necesario para directivas como [class]
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, HostBinding, HostListener } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 // Tipo para el estado visual del toggle-checkbox
-export type ToggleState = 'checked' | 'unchecked' | 'indeterminate';
+export type ToggleState = 'on' | 'off' | 'intermediate';
 
 @Component({
   selector: 'app-toggle-checkbox',
-  // --- REFACTORIZACIÓN A STANDALONE ---
   standalone: true,
-  imports: [
-    CommonModule // Importamos CommonModule para poder usar [class.xxx] en la plantilla.
-  ],
-  changeDetection: ChangeDetectionStrategy.OnPush, // MEJORA: Optimización de rendimiento.
-  // ------------------------------------
+  imports: [CommonModule, UiIconComponent],
   templateUrl: './toggle-checkbox.component.html',
   styleUrls: ['./toggle-checkbox.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class ToggleCheckboxComponent implements AfterViewInit, OnChanges {
-  // Estado externo ("checked", "unchecked", "indeterminate")
-  @Input() state: ToggleState = 'unchecked';
-
-  // Emite el estado tras el cambio de toggle
+export class ToggleCheckboxComponent {
+  @Input() state: ToggleState = 'off';
   @Output() stateChange = new EventEmitter<ToggleState>();
 
-  // Controla acceso al checkbox real para manejar indeterminate correctamente
-  @ViewChild('checkbox') checkbox!: ElementRef<HTMLInputElement>;
-
-  ngAfterViewInit(): void {
-    this.updateIndeterminateState();
+  // Vinculamos el estado a una clase en el host para estilado fácil y coherente
+  @HostBinding('class') get hostClass() {
+    return `toggle-checkbox--${this.state}`;
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    // Si el estado cambia desde fuera, actualizamos la propiedad 'indeterminate' del input real.
-    if (changes['state']) {
-      this.updateIndeterminateState();
-    }
-  }
-
-  /**
-   * Sincroniza el estado visual del componente con la propiedad 'indeterminate'
-   * del elemento input nativo del navegador.
-   */
-  updateIndeterminateState(): void {
-    if (this.checkbox?.nativeElement) {
-      this.checkbox.nativeElement.indeterminate = this.state === 'indeterminate';
-    }
+  // Hacemos el componente clicable
+  @HostBinding('attr.role') role = 'checkbox';
+  @HostBinding('attr.tabindex') tabindex = 0;
+  @HostListener('click')
+  @HostListener('keydown.enter')
+  @HostListener('keydown.space')
+  onClick(event?: Event) {
+    event?.preventDefault();
+    this.toggle();
   }
 
   /**
    * Gestiona el clic del usuario. El comportamiento es:
-   * - Si está 'unchecked' o 'indeterminate', pasa a 'checked'.
-   * - Si está 'checked', pasa a 'unchecked'.
+   * - Si está 'off' o 'intermediate', pasa a 'on'.
+   * - Si está 'on', pasa a 'off'.
    */
   toggle(): void {
-    this.state = (this.state === 'checked') ? 'unchecked' : 'checked';
-    this.updateIndeterminateState();
+    this.state = (this.state === 'on') ? 'off' : 'on';
     this.stateChange.emit(this.state);
   }
 }

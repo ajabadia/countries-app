@@ -42,7 +42,7 @@ export class AdminTranslationsComponent extends BaseAdminComponent<any> {
   public override entityNamePlural = 'Traducciones';
 
   // Configuramos las columnas que mostrará la tabla
-  public override tableColumns: TableColumn[] = [
+  public override tableColumns: TableColumn<any>[] = [
     { key: 'name', label: 'Nombre', sortable: true },
     // Puedes añadir más columnas aquí si el modelo de 'Translation' es más complejo
   ];

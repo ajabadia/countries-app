@@ -18,7 +18,7 @@ import { PaginatorComponent } from '@shared/components/paginator/paginator.compo
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
 // ✅ CORRECCIÓN: Importamos el formulario desde su nueva ubicación correcta.
-import { AreaFormComponent } from './area-form/area-form.component';
+import { AreaFormComponent } from '@shared/components/area-form/area-form.component';
 
 @Component({
   selector: 'app-admin-areas',
@@ -43,7 +43,7 @@ export class AdminAreasComponent extends BaseAdminComponent<any> {
   public override entityName = 'Área';
   public override entityNamePlural = 'Áreas';
 
-  public override tableColumns: TableColumn[] = [
+  public override tableColumns: TableColumn<any>[] = [
     { key: 'name', label: 'Nombre', sortable: true },
   ];
 

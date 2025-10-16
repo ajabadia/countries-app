@@ -6,7 +6,7 @@
         <th (click)="onSort(col.field)">
           {{ col.header }}
           @if (sortKey === col.field) {
-            <app-ui-icon [icon]="sortOrder === 'asc' ? 'icon-sort-asc' : 'icon-sort-desc'"></app-ui-icon>
+            <app-ui-icon [name]="sortOrder === 'asc' ? 'icon-sort-asc' : 'icon-sort-desc'"></app-ui-icon>
           }
         </th>
       }

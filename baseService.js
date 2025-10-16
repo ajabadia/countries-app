@@ -25,15 +25,34 @@ class BaseService {
 
   /**
    * Obtiene todos los registros de la tabla.
-   * @param {string[]} columns - Las columnas a seleccionar.
-   * @param {string} [orderBy='id'] - La columna por la que ordenar.
+   * @param {object} [options] - Opciones de consulta.
+   * @param {string[]} [options.columns=['*']] - Las columnas a seleccionar.
+   * @param {string} [options.orderBy='id'] - La columna por la que ordenar.
+   * @param {'asc' | 'desc'} [options.orderDir='asc'] - La dirección de ordenamiento.
+   * @param {number} [options.limit] - Límite de registros a devolver.
+   * @param {number} [options.offset] - Desplazamiento para paginación.
    * @template T
    * @returns {{data: T[], total: number}}
    */
-  getAll(columns = ['*'], orderBy = 'id') {
+  getAll(options = {}) {
+    const { columns = ['*'], orderBy = 'id', orderDir = 'asc', limit, offset } = options;
+
+    // --- Validación para prevenir SQL Injection ---
+    // Obtenemos las columnas válidas de la tabla para crear una lista blanca.
+    const validColumns = this.db.prepare(`PRAGMA table_info(${this.tableName})`).all().map(c => c.name);
+    const safeOrderBy = validColumns.includes(orderBy) ? orderBy : 'id';
+    const safeOrderDir = ['asc', 'desc'].includes(orderDir.toLowerCase()) ? orderDir.toUpperCase() : 'ASC';
+    // --- Fin de la validación ---
+
     const cols = columns.join(', ');
-    const rows = this.db.prepare(`SELECT ${cols} FROM ${this.tableName} ORDER BY ${orderBy}`).all();
-    return { data: rows, total: rows.length };
+    const { total } = this.getCount(); // Obtenemos el total real de la tabla
+
+    let query = `SELECT ${cols} FROM ${this.tableName} ORDER BY ${safeOrderBy} ${safeOrderDir}`;
+    if (limit) query += ` LIMIT ${limit}`;
+    if (offset) query += ` OFFSET ${offset}`;
+
+    const rows = this.db.prepare(query).all();
+    return { data: rows, total };
   }
 
   /**

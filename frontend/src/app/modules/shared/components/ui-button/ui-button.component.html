@@ -11,16 +11,17 @@
 
   @if (icon && !loading) {
     <app-ui-icon
-      class="ui-button__icon"
-      [icon]="icon"
+      [name]="icon"
       [type]="iconType"
       [size]="iconSize"
-    ></app-ui-icon>
+      class="ui-button__icon"
+      [class.ui-button__icon--only]="!hasContent" />
   }
 
   @if (iconPosition !== 'only' && !loading) {
     <span
       class="ui-button__text"
+      #contentWrapper
       >
       <ng-content></ng-content>
     </span>

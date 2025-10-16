@@ -1,7 +1,7 @@
 // src/app/modules/shared/models/table-column.model.ts
 
-export interface TableColumn {
-  key: string;          // La clave para acceder al dato en el objeto (ej: 'name' o 'country.name').
+export interface TableColumn<T> {
+  key: keyof T | string; // La clave para acceder al dato en el objeto (ej: 'name' o 'country.name').
   label: string;        // El texto a mostrar en la cabecera.
   sortable?: boolean;   // Si la columna es ordenable.
   width?: string;       // Ancho fijo (ej: '150px').
@@ -14,7 +14,7 @@ export interface TableColumn {
    * 'date' para formatear una fecha, etc.
    * Reemplaza a la antigua propiedad 'isFlag'.
    */
-  cellType?: 'text' | 'flag' | 'date' | string;
+  type?: 'text' | 'flag' | 'date' | string;
 
   /**
    * MEJORA: Para celdas de tipo 'date', permite especificar un formato.

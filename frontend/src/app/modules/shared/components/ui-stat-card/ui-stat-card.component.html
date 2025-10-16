@@ -4,10 +4,10 @@
   role="button"
   [attr.aria-label]="label"
   (click)="onClick()">
-  @if (icon) {
+  @if (name) {
     <span class="ui-stat-card__icon">
       <app-ui-icon
-        [icon]="icon"
+        [name]="name"
         [type]="iconType"
         [size]="iconSize.toString()">
         </app-ui-icon>

@@ -9,7 +9,7 @@
 
 <div class="stats-grid">
   @for (card of statCards; track card.title) {
-    <app-ui-stat-card [routerLink]="card.route" [label]="card.title" [value]="(card.count$ | async) ?? 0" [icon]="card.icon">
+    <app-ui-stat-card [routerLink]="card.route" [label]="card.title" [value]="(card.count$ | async) ?? 0" [name]="card.name">
     </app-ui-stat-card>
   }
 </div>

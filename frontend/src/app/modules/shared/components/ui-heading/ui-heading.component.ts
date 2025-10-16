@@ -16,7 +16,8 @@ export class UiHeadingComponent {
   @Input() title: string = '';
   @Input() level: 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 = 1;
   @Input() subtitle: string | null = null; // ✅ CORRECCIÓN: Aceptamos 'null' para ser compatible con el modal.
-  @Input() icon?: string;
+  // ✅ ESTANDARIZACIÓN: Renombramos 'icon' a 'name' para alinear con la API de ui-icon.
+  @Input() name?: string;
   @Input() align: 'left' | 'center' | 'right' = 'left';
   @Input() iconPosition: 'left' | 'right' = 'left';
 

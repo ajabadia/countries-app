@@ -38,7 +38,7 @@ export class AdminContinentsComponent extends BaseAdminComponent<any> {
   public override entityName = 'Continente';
   public override entityNamePlural = 'Continentes';
 
-  public override tableColumns: TableColumn[] = [
+  public override tableColumns: TableColumn<any>[] = [
     { key: 'name', label: 'Nombre', sortable: true },
   ];
 

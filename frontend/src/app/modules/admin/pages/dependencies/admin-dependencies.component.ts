@@ -38,6 +38,6 @@ export class AdminDependenciesComponent extends BaseAdminComponent<any> {
   public override entityName = 'Dependencia';
   public override entityNamePlural = 'Dependencias';
 
-  public override tableColumns: TableColumn[] = [{ key: 'name', label: 'Nombre', sortable: true }];
+  public override tableColumns: TableColumn<any>[] = [{ key: 'name', label: 'Nombre', sortable: true }];
   public override form = this.fb.group({ name: ['', Validators.required] });
 }

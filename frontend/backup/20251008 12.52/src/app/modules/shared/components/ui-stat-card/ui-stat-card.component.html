@@ -15,7 +15,7 @@
 </div>
 
 <ng-template #cardContent>
-  <app-ui-icon *ngIf="icon" [icon]="icon" [type]="iconType" size="xl" class="ui-stat-card__icon" />
+  <app-ui-icon *ngIf="icon" [name]="icon" [type]="iconType" size="xl" class="ui-stat-card__icon" />
   <span class="ui-stat-card__label">{{ label }}</span>
   <span class="ui-stat-card__value" [style.fontSize.rem]="valueFontSize">{{ value }}</span>
 </ng-template>

@@ -10,17 +10,17 @@ import { MenuBarItem } from "@shared/components/menu-bar/menu-bar.component";
 export const PUBLIC_ROUTES: MenuBarItem[] = [
   { 
     label: 'Información general', 
-    icon: 'info-circle', 
+    name: 'info-circle', 
     route: '/public' 
   },
   { 
     label: 'Información por países', 
-    icon: 'country', 
+    name: 'country', 
     route: '/public/countries' 
   },
   {
     label: 'Test',
-    icon: 'icon-flask',
+    name: 'icon-flask',
     route: '/test'
   },
 ];
@@ -29,13 +29,13 @@ export const PUBLIC_ROUTES: MenuBarItem[] = [
  * Definición centralizada para las rutas de administración.
  */
 export const ADMIN_ROUTES: MenuBarItem[] = [
-  { label: 'Dashboard', icon: 'dashboard', route: '/admin/dashboard' },
-  { label: 'Países', icon: 'country', route: '/admin/countries' },
-  { label: 'Continentes', icon: 'continents', route: '/admin/continents' },
-  { label: 'Áreas', icon: 'area', route: '/admin/areas' },
-  { label: 'Dependencias', icon: 'dependencies', route: '/admin/dependencies' },
-  { label: 'Lenguajes', icon: 'languages', route: '/admin/languages' },
-  { label: 'Traducciones', icon: 'translations', route: '/admin/translations' }
+  { label: 'Dashboard', name: 'dashboard', route: '/admin/dashboard' },
+  { label: 'Países', name: 'country', route: '/admin/countries' },
+  { label: 'Continentes', name: 'continents', route: '/admin/continents' },
+  { label: 'Áreas', name: 'area', route: '/admin/areas' },
+  { label: 'Dependencias', name: 'dependencies', route: '/admin/dependencies' },
+  { label: 'Lenguajes', name: 'languages', route: '/admin/languages' },
+  { label: 'Traducciones', name: 'translations', route: '/admin/translations' }
 ];
 
 /**

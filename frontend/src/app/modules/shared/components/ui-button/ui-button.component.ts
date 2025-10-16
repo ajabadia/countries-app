@@ -1,6 +1,6 @@
 // src/app/modules/shared/components/ui-button/ui-button.component.ts
 
-import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter, ChangeDetectionStrategy, ViewChild, ElementRef, AfterContentInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconType } from '@services/icon.service';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
@@ -18,7 +18,7 @@ export type ButtonSize = 'xs' | 's' | 'm' | 'l' | 'xl';
   styleUrls: ['./ui-button.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiButtonComponent {
+export class UiButtonComponent implements AfterContentInit {
   @Input() type: 'button' | 'submit' = 'button';
   @Input() disabled = false;
   @Input() loading = false;
@@ -32,6 +32,16 @@ export class UiButtonComponent {
   @Input() ariaLabel?: string;
 
   @Output() onClick = new EventEmitter<MouseEvent>();
+
+  // ✅ CORRECCIÓN: Añadimos la lógica para detectar si el botón tiene contenido de texto.
+  @ViewChild('contentWrapper') contentWrapper!: ElementRef<HTMLSpanElement>;
+  public hasContent = true;
+
+  ngAfterContentInit(): void {
+    // Comprobamos si el contenido proyectado (ng-content) está vacío.
+    const content = this.contentWrapper?.nativeElement.textContent?.trim() ?? '';
+    this.hasContent = content.length > 0;
+  }
 
   /**
    * ✅ MEJORA: El tamaño del icono ahora es dinámico y depende del tamaño del botón.

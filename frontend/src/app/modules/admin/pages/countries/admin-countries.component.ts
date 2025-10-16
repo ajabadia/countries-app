@@ -46,7 +46,7 @@ export class AdminCountriesComponent extends BaseAdminComponent<Country> {
   public override entityNamePlural = 'Países';
 
   // El icono que se mostrará en el heading y el modal.
-  public override tableColumns: TableColumn[] = [
+  public override tableColumns: TableColumn<Country>[] = [
     { key: 'defaultname', label: 'Nombre', sortable: true },
     { key: 'alpha2may', label: 'Alpha-2', sortable: true },
     { key: 'alpha3may', label: 'Alpha-3', sortable: true },
