@@ -1,54 +1,62 @@
 // backend/index.ts
 import dotenv from 'dotenv';
-// Carga las variables de entorno desde el archivo .env
-dotenv.config();
-
 import express from 'express';
-import cors from 'cors';
-import morgan from 'morgan';
-import cookieParser from 'cookie-parser';
-import countriesRouter from './routes/countries.js';
-import continentsRouter from './routes/continents.js';
-import languagesRouter from './routes/languages.js';
-import areasRouter from './routes/areas.js';
-import dependenciesRouter from './routes/dependencies.js';
-import multilingualnamesRouter from './routes/multilingualnames.js';
-import authRouter from './routes/auth.js';
-import { errorHandler } from './middleware/errorHandler.js';
 import logger from './config/logger.js';
 
-const app = express();
+async function startServer() {
+  // Load environment variables from .env file, but not in the test environment.
+  // In 'test', jest.setup.ts is responsible for loading variables from .env.test.
+  if (process.env.NODE_ENV !== 'test') {
+    dotenv.config();
+  }
 
-// Stream para que Morgan (logger de HTTP) use Winston.
-const stream = {
-  write: (message: string) => logger.http(message.trim()),
-};
+  // --- Dynamic Imports ---
+  // We import these modules *after* dotenv has been configured.
+  const cors = (await import('cors')).default;
+  const morgan = (await import('morgan')).default;
+  const cookieParser = (await import('cookie-parser')).default;
+  const { errorHandler } = await import('./middleware/errorHandler.js');
+  const authRouter = (await import('./routes/auth.js')).default;
+  const countriesRouter = (await import('./routes/countries.js')).default;
+  const continentsRouter = (await import('./routes/continents.js')).default;
+  const languagesRouter = (await import('./routes/languages.js')).default;
+  const areasRouter = (await import('./routes/areas.js')).default;
+  const dependenciesRouter = (await import('./routes/dependencies.js')).default;
+  const multilingualnamesRouter = (await import('./routes/multilingualnames.js')).default;
 
-// Usamos el stream de Winston en Morgan.
-// 'combined' es un formato estándar de Apache que incluye información útil.
-const morganMiddleware = morgan('combined', { stream });
+  const app = express();
 
-// Middlewares
-app.use(morganMiddleware);
-app.use(cors()); // Habilita CORS para todas las rutas
-app.use(express.json()); // Middleware para parsear JSON
-app.use(cookieParser()); // Middleware para parsear cookies
+  // Stream for Morgan (HTTP logger) to use Winston.
+  const stream = {
+    write: (message: string) => logger.http(message.trim()),
+  };
 
-// Rutas de la API
-app.use('/api/auth', authRouter);
-app.use('/api/countries', countriesRouter);
-app.use('/api/continents', continentsRouter);
-app.use('/api/languages', languagesRouter);
-app.use('/api/areas', areasRouter);
-app.use('/api/dependencies', dependenciesRouter);
-app.use('/api/multilingualnames', multilingualnamesRouter);
+  // Use Winston's stream in Morgan.
+  const morganMiddleware = morgan('combined', { stream });
 
-// Middleware de manejo de errores (debe ser el último en la cadena de middlewares)
-app.use(errorHandler);
+  // Middlewares
+  app.use(morganMiddleware);
+  app.use(cors()); // Enable CORS for all routes
+  app.use(express.json()); // Middleware to parse JSON
+  app.use(cookieParser()); // Middleware to parse cookies
 
-const PORT = process.env.PORT || 3000;
+  // API Routes
+  app.use('/api/auth', authRouter);
+  app.use('/api/countries', countriesRouter);
+  app.use('/api/continents', continentsRouter);
+  app.use('/api/languages', languagesRouter);
+  app.use('/api/areas', areasRouter);
+  app.use('/api/dependencies', dependenciesRouter);
+  app.use('/api/multilingualnames', multilingualnamesRouter);
 
-app.listen(PORT, () => {
-  // Usamos un emoji para que el mensaje de éxito sea más visible :)
-  logger.info(`🚀 Server running on http://localhost:${PORT}`);
-});
+  // Error handling middleware (must be the last in the middleware chain)
+  app.use(errorHandler);
+
+  const PORT = process.env.PORT || 3000;
+
+  app.listen(PORT, () => {
+    logger.info(`🚀 Server running on http://localhost:${PORT}`);
+  });
+}
+
+startServer();

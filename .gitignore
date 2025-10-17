@@ -1,0 +1,45 @@
+# Fichero .gitignore para un monorepo con Backend (Node.js) y Frontend (Angular)
+
+## Ignorar dependencias (la regla más importante)
+# Esto evita subir gigabytes de ficheros que se pueden instalar con `npm install`
+node_modules/
+
+## Ficheros de entorno
+# Contienen secretos y configuración local. ¡Nunca deben subirse!
+.env
+.env.*
+!.env.example # A menudo se sube un fichero de ejemplo sin secretos
+
+## Ficheros de build y compilación
+# Se generan automáticamente y no son código fuente.
+dist/
+build/
+*.tsbuildinfo
+
+## Ficheros de log
+# Generados por la aplicación en ejecución (ej. por Winston).
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+## Ficheros de base de datos local
+# Ignoramos el fichero de la base de datos de desarrollo.
+# La base de datos se debe crear a partir de un esquema (como ya haces en database.ts).
+/backend/db/countries.db
+/backend/db/database_test.sqlite
+
+## Ficheros específicos de Angular
+.angular/
+
+## Ficheros del sistema operativo
+.DS_Store
+Thumbs.db
+
+## Ficheros del editor de código
+.vscode/
+.idea/
+
+## Ficheros de caché de tests
+coverage/

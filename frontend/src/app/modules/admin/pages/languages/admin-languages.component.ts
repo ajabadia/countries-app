@@ -31,7 +31,7 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
     ModalComponent,
     ConfirmDialogComponent,
   ],
-  templateUrl: './admin-languages.component.html', // Asumo que existe una plantilla genérica
+  templateUrl: './admin-languages.component.html', // Ruta relativa al componente
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLanguagesComponent extends BaseAdminComponent<Language> {

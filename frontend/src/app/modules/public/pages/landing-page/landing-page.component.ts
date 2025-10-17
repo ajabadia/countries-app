@@ -15,7 +15,7 @@ import { LanguagesService } from '@services/languages.service';
 import { BaseCrudService } from '@services/base-crud.service';
 
 /** Helper para obtener el total de un servicio CRUD */
-const getCount = (service: BaseCrudService<any, any>): Observable<number> => {
+const getCount = (service: { getAll: (params?: any) => Observable<{ total: number }> }): Observable<number> => {
   return service.getAll({ page: 1, pageSize: 1 }).pipe(map(response => response.total));
 };
 

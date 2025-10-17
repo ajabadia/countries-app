@@ -10,7 +10,7 @@ import { NotFoundError, ValidationError } from '../errors/httpErrors.js';
  * Una función que toma el body de una petición y devuelve una entidad parcial y limpia.
  * Esencial para prevenir la asignación masiva (mass assignment).
  */
-type BodySanitizer<T> = (body: any) => Partial<T>;
+type BodySanitizer<T> = (body: unknown) => Partial<T>;
 
 /**
  * Factoría para crear un conjunto de controladores CRUD genéricos para una entidad.
@@ -24,13 +24,16 @@ export function createCrudController<T extends { id: number | string }>(
   sanitizer: BodySanitizer<T>
 ) {
   const getAll = asyncHandler(async (req: Request, res: Response) => {
-    const { page = '1', pageSize = '10', sort = 'id', order = 'asc', search = null } = req.query;
+    const { page = '1', pageSize = '10', orderBy = 'id', orderDir = 'asc', search = null } = req.query;
+
+    const pageNumber = parseInt(page as string, 10) || 1;
+    const pageSizeNumber = parseInt(pageSize as string, 10) || 10;
 
     const options: GetAllOptions = {
-      limit: parseInt(pageSize as string, 10),
-      offset: (parseInt(page as string, 10) - 1) * parseInt(pageSize as string, 10),
-      orderBy: sort as string,
-      orderDir: order as 'asc' | 'desc',
+      limit: pageSizeNumber,
+      offset: (pageNumber - 1) * pageSizeNumber,
+      orderBy: orderBy as string,
+      orderDir: orderDir as 'asc' | 'desc',
       search: search as string | null,
     };
 
@@ -55,10 +58,8 @@ export function createCrudController<T extends { id: number | string }>(
     }
 
     const entityData = sanitizer(req.body);
-    const result = await service.create(entityData);
-
-    // Después de crear, obtenemos la entidad completa para devolverla.
-    const newEntity = await service.getById(result.lastInsertRowid as number);
+    // Asumiendo que service.create devuelve la entidad creada
+    const newEntity = await service.create(entityData);
     res.status(201).json(newEntity);
   });
 
@@ -75,9 +76,8 @@ export function createCrudController<T extends { id: number | string }>(
     }
 
     const entityData = sanitizer(req.body);
-    await service.update(id, entityData);
-
-    const updatedEntity = await service.getById(id);
+    // Asumiendo que service.update devuelve la entidad actualizada
+    const updatedEntity = await service.update(id, entityData);
     res.json(updatedEntity);
   });
 
@@ -92,5 +92,25 @@ export function createCrudController<T extends { id: number | string }>(
     res.status(204).send();
   });
 
-  return { getAll, getById, create, update, delete: remove };
+  const removeMany = asyncHandler(async (req: Request, res: Response) => {
+    const { ids } = req.body;
+
+    if (!Array.isArray(ids) || ids.length === 0) {
+      throw new ValidationError([
+        {
+          msg: 'Invalid value',
+          param: 'ids',
+          location: 'body',
+          value: ids,
+        },
+      ]);
+    }
+
+    // Asumiendo que service.removeMany existe y devuelve el número de filas afectadas
+    const result = await service.removeMany(ids);
+
+    res.json({ message: `${result.changes} ${entityName}(s) deleted successfully.` });
+  });
+
+  return { getAll, getById, create, update, delete: remove, removeMany };
 }

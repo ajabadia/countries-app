@@ -8,9 +8,10 @@ export default {
         '^(\\.{1,2}/.*)\\.js$': '$1',
     },
     // Archivos a incluir en las pruebas
-    testMatch: ['<rootDir>/tests/**/*.test.ts'], // Busca pruebas en la carpeta `tests`
+    testMatch: ['<rootDir>/test/**/*.test.ts'], // Busca pruebas en la carpeta `test`
     testPathIgnorePatterns: ['/node_modules/', '/dist/'],
-    setupFilesAfterEnv: ['<rootDir>/tests/jest.setup.ts'], // Carga este archivo antes de las pruebas
+    setupFiles: ['<rootDir>/test/jest.preload.ts'], // Se ejecuta ANTES del entorno de test
+    setupFilesAfterEnv: ['<rootDir>/test/jest.setup.ts'], // Carga este archivo antes de las pruebas
     verbose: true,
 };
 //# sourceMappingURL=jest.config.js.map

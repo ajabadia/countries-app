@@ -25,7 +25,7 @@ export class BaseCrudService<T, C> {
    * @param params - Opciones de paginación, ordenamiento y búsqueda.
    * @returns Un observable con la respuesta de la API.
    */
-  getAll(params: { page?: number, pageSize?: number, sort?: string, order?: 'asc' | 'desc', search?: string | null } = {}): Observable<ApiResponse<T>> {
+  getAll(params: { page?: number, pageSize?: number, orderBy?: string, orderDir?: 'asc' | 'desc', search?: string | null } = {}): Observable<ApiResponse<T>> {
     return this.http.get<ApiResponse<T>>(this.apiUrl, { params: this.toHttpParams(params) });
   }
 
@@ -63,6 +63,11 @@ export class BaseCrudService<T, C> {
    * @returns Un observable que se completa cuando la operación termina.
    */
   delete(ids: (number | string)[]): Observable<void> {
+    // ✅ ROBUSTEZ: No hacer la petición si el array de IDs está vacío.
+    if (!ids || ids.length === 0) {
+      return new Observable(observer => observer.complete());
+    }
+
     return this.http.request<void>('delete', this.apiUrl, { body: { ids } });
   }
 
