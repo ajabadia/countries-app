@@ -5,7 +5,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 // Modelos y Servicios
 import { BaseAdminComponent } from '@services/base-admin.component';
 import { LanguagesService } from '@services/languages.service';
-import { Language } from '@models/language';
+import { Language } from '@models/language.model';
 import { TableColumn } from '@services/table-column.model';
 
 // Componentes Standalone necesarios (la mayoría ahora se gestionan en BaseAdminComponent)

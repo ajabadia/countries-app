@@ -8,6 +8,8 @@ import { HttpClient } from '@angular/common/http';
 })
 export class LanguagesService extends BaseCrudService<Language, Partial<Language>> {
   constructor() {
-    super('languages', inject(HttpClient));
+    // El constructor de la clase base solo espera el nombre del endpoint.
+    // HttpClient ya se inyecta en la clase base.
+    super('languages');
   }
 }
