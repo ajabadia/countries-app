@@ -17,27 +17,6 @@ class BaseService {
   }
  
   /**
-   * Obtiene el número total de registros en la tabla.
-   * @returns {{total: number}}
-   */
-  getCount() {
-    // Este método ahora es privado porque la lógica de búsqueda afecta al total.
-    // Se llamará desde getAll.
-    // const { total } = this.db.prepare(`SELECT COUNT(*) as total FROM ${this.tableName}`).get();
-    // return { total: total || 0 };
-    throw new Error('getCount es ahora un método interno. El total se devuelve con getAll.');
-  }
-
-  _buildWhereClause(search) {
-    if (!search || this.searchableFields.length === 0) {
-      return { clause: '', params: [] };
-    }
-    const clause = `WHERE ${this.searchableFields.map(field => `${field} LIKE ?`).join(' OR ')}`;
-    const params = this.searchableFields.map(() => `%${search}%`);
-    return { clause, params };
-  }
- 
-  /**
    * Obtiene todos los registros de la tabla.
    * @param {object} [options] - Opciones de consulta.
    * @param {string[]} [options.columns=['*']] - Las columnas a seleccionar.
@@ -93,6 +72,15 @@ class BaseService {
     return this.db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id);
   }
  
+  _buildWhereClause(search) {
+    if (!search || this.searchableFields.length === 0) {
+      return { clause: '', params: [] };
+    }
+    const clause = `WHERE ${this.searchableFields.map(field => `${field} LIKE ?`).join(' OR ')}`;
+    const params = this.searchableFields.map(() => `%${search}%`);
+    return { clause, params };
+  }
+
   /**
    * Elimina un registro por su ID.
    * @param {number | string} id - El ID del registro a eliminar.
