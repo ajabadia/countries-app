@@ -16,8 +16,9 @@
     /* Interoperabilidad de Módulos */
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
+    "isolatedModules": true,
 
-    /* Opciones para Migración Gradual */
+     /* Opciones para Migración Gradual */
     "allowJs": true,
     "checkJs": false,
 

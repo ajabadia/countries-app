@@ -81,8 +81,8 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
           page: params.page, 
           pageSize: params.pageSize,
           search: params.search, // ✅ El tipo ya coincide (string | null)
-          sort: params.sort.key, // ✅ El backend espera 'sort' y 'order'
-          order: params.sort.direction,
+          orderBy: params.sort.key, // 🔄 CORREGIDO: Usar orderBy
+          orderDir: params.sort.direction, // 🔄 CORREGIDO: Usar orderDir
         }))
       )),
       catchError(() => {

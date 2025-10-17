@@ -11,20 +11,22 @@ import auditLogService from '../services/auditLogService.js';
 import logger from '../config/logger.js';
 const generateJWT = (user) => {
     // Aseguramos que la variable de entorno exista en tiempo de ejecución.
-    if (!process.env.SECRET_JWT_SEED) {
-        throw new Error('FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.');
+    const secret = process.env.SECRET_JWT_SEED;
+    if (!secret) {
+        throw new Error('FATAL_ERROR: SECRET_JWT_SEED is not defined.');
     }
     const payload = { id: user.id, name: user.name, role: user.role || 'user' };
-    return jwt.sign(payload, process.env.SECRET_JWT_SEED, {
+    return jwt.sign(payload, secret, {
         expiresIn: '2h',
     });
 };
 const generateRefreshToken = (user) => {
     // Aseguramos que la variable de entorno exista en tiempo de ejecución.
-    if (!process.env.REFRESH_TOKEN_SECRET) {
-        throw new Error('FATAL_ERROR: REFRESH_TOKEN_SECRET is not defined in environment variables.');
+    const secret = process.env.REFRESH_TOKEN_SECRET;
+    if (!secret) {
+        throw new Error('FATAL_ERROR: REFRESH_TOKEN_SECRET is not defined.');
     }
-    return jwt.sign({ id: user.id }, process.env.REFRESH_TOKEN_SECRET, {
+    return jwt.sign({ id: user.id }, secret, {
         expiresIn: '7d',
     });
 };
@@ -52,16 +54,11 @@ export const register = asyncHandler(async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, salt);
     // Creamos el nuevo usuario
     const userData = { name, email, password: hashedPassword, role: 'user' }; // Rol por defecto 'user'
-    const result = await usersService.create(userData);
-    // Obtenemos el usuario recién creado para generar el token
-    // Usamos el ID del registro insertado, es más eficiente que buscar por email.
-    const createdUser = await usersService.getById(result.lastInsertRowid);
-    if (!createdUser) {
-        throw new Error('Failed to create user.'); // Error interno del servidor
-    }
+    // El servicio ahora devuelve la entidad completa.
+    const createdUser = await usersService.create(userData);
     const token = generateJWT(createdUser);
     res.status(201).json({
-        id: result.lastInsertRowid,
+        id: createdUser.id,
         name: createdUser.name,
         email: createdUser.email,
         token,
@@ -160,7 +157,7 @@ export const updateUserRole = asyncHandler(async (req, res) => {
         throw new NotFoundError('User not found');
     }
     // Actualizar el rol del usuario
-    await usersService.update(id, { role });
+    const updatedUser = await usersService.update(id, { role });
     // Registrar el cambio de rol en el log de auditoría
     auditLogService.logEvent({
         level: 'INFO',
@@ -170,7 +167,6 @@ export const updateUserRole = asyncHandler(async (req, res) => {
         details: `User role changed from '${userToUpdate.role}' to '${role}'.`,
         ipAddress: req.ip,
     });
-    const updatedUser = await usersService.getById(id);
     res.json(updatedUser);
 });
 /**
@@ -217,7 +213,7 @@ export const updatePassword = asyncHandler(async (req, res) => {
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(newPassword, salt);
     await usersService.update(userId, { password: hashedPassword });
-    res.json({ message: 'Password updated successfully' });
+    res.status(200).json({ message: 'Password updated successfully' });
 });
 /**
  * @desc    Delete a user (Admin only)
@@ -299,14 +295,14 @@ export const resetPassword = asyncHandler(async (req, res) => {
     const { password } = req.body;
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
-    // 4. Actualizar la contraseña y limpiar los campos de reseteo
-    await usersService.update(user.id, {
+    // 4. Actualizar la contraseña, limpiar los campos de reseteo y obtener el usuario actualizado
+    const updatedUser = await usersService.update(user.id, {
         password: hashedPassword,
         resetPasswordToken: null, // Usar null para consistencia con la BD
         resetPasswordExpire: null, // Usar null para consistencia con la BD
     });
     // Opcional: generar un nuevo JWT y loguear al usuario automáticamente
-    const token = generateJWT(user);
+    const token = generateJWT(updatedUser);
     res.status(200).json({ message: 'Password reset successfully', token });
 });
 /**
@@ -339,8 +335,7 @@ export const updateProfile = asyncHandler(async (req, res) => {
         updateData.name = name;
     if (email)
         updateData.email = email;
-    await usersService.update(userId, updateData);
-    const updatedUser = await usersService.getById(userId);
+    const updatedUser = await usersService.update(userId, updateData);
     res.json(updatedUser);
 });
 /**

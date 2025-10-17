@@ -1,7 +1,7 @@
 // backend/tests/jest.setup.ts
-// Definimos las variables de entorno necesarias para las pruebas.
-process.env.SECRET_JWT_SEED = 'test-secret-seed';
-process.env.REFRESH_TOKEN_SECRET = 'test-refresh-secret';
-process.env.DB_PATH = ':memory:'; // Usar base de datos en memoria para todas las pruebas
-export {};
+import { config } from 'dotenv';
+import path from 'path';
+// Carga las variables de entorno desde .env.test
+// Esto asegura que las pruebas usen su propia configuración (ej. una BD de pruebas)
+config({ path: path.resolve(process.cwd(), 'test/.env.test') });
 //# sourceMappingURL=jest.setup.js.map

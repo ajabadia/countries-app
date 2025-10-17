@@ -81,8 +81,25 @@ export default class BaseService {
         return db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
     }
     /**
+     * Elimina múltiples registros por sus IDs.
+     * @param ids Un array de IDs de los registros a eliminar.
+     * @returns El resultado de la ejecución de la consulta.
+     */
+    async removeMany(ids) {
+        const db = await getDB();
+        if (!Array.isArray(ids) || ids.length === 0) {
+            // Devuelve un resultado que no indica cambios si el array está vacío.
+            return { changes: 0, lastInsertRowid: 0 };
+        }
+        // Crea los placeholders (?) para la consulta SQL
+        const placeholders = ids.map(() => '?').join(',');
+        const stmt = db.prepare(`DELETE FROM ${this.tableName} WHERE id IN (${placeholders})`);
+        return stmt.run(...ids);
+    }
+    /**
      * Crea un nuevo registro.
      * @param data Objeto con los datos a insertar.
+     * @returns La entidad recién creada.
      */
     async create(data) {
         const db = await getDB();
@@ -90,7 +107,9 @@ export default class BaseService {
         const values = Object.values(data);
         const placeholders = columns.map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-        return db.prepare(sql).run(...values);
+        const result = db.prepare(sql).run(...values);
+        // Devolvemos la entidad completa recién creada
+        return (await this.getById(Number(result.lastInsertRowid)));
     }
     /**
      * Actualiza un registro por su ID.
@@ -105,7 +124,9 @@ export default class BaseService {
         const values = Object.values(data);
         const setClause = columns.map(col => `${col} = ?`).join(', ');
         const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-        return db.prepare(sql).run(...values, id);
+        db.prepare(sql).run(...values, id);
+        // Devolvemos la entidad completa actualizada
+        return (await this.getById(id));
     }
     _buildWhereClause(search) {
         if (!search || this.searchableFields.length === 0) {

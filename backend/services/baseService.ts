@@ -113,16 +113,38 @@ export default class BaseService<T extends { id: number | string }> {
   }
 
   /**
+   * Elimina múltiples registros por sus IDs.
+   * @param ids Un array de IDs de los registros a eliminar.
+   * @returns El resultado de la ejecución de la consulta.
+   */
+  async removeMany(ids: (string | number)[]): Promise<RunResult> {
+    const db = await getDB();
+    if (!Array.isArray(ids) || ids.length === 0) {
+      // Devuelve un resultado que no indica cambios si el array está vacío.
+      return { changes: 0, lastInsertRowid: 0 };
+    }
+
+    // Crea los placeholders (?) para la consulta SQL
+    const placeholders = ids.map(() => '?').join(',');
+    const stmt = db.prepare(`DELETE FROM ${this.tableName} WHERE id IN (${placeholders})`);
+    return stmt.run(...ids);
+  }
+
+  /**
    * Crea un nuevo registro.
    * @param data Objeto con los datos a insertar.
+   * @returns La entidad recién creada.
    */
-  async create(data: Partial<T>): Promise<RunResult> {
+  async create(data: Partial<T>): Promise<T> {
     const db = await getDB();
     const columns = Object.keys(data);
     const values = Object.values(data);
     const placeholders = columns.map(() => '?').join(', ');
     const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-    return db.prepare(sql).run(...values);
+    const result = db.prepare(sql).run(...values);
+
+    // Devolvemos la entidad completa recién creada
+    return (await this.getById(Number(result.lastInsertRowid))) as T;
   }
 
   /**
@@ -130,7 +152,7 @@ export default class BaseService<T extends { id: number | string }> {
    * @param id El ID del registro a actualizar.
    * @param data Objeto con los datos a actualizar.
    */
-  async update(id: number | string, data: Partial<T>): Promise<RunResult> {
+  async update(id: number | string, data: Partial<T>): Promise<T> {
     const db = await getDB();
     const columns = Object.keys(data);
     if (columns.length === 0) throw new Error('No hay datos para actualizar.');
@@ -138,7 +160,10 @@ export default class BaseService<T extends { id: number | string }> {
     const values = Object.values(data);
     const setClause = columns.map(col => `${col} = ?`).join(', ');
     const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-    return db.prepare(sql).run(...values, id);
+    db.prepare(sql).run(...values, id);
+
+    // Devolvemos la entidad completa actualizada
+    return (await this.getById(id)) as T;
   }
 
   private _buildWhereClause(search: string | null): WhereClause {

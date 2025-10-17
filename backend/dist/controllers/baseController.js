@@ -9,12 +9,14 @@ import { NotFoundError, ValidationError } from '../errors/httpErrors.js';
  */
 export function createCrudController(service, entityName, sanitizer) {
     const getAll = asyncHandler(async (req, res) => {
-        const { page = '1', pageSize = '10', sort = 'id', order = 'asc', search = null } = req.query;
+        const { page = '1', pageSize = '10', orderBy = 'id', orderDir = 'asc', search = null } = req.query;
+        const pageNumber = parseInt(page, 10) || 1;
+        const pageSizeNumber = parseInt(pageSize, 10) || 10;
         const options = {
-            limit: parseInt(pageSize, 10),
-            offset: (parseInt(page, 10) - 1) * parseInt(pageSize, 10),
-            orderBy: sort,
-            orderDir: order,
+            limit: pageSizeNumber,
+            offset: (pageNumber - 1) * pageSizeNumber,
+            orderBy: orderBy,
+            orderDir: orderDir,
             search: search,
         };
         const result = await service.getAll(options);
@@ -34,9 +36,8 @@ export function createCrudController(service, entityName, sanitizer) {
             throw new ValidationError(errors.array());
         }
         const entityData = sanitizer(req.body);
-        const result = await service.create(entityData);
-        // Después de crear, obtenemos la entidad completa para devolverla.
-        const newEntity = await service.getById(result.lastInsertRowid);
+        // Asumiendo que service.create devuelve la entidad creada
+        const newEntity = await service.create(entityData);
         res.status(201).json(newEntity);
     });
     const update = asyncHandler(async (req, res) => {
@@ -50,8 +51,8 @@ export function createCrudController(service, entityName, sanitizer) {
             throw new NotFoundError(`${entityName} with id ${id} not found`);
         }
         const entityData = sanitizer(req.body);
-        await service.update(id, entityData);
-        const updatedEntity = await service.getById(id);
+        // Asumiendo que service.update devuelve la entidad actualizada
+        const updatedEntity = await service.update(id, entityData);
         res.json(updatedEntity);
     });
     const remove = asyncHandler(async (req, res) => {
@@ -62,6 +63,22 @@ export function createCrudController(service, entityName, sanitizer) {
         }
         res.status(204).send();
     });
-    return { getAll, getById, create, update, delete: remove };
+    const removeMany = asyncHandler(async (req, res) => {
+        const { ids } = req.body;
+        if (!Array.isArray(ids) || ids.length === 0) {
+            throw new ValidationError([
+                {
+                    msg: 'Invalid value',
+                    param: 'ids',
+                    location: 'body',
+                    value: ids,
+                },
+            ]);
+        }
+        // Asumiendo que service.removeMany existe y devuelve el número de filas afectadas
+        const result = await service.removeMany(ids);
+        res.json({ message: `${result.changes} ${entityName}(s) deleted successfully.` });
+    });
+    return { getAll, getById, create, update, delete: remove, removeMany };
 }
 //# sourceMappingURL=baseController.js.map

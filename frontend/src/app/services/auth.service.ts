@@ -5,7 +5,7 @@ import { Observable, tap, BehaviorSubject } from 'rxjs';
 import { environment } from '@env/environment';
 
 interface AuthResponse {
-  token: string;
+  accessToken: string; // 🔄 CORREGIDO: Alineado con la respuesta del backend
 }
 
 @Injectable({
@@ -30,8 +30,8 @@ export class AuthService {
 
   login(credentials: { username: string; password: string }): Observable<AuthResponse> {
     return this.http.post<AuthResponse>(`${this.apiUrl}/login`, credentials).pipe(
-      tap((response: AuthResponse) => {
-        localStorage.setItem(this.TOKEN_KEY, response.token);
+      tap(response => {
+        localStorage.setItem(this.TOKEN_KEY, response.accessToken);
         this.loggedIn.next(true);
       })
     );
