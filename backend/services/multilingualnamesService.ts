@@ -1,4 +1,5 @@
 // backend/services/multilingualnamesService.ts
+import { getDB } from '../db/database.js';
 import BaseService from './baseService.js';
 import type { MultilingualName } from '../types/multilingualname.types.js';
 
@@ -16,9 +17,10 @@ class MultilingualnamesService extends BaseService<MultilingualName> {
    * @param entityId El ID de la entidad (p. ej., el ID de un país).
    * @returns Un array de nombres multilingües.
    */
-  public findByEntityId(entityId: string): MultilingualName[] {
+  public async findByEntityId(entityId: string): Promise<MultilingualName[]> {
+    const db = await getDB();
     const sql = `SELECT * FROM ${this.tableName} WHERE entity_id = ?`;
-    return this.db.prepare(sql).all(entityId) as MultilingualName[];
+    return db.prepare(sql).all(entityId) as MultilingualName[];
   }
 }
 

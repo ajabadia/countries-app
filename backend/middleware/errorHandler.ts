@@ -1,6 +1,7 @@
 // backend/middleware/errorHandler.ts
 import type { Request, Response, NextFunction } from 'express';
-import { HttpError, ValidationError } from '../errors/httpErrors.js';
+import logger from '../config/logger.js';
+import { HttpError, ValidationError } from '../errors/httpErrors.js'; // Mantener esta línea
 
 interface SqliteError extends Error {
   code: string;
@@ -10,8 +11,9 @@ interface SqliteError extends Error {
  * Middleware de manejo de errores centralizado.
  * Captura los errores que ocurren en los controladores asíncronos.
  */
-export const errorHandler = (err: Error, req: Request, res: Response, next: NextFunction) => {
-  console.error(err.stack);
+export const errorHandler = (err: Error | SqliteError, req: Request, res: Response, next: NextFunction) => {
+  // Logueamos el error completo con su stack trace usando Winston.
+  logger.error(err.message, { stack: err.stack, path: req.path });
 
   // Manejo específico para errores de validación.
   if (err instanceof ValidationError) {
@@ -24,7 +26,9 @@ export const errorHandler = (err: Error, req: Request, res: Response, next: Next
   }
 
   // Manejo de errores específicos, como violaciones de constraints de la base de datos.
-  if ((err as SqliteError).code === 'SQLITE_CONSTRAINT_UNIQUE') {
+  // Comprobamos si el error tiene una propiedad 'code', que es característico de errores de BD.
+  // Esto es más seguro que 'instanceof' que no funciona post-transpilación.
+  if ('code' in err && err.code === 'SQLITE_CONSTRAINT_UNIQUE') {
     return res.status(409).json({ message: 'Conflict: The resource already exists or a unique field is duplicated.' });
   }
 

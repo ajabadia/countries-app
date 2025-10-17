@@ -11,10 +11,18 @@ import {
 
 const router = Router();
 
+const createValidationRules = [
+  body('defaultname').notEmpty().isString().withMessage('defaultname is required'),
+];
+
+const updateValidationRules = [
+  body('defaultname').optional().isString().withMessage('defaultname must be a string'),
+];
+
 router.get('/', getAllContinents);
 router.get('/:id', param('id').isString().withMessage('ID must be a string'), getContinentById);
-router.post('/', body('defaultname').notEmpty().isString(), createContinent);
-router.put('/:id', param('id').isString(), body('defaultname').optional().isString(), updateContinent);
+router.post('/', createValidationRules, createContinent);
+router.put('/:id', param('id').isString(), updateValidationRules, updateContinent);
 router.delete('/:id', param('id').isString().withMessage('ID must be a string'), deleteContinent);
 
 export default router;

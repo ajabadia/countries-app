@@ -34,13 +34,13 @@ export function createCrudController<T extends { id: number | string }>(
       search: search as string | null,
     };
 
-    const result = service.getAll(options);
+    const result = await service.getAll(options);
     res.json(result);
   });
 
   const getById = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const entity = service.getById(id);
+    const entity = await service.getById(id);
 
     if (!entity) {
       throw new NotFoundError(`${entityName} with id ${id} not found`);
@@ -55,9 +55,11 @@ export function createCrudController<T extends { id: number | string }>(
     }
 
     const entityData = sanitizer(req.body);
-    const result = service.create(entityData);
+    const result = await service.create(entityData);
 
-    res.status(201).json({ id: result.lastInsertRowid, ...entityData });
+    // Después de crear, obtenemos la entidad completa para devolverla.
+    const newEntity = await service.getById(result.lastInsertRowid as number);
+    res.status(201).json(newEntity);
   });
 
   const update = asyncHandler(async (req: Request, res: Response) => {
@@ -67,21 +69,21 @@ export function createCrudController<T extends { id: number | string }>(
     }
 
     const { id } = req.params;
-    const existing = service.getById(id);
+    const existing = await service.getById(id);
     if (!existing) {
       throw new NotFoundError(`${entityName} with id ${id} not found`);
     }
 
     const entityData = sanitizer(req.body);
-    service.update(id, entityData);
+    await service.update(id, entityData);
 
-    const updatedEntity = service.getById(id);
+    const updatedEntity = await service.getById(id);
     res.json(updatedEntity);
   });
 
   const remove = asyncHandler(async (req: Request, res: Response) => {
     const { id } = req.params;
-    const result = service.remove(id);
+    const result = await service.remove(id);
 
     if (result.changes === 0) {
       throw new NotFoundError(`${entityName} with id ${id} not found`);

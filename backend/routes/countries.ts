@@ -2,6 +2,7 @@
 import { Router } from 'express';
 import { body, param } from 'express-validator';
 import { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, getCountryTranslations } from '../controllers/countriesController.js';
+import { protect } from '../middleware/authMiddleware.js';
 
 const router = Router();
 
@@ -33,12 +34,12 @@ router.get('/:id/translations', param('id').isString(), getCountryTranslations);
 router.get('/:id', param('id').isString(), getCountryById);
 
 // POST /api/countries -> Crea un nuevo país.
-router.post('/', countryValidationRules, createCountry);
+router.post('/', protect, countryValidationRules, createCountry);
 
 // PUT /api/countries/:id -> Actualiza un país existente.
-router.put('/:id', countryUpdateValidationRules, updateCountry);
+router.put('/:id', protect, countryUpdateValidationRules, updateCountry);
 
 // DELETE /api/countries/:id -> Elimina un país.
-router.delete('/:id', param('id').isString().withMessage('ID must be a string in the URL'), deleteCountry);
+router.delete('/:id', protect, param('id').isString().withMessage('ID must be a string in the URL'), deleteCountry);
 
 export default router;

@@ -28,7 +28,8 @@
       "@shared/*": ["app/modules/shared/*"],
       "@services/*": ["app/services/*"],
       "@env/*": ["environments/*"],
-      "@utils/*": ["app/utils/*"]
+      "@utils/*": ["app/utils/*"],
+      "@models/*": ["app/models/*"]
     }
   },
   "angularCompilerOptions": {

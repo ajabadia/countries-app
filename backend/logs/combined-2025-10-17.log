@@ -1,0 +1,53 @@
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 20:53:12:5312"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 20:54:12:5412"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 20:54:13:5413"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 20:56:59:5659"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:03:02:32"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:03:04:34"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:03:57:357"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:04:22:422"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:05:34:534"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:07:48:748"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:08:39:839"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:10:46:1046"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:11:35:1135"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:12:44:1244"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:13:36:1336"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:15:21:1521"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:15:22:1522"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:15:28:1528"}
+{"level":"info","message":"Tabla \"users\" inicializada correctamente.","timestamp":"2025-10-17 21:15:37:1537"}
+{"level":"info","message":"Tabla \"audit_logs\" inicializada correctamente.","timestamp":"2025-10-17 21:15:37:1537"}
+{"level":"warn","message":"No se han definido las variables de entorno para el admin por defecto. Saltando creación.","timestamp":"2025-10-17 21:15:37:1537"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:15:37:1537"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:15:38:1538"}
+{"level":"error","message":"Validation failed","path":"/api/auth/register","stack":"Error: Validation failed\n    at D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:58:11\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-10-17 21:15:38:1538"}
+{"level":"info","message":"Tabla \"users\" inicializada correctamente.","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"info","message":"Tabla \"audit_logs\" inicializada correctamente.","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"warn","message":"No se han definido las variables de entorno para el admin por defecto. Saltando creación.","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"error","message":"Validation failed","path":"/api/auth/register","stack":"Error: Validation failed\n    at D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:58:11\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-10-17 21:15:44:1544"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:20:21:2021"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:20:55:2055"}
+{"level":"info","message":"Tabla \"users\" inicializada correctamente.","timestamp":"2025-10-17 21:21:02:212"}
+{"level":"info","message":"Tabla \"audit_logs\" inicializada correctamente.","timestamp":"2025-10-17 21:21:03:213"}
+{"level":"warn","message":"No se han definido las variables de entorno para el admin por defecto. Saltando creación.","timestamp":"2025-10-17 21:21:03:213"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:21:03:213"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:21:03:213"}
+{"level":"error","message":"Validation failed","path":"/api/auth/register","stack":"Error: Validation failed\n    at D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:58:11\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-10-17 21:21:03:213"}
+{"level":"info","message":"Tabla \"users\" inicializada correctamente.","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"info","message":"Tabla \"audit_logs\" inicializada correctamente.","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"warn","message":"No se han definido las variables de entorno para el admin por defecto. Saltando creación.","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"error","message":"FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.","path":"/api/auth/register","stack":"Error: FATAL_ERROR: SECRET_JWT_SEED is not defined in environment variables.\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:20:11)\n    at generateJWT (D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:76:17)","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"error","message":"Validation failed","path":"/api/auth/register","stack":"Error: Validation failed\n    at D:\\desarrollos\\countries2\\backend\\controllers\\authController.ts:58:11\n    at processTicksAndRejections (node:internal/process/task_queues:105:5)","timestamp":"2025-10-17 21:21:22:2122"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:34:48:3448"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:36:26:3626"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:38:19:3819"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:39:29:3929"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:42:11:4211"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:44:41:4441"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:45:08:458"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:46:16:4616"}
+{"level":"info","message":"🚀 Server running on http://localhost:3000","timestamp":"2025-10-17 21:48:45:4845"}

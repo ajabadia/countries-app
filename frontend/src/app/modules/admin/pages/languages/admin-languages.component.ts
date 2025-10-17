@@ -5,6 +5,7 @@ import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
 // Modelos y Servicios
 import { BaseAdminComponent } from '@services/base-admin.component';
 import { LanguagesService } from '@services/languages.service';
+import { Language } from '@models/language';
 import { TableColumn } from '@services/table-column.model';
 
 // Componentes Standalone necesarios (la mayoría ahora se gestionan en BaseAdminComponent)
@@ -33,23 +34,24 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
   templateUrl: './admin-languages.component.html', // Asumo que existe una plantilla genérica
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminLanguagesComponent extends BaseAdminComponent<any> {
+export class AdminLanguagesComponent extends BaseAdminComponent<Language> {
   // Inyectamos el servicio específico para esta entidad
   protected override entityService = inject(LanguagesService);
-  
+
   // Definimos los nombres para la UI (títulos, botones, etc.)
   public override entityName = 'Lenguaje';
   public override entityNamePlural = 'Lenguajes';
 
   // Configuramos las columnas que mostrará la tabla
-  public override tableColumns: TableColumn<any>[] = [
-    { key: 'name', label: 'Nombre', sortable: true },
-    // Puedes añadir más columnas aquí si el modelo de 'Language' es más complejo
+  public override tableColumns: TableColumn<Language>[] = [
+    { key: 'id', label: 'ID', sortable: true },
+    { key: 'name', label: 'Nombre', sortable: true, minWidth: '200px' },
+    { key: 'active', label: 'Activo', type: 'status' } // Usamos el tipo 'status' para un renderizado especial
   ];
 
   // Definimos el formulario reactivo para crear y editar la entidad
   public override form = this.fb.group({
-    name: ['', Validators.required],
-    // Puedes añadir más campos aquí
+    name: ['', [Validators.required, Validators.minLength(2)]],
+    active: [1, Validators.required]
   });
 }

@@ -8,31 +8,31 @@ import { getDB } from '../db/database.js';
 export default class BaseService {
     tableName;
     searchableFields;
-    db;
     constructor(tableName, searchableFields = []) {
         this.tableName = tableName;
         this.searchableFields = searchableFields;
         if (!tableName) {
             throw new Error('Se requiere un nombre de tabla para el servicio.');
         }
-        this.db = getDB();
+        // La conexión a la BD se obtendrá de forma asíncrona en cada método.
     }
     /**
      * Obtiene todos los registros de la tabla con opciones de paginación, orden y búsqueda.
      * @param options Opciones de consulta.
      * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
      */
-    getAll(options = {}) {
+    async getAll(options = {}) {
+        const db = await getDB();
         const { columns = ['*'], orderBy = 'id', orderDir = 'asc', limit, offset, search = null } = options;
         // --- Validación para prevenir SQL Injection ---
-        const validColumnsInfo = this.db.prepare(`PRAGMA table_info(${this.tableName})`).all();
+        const validColumnsInfo = db.prepare(`PRAGMA table_info(${this.tableName})`).all();
         const validColumns = validColumnsInfo.map(c => c.name);
         const safeOrderBy = validColumns.includes(orderBy) ? orderBy : 'id';
         const safeOrderDir = ['asc', 'desc'].includes(orderDir.toLowerCase()) ? orderDir.toUpperCase() : 'ASC';
         const cols = columns.join(', ');
         const { clause: whereClause, params: searchParams } = this._buildWhereClause(search);
         const totalQuery = `SELECT COUNT(*) as total FROM ${this.tableName} ${whereClause}`;
-        const { total } = this.db.prepare(totalQuery).get(...searchParams);
+        const { total } = db.prepare(totalQuery).get(...searchParams);
         let query = `SELECT ${cols} FROM ${this.tableName} ${whereClause} ORDER BY ${safeOrderBy} ${safeOrderDir}`;
         const queryParams = [...searchParams];
         if (limit != null) {
@@ -43,7 +43,7 @@ export default class BaseService {
             query += ` OFFSET ?`;
             queryParams.push(offset);
         }
-        const rows = this.db.prepare(query).all(...queryParams);
+        const rows = db.prepare(query).all(...queryParams);
         return { data: rows, total };
     }
     /**
@@ -52,41 +52,60 @@ export default class BaseService {
      * @param columns Las columnas a seleccionar.
      * @returns La entidad encontrada o `undefined` si no existe.
      */
-    getById(id, columns = ['*']) {
+    async getById(id, columns = ['*']) {
+        const db = await getDB();
         const cols = columns.join(', ');
-        return this.db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id);
+        return db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id);
+    }
+    /**
+     * Encuentra el primer registro que coincide con un conjunto de condiciones.
+     * @param criteria Un objeto donde las claves son columnas y los valores son los que se deben buscar.
+     * @returns La entidad encontrada o `undefined` si no existe.
+     */
+    async findOneBy(criteria) {
+        const db = await getDB();
+        const columns = Object.keys(criteria);
+        if (columns.length === 0)
+            return undefined;
+        const values = Object.values(criteria);
+        const whereClause = columns.map(col => `${col} = ?`).join(' AND ');
+        const sql = `SELECT * FROM ${this.tableName} WHERE ${whereClause} LIMIT 1`;
+        return db.prepare(sql).get(...values);
     }
     /**
      * Elimina un registro por su ID.
      * @param id El ID del registro a eliminar.
      */
-    remove(id) {
-        return this.db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+    async remove(id) {
+        const db = await getDB();
+        return db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
     }
     /**
      * Crea un nuevo registro.
      * @param data Objeto con los datos a insertar.
      */
-    create(data) {
+    async create(data) {
+        const db = await getDB();
         const columns = Object.keys(data);
         const values = Object.values(data);
         const placeholders = columns.map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-        return this.db.prepare(sql).run(...values);
+        return db.prepare(sql).run(...values);
     }
     /**
      * Actualiza un registro por su ID.
      * @param id El ID del registro a actualizar.
      * @param data Objeto con los datos a actualizar.
      */
-    update(id, data) {
+    async update(id, data) {
+        const db = await getDB();
         const columns = Object.keys(data);
         if (columns.length === 0)
             throw new Error('No hay datos para actualizar.');
         const values = Object.values(data);
         const setClause = columns.map(col => `${col} = ?`).join(', ');
         const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-        return this.db.prepare(sql).run(...values, id);
+        return db.prepare(sql).run(...values, id);
     }
     _buildWhereClause(search) {
         if (!search || this.searchableFields.length === 0) {

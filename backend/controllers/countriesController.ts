@@ -32,13 +32,13 @@ const getCountryTranslations = asyncHandler(async (req: Request, res: Response) 
   const { id } = req.params;
 
   // 1. Verificar que el país existe para devolver un 404 si no.
-  const country = countriesService.getById(id);
+  const country = await countriesService.getById(id);
   if (!country) {
     throw new NotFoundError(`Country with id ${id} not found`);
   }
 
   // 2. Obtener las traducciones para ese entity_id.
-  const translations = multilingualnamesService.findByEntityId(id);
+  const translations = await multilingualnamesService.findByEntityId(id);
   res.json(translations);
 });
 

@@ -2,37 +2,53 @@
 
 /**
  * Clase base para todos los errores HTTP personalizados.
- * Contiene un `statusCode` para que el `errorHandler` sepa cómo responder.
  */
 export class HttpError extends Error {
-  public readonly statusCode: number;
+  public statusCode: number;
 
   constructor(statusCode: number, message: string) {
     super(message);
     this.statusCode = statusCode;
-    // Esto es necesario para que `instanceof` funcione correctamente con clases de error personalizadas en TypeScript.
+    // Mantiene el stack trace correcto para errores personalizados
     Object.setPrototypeOf(this, new.target.prototype);
   }
 }
 
 /**
- * Error específico para respuestas 404 Not Found.
+ * Error para problemas de validación (400 Bad Request).
+ */
+export class ValidationError extends HttpError {
+  public errors: any[];
+
+  constructor(errors: any[], message = 'Validation failed') {
+    super(400, message);
+    this.errors = errors;
+  }
+}
+
+/**
+ * Error para recursos no encontrados (404 Not Found).
  */
 export class NotFoundError extends HttpError {
-  constructor(message: string = 'Resource not found') {
+  constructor(message = 'Resource not found') {
     super(404, message);
   }
 }
 
 /**
- * Error específico para respuestas 400 Bad Request debido a errores de validación.
- * Contiene el array de errores generado por express-validator.
+ * Error para problemas de autenticación (401 Unauthorized).
  */
-export class ValidationError extends HttpError {
-  public readonly errors: any[];
+export class AuthenticationError extends HttpError {
+  constructor(message = 'Authentication failed') {
+    super(401, message);
+  }
+}
 
-  constructor(errors: any[], message: string = 'Validation failed') {
-    super(400, message);
-    this.errors = errors;
+/**
+ * Error para acceso prohibido (403 Forbidden).
+ */
+export class ForbiddenError extends HttpError {
+  constructor(message = 'Access denied') {
+    super(403, message);
   }
 }

@@ -28,8 +28,6 @@ export interface WhereClause {
  * @template T El tipo de la entidad que maneja el servicio. Debe tener una propiedad `id`.
  */
 export default class BaseService<T extends { id: number | string }> {
-  protected db: Database;
-
   constructor(
     protected tableName: string,
     protected searchableFields: string[] = []
@@ -37,7 +35,7 @@ export default class BaseService<T extends { id: number | string }> {
     if (!tableName) {
       throw new Error('Se requiere un nombre de tabla para el servicio.');
     }
-    this.db = getDB();
+    // La conexión a la BD se obtendrá de forma asíncrona en cada método.
   }
 
   /**
@@ -45,11 +43,12 @@ export default class BaseService<T extends { id: number | string }> {
    * @param options Opciones de consulta.
    * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
    */
-  getAll(options: GetAllOptions = {}): { data: T[]; total: number } {
+  async getAll(options: GetAllOptions = {}): Promise<{ data: T[]; total: number }> {
+    const db = await getDB();
     const { columns = ['*'], orderBy = 'id', orderDir = 'asc', limit, offset, search = null } = options;
 
     // --- Validación para prevenir SQL Injection ---
-    const validColumnsInfo = this.db.prepare(`PRAGMA table_info(${this.tableName})`).all() as { name: string }[];
+    const validColumnsInfo = db.prepare(`PRAGMA table_info(${this.tableName})`).all() as { name: string }[];
     const validColumns = validColumnsInfo.map(c => c.name);
     const safeOrderBy = validColumns.includes(orderBy) ? orderBy : 'id';
     const safeOrderDir = ['asc', 'desc'].includes(orderDir.toLowerCase()) ? orderDir.toUpperCase() : 'ASC';
@@ -58,7 +57,7 @@ export default class BaseService<T extends { id: number | string }> {
     const { clause: whereClause, params: searchParams } = this._buildWhereClause(search);
 
     const totalQuery = `SELECT COUNT(*) as total FROM ${this.tableName} ${whereClause}`;
-    const { total } = this.db.prepare(totalQuery).get(...searchParams) as { total: number };
+    const { total } = db.prepare(totalQuery).get(...searchParams) as { total: number };
 
     let query = `SELECT ${cols} FROM ${this.tableName} ${whereClause} ORDER BY ${safeOrderBy} ${safeOrderDir}`;
     const queryParams = [...searchParams];
@@ -72,7 +71,7 @@ export default class BaseService<T extends { id: number | string }> {
       queryParams.push(offset);
     }
 
-    const rows = this.db.prepare(query).all(...queryParams) as T[];
+    const rows = db.prepare(query).all(...queryParams) as T[];
     return { data: rows, total };
   }
 
@@ -82,29 +81,48 @@ export default class BaseService<T extends { id: number | string }> {
    * @param columns Las columnas a seleccionar.
    * @returns La entidad encontrada o `undefined` si no existe.
    */
-  getById(id: number | string, columns: string[] = ['*']): T | undefined {
+  async getById(id: number | string, columns: string[] = ['*']): Promise<T | undefined> {
+    const db = await getDB();
     const cols = columns.join(', ');
-    return this.db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id) as T | undefined;
+    return db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id) as T | undefined;
+  }
+
+  /**
+   * Encuentra el primer registro que coincide con un conjunto de condiciones.
+   * @param criteria Un objeto donde las claves son columnas y los valores son los que se deben buscar.
+   * @returns La entidad encontrada o `undefined` si no existe.
+   */
+  async findOneBy(criteria: Partial<T>): Promise<T | undefined> {
+    const db = await getDB();
+    const columns = Object.keys(criteria);
+    if (columns.length === 0) return undefined;
+
+    const values = Object.values(criteria);
+    const whereClause = columns.map(col => `${col} = ?`).join(' AND ');
+    const sql = `SELECT * FROM ${this.tableName} WHERE ${whereClause} LIMIT 1`;
+    return db.prepare(sql).get(...values) as T | undefined;
   }
 
   /**
    * Elimina un registro por su ID.
    * @param id El ID del registro a eliminar.
    */
-  remove(id: number | string): RunResult {
-    return this.db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+  async remove(id: number | string): Promise<RunResult> {
+    const db = await getDB();
+    return db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
   }
 
   /**
    * Crea un nuevo registro.
    * @param data Objeto con los datos a insertar.
    */
-  create(data: Partial<T>): RunResult {
+  async create(data: Partial<T>): Promise<RunResult> {
+    const db = await getDB();
     const columns = Object.keys(data);
     const values = Object.values(data);
     const placeholders = columns.map(() => '?').join(', ');
     const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-    return this.db.prepare(sql).run(...values);
+    return db.prepare(sql).run(...values);
   }
 
   /**
@@ -112,14 +130,15 @@ export default class BaseService<T extends { id: number | string }> {
    * @param id El ID del registro a actualizar.
    * @param data Objeto con los datos a actualizar.
    */
-  update(id: number | string, data: Partial<T>): RunResult {
+  async update(id: number | string, data: Partial<T>): Promise<RunResult> {
+    const db = await getDB();
     const columns = Object.keys(data);
     if (columns.length === 0) throw new Error('No hay datos para actualizar.');
 
     const values = Object.values(data);
     const setClause = columns.map(col => `${col} = ?`).join(', ');
     const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-    return this.db.prepare(sql).run(...values, id);
+    return db.prepare(sql).run(...values, id);
   }
 
   private _buildWhereClause(search: string | null): WhereClause {
