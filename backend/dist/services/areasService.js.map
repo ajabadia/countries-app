@@ -1,0 +1,1 @@
+{"version":3,"file":"areasService.js","sourceRoot":"","sources":["../../services/areasService.ts"],"names":[],"mappings":"AAAA,mCAAmC;AACnC,OAAO,WAAW,MAAM,kBAAkB,CAAC;AAG3C;;;GAGG;AACH,MAAM,YAAa,SAAQ,WAAiB;IAC1C;QACE,KAAK,CAAC,OAAO,EAAE,CAAC,aAAa,CAAC,CAAC,CAAC;IAClC,CAAC;CACF;AAED,eAAe,IAAI,YAAY,EAAE,CAAC"}

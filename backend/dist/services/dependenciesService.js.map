@@ -1,0 +1,1 @@
+{"version":3,"file":"dependenciesService.js","sourceRoot":"","sources":["../../services/dependenciesService.ts"],"names":[],"mappings":"AAAA,0CAA0C;AAC1C,OAAO,WAAW,MAAM,kBAAkB,CAAC;AAG3C;;;GAGG;AACH,MAAM,mBAAoB,SAAQ,WAAuB;IACvD;QACE,KAAK,CAAC,cAAc,EAAE,CAAC,WAAW,EAAE,cAAc,CAAC,CAAC,CAAC;IACvD,CAAC;CACF;AAED,eAAe,IAAI,mBAAmB,EAAE,CAAC"}

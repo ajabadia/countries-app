@@ -1,0 +1,1 @@
+{"version":3,"file":"languagesService.js","sourceRoot":"","sources":["../../services/languagesService.ts"],"names":[],"mappings":"AAAA,uCAAuC;AACvC,OAAO,WAAW,MAAM,kBAAkB,CAAC;AAG3C;;;GAGG;AACH,MAAM,gBAAiB,SAAQ,WAAqB;IAClD;QACE,KAAK,CAAC,WAAW,EAAE,CAAC,MAAM,CAAC,CAAC,CAAC;IAC/B,CAAC;CACF;AAED,eAAe,IAAI,gBAAgB,EAAE,CAAC"}

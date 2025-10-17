@@ -1,0 +1,30 @@
+{
+  "compilerOptions": {
+    /* Opciones del Proyecto */
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "outDir": "./dist",
+    "rootDir": "./",
+    "sourceMap": true,
+
+    /* Chequeo de Tipos Estricto */
+    "strict": true,
+    "noImplicitAny": true,
+    "strictNullChecks": true,
+
+    /* Interoperabilidad de Módulos */
+    "esModuleInterop": true,
+    "allowSyntheticDefaultImports": true,
+
+    /* Opciones para Migración Gradual */
+    "allowJs": true,
+    "checkJs": false,
+
+    /* Opciones Avanzadas */
+    "forceConsistentCasingInFileNames": true,
+    "skipLibCheck": true
+  },
+  "include": ["**/*.js", "**/*.ts"],
+  "exclude": ["node_modules", "dist"]
+}
