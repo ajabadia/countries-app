@@ -43,3 +43,6 @@ Thumbs.db
 
 ## Ficheros de caché de tests
 coverage/
+
+.node_modules/
+
