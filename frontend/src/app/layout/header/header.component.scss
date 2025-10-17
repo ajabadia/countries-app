@@ -14,7 +14,10 @@
 
   &__container {
     @include t.container;
-    @include t.flex-between;
+    width: 100%; // ✅ CORRECCIÓN: Hacemos que el contenedor flex ocupe todo el ancho del header.
+    display: flex;
+    align-items: center;
+    gap: var(--space-m); // ✅ Añadimos un espacio entre los elementos del header.
   }
 
   &__brand {
@@ -26,7 +29,8 @@
   &__title {
     // Ocupa el espacio central pero se alinea al centro.
     flex-grow: 1;
-    text-align: center;
+    min-width: 0; // ✅ PERMITE ENCOGERSE: Evita que el título empuje a la navegación.
+    text-align: left; // ✅ CORRECCIÓN: Alineamos el texto a la izquierda.
     font-size: var(--font-size-lg);
     font-weight: 600;
     color: var(--color-text-muted);
