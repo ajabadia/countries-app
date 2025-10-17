@@ -1,6 +1,10 @@
 // d:/desarrollos/countries2/frontend/src/app/modules/shared/components/ui-heading/ui-heading.component.scss
 
-@use 'src/styles/mixins' as m;
+// ✅ REFACTOR: Importamos el fichero de herramientas para tener acceso a los placeholders de tipografía.
+// No es necesario un alias (`as ...`) porque solo usamos `@extend`.
+// ✅ CORRECCIÓN: Usamos una ruta absoluta desde 'src' para garantizar que el compilador
+// siempre encuentre el fichero de herramientas, independientemente del contexto.
+@use 'src/styles/tools';
 
 // El contenedor principal del heading. Ocupa el 100% del ancho y alinea el contenido interno.
 .ui-heading {

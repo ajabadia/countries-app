@@ -1,26 +1,34 @@
 :host {
   display: inline-flex;
   vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  // ✅ FUSIÓN: Esta es la regla clave para que el icono herede el color del botón.
+  color: inherit;
+  // ✅ FUSIÓN: El tamaño se controla mediante la variable CSS --icon-size,
+  // que es establecida por el HostBinding en el componente.
+  width: var(--icon-size, 1em);
+  height: var(--icon-size, 1em);
 }
 
-.ui-icon {
+// El contenedor interno (span para SVG, o la propia img) debe ocupar todo el espacio.
+.icon-wrapper,
+.icon-image {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   transition: color 0.2s;
-
-  // Los elementos internos (SVG o IMG) deben ocupar todo el espacio
-  & > * {
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
+  width: 100%;
+  height: 100%;
 }
 
-// El SVG inyectado hereda el color del texto (`currentColor`)
+// ✅ FUSIÓN: El SVG inyectado usa `currentColor` para tomar el color heredado.
+// El servicio `IconService` ya se encarga de parchear el SVG para que esto funcione.
 :host ::ng-deep svg {
   fill: currentColor;
   stroke: currentColor;
+  width: 100%;
+  height: 100%;
 }
 
 // Estilos específicos para variantes que mencionaste

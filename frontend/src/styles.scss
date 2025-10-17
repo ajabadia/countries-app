@@ -1,162 +1,20 @@
-// src/styles.scss
-/* Importamos archivos modulares para variables, mixins y reset */
-@use 'styles/variables' as v;
+/* src/styles.scss */
+// ✅ REFACTOR: Este fichero es ahora el único punto de entrada para todos los estilos globales.
+// Importa todos los parciales en el orden correcto.
+// Gracias a esto, las variables, mixins y placeholders están disponibles
+// en toda la aplicación a través de la importación de 'tools'.
+@use 'styles/tools' as t;
 @use 'styles/reset';
-@use 'styles/mixins' as m;
 @use 'styles/base';
-/* 1. Importamos TODOS los estilos compartidos de admin en un solo lugar */
-@use 'styles/shared/admin';
+// ✅ CORRECCIÓN: Se reordena la importación. `_components.scss` debe cargarse antes
+// que `_theme.scss` para que las clases de componentes (como `.btn--ghost`) estén
+// disponibles y puedan ser extendidas por las utilidades de tema.
+@use 'styles/components';
+@use 'styles/theme';
 
-
-/* --- UTILIDADES GLOBALES --- */
-.u-sr-only {
-  position: absolute;
-  width: 1px;
-  height: 1px;
-  padding: 0;
-  margin: -1px;
-  overflow: hidden;
-  clip: rect(0, 0, 0, 0);
-  white-space: nowrap;
-  border: 0;
-}
-
-/* Utilidades de espaciado */
-.u-spacing {
-  &--xs { padding: var(--space-xs); }
-  &--s { padding: var(--space-s); }
-  &--sm { padding: var(--space-sm); }
-  &--m { padding: var(--space-m); }
-  &--ml { padding: var(--space-ml); }
-  &--l { padding: var(--space-l); }
-  &--xl { padding: var(--space-xl); }
-  &--xxl { padding: var(--space-xxl); }
-}
-
-/* Utilidades de color */
-.u-text {
-  &--primary { color: var(--color-primary) !important; } // Tono principal
-  &--accent { color: var(--color-accent) !important; } // Tono de resalte
-  &--success { color: var(--color-success) !important; } // Verde
-  &--error { color: var(--color-error) !important; } // Rojo
-  &--warning { color: var(--color-warning) !important; } // Amarillo/Naranja
-  &--muted { color: var(--color-text-muted) !important; } // Gris apagado
-  &--link { color: var(--color-link) !important; } // Color de enlace
-}
-
-/* Utilidades de tamaño */
-.u-size {
-  &--xs { font-size: var(--font-size-xs); }
-  &--sm { font-size: var(--font-size-sm); }
-  &--md { font-size: var(--font-size-base); }
-  &--lg { font-size: var(--font-size-lg); }
-  &--xl { font-size: var(--font-size-xl); }
-}
-
-/* Utilidades de fondo con colores corporativos */
-.u-bg {
-  &--primary {
-    background: var(--color-primary) !important;
-    color: var(--color-primary-contrast) !important;
-  }
-  &--secondary {
-    background: var(--color-secondary) !important;
-    color: var(--color-primary-contrast) !important;
-  }
-  &--success {
-    background: var(--color-success) !important;
-    color: var(--color-text-contrast) !important;
-  }
-  &--error {
-    background: var(--color-error) !important;
-    color: var(--color-text-contrast) !important;
-  }
-  &--warning {
-    background: var(--color-warning) !important;
-    color: var(--color-text-contrast) !important;
-  }
-}
-
-/* Ejemplo de uso de mixin global en utilidades (opcional, sólo si tienes utilidades propias aquí) */
-.u-icon {
-  display: inline-block;
-  vertical-align: middle;
-  @include m.size(24px); /* CORRECCIÓN: La sintaxis correcta es @include namespace.mixin-name() */
-}
-
-/* 3. Layout principal con BEM */
-.app {
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  
-  &__header {
-    width: 100%;
-    background: var(--color-surface);
-    box-shadow: var(--shadow-soft);
-    display: flex;
-    flex-direction: column;
-    align-items: stretch;
-    z-index: 10;
-    height: var(--header-height);
-    
-    &-controls {
-      display: flex;
-      justify-content: flex-end;
-      align-items: center;
-      gap: var(--space-m);
-      padding: var(--space-s) var(--space-l) 0 var(--space-l);
-      
-      @media (max-width: 800px) {
-        flex-direction: column;
-        align-items: flex-end;
-        gap: var(--space-s);
-        padding: var(--space-s) var(--space-sm) 0 var(--space-sm);
-      }
-    }
-    
-    &-menu {
-      width: 100%;
-      display: flex;
-      justify-content: flex-start;
-      background: transparent;
-      
-      @media(max-width: 768px) {
-        flex-direction: column;
-        align-items: stretch;
-      }
-    }
-  }
-  
-  &__container {
-    max-width: 1200px;
-    margin: 0 auto;
-    margin-top: var(--space-xl);
-    margin-bottom: var(--space-xl);
-    padding-left: var(--space-xl);
-    padding-right: var(--space-xl);
-    flex: 1;
-  }
-  
-  &__main {
-    flex: 1;
-  }
-}
-
-.page {
-  padding-left: 0.25rem;
-  padding-right: 0.25rem;
-  /* Para que nunca toque el borde, pero sea pequeño */
-  max-width: 1200px;
-  margin-left: auto;
-  margin-right: auto;
-  box-sizing: border-box;
-}
-
-@media (max-width: 700px) {
-  .page {
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
-    max-width: 100%;
-  }
+// === TEMA OSCURO ===
+// ✅ REFACTOR: Se aplica el tema oscuro aquí para romper la dependencia circular
+// que existía en `_variables.scss`.
+[data-theme='dark'] {
+  @include t.dark-theme-variables;
 }

@@ -1,4 +1,4 @@
-﻿﻿﻿﻿﻿﻿// controllers/areasController.js
+﻿﻿﻿﻿﻿﻿﻿﻿// controllers/areasController.js
 const asyncHandler = require('express-async-handler');
 const areasService = require('../services/areasService.js');
 
@@ -10,7 +10,13 @@ const getCount = asyncHandler(async (req, res) => {
 
 // GET /api/areas
 const getAll = asyncHandler(async (req, res) => {
-  const result = areasService.getAll(['id', 'defaultname'], 'id');
+  // Pasamos las opciones como un objeto para que coincida con la firma del método en BaseService
+  const options = {
+    columns: ['id', 'defaultname'],
+    orderBy: 'id',
+    orderDir: 'asc'
+  };
+  const result = areasService.getAll(options);
   res.json(result);
 });
 
@@ -31,8 +37,8 @@ const create = asyncHandler(async (req, res) => {
     return res.status(400).json({ error: 'Los campos id y defaultname son obligatorios' });
   }
   areasService.create({ id, defaultname });
-  const newItem = areasService.getById(id);
-  res.status(201).json(newItem);
+  // Evitamos una consulta extra a la BD. Ya tenemos los datos del nuevo item.
+  res.status(201).json({ id, defaultname });
 });
 
 // PUT /api/areas/:id
@@ -46,8 +52,8 @@ const update = asyncHandler(async (req, res) => {
   if (info.changes === 0) {
     return res.status(404).json({ error: 'Área no encontrada' });
   }
-  const updatedItem = areasService.getById(req.params.id);
-  res.json(updatedItem);
+  // Evitamos una consulta extra a la BD. Devolvemos el objeto actualizado con los datos disponibles.
+  res.json({ id: req.params.id, defaultname });
 });
 
 // DELETE /api/areas/:id

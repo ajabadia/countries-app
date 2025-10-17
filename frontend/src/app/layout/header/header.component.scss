@@ -1,29 +1,39 @@
-@use 'src/styles/mixins' as m;
+// ✅ REFACTOR: Se importa el fichero de herramientas unificado.
+@use 'src/styles/tools' as t;
 
-.header {
+// ✅ REFACTOR: Se usa la nomenclatura BEM correcta (`app-header`) y se aplican las variables globales.
+.app-header {
   height: var(--header-height);
   background-color: var(--color-surface);
   box-shadow: var(--shadow-base);
   display: flex;
   align-items: center;
+  position: sticky; // Para que se mantenga fijo en la parte superior
+  top: 0;
+  z-index: var(--z-sticky);
 
   &__container {
-    @include m.container;
-    @include m.flex-between;
+    @include t.container;
+    @include t.flex-between;
   }
 
   &__brand {
-    font-size: var(--font-size-xl);
-    font-weight: 700;
+    display: flex;
+    align-items: center;
   }
 
-  &__brand-link {
-    color: var(--color-primary);
-    text-decoration: none;
+  // ✅ REFACTOR: Estilos para el título central.
+  &__title {
+    // Ocupa el espacio central pero se alinea al centro.
+    flex-grow: 1;
+    text-align: center;
+    font-size: var(--font-size-lg);
+    font-weight: 600;
+    color: var(--color-text-muted);
+    margin: 0;
   }
 
   &__nav {
-    display: flex;
-    gap: var(--space-s);
+    // Los estilos del nav-menu se encargarán del resto.
   }
 }

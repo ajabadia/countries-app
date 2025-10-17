@@ -1,5 +1,7 @@
 // src/styles/_base.scss
-@use 'mixins' as m;
+// ✅ REFACTOR: Importamos el fichero de herramientas para tener acceso a los mixins
+// y placeholders de tipografía, solucionando los errores de compilación.
+@use 'tools' as t;
 
 // --- Estilos base para HTML y Body ---
 html, body {
@@ -23,7 +25,13 @@ a {
 
   // ✅ MEJORA DE ACCESIBILIDAD: Usamos :focus-visible para mostrar el outline
   // solo a usuarios que navegan con teclado, evitando el anillo visual al hacer clic.
-  @include m.focus-visible;
+  @include t.focus-visible;
+}
+
+// --- Estilos de Layout ---
+// Clase de contenedor global para centrar y limitar el ancho.
+.container {
+  @include t.container;
 }
 
 // --- Estilos Globales para Encabezados ---

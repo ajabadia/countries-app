@@ -2,15 +2,11 @@
 
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MenuBarComponent } from '../../shared/components/menu-bar/menu-bar.component';
-import { PUBLIC_ROUTES } from '../../../config/route-config';
 
 @Component({
   selector: 'app-public',
   standalone: true,
-  imports: [RouterModule, MenuBarComponent],
-  templateUrl: './public.component.html',
+  imports: [RouterModule],
+  template: '<router-outlet></router-outlet>',
 })
-export class PublicComponent {
-  public readonly publicMenuItems = PUBLIC_ROUTES;
-}
+export class PublicComponent {}

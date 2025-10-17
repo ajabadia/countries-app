@@ -1,6 +1,0 @@
-<svg role="img" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <title>Warning</title>
-  <polygon points="12,2 22,20 2,20" stroke="orange" stroke-width="2" fill="none"/>
-  <rect x="11" y="8" width="2" height="6" fill="orange"/>
-  <rect x="11" y="16" width="2" height="2" fill="orange"/>
-</svg>

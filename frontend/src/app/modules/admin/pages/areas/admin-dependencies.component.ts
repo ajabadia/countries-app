@@ -1,25 +1,25 @@
-// src/app/modules/admin/pages/continents/admin-continents.component.ts
+// src/app/modules/admin/pages/dependencies/admin-dependencies.component.ts
 
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { ReactiveFormsModule, Validators } from '@angular/forms';
 
 // Modelos y Servicios
 import { BaseAdminComponent } from '@services/base-admin.component';
-import { ContinentsService } from '@services/continents.service';
+import { DependenciesService } from '@services/dependencies.service';
 import { TableColumn } from '@services/table-column.model';
 
 // ✅ REFACTOR: Import all the necessary standalone components for the admin layout.
-import { AsyncPipe } from '@angular/common';
 import { TableComponent } from '@shared/components/table/table.component';
 import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
 import { SearchBoxComponent } from '@shared/components/search-box/search-box.component';
 import { ToolbarButtonsComponent } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
 import { ModalComponent } from '@shared/components/modal/modal.component';
 import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.component';
 
 @Component({
-  selector: 'app-admin-continents',
+  selector: 'app-admin-dependencies',
   standalone: true,
   imports: [
     CommonModule,
@@ -29,25 +29,27 @@ import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confir
     PaginatorComponent,
     SearchBoxComponent,
     ToolbarButtonsComponent,
+    ModalComponent,
+    ConfirmDialogComponent,
+    UiHeadingComponent,
   ],
-  templateUrl: './admin-continents.component.html', // Asumimos que usará una plantilla genérica
+  // ✅ REFACTOR: La plantilla ahora está en la carpeta 'pages', por lo que la ruta es más simple.
+  templateUrl: '../admin-base-page.component.html', // Apuntamos a la plantilla genérica
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class AdminContinentsComponent extends BaseAdminComponent<any> {
-  // Inyectamos el servicio específico para esta entidad
-  protected override entityService = inject(ContinentsService);
+export class AdminDependenciesComponent extends BaseAdminComponent<any> {
+  protected override entityService = inject(DependenciesService);
 
-  // Definimos los nombres para la UI (títulos, botones, etc.)
-  public override entityName = 'Continente';
-  public override entityNamePlural = 'Continentes';
+  public override entityName = 'Dependencia';
+  public override entityNamePlural = 'Dependencias';
 
-  // Configuramos las columnas que mostrará la tabla
   public override tableColumns: TableColumn<any>[] = [
-    { key: 'name', label: 'Nombre', sortable: true },
+    { key: 'id', label: 'ID', sortable: true, width: '100px' },
+    { key: 'defaultname', label: 'Nombre', sortable: true },
   ];
 
-  // Definimos el formulario reactivo para crear y editar la entidad
   public override form = this.fb.group({
-    name: ['', Validators.required],
+    id: ['', Validators.required],
+    defaultname: ['', Validators.required],
   });
 }

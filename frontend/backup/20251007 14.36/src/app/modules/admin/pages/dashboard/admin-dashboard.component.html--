@@ -1,8 +1,0 @@
-<app-ui-heading
-  [level]="1"
-  text="Dashboard"
-  icon="icon-dashboard"
-  iconPosition="left"
-  color="primary"
-  textAlign="left">
-</app-ui-heading>

@@ -1,7 +1,7 @@
 // src/app/modules/admin/components/admin-dashboard/admin-dashboard.component.ts
 import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable, map } from 'rxjs';
+import { Observable, map, catchError, of } from 'rxjs';
 
 // --- Servicios ---
 import { CountriesService } from '@services/countries.service';
@@ -21,8 +21,11 @@ import { UiStatCardComponent } from '@shared/components/ui-stat-card/ui-stat-car
 import { RouterModule } from '@angular/router';
 
 /** Helper para obtener el total de un servicio CRUD */
-const getCount = (service: BaseCrudService<any, any>): Observable<number> => {
-  return service.getAll({ page: 1, pageSize: 1 }).pipe(map(response => response.total));
+const getCount = (service: { getAll: (params?: any) => Observable<{ data: any[], total: number }> }): Observable<number> => {
+  // ✅ CORRECCIÓN: La API devuelve `total` en la raíz de la respuesta, no en `meta.totalItems`.
+  // Ajustamos el `map` para que coincida con la estructura del backend.
+  // We also add error handling to return 0 if the request fails.
+  return service.getAll({ page: 1, pageSize: 1 }).pipe(map(response => response.total || 0), catchError(() => of(0)));
 };
 
 interface StatCard {

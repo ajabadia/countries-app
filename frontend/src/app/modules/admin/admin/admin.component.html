@@ -1,16 +1,15 @@
-<!-- admin.component.html -->
-
-<!-- Contenedor principal para el layout de administración -->
+<!--
+  ✅ CORRECCIÓN: El layout ahora utiliza el nuevo <app-nav-menu>,
+  que está diseñado específicamente para la navegación por rutas.
+-->
 <div class="admin-layout">
-  
-  <!-- Menú de navegación principal (app-menu-bar, usa los items pasados en TS) -->
-  <app-menu-bar
+  <app-nav-menu
     [items]="adminMenuItems"
-    ariaLabel="Menú de administración"
-  ></app-menu-bar>
+    basePath="/admin"
+    class="admin-layout__menu"
+  ></app-nav-menu>
 
-  <!-- Contenido principal: aquí se renderizan los componentes ruteados (Dashboard, Países, etc.) -->
-  <main class="admin-content">
+  <div class="admin-layout__content-wrapper">
     <router-outlet></router-outlet>
-  </main>
+  </div>
 </div>

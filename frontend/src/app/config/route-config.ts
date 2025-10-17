@@ -1,46 +1,24 @@
 // src/app/config/route-config.ts
 
-import { MenuBarItem } from "@shared/components/menu-bar/menu-bar.component";
+import { MenuBarItem } from '../menu-bar.interface';
 
-/**
- * Definición centralizada para las rutas públicas.
- * Cada objeto contiene la información necesaria para construir
- * tanto los elementos del menú como los encabezados de las páginas.
- */
 export const PUBLIC_ROUTES: MenuBarItem[] = [
-  { 
-    label: 'Información general', 
-    name: 'info-circle', 
-    route: '/public' 
-  },
-  { 
-    label: 'Información por países', 
-    name: 'country', 
-    route: '/public/countries' 
-  },
-  {
-    label: 'Test',
-    name: 'icon-flask',
-    route: '/test'
-  },
+  { name: 'home', label: 'Inicio', route: '/' },
+  { name: 'countries', label: 'Países', route: '/countries' },
+  { name: 'languages', label: 'Idiomas', route: '/languages' },
+  { name: 'about', label: 'Acerca de', route: '/about' },
 ];
 
-/**
- * Definición centralizada para las rutas de administración.
- */
 export const ADMIN_ROUTES: MenuBarItem[] = [
-  { label: 'Dashboard', name: 'dashboard', route: '/admin/dashboard' },
-  { label: 'Países', name: 'country', route: '/admin/countries' },
-  { label: 'Continentes', name: 'continents', route: '/admin/continents' },
-  { label: 'Áreas', name: 'area', route: '/admin/areas' },
-  { label: 'Dependencias', name: 'dependencies', route: '/admin/dependencies' },
-  { label: 'Lenguajes', name: 'languages', route: '/admin/languages' },
-  { label: 'Traducciones', name: 'translations', route: '/admin/translations' }
+  { name: 'dashboard', label: 'Dashboard', route: '/admin' },
+  { name: 'admin-countries', label: 'Gestionar Países', route: '/admin/countries' },
+  { name: 'admin-languages', label: 'Gestionar Idiomas', route: '/admin/languages' },
+  { name: 'admin-users', label: 'Usuarios', route: '/admin/users' },
 ];
 
-/**
- * Un mapa combinado para un acceso más fácil al buscar una ruta específica.
- */
-export const ALL_ROUTES_MAP = new Map<string, MenuBarItem>(
-  [...PUBLIC_ROUTES, ...ADMIN_ROUTES].map(item => [Array.isArray(item.route) ? item.route.join('/') : item.route as string, item])
-);
+export const TEST_ROUTES: MenuBarItem[] = [
+  { name: 'test-home', label: 'Inicio Tests', route: '/test' },
+  { name: 'test-components', label: 'Componentes UI', route: '/test/components' },
+  { name: 'test-icons', label: 'Iconos', route: '/test/icons' },
+  { name: 'test-services', label: 'Servicios', route: '/test/services' },
+];

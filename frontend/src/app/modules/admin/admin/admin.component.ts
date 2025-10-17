@@ -2,16 +2,13 @@
 
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { MenuBarComponent } from '@shared/components/menu-bar/menu-bar.component';
-import { ADMIN_ROUTES } from '@config/route-config';
 
 @Component({
   selector: 'app-admin',
   standalone: true,
-  imports: [RouterModule, MenuBarComponent],
-  templateUrl: './admin.component.html',
-  styleUrls: ['./admin.component.scss']
+  imports: [RouterModule],
+  // ✅ REFACTOR: Este componente ahora solo actúa como un contenedor para las rutas de admin.
+  // El layout principal (header, etc.) es gestionado por AppComponent.
+  template: '<router-outlet></router-outlet>',
 })
-export class AdminComponent {
-  public readonly adminMenuItems = ADMIN_ROUTES;
-}
+export class AdminComponent {}

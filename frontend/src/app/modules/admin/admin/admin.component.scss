@@ -1,28 +1,20 @@
-/* src/app/modules/admin/admin/admin.component.scss */
-/* Importamos solo mixins y variables para evitar module loop */
-@use 'src/styles/variables' as v;
-@use 'src/styles/mixins' as m;
+// ✅ REFACTOR: Importamos el fichero de herramientas para tener acceso a los mixins.
+// ✅ CORRECCIÓN: Usamos una ruta absoluta desde 'src' para garantizar que el compilador
+// siempre encuentre el fichero de herramientas, independientemente del contexto.
+@use 'src/styles/tools' as t;
 
-.admin-container { /* Ejemplo */
-  @include m.mobile-only {
-    padding: 1rem;
-  }
-}
-
+// ✅ REFACTOR: Los estilos del layout ahora se heredan del mixin reutilizable.
 .admin-layout {
-  display: flex;
-  flex-direction: column;
-  min-height: 100vh;
-  background: var(--color-background);
+  @include t.section-layout;
 }
 
-.admin-content {
-  flex: 1 1 auto;
-  width: 100%;
-  padding: 1.5rem 2.5rem; 
-  box-sizing: border-box;
+// Asignamos los elementos a las áreas definidas en el mixin.
+.admin-layout__menu {
+  grid-area: menu;
+}
 
-  @include m.mobile-only {
-    padding: 1rem 1rem;
-  }
+.admin-layout__content-wrapper {
+  grid-area: content;
+  overflow-y: auto;
+  padding: var(--space-l);
 }

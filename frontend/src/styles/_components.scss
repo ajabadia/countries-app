@@ -1,31 +1,30 @@
 // src/styles/components.scss
 
-// components.scss
-
-// ✅ CORRECCIÓN: Se añade el @import que faltaba.
-@import 'mixins';
+// ✅ REFACTOR: Se importa el fichero de herramientas para tener acceso a los mixins
+// y variables necesarios para definir los componentes.
+@use 'tools' as t;
 
 .btn {
-  @include button-base; // <- Funcionará
-  @include button-size('md');
-  @include focus-visible;
+  @include t.button-base;
+  @include t.button-size('md');
+  @include t.focus-visible;
 
-  &--primary { @include button-variant('primary'); }
-  &--secondary { @include button-variant('secondary'); }
-  &--outline { @include button-variant('outline'); }
-  &--ghost { @include button-variant('ghost'); }
-  &--danger { @include button-variant('danger'); }
+  &--primary { @include t.button-variant('primary'); }
+  &--secondary { @include t.button-variant('secondary'); }
+  &--outline { @include t.button-variant('outline'); }
+  &--ghost { @include t.button-variant('ghost'); }
+  &--danger { @include t.button-variant('danger'); }
 
-  &--xs { @include button-size('xs'); }
-  &--sm { @include button-size('sm'); }
-  &--lg { @include button-size('lg'); }
-  &--xl { @include button-size('xl'); }
+  &--xs { @include t.button-size('xs'); }
+  &--sm { @include t.button-size('sm'); }
+  &--lg { @include t.button-size('lg'); }
+  &--xl { @include t.button-size('xl'); }
 
   &--full-width { width: 100%; }
-  &--loading { @include state-loading; }
+  &--loading { @include t.state-loading; }
 
   &__icon {
-    @include size(1em);
+    @include t.size(1em);
 
     &--left { margin-right: var(--space-xs); }
     &--right { margin-left: var(--space-xs); }
@@ -34,9 +33,9 @@
 
 // CARD BASE
 .card {
-  @include card-base;
+  @include t.card-base;
 
-  &--elevated { @include card-elevated; }
+  &--elevated { @include t.card-elevated; }
   &--interactive {
     cursor: pointer;
     transition: all var(--transition-base);
@@ -50,8 +49,9 @@
   &__header {
     margin: calc(var(--space-m) * -1) calc(var(--space-m) * -1) var(--space-m) calc(var(--space-m) * -1);
     padding: var(--space-m);
+    // ✅ REFACTOR: Usamos las variables semánticas para unificar estilos.
     border-bottom: var(--border-width) solid var(--color-border);
-    background: var(--color-secondary-light);
+    background: var(--color-surface-accented);
     border-radius: var(--radius-lg) var(--radius-lg) 0 0;
   }
 
@@ -69,8 +69,9 @@
   &__footer {
     margin: var(--space-m) calc(var(--space-m) * -1) calc(var(--space-m) * -1) calc(var(--space-m) * -1);
     padding: var(--space-m);
+    // ✅ REFACTOR: Usamos las variables semánticas para unificar estilos.
     border-top: var(--border-width) solid var(--color-border);
-    background: var(--color-secondary-light);
+    background: var(--color-surface-accented);
     border-radius: 0 0 var(--radius-lg) var(--radius-lg);
   }
 }
@@ -86,14 +87,14 @@
   padding: var(--space-m);
 
   &__backdrop {
-    position: absolute;
+    position: fixed; // Usamos fixed para que cubra toda la pantalla
     inset: 0;
     background: var(--modal-overlay-bg);
     backdrop-filter: blur(4px);
   }
 
   &__content {
-    @include card-base;
+    @include t.card-base;
     position: relative;
     max-width: 90vw;
     max-height: 90vh;
@@ -111,9 +112,10 @@
   }
 
   &__header {
-    @include flex-between;
+    @include t.flex-between;
     padding: var(--space-m);
-    border-bottom: var(--border-width) solid var(--modal-header-border);
+    // ✅ REFACTOR: Usamos la variable de borde principal en lugar de una específica del modal.
+    border-bottom: var(--border-width) solid var(--color-border);
     gap: var(--space-m);
   }
 
@@ -125,9 +127,9 @@
   }
 
   &__close {
-    @include button-reset;
-    @include size(32px);
-    @include flex-center;
+    @include t.button-reset;
+    @include t.size(32px);
+    @include t.flex-center;
     border-radius: var(--radius-md);
     color: var(--color-text-muted);
     transition: all var(--transition-fast);
@@ -145,9 +147,10 @@
   }
 
   &__footer {
-    @include flex-between;
+    @include t.flex-between;
     padding: var(--space-m);
-    border-top: var(--border-width) solid var(--modal-header-border);
+    // ✅ REFACTOR: Usamos la variable de borde principal.
+    border-top: var(--border-width) solid var(--color-border);
     gap: var(--space-sm);
   }
 }

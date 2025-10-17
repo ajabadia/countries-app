@@ -1,27 +1,23 @@
 // src/app/app.routes.ts
 
-import { TestComponent } from './modules/test/test.component';
 import { Routes } from '@angular/router';
-import { PublicComponent } from './modules/public/public.component';
-import { AdminComponent } from './modules/admin/admin/admin.component';
 
 export const routes: Routes = [
-  // --- Ruta para la sección pública ---
-  // Al navegar a /public, se carga PublicComponent, que contiene el menú público.
+  // ✅ REFACTOR: Se eliminan los componentes de layout intermedios (PublicComponent, AdminComponent).
+  // Ahora, las rutas de cada módulo se cargan directamente en el <router-outlet> principal de AppComponent.
   {
-    path: 'public',
-    component: PublicComponent,
-    // Las rutas hijas se cargarán dentro del <router-outlet> de PublicComponent.
+    path: '', // La sección pública ahora es la raíz.
     loadChildren: () => import('./modules/public/public.routes').then(m => m.PUBLIC_ROUTES),
   },
-
-  // --- Ruta para la sección de administración ---
-  // Al navegar a /admin, se carga AdminComponent, que contiene el menú de admin.
   {
     path: 'admin',
-    component: AdminComponent,
-    // Las rutas hijas se cargarán dentro del <router-outlet> de AdminComponent.
     loadChildren: () => import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+  },
+  {
+    path: 'test',
+    // ✅ FIX: The test routes file was missing. For now, we can load a placeholder component.
+    // This can be expanded later.
+    loadComponent: () => import('./modules/test/test.component').then(m => m.TestComponent),
   },
 
   // --- Ruta por defecto ---
@@ -29,14 +25,7 @@ export const routes: Routes = [
   {
 
     path: '',
-    redirectTo: '/public',
+    redirectTo: '/', // Redirige a la raíz (sección pública).
     pathMatch: 'full',
-  },
-
-  // --- Ruta comodín (opcional pero recomendado) ---
-  // Redirige a la página de inicio si la URL no coincide con ninguna ruta.
-  {
-    path: '**',
-    redirectTo: '/public',
   },
 ];

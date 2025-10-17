@@ -1,0 +1,11 @@
+<nav class="nav-menu">
+  <app-ui-button
+    *ngFor="let item of items"
+    [routerLink]="item.route"
+    routerLinkActive="ui-button--active"
+    [icon]="item.name"
+    variant="ghost"
+  >
+    {{ item.label }}
+  </app-ui-button>
+</nav>

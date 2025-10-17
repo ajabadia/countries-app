@@ -1,6 +1,15 @@
-<app-menu-bar
-  [items]="publicMenuItems"
-  ariaLabel="Menú público"
-></app-menu-bar>
+<!--
+  Layout para la sección pública.
+  Utiliza el componente reutilizable <app-nav-menu> para la navegación.
+-->
+<div class="public-layout">
+  <app-nav-menu
+    [items]="publicMenuItems"
+    basePath="/public"
+    class="public-layout__menu"
+  ></app-nav-menu>
 
-<router-outlet></router-outlet>
+  <div class="public-layout__content-wrapper">
+    <router-outlet></router-outlet>
+  </div>
+</div>

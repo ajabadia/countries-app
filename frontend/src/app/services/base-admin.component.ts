@@ -3,7 +3,7 @@
 import { Router } from '@angular/router';
 import { Directive, OnInit, inject } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
-import { BehaviorSubject, Observable, Subject, switchMap, tap, catchError, of, combineLatest, map } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, switchMap, tap, catchError, of, combineLatest, map, startWith } from 'rxjs';
 
 // Interfaces y Modelos
 import { ApiResponse } from '@services/api-response.model';
@@ -13,16 +13,17 @@ import { TableColumn } from '@services/table-column.model';
 import { ToolbarButtonConfig as ToolbarButton } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
 import { BaseCrudService } from '@services/base-crud.service';
 import { SelectionService } from '@services/selection.service'; // La ruta ya es correcta, confirmamos consistencia
-import { ALL_ROUTES_MAP } from '@config/route-config';
+import { TitleService } from './title.service'; // ✅ NUEVO: Importamos el servicio de título.
 // He corregido la ruta de importación del formulario de área.
 // Asumo que existe un AdminAreasComponent que lo usará.
 import { AreaFormComponent } from '@shared/components/area-form/area-form.component';
 
-@Directive()
+@Directive() // ✅ CORRECCIÓN: La clase base no debe tener plantilla. Es solo para lógica.
 export abstract class BaseAdminComponent<T extends { id: string | number }> implements OnInit {
   // --- Inyección de dependencias ---
   protected router = inject(Router);
   protected fb = inject(FormBuilder);
+  protected titleService = inject(TitleService); // ✅ NUEVO: Inyectamos el servicio.
 
   // --- Propiedades abstractas (a implementar por la clase hija) ---
   protected abstract entityService: BaseCrudService<T, Partial<T>>;
@@ -31,9 +32,6 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   public abstract tableColumns: TableColumn<T>[];
   public abstract form: FormGroup;
 
-  // --- Propiedades para el encabezado de la página ---
-  public pageTitle = '';
-  public pageIcon? = '';
 
   // --- Estado reactivo para la tabla y paginación ---
   public readonly page$ = new BehaviorSubject<number>(1);
@@ -64,7 +62,7 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   ];
 
   ngOnInit(): void {
-    this.setPageMetadata();
+    this.titleService.setTitle(this.entityNamePlural);
 
     // Combina todos los streams de estado para recargar los datos
     const params$ = combineLatest({
@@ -75,16 +73,16 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
     });
 
     this.response$ = this.refresh$.pipe(
-      // Inicia la carga la primera vez
+      startWith(null), // ✅ MEJORA: Inicia el stream inmediatamente en la suscripción.
       tap(() => this.isLoading = true),
       // Cada vez que uno de los parámetros cambia, hacemos la petición
       switchMap(() => params$.pipe(
         switchMap(params => this.entityService.getAll({
           page: params.page, 
           pageSize: params.pageSize,
-          search: params.search,
-          sortKey: params.sort.key,
-          sortOrder: params.sort.direction,
+          search: params.search, // ✅ El tipo ya coincide (string | null)
+          sort: params.sort.key, // ✅ El backend espera 'sort' y 'order'
+          order: params.sort.direction,
         }))
       )),
       catchError(() => {
@@ -95,20 +93,8 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
       tap(() => this.isLoading = false)
     );
 
-    // Carga inicial
-    this.refresh$.next();
   }
 
-  /**
-   * Establece el título y el icono de la página basándose en la URL actual.
-   */
-  private setPageMetadata(): void {
-    const currentRouteConfig = ALL_ROUTES_MAP.get(this.router.url);
-    if (currentRouteConfig) {
-      this.pageTitle = currentRouteConfig.label;
-      this.pageIcon = currentRouteConfig.name;
-    }
-  }
   // --- Métodos de eventos de la UI ---
   onSearchChange(searchTerm: string | null): void {
     this.page$.next(1);

@@ -1,100 +1,19 @@
-.toolbar-buttons {
-  display: flex;
-  gap: 1rem;
-  margin-bottom: 1.5rem;
-  justify-content: flex-start;
-  align-items: center;
-  flex-wrap: wrap;
+/*
+  ✅ REFACTORIZACIÓN: Se han eliminado todos los estilos que definían una apariencia
+  propia para los botones dentro de esta barra (.tb-btn, .tb-btn--main, etc.).
 
-  .tb-btn {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 0.5em;
-    padding: 0.55em 1.15em;
-    min-height: 2.7em;
-    font-size: 1.08em;
-    border: none;
-    border-radius: 0.5em;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
-    box-sizing: border-box;
-    outline: none;
+  Ahora, este componente solo se encarga de la disposición de los botones,
+  y los botones hijos (ui-button) son los únicos responsables de su estilo.
+*/
 
-    &__icon {
-      font-size: inherit; // hereda del botón; puedes ajustar si quieres tamaño exacto
-      display: flex;
-      align-items: center;
+:host {
+  display: grid;
+  gap: var(--space-s); // Espacio entre botones, definido por las variables globales.
 
-    }
-
-    // Botón "nuevo" (color corporativo)
-    &--main {
-      background: #0a7de9;          // Azul corporativo
-      color: #fff;
-      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
-        background: #136ddc;
-        box-shadow: 0 0 0 2px #c9e9fb inset;
-      }
-    }
-
-    // Botón "editar" (amarillo)
-    &--edit {
-      background: #ffe391;
-      color: #926f13;
-      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
-        background: #ffde55;
-        color: #805a09;
-        box-shadow: 0 0 0 2px #fff0c1 inset;
-      }
-    }
-
-    // Botón "borrar" (rojo)
-    &--danger {
-      background: #ffb0aa;
-      color: #be371c;
-      &:hover:not(:disabled), &:focus-visible:not(:disabled) {
-        background: #ff8072;
-        color: #9c2611;
-        box-shadow: 0 0 0 2px #ffe1dc inset;
-      }
-    }
-
-    // Deshabilitado visualmente
-    &:disabled, &.tb-btn--disabled {
-      opacity: 0.52;
-      background: #ebebeb !important;
-      color: #b0b0b0 !important;
-      cursor: not-allowed;
-      pointer-events: none;
-      box-shadow: none;
-    }
-  }
-}
-
-.tb-btn__icon img {
-    // Hereda el color del texto del botón como "fill" del SVG
-    // Necesario que el SVG use fill="currentColor" en su raíz.
-    filter: none;
-    vertical-align: middle;
-    margin-right: 0.35em;
-    height: 1.22em;
-    width: auto;
-    display: inline-block;
-    color: inherit;  // Hereda color del botón
-  }
- 
-
-
-// Responsive toolbar
-@media (max-width: 600px) {
-  .toolbar-buttons {
-    gap: 0.6em;
-    .tb-btn {
-      padding: 0.37em 0.77em;
-      min-height: 2.1em;
-      font-size: 0.99em;
-    }
-  }
+  /*
+    Esta es la regla clave para el balanceo automático:
+    - `auto-fit` y `minmax` aseguran que los botones se distribuyan de forma
+      equitativa y se reorganicen de manera balanceada en pantallas más pequeñas.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(min-content, 1fr));
 }

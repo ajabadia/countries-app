@@ -63,14 +63,17 @@
   --color-background-medium: #d3dee6;
   --color-background-soft: #dce3ef;
   --color-background-light: #f3f7fe;
-  --color-background: var(--color-background-light); // Fondo principal de la app
+  --color-background: #f3f7fe; // Fondo principal de la app
   --color-surface: #ffffff;
-  --color-surface-soft: #f8fbfd;
+  // ✅ REFACTOR: Nueva variable semántica para fondos de cabeceras/pies de sección.
+  // Se usa en .card__header, .card__footer, .modal__header, etc.
+  --color-surface-accented: var(--color-secondary-lighter);
   --color-border: #e6e8ea;
   --color-text: var(--color-tertiary); // Usamos el negro terciario para el texto principal
   --color-text-contrast: #ffffff;
-  --color-text-muted: #69707a;
-  --color-link: var(--color-primary);
+  --color-text-muted: #69707a; 
+  // ✅ REFACTOR: El color de los enlaces debe usar la variable semántica de información.
+  --color-link: var(--color-info);
 
   // === ESPACIADO (Basado en bloques S, M, L) ===
   // Talla S
@@ -147,25 +150,5 @@
 }
 
 // === TEMA OSCURO ===
-[data-theme='dark'] {
-  // Re-mapeamos las variables para el tema oscuro
-  --color-primary: #6ab2f4;
-  --color-primary-dark: #8ccaff;
-  --color-primary-contrast: #ffffff;
-
-  --color-secondary: #a5bedc;
-
-  --color-background: #181a20;
-  --color-surface: #232331;
-  --color-border: #374862;
-
-  --color-text: #f3f7fe;
-  --color-text-contrast: #181a20;
-  --color-text-muted: #bfc2ca;
-
-  --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.3);
-  --shadow-base: 0 1px 3px 0 rgba(0, 0, 0, 0.4), 0 1px 2px 0 rgba(0, 0, 0, 0.2);
-  --shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.4), 0 2px 4px -1px rgba(0, 0, 0, 0.2);
-  --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.4), 0 4px 6px -2px rgba(0, 0, 0, 0.3);
-  --shadow-active: 0 2px 16px rgba(79, 99, 163, 0.33);
-}
+// ✅ REFACTOR: The dark theme is now applied in the main `styles.scss` file
+// to break the circular dependency. This file should only contain variable definitions.

@@ -1,5 +1,6 @@
 /* app.component.scss */
-@use 'src/styles/mixins' as m;
+// ✅ REFACTOR: Ya no es necesario importar 'index' o 'mixins'.
+// El mixin 'container' ahora se aplica a una clase CSS global '.container' definida en `_base.scss`.
 
 .app-container {
   display: flex;
@@ -14,11 +15,8 @@
 }
 
 .app-content {
-  // ✅ REUTILIZACIÓN: Usamos el mixin de contenedor para centrar el contenido
-  // y aplicar los paddings estándar del sistema de diseño.
-  @include m.container;
+  // Los estilos de contenedor ahora se gestionan con la clase .container en el HTML.
   flex-grow: 1; // Asegura que el contenido principal ocupe el espacio disponible.
   padding-top: var(--space-l);
   padding-bottom: var(--space-l);
 }
-

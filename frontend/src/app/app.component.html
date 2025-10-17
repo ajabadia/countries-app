@@ -1,13 +1,8 @@
+<!-- src/app/app.component.html -->
 <div class="app-container">
-  <app-header></app-header>
-  
-  <main class="app-content">
-    <!-- 
-      Aquí se renderizará el componente de la ruta activa.
-      Ej: PublicComponent o AdminComponent, que a su vez tienen su propio <router-outlet> y <app-menu-bar>.
-    -->
+  <app-header class="app-header"></app-header>
+
+  <main class="app-content container">
     <router-outlet></router-outlet>
   </main>
-  
-  <app-footer></app-footer>
 </div>
