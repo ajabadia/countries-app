@@ -18,7 +18,11 @@ import { TitleService } from './title.service'; // ✅ NUEVO: Importamos el serv
 // Asumo que existe un AdminAreasComponent que lo usará.
 import { AreaFormComponent } from '@shared/components/area-form/area-form.component';
 
-@Directive() // ✅ CORRECCIÓN: La clase base no debe tener plantilla. Es solo para lógica.
+/**
+ * Clase base abstracta con toda la lógica CRUD para una página de administración.
+ * No tiene plantilla, solo proporciona la lógica que los componentes de página usarán.
+ */
+@Directive()
 export abstract class BaseAdminComponent<T extends { id: string | number }> implements OnInit {
   // --- Inyección de dependencias ---
   protected router = inject(Router);
@@ -28,9 +32,9 @@ export abstract class BaseAdminComponent<T extends { id: string | number }> impl
   // --- Propiedades abstractas (a implementar por la clase hija) ---
   protected abstract entityService: BaseCrudService<T, Partial<T>>;
   public abstract entityName: string;
-  public abstract entityNamePlural: string;
-  public abstract tableColumns: TableColumn<T>[];
   public abstract form: FormGroup;
+  public entityNamePlural!: string; // Se implementará en la clase hija
+  public tableColumns!: TableColumn<T>[]; // Se implementará en la clase hija
 
 
   // --- Estado reactivo para la tabla y paginación ---

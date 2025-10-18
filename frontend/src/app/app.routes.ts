@@ -1,6 +1,7 @@
 // src/app/app.routes.ts
 
 import { Routes } from '@angular/router';
+import { authGuard } from './core/guards/auth.guard';
 
 export const routes: Routes = [
   // ✅ REFACTOR: Se eliminan los componentes de layout intermedios (PublicComponent, AdminComponent).
@@ -12,6 +13,7 @@ export const routes: Routes = [
   {
     path: 'admin',
     loadChildren: () => import('./modules/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+    canActivate: [authGuard], // 🔐 Proteger todas las rutas hijas de /admin
   },
   {
     path: 'test',

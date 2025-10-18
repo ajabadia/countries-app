@@ -1,40 +1,21 @@
 // src/app/modules/admin/pages/continents/admin-continents.component.ts
 
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 // Modelos y Servicios
 import { BaseAdminComponent } from '@services/base-admin.component';
 import { ContinentsService } from '@services/continents.service';
 import { TableColumn } from '@services/table-column.model';
 
-// Componentes Standalone necesarios
-import { TableComponent } from '@shared/components/table/table.component';
-import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
-import { SearchBoxComponent } from '@shared/components/search-box/search-box.component';
-import { ToolbarButtonsComponent } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
-import { ModalComponent } from '@shared/components/modal/modal.component';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
-import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.component';
+import { ADMIN_PAGE_IMPORTS } from '../admin-page.imports';
 
 @Component({
   selector: 'app-admin-continents',
   standalone: true,
-  imports: [
-    CommonModule,
-    AsyncPipe,
-    ReactiveFormsModule,
-    TableComponent,
-    PaginatorComponent,
-    SearchBoxComponent,
-    ToolbarButtonsComponent,
-    ModalComponent,
-    ConfirmDialogComponent,
-    UiHeadingComponent, // ✅ AÑADIDO: Importamos el componente de título.
-  ],
+  imports: [...ADMIN_PAGE_IMPORTS],
   // ✅ REFACTOR: La plantilla ahora está en la carpeta 'pages', por lo que la ruta es más simple.
-  templateUrl: '../admin-base-page.component.html',
+  templateUrl: './../admin-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminContinentsComponent extends BaseAdminComponent<any> {

@@ -32,7 +32,7 @@ import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.com
     UiHeadingComponent,
   ],
   // ✅ REFACTOR: Apuntamos a la plantilla genérica compartida.
-  templateUrl: '../admin-base-page.component.html',
+  templateUrl: '../base-admin-page/admin-base-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDependenciesComponent extends BaseAdminComponent<any> {

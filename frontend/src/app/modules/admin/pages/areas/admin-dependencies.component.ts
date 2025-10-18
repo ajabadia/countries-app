@@ -1,40 +1,21 @@
 // src/app/modules/admin/pages/dependencies/admin-dependencies.component.ts
 
 import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule, AsyncPipe } from '@angular/common';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { Validators } from '@angular/forms';
 
 // Modelos y Servicios
 import { BaseAdminComponent } from '@services/base-admin.component';
 import { DependenciesService } from '@services/dependencies.service';
 import { TableColumn } from '@services/table-column.model';
 
-// ✅ REFACTOR: Import all the necessary standalone components for the admin layout.
-import { TableComponent } from '@shared/components/table/table.component';
-import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
-import { SearchBoxComponent } from '@shared/components/search-box/search-box.component';
-import { ToolbarButtonsComponent } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
-import { ModalComponent } from '@shared/components/modal/modal.component';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
-import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.component';
+import { ADMIN_PAGE_IMPORTS } from '../admin-page.imports';
 
 @Component({
   selector: 'app-admin-dependencies',
   standalone: true,
-  imports: [
-    CommonModule,
-    AsyncPipe,
-    ReactiveFormsModule,
-    TableComponent,
-    PaginatorComponent,
-    SearchBoxComponent,
-    ToolbarButtonsComponent,
-    ModalComponent,
-    ConfirmDialogComponent,
-    UiHeadingComponent,
-  ],
+  imports: [...ADMIN_PAGE_IMPORTS],
   // ✅ REFACTOR: La plantilla ahora está en la carpeta 'pages', por lo que la ruta es más simple.
-  templateUrl: '../admin-base-page.component.html', // Apuntamos a la plantilla genérica
+  templateUrl: '../admin-page.component.html',
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminDependenciesComponent extends BaseAdminComponent<any> {

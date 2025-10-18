@@ -1,57 +1,43 @@
-import { Component, ChangeDetectionStrategy, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, FormBuilder, Validators } from '@angular/forms';
+import { Component, inject, ChangeDetectionStrategy } from '@angular/core';
+import { Validators } from '@angular/forms';
 
 // Modelos y Servicios
-import { BaseAdminComponent } from '@services/base-admin.component';
+import { Language } from '@services/language.model'; // Usamos el modelo que acabamos de corregir
 import { LanguagesService } from '@services/languages.service';
-import { Language } from '@models/language.model';
 import { TableColumn } from '@services/table-column.model';
 
-// Componentes Standalone necesarios (la mayoría ahora se gestionan en BaseAdminComponent)
-import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.component';
-import { ToolbarButtonsComponent } from '@shared/components/toolbar-buttons/toolbar-buttons.component';
-import { SearchBoxComponent } from '@shared/components/search-box/search-box.component';
-import { TableComponent } from '@shared/components/table/table.component';
-import { PaginatorComponent } from '@shared/components/paginator/paginator.component';
-import { ModalComponent } from '@shared/components/modal/modal.component';
-import { ConfirmDialogComponent } from '@shared/components/confirm-dialog/confirm-dialog.component';
+// Componentes Base y Array de importaciones comunes
+import { BaseAdminComponent } from '@services/base-admin.component';
+import { ADMIN_PAGE_IMPORTS } from '../admin-page.imports';
+// import { LanguageFormComponent } from '@shared/components/language-form/language-form.component';
 
 @Component({
   selector: 'app-admin-languages',
   standalone: true,
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    UiHeadingComponent,
-    ToolbarButtonsComponent,
-    SearchBoxComponent,
-    TableComponent,
-    PaginatorComponent,
-    ModalComponent,
-    ConfirmDialogComponent,
-  ],
-  templateUrl: './admin-languages.component.html', // Ruta relativa al componente
+  templateUrl: './../admin-page.component.html',
+  imports: [...ADMIN_PAGE_IMPORTS /*, LanguageFormComponent */],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class AdminLanguagesComponent extends BaseAdminComponent<Language> {
-  // Inyectamos el servicio específico para esta entidad
-  protected override entityService = inject(LanguagesService);
+  // --- Implementación de propiedades abstractas ---
 
-  // Definimos los nombres para la UI (títulos, botones, etc.)
-  public override entityName = 'Lenguaje';
-  public override entityNamePlural = 'Lenguajes';
+  // 1. Inyectar el servicio específico
+  protected entityService = inject(LanguagesService);
+  
+  // 2. Definir nombres para la UI
+  public override entityName = 'Idioma';
+  public override entityNamePlural = 'Idiomas';
 
-  // Configuramos las columnas que mostrará la tabla
+  // 3. Definir las columnas de la tabla
   public override tableColumns: TableColumn<Language>[] = [
-    { key: 'id', label: 'ID', sortable: true },
-    { key: 'name', label: 'Nombre', sortable: true, minWidth: '200px' },
-    { key: 'active', label: 'Activo', type: 'status' } // Usamos el tipo 'status' para un renderizado especial
+    { key: 'id', label: 'ID' },
+    { key: 'name', label: 'Nombre' },
+    { key: 'active', label: 'Activo', type: 'status' },
   ];
 
-  // Definimos el formulario reactivo para crear y editar la entidad
-  public override form = this.fb.group({
-    name: ['', [Validators.required, Validators.minLength(2)]],
-    active: [1, Validators.required]
+  // 4. Definir el formulario de creación/edición
+  public form = this.fb.group({
+    name: ['', Validators.required],
+    active: [1],
   });
 }

@@ -2,6 +2,7 @@
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { ApiResponse } from './api-response.model'; // ✅ Importamos el modelo unificado
+import { environment } from '@env/environment'; // ✅ Importamos el entorno
 import { Directive, inject } from '@angular/core'; // ✅ Importamos Directive e inject
 
 
@@ -17,7 +18,7 @@ export class BaseCrudService<T, C> {
   protected http = inject(HttpClient);
 
   constructor(entityName: string) {
-    this.apiUrl = `/api/${entityName}`; // El apiUrl se construye aquí
+    this.apiUrl = `${environment.apiUrl}/api/${entityName}`; // ✅ Usamos la URL base del entorno
   }
 
   /**
