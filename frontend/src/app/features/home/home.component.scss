@@ -1,0 +1,21 @@
+/* File: /frontend/src/app/features/home/home.component.scss */
+
+:host {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f8f9fa;
+}
+
+.home-container {
+  text-align: center;
+  padding: 2rem;
+  background-color: #fff;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.home-header {
+  margin-bottom: 2rem;
+}

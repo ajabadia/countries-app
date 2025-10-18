@@ -36,7 +36,6 @@
     "@types/cors": "^2.8.17",
     "@types/express": "^4.17.21",
     "@types/express-rate-limit": "^6.0.0",
-    "@types/jest": "^29.5.12",
     "@types/jsonwebtoken": "^9.0.6",
     "@types/morgan": "^1.9.9",
     "@types/node": "^20.14.12",
@@ -46,10 +45,7 @@
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
-    "jest": "^29.7.0",
     "prettier": "^3.6.2",
-    "supertest": "^7.0.0",
-    "ts-jest": "^29.2.3",
     "tsc-watch": "^6.2.0",
     "typescript": "^5.5.4"
   }

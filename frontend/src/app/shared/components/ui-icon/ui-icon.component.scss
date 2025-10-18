@@ -1,0 +1,41 @@
+:host {
+  display: inline-flex;
+  vertical-align: middle;
+  align-items: center;
+  justify-content: center;
+  // El icono hereda el color del texto de su contenedor (ej. un botón).
+  color: inherit;
+  // El tamaño se controla mediante la variable CSS --icon-size,
+  // que es establecida por el HostBinding en el componente.
+  width: var(--icon-size, 1em);
+  height: var(--icon-size, 1em);
+}
+
+// El contenedor interno (span para SVG, o la propia img) debe ocupar todo el espacio.
+.icon-wrapper,
+.icon-image {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s;
+  width: 100%;
+  height: 100%;
+}
+
+// El SVG inyectado usa `currentColor` para tomar el color heredado.
+// Asegúrate de que tus archivos .svg usen fill="currentColor".
+::ng-deep .icon-wrapper svg {
+  fill: currentColor;
+  width: 100%;
+  height: 100%;
+}
+
+// Estilos específicos para variantes como en el original
+:host(.flag-circle) {
+  color: var(--color-flag, #fff);
+  background: var(--flag-bg, #11a2ea);
+  border: 2.5px solid #c9e7fc;
+  border-radius: 50%;
+  box-shadow: 0 1px 6px rgba(17, 162, 234, 0.1);
+  padding: 0.15em;
+}

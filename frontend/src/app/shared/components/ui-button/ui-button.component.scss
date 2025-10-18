@@ -1,0 +1,133 @@
+// Variables de color base (pueden venir de un :root global)
+$color-primary: #007bff;
+$color-secondary: #6c757d;
+$color-danger: #dc3545;
+$color-success: #28a745;
+$color-warning: #ffc107;
+$color-text-light: #fff;
+$color-text-dark: #212529;
+$color-border: #dee2e6;
+
+:host(.ui-button) {
+  // --- Estructura Base ---
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.6em;
+  position: relative;
+  border-radius: 4px;
+  font-weight: 600;
+  cursor: pointer;
+  text-decoration: none;
+  transition: all 0.2s ease-in-out;
+  user-select: none;
+  white-space: nowrap;
+  border: 1px solid;
+
+  // --- Sistema de Theming con Variables CSS ---
+  // Esto permite una personalización muy sencilla y potente.
+  background-color: var(--_bg, transparent);
+  color: var(--_color, inherit);
+  border-color: var(--_border, transparent);
+
+  // --- Tamaños (Size) ---
+  &.ui-button--s {
+    padding: 0.25rem 0.75rem;
+    font-size: 12px;
+    min-height: 1.75rem;
+  }
+  &.ui-button--m {
+    padding: 0.5rem 1rem;
+    font-size: 14px;
+    min-height: 2.25rem;
+  }
+  &.ui-button--l {
+    padding: 0.65rem 1.5rem;
+    font-size: 16px;
+    min-height: 2.75rem;
+  }
+
+  // --- Colores ---
+  &.ui-button--primary {
+    --_bg-solid: #{$color-primary};
+    --_color-solid: #{$color-text-light};
+    --_color-outline: #{$color-primary};
+    --_border-outline: #{$color-primary};
+  }
+  &.ui-button--secondary {
+    --_bg-solid: #{$color-secondary};
+    --_color-solid: #{$color-text-light};
+    --_color-outline: #{$color-secondary};
+    --_border-outline: #{$color-secondary};
+  }
+  &.ui-button--danger {
+    --_bg-solid: #{$color-danger};
+    --_color-solid: #{$color-text-light};
+    --_color-outline: #{$color-danger};
+    --_border-outline: #{$color-danger};
+  }
+  // ... (añadir success, warning, etc. de la misma forma)
+
+  // --- Variantes de Estilo ---
+  &.ui-button--solid {
+    --_bg: var(--_bg-solid);
+    --_color: var(--_color-solid);
+    --_border: var(--_bg-solid);
+    &:hover:not(:disabled) { --_bg: #{darken($color-primary, 8%)}; --_border: #{darken($color-primary, 8%)}; }
+  }
+  &.ui-button--outline {
+    --_bg: transparent;
+    --_color: var(--_color-outline);
+    --_border: var(--_border-outline);
+    &:hover:not(:disabled) { --_bg: rgba(var(--_color-outline), 0.1); }
+  }
+  &.ui-button--ghost {
+    --_bg: transparent;
+    --_color: var(--_color-outline);
+    --_border: transparent;
+    &:hover:not(:disabled) { --_bg: rgba(var(--_color-outline), 0.1); }
+  }
+
+  // --- Estados ---
+  &:disabled,
+  &.ui-button--loading {
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  // --- Modificadores ---
+  &.ui-button--full-width { width: 100%; }
+  &.ui-button--icon-only {
+    padding: 0.5rem;
+    min-width: 2.25rem; // Asegura que sea cuadrado
+    .ui-button__label { display: none; }
+  }
+}
+
+// --- Elementos Internos ---
+.ui-button__content {
+  display: inline-flex;
+  align-items: center;
+  gap: inherit;
+  transition: opacity 0.2s;
+
+  &--hidden {
+    opacity: 0;
+  }
+}
+
+.ui-button__spinner {
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border: 2px solid currentColor;
+  border-top-color: transparent;
+  border-radius: 50%;
+  animation: ui-button-spin 0.65s linear infinite;
+}
+
+@keyframes ui-button-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}

@@ -1,14 +1,16 @@
-// src/app/app.component.ts
+// File: /frontend/src/app/app.component.ts
+
 import { Component } from '@angular/core';
-import { RouterModule } from '@angular/router';
-import { HeaderComponent } from './layout/header/header.component';
+import { CommonModule } from '@angular/common';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-root',
   standalone: true,
-  // ✅ REFACTOR: Se elimina NavMenuComponent de las importaciones.
-  imports: [RouterModule, HeaderComponent],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss'],
+  imports: [CommonModule, RouterOutlet],
+  template: '<router-outlet></router-outlet>', // Simplemente renderiza el componente de la ruta activa
+  styles: [':host { display: block; }'],
 })
-export class AppComponent {}
+export class AppComponent {
+  title = 'frontend';
+}

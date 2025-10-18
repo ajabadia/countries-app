@@ -1,0 +1,24 @@
+<!-- Icono de Carga (se muestra cuando `loading` es true) -->
+<span *ngIf="loading" class="ui-button__spinner" aria-hidden="true"></span>
+
+<!-- Contenido principal del botón, se oculta durante la carga -->
+<span class="ui-button__content" [class.ui-button__content--hidden]="loading">
+  <!-- Icono a la izquierda -->
+  <app-ui-icon
+    *ngIf="name && iconPosition !== 'right'"
+    [icon-name]="name"
+    [icon-type]="iconType"
+    [icon-size]="size" />
+
+  <!-- Texto/Contenido proyectado -->
+  <span class="ui-button__label" #contentWrapper>
+    <ng-content></ng-content>
+  </span>
+
+  <!-- Icono a la derecha -->
+  <app-ui-icon
+    *ngIf="name && iconPosition === 'right'"
+    [icon-name]="name"
+    [icon-type]="iconType"
+    [icon-size]="size" />
+</span>

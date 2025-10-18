@@ -1,0 +1,51 @@
+<div class="table-container">
+  <table>
+    <thead>
+      <tr>
+        <!-- Columna de Selección (si se proporciona el servicio) -->
+        <th *ngIf="selection" class="selection-cell">
+          <input
+            type="checkbox"
+            [checked]="selection.areAllSelected(data || [])"
+            (change)="selection.toggleAll(data || [])"
+          />
+        </th>
+
+        <!-- Columnas de Datos -->
+        <th *ngFor="let col of columns" (click)="onSort(col)" [class.sortable]="col.sortable">
+          {{ col.label }}
+          <span *ngIf="col.sortable" class="sort-icon">
+            <span *ngIf="isSorted(col, 'asc')">▲</span>
+            <span *ngIf="isSorted(col, 'desc')">▼</span>
+          </span>
+        </th>
+
+        <!-- Columna de Acciones (si se proporciona la plantilla) -->
+        <th *ngIf="actionsTemplate">Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- Estado de Carga -->
+      <tr *ngIf="isLoading" data-state="info">
+        <td [attr.colspan]="columns.length + (selection ? 1 : 0) + (actionsTemplate ? 1 : 0)">Loading...</td>
+      </tr>
+
+      <!-- Estado Vacío -->
+      <tr *ngIf="!isLoading && (!data || data.length === 0)" data-state="info">
+        <td [attr.colspan]="columns.length + (selection ? 1 : 0) + (actionsTemplate ? 1 : 0)">No records found.</td>
+      </tr>
+
+      <!-- Filas de Datos -->
+      <tr *ngFor="let item of data">
+        <td *ngIf="selection" class="selection-cell">
+          <input type="checkbox" [checked]="selection.isSelected(item)" (change)="selection.toggle(item)" />
+        </td>
+        <td *ngFor="let col of columns">{{ getCellValue(item, col.key) }}</td>
+        <td *ngIf="actionsTemplate">
+          <!-- Proyecta aquí el contenido de la plantilla de acciones -->
+          <ng-container [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+        </td>
+      </tr>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,10 @@
+:host {
+  display: inline-block;
+  line-height: 0; // Elimina el espacio extra debajo de la imagen
+}
+
+.logo-image {
+  width: 100%;
+  height: auto;
+  display: block;
+}

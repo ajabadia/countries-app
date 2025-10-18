@@ -1,0 +1,15 @@
+{
+  "TITLE": "EN - Aplicación de Países",
+  "COUNTRIES": "EN - Países",
+  "SAVE": "EN - Guardar",
+  "DELETE": "EN - Eliminar",
+  "CONFIRM_DELETE": "EN - ¿Seguro que desea eliminar el registro?",
+     "SELECT_LANGUAGE": "EN - Seleccionar idioma",
+    "ADMIN_DASHBOARD": {
+    "TITLE": "EN - Panel de administración"
+  },
+
+  "USERS": "EN - Usuarios",
+
+  "AREAS": "EN - Áreas"
+}

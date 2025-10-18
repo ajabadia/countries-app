@@ -1,0 +1,164 @@
+// src/styles/_mixins-definitions.scss
+// ✅ NUEVO FICHERO: Contiene las definiciones de los mixins para evitar dependencias circulares.
+
+// --- Mixins de Layout y Flexbox ---
+@mixin flex-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@mixin flex-between {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+@mixin size($width, $height: $width) {
+  width: $width;
+  height: $height;
+}
+
+@mixin section-layout {
+  display: grid;
+  grid-template-columns: var(--sidebar-width) 1fr;
+  grid-template-rows: auto 1fr;
+  grid-template-areas:
+    'menu header'
+    'menu content';
+  height: 100vh;
+  overflow: hidden;
+}
+
+// ✅ CORRECCIÓN: Se añade el mixin `container` que faltaba.
+// Este mixin es esencial para centrar y limitar el ancho del contenido principal.
+@mixin container {
+  width: 100%;
+  max-width: var(--container-width, 1200px);
+  margin-left: auto;
+  margin-right: auto;
+  padding: 0 var(--space-m);
+}
+
+// --- Mixins de Componentes de UI ---
+@mixin button-reset {
+  border: none;
+  margin: 0;
+  padding: 0;
+  width: auto;
+  overflow: visible;
+  background: transparent;
+  color: inherit;
+  font: inherit;
+  line-height: normal;
+  -webkit-font-smoothing: inherit;
+  -moz-osx-font-smoothing: inherit;
+  -webkit-appearance: none;
+  cursor: pointer;
+}
+
+@mixin button-base {
+  @include button-reset;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  transition: all var(--transition-base);
+  border: var(--border-width) solid transparent;
+}
+
+@mixin button-variant($type) {
+  @if $type == 'primary' {
+    background-color: var(--color-primary);
+    color: var(--color-primary-contrast);
+    border-color: var(--color-primary);
+    &:hover:not(:disabled) { background-color: var(--color-primary-dark); }
+  } @else if $type == 'secondary' {
+    background-color: var(--color-secondary);
+    color: var(--color-primary-contrast);
+    border-color: var(--color-secondary);
+    &:hover:not(:disabled) { background-color: var(--color-secondary-dark); }
+  } @else if $type == 'outline' {
+    background-color: transparent;
+    border-color: var(--color-primary);
+    color: var(--color-primary);
+    &:hover:not(:disabled) {
+      background-color: var(--color-primary-lighter);
+      color: var(--color-primary-dark);
+    }
+  } @else if $type == 'ghost' {
+    background-color: transparent;
+    border-color: transparent;
+    color: var(--color-text-muted);
+    &:hover:not(:disabled) {
+      background-color: var(--color-surface-accented);
+      color: var(--color-text);
+    }
+  } @else if $type == 'danger' {
+    background-color: var(--color-error);
+    color: var(--color-primary-contrast);
+    border-color: var(--color-error);
+    &:hover:not(:disabled) { background-color: var(--color-quaternary-red-dark); }
+  }
+}
+
+@mixin button-size($size) {
+  // ✅ REFACTOR: Se implementa la lógica para los tamaños de botón.
+  @if $size == 'xs' {
+    font-size: var(--font-size-xs);
+    padding: var(--space-xs) var(--space-s);
+    height: 28px;
+  } @else if $size == 'sm' {
+    font-size: var(--font-size-sm);
+    padding: var(--space-s) var(--space-sm);
+    height: 36px;
+  } @else if $size == 'md' {
+    font-size: var(--font-size-base);
+    padding: var(--space-sm) var(--space-m);
+    height: 44px;
+  } @else if $size == 'lg' {
+    font-size: var(--font-size-lg);
+    padding: var(--space-m) var(--space-l);
+    height: 52px;
+  } @else if $size == 'xl' {
+    font-size: var(--font-size-xl);
+    padding: var(--space-ml) var(--space-xl);
+    height: 60px;
+  }
+}
+
+@mixin card-base {
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  border: var(--border-width) solid var(--color-border);
+  padding: var(--space-m);
+  box-shadow: var(--shadow-base);
+}
+
+@mixin card-elevated {
+  box-shadow: var(--shadow-lg);
+}
+
+// --- Mixins de Estado y Accesibilidad ---
+@mixin focus-visible {
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+    box-shadow: 0 0 0 4px rgba(var(--color-primary), 0.2);
+  }
+}
+
+@mixin state-loading {
+  cursor: wait;
+  opacity: 0.7;
+  position: relative;
+
+  &::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: rgba(255, 255, 255, 0.5);
+    z-index: 1;
+  }
+}

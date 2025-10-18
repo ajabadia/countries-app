@@ -1,0 +1,11 @@
+/* src/styles/_reset.scss */
+/* Reset básico para normalizar estilos */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+}

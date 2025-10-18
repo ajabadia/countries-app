@@ -1,0 +1,5 @@
+<!-- File: /frontend/src/assets/icons/system/unknown.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+  <rect width="100" height="100" rx="15" fill="#E0E0E0"/>
+  <text x="50" y="65" font-family="sans-serif" font-size="40" fill="#757575" text-anchor="middle" font-weight="bold">UNK</text>
+</svg>

@@ -1,0 +1,34 @@
+<!-- File: /frontend/src/app/shared/components/ui-heading/ui-heading.component.html -->
+
+<!--
+  Este ng-container renderiza la etiqueta H correcta (h1, h2, etc.)
+  y le pasa el contenido definido en #headingContent.
+-->
+<ng-container [ngSwitch]="level">
+  <h1 *ngSwitchCase="1"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h1>
+  <h2 *ngSwitchCase="2"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h2>
+  <h3 *ngSwitchCase="3"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h3>
+  <h4 *ngSwitchCase="4"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h4>
+  <h5 *ngSwitchCase="5"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h5>
+  <h6 *ngSwitchCase="6"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h6>
+</ng-container>
+
+<!--
+  Definimos el contenido del encabezado UNA SOLA VEZ aquí.
+  Esto sigue el principio DRY (Don't Repeat Yourself).
+-->
+<ng-template #headingContent>
+  <app-ui-icon
+    *ngIf="name && position === 'left'"
+    [name]="name"
+    [size]="iconSize"
+    [type]="type"
+    [color]="color" />
+  <span>{{ title }}</span>
+  <app-ui-icon
+    *ngIf="name && position === 'right'"
+    [name]="name"
+    [size]="iconSize"
+    [type]="type"
+    [color]="color" />
+</ng-template>
