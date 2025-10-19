@@ -5,17 +5,17 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f8f9fa;
+  background-color: var(--color-background);
 }
 
 .home-container {
   text-align: center;
-  padding: 2rem;
-  background-color: #fff;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  padding: var(--space-ml);
+  background-color: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-md);
 }
 
 .home-header {
-  margin-bottom: 2rem;
+  margin-bottom: var(--space-ml);
 }

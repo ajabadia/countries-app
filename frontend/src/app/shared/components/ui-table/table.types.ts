@@ -1,4 +1,4 @@
-import { SortDirection } from './sort.type';
+import { SortDirection } from '@shared/types/sort.type';
 
 export interface TableColumn<T> {
   key: keyof T | string; // 'string' para poder acceder a propiedades anidadas si fuera necesario

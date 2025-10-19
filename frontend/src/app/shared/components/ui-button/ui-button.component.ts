@@ -1,6 +1,7 @@
 import { Component, Input, ChangeDetectionStrategy, HostBinding, ViewChild, ElementRef, AfterContentInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UiIconComponent, UiIconType } from '@shared/components/ui-icon/ui-icon.component';
+import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
+import { UiIconSize, UiIconType } from '@shared/services/icon.service';
 
 // --- Tipos exportables para consistencia en la aplicación ---
 export type ButtonColor = 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
@@ -18,18 +19,21 @@ export type ButtonSize = 's' | 'm' | 'l';
 })
 export class UiButtonComponent implements AfterContentInit, OnChanges {
   // --- API del Botón ---
-  @Input({ alias: 'button-color' }) color: ButtonColor = 'primary';
-  @Input({ alias: 'button-variant' }) variant: ButtonVariant = 'solid';
-  @Input({ alias: 'button-size' }) size: ButtonSize = 'm';
-  @Input({ alias: 'button-disabled' }) disabled = false;
-  @Input({ alias: 'button-loading' }) loading = false;
-  @Input({ alias: 'button-full-width' }) fullWidth = false;
-  @Input({ alias: 'button-aria-label' }) ariaLabel?: string;
+  @Input({ alias: 'ui-button-color' }) color: ButtonColor = 'primary';
+  @Input({ alias: 'ui-button-variant' }) variant: ButtonVariant = 'solid';
+  @Input({ alias: 'ui-button-size' }) size: ButtonSize = 'm';
+  @Input({ alias: 'ui-button-disabled' }) disabled = false;
+  @Input({ alias: 'ui-button-loading' }) loading = false;
+  @Input({ alias: 'ui-button-full-width' }) fullWidth = false;
+  @Input({ alias: 'ui-button-aria-label' }) ariaLabel?: string;
 
-  // --- API para el Icono ---
-  @Input({ alias: 'icon-name' }) name?: string;
-  @Input({ alias: 'icon-position' }) iconPosition: 'left' | 'right' | 'only' = 'left';
-  @Input({ alias: 'icon-type' }) iconType: UiIconType = 'system';
+  // --- API para el Icono (Pass-through) ---
+  @Input({ alias: 'ui-icon-name' }) iconName?: string;
+  @Input({ alias: 'ui-icon-position' }) iconPosition: 'left' | 'right' | 'only' = 'left';
+  @Input({ alias: 'ui-icon-type' }) iconType: UiIconType = 'system';
+  @Input({ alias: 'ui-icon-size' }) iconSize?: UiIconSize | 'inherit' | string;
+  @Input({ alias: 'ui-icon-color' }) iconColor?: string;
+  @Input({ alias: 'ui-icon-class' }) iconClass = '';
 
   // --- Detección de contenido ---
   @ViewChild('contentWrapper') private contentWrapper!: ElementRef<HTMLSpanElement>;
@@ -54,7 +58,7 @@ export class UiButtonComponent implements AfterContentInit, OnChanges {
   // --- Vinculación de clases al Host ---
   @HostBinding('class')
   get hostClasses(): string {
-    const isIconOnly = this.name && (!this.hasContent || this.iconPosition === 'only');
+    const isIconOnly = this.iconName && (!this.hasContent || this.iconPosition === 'only');
     return `
       ui-button
       ui-button--${this.color}
@@ -63,7 +67,7 @@ export class UiButtonComponent implements AfterContentInit, OnChanges {
       ${this.loading ? 'ui-button--loading' : ''}
       ${this.fullWidth ? 'ui-button--full-width' : ''}
       ${isIconOnly ? 'ui-button--icon-only' : ''}
-    `;
+    `.trim();
   }
 
   @HostBinding('attr.disabled')
@@ -74,6 +78,6 @@ export class UiButtonComponent implements AfterContentInit, OnChanges {
   @HostBinding('attr.aria-label')
   get finalAriaLabel(): string | undefined {
     // Proporciona un aria-label si no hay texto visible, para accesibilidad.
-    return this.ariaLabel || (this.name && !this.hasContent ? this.name : undefined);
+    return this.ariaLabel || (this.iconName && !this.hasContent ? this.iconName : undefined);
   }
 }

@@ -32,10 +32,23 @@
 
 // Estilos específicos para variantes como en el original
 :host(.flag-circle) {
-  color: var(--color-flag, #fff);
-  background: var(--flag-bg, #11a2ea);
-  border: 2.5px solid #c9e7fc;
+  color: var(--color-flag, var(--color-text-light));
+  background: var(--flag-bg, var(--color-primary));
+  border: 2.5px solid var(--color-primary-light);
   border-radius: 50%;
-  box-shadow: 0 1px 6px rgba(17, 162, 234, 0.1);
+  box-shadow: var(--shadow-sm);
   padding: 0.15em;
+}
+
+// Clase para aplicar escala de grises
+:host(.grayscale) {
+  filter: grayscale(100%);
+  opacity: 0.8;
+}
+
+// Estilo para banderas rectangulares con sombra
+:host(.flag-rect) {
+  border-radius: 3px;
+  box-shadow: var(--shadow-sm);
+  overflow: hidden; // Asegura que la imagen interior respete el borde redondeado
 }

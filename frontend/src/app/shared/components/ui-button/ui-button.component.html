@@ -5,10 +5,12 @@
 <span class="ui-button__content" [class.ui-button__content--hidden]="loading">
   <!-- Icono a la izquierda -->
   <app-ui-icon
-    *ngIf="name && iconPosition !== 'right'"
-    [icon-name]="name"
-    [icon-type]="iconType"
-    [icon-size]="size" />
+    *ngIf="iconName && iconPosition !== 'right'"
+    [ui-icon-name]="iconName"
+    [ui-icon-type]="iconType"
+    [ui-icon-size]="iconSize || size"
+    [ui-icon-color]="iconColor"
+    [ui-icon-class]="iconClass" />
 
   <!-- Texto/Contenido proyectado -->
   <span class="ui-button__label" #contentWrapper>
@@ -17,8 +19,10 @@
 
   <!-- Icono a la derecha -->
   <app-ui-icon
-    *ngIf="name && iconPosition === 'right'"
-    [icon-name]="name"
-    [icon-type]="iconType"
-    [icon-size]="size" />
+    *ngIf="iconName && iconPosition === 'right'"
+    [ui-icon-name]="iconName"
+    [ui-icon-type]="iconType"
+    [ui-icon-size]="iconSize || size"
+    [ui-icon-color]="iconColor"
+    [ui-icon-class]="iconClass" />
 </span>

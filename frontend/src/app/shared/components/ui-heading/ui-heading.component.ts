@@ -1,9 +1,7 @@
-// File: /frontend/src/app/shared/components/ui-heading/ui-heading.component.ts
-
 import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { UiIconComponent, UiIconSize } from '@shared/components/ui-icon/ui-icon.component';
-import { UiIconType } from '@shared/services/icon.service';
+import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
+import { UiIconSize, UiIconType } from '@shared/services/icon.service';
 
 export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
 
@@ -16,31 +14,33 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiHeadingComponent {
-  @Input() title = '';
-  @Input() level: HeadingLevel = 1;
+  @Input({ alias: 'ui-heading-title' }) title = '';
+  @Input({ alias: 'ui-heading-level' }) level: HeadingLevel = 1;
 
-  // API de icono "passthrough" - Acepta los inputs de ui-icon directamente
-  @Input() name?: string;
-  @Input() type: UiIconType = 'system';
-  @Input() position: 'left' | 'right' = 'left';
-  @Input() color?: string;
+  // --- API para el Icono (Pass-through) ---
+  @Input({ alias: 'ui-icon-name' }) iconName?: string;
+  @Input({ alias: 'ui-icon-type' }) iconType: UiIconType = 'system';
+  @Input({ alias: 'ui-icon-position' }) iconPosition: 'left' | 'right' = 'left';
+  @Input({ alias: 'ui-icon-color' }) iconColor?: string;
+  @Input({ alias: 'ui-icon-size' }) iconSize?: UiIconSize | 'inherit' | string;
 
   /**
-   * Mapea el nivel del encabezado al tamaño que espera `ui-icon`.
-   * Esto crea una jerarquía visual consistente y automática.
+   * Determina el tamaño final del icono.
+   * Usa el tamaño específico del icono si se proporciona; de lo contrario,
+   * mapea el nivel del encabezado a un tamaño de icono para una jerarquía visual consistente.
    */
-  get iconSize(): UiIconSize {
+  get finalIconSize(): UiIconSize | 'inherit' | string {
+    if (this.iconSize) {
+      return this.iconSize;
+    }
+
     switch (this.level) {
-      case 1:
-        return 'xl';
-      case 2:
-        return 'l';
-      case 3:
-        return 'm';
-      case 4:
-        return 's';
-      default:
-        return 'xs';
+      case 1: return 'xl';
+      case 2: return 'l';
+      case 3: return 'l';
+      case 4: return 'm';
+      case 5: return 'm';
+      case 6: return 's';
     }
   }
 }

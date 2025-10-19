@@ -74,6 +74,7 @@
   --color-text-muted: #69707a; 
   // ✅ REFACTOR: El color de los enlaces debe usar la variable semántica de información.
   --color-link: var(--color-info);
+  --color-loading-overlay: rgba(255, 255, 255, 0.5);
 
   // === ESPACIADO (Basado en bloques S, M, L) ===
   // Talla S

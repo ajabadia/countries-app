@@ -2,7 +2,6 @@ import {
   Component,
   Input,
   OnChanges,
-  SimpleChanges,
   inject,
   ChangeDetectionStrategy,
   HostBinding,
@@ -10,10 +9,9 @@ import {
 import { CommonModule } from '@angular/common';
 import { Observable, of } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
-import { IconService, UiIconType } from './icon.service';
+import { IconService, UiIconType, UiIconSize } from '@shared/services/icon.service';
 
 export type UiIconRender = 'svg' | 'image';
-export type UiIconSize = 'xs' | 's' | 'm' | 'l' | 'xl';
 
 @Component({
   selector: 'app-ui-icon',
@@ -35,12 +33,12 @@ export class UiIconComponent implements OnChanges {
   private iconService = inject(IconService);
 
   // --- Entradas (Inputs) ---
-  @Input({ required: true }) name!: string;
-  @Input() type: UiIconType = 'system';
-  @Input() renderType: UiIconRender = 'svg';
-  @Input() size: UiIconSize | 'inherit' | string = 'm';
-  @Input() color?: string;
-  @Input('class') customClass = '';
+  @Input({ alias: 'ui-icon-name', required: true }) name!: string;
+  @Input({ alias: 'ui-icon-type' }) type: UiIconType = 'system';
+  @Input({ alias: 'ui-icon-render-type' }) renderType: UiIconRender = 'svg';
+  @Input({ alias: 'ui-icon-size' }) size: UiIconSize | 'inherit' | string = 'm';
+  @Input({ alias: 'ui-icon-color' }) color?: string;
+  @Input({ alias: 'ui-icon-class' }) customClass = '';
 
   // --- Propiedades internas ---
   svgContent$: Observable<SafeHtml> = of('');
@@ -63,11 +61,11 @@ export class UiIconComponent implements OnChanges {
 
   @HostBinding('class')
   get hostClasses(): string {
-    return this.customClass;
+    return `ui-icon ${this.customClass}`.trim();
   }
 
-  ngOnChanges(changes: SimpleChanges): void {
-    if (changes['name'] || changes['type'] || changes['renderType']) {
+  ngOnChanges(): void {
+    if (this.name) {
       if (this.renderType === 'svg') {
         this.svgContent$ = this.iconService.getIcon(this.name, this.type);
         this.imagePath = '';

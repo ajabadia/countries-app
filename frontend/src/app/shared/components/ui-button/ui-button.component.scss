@@ -1,12 +1,4 @@
-// Variables de color base (pueden venir de un :root global)
-$color-primary: #007bff;
-$color-secondary: #6c757d;
-$color-danger: #dc3545;
-$color-success: #28a745;
-$color-warning: #ffc107;
-$color-text-light: #fff;
-$color-text-dark: #212529;
-$color-border: #dee2e6;
+
 
 :host(.ui-button) {
   // --- Estructura Base ---
@@ -33,59 +25,67 @@ $color-border: #dee2e6;
   // --- Tamaños (Size) ---
   &.ui-button--s {
     padding: 0.25rem 0.75rem;
-    font-size: 12px;
+    font-size: var(--font-size-sm);
     min-height: 1.75rem;
   }
   &.ui-button--m {
     padding: 0.5rem 1rem;
-    font-size: 14px;
+    font-size: var(--font-size-base);
     min-height: 2.25rem;
   }
   &.ui-button--l {
     padding: 0.65rem 1.5rem;
-    font-size: 16px;
+    font-size: var(--font-size-lg);
     min-height: 2.75rem;
   }
 
   // --- Colores ---
   &.ui-button--primary {
-    --_bg-solid: #{$color-primary};
-    --_color-solid: #{$color-text-light};
-    --_color-outline: #{$color-primary};
-    --_border-outline: #{$color-primary};
+    --_bg-solid: var(--color-primary);
+    --_bg-solid-hover: var(--color-primary-hover);
+    --_color-solid: var(--color-primary-contrast-text);
+    --_color-outline: var(--color-primary);
+    --_border-outline: var(--color-primary);
+    --_color-outline-rgb: var(--color-primary-rgb);
   }
   &.ui-button--secondary {
-    --_bg-solid: #{$color-secondary};
-    --_color-solid: #{$color-text-light};
-    --_color-outline: #{$color-secondary};
-    --_border-outline: #{$color-secondary};
+    --_bg-solid: var(--color-secondary);
+    --_bg-solid-hover: var(--color-secondary-hover);
+    --_color-solid: var(--color-secondary-contrast-text);
+    --_color-outline: var(--color-secondary);
+    --_border-outline: var(--color-secondary);
+    --_color-outline-rgb: var(--color-secondary-rgb);
   }
   &.ui-button--danger {
-    --_bg-solid: #{$color-danger};
-    --_color-solid: #{$color-text-light};
-    --_color-outline: #{$color-danger};
-    --_border-outline: #{$color-danger};
+    --_bg-solid: var(--color-danger);
+    --_bg-solid-hover: var(--color-danger-hover);
+    --_color-solid: var(--color-danger-contrast-text);
+    --_color-outline: var(--color-danger);
+    --_border-outline: var(--color-danger);
+    --_color-outline-rgb: var(--color-danger-rgb);
   }
-  // ... (añadir success, warning, etc. de la misma forma)
 
   // --- Variantes de Estilo ---
   &.ui-button--solid {
     --_bg: var(--_bg-solid);
     --_color: var(--_color-solid);
     --_border: var(--_bg-solid);
-    &:hover:not(:disabled) { --_bg: #{darken($color-primary, 8%)}; --_border: #{darken($color-primary, 8%)}; }
+    &:hover:not(:disabled) {
+      --_bg: var(--_bg-solid-hover);
+      --_border: var(--_bg-solid-hover);
+    }
   }
   &.ui-button--outline {
     --_bg: transparent;
     --_color: var(--_color-outline);
     --_border: var(--_border-outline);
-    &:hover:not(:disabled) { --_bg: rgba(var(--_color-outline), 0.1); }
+    &:hover:not(:disabled) { background-color: rgba(var(--_color-outline-rgb), 0.1); }
   }
   &.ui-button--ghost {
     --_bg: transparent;
     --_color: var(--_color-outline);
     --_border: transparent;
-    &:hover:not(:disabled) { --_bg: rgba(var(--_color-outline), 0.1); }
+    &:hover:not(:disabled) { background-color: rgba(var(--_color-outline-rgb), 0.1); }
   }
 
   // --- Estados ---

@@ -6,15 +6,19 @@ import {
   Injector,
   runInInjectionContext,
   signal,
+  computed,
   WritableSignal,
 } from '@angular/core';
+import { HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import {
   BehaviorSubject,
   Subject,
   Observable,
-  combineLatest,
   Subscription,
+  combineLatest,
+  of,
+  EMPTY,
 } from 'rxjs';
 import {
   switchMap,
@@ -23,8 +27,9 @@ import {
   distinctUntilChanged,
   tap,
   catchError,
-  of,
+  finalize,
 } from 'rxjs/operators';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { BaseCrudService } from '@shared/services/base-crud.service';
 import { SelectionService } from '@shared/services/selection.service';
@@ -73,14 +78,19 @@ export abstract class BaseAdminDirective<T extends { id: number }>
   private refresh$ = new Subject<void>();
 
   // --- Estado público y Observables ---
-  data$: Observable<T[]> = of([]);
-  totalRecords = signal(0);
-  isLoading = signal(true);
+  private pagedResponse = toSignal<PagedResponse<T>>(EMPTY as Observable<PagedResponse<T>>);
+  data = computed(() => this.pagedResponse()?.data ?? []);
+  totalRecords = computed(() => this.pagedResponse()?.total ?? 0);
+  isLoading = signal(true); // Se gestiona con tap
   selectionService!: SelectionService<T>; // Se inicializa en ngOnInit
 
   // --- Gestión de modales ---
   isModalVisible = signal(false);
+  isConfirmModalVisible = signal(false);
+  isSaving = signal(false);
+  isDeleting = signal(false);
   editingItem: WritableSignal<T | null> = signal(null);
+  itemToDelete: WritableSignal<T | null> = signal(null);
 
   private subscription: Subscription = new Subscription();
 
@@ -90,7 +100,7 @@ export abstract class BaseAdminDirective<T extends { id: number }>
       this.selectionService = new SelectionService<T>();
     });
 
-    const combined$ = combineLatest([
+    const pagedResponse$ = combineLatest([
       this.page$,
       this.pageSize$,
       this.search$.pipe(debounceTime(300), distinctUntilChanged()),
@@ -98,35 +108,32 @@ export abstract class BaseAdminDirective<T extends { id: number }>
       this.refresh$.pipe(startWith(null)), // Para refresco manual
     ]).pipe(
       tap(() => this.isLoading.set(true)),
-      switchMap(([page, pageSize, search, sort]) =>
-        this.service
-          .getAll({
-            page,
-            pageSize,
-            search,
-            orderBy: sort.orderBy,
-            orderDir: sort.orderDir,
-          })
-          .pipe(
+      switchMap(([page, pageSize, search, sort]) => {
+        let params = new HttpParams()
+          .set('page', page.toString())
+          .set('limit', pageSize.toString()); // O 'pageSize' si tu backend lo prefiere
+
+        if (search) {
+          params = params.set('search', search);
+        }
+        params = params.set('orderBy', sort.orderBy as string);
+        params = params.set('orderDir', sort.orderDir);
+
+        return this.service.getAll(params).pipe(
             catchError(err => {
               console.error('Error fetching data:', err);
               // TODO: Integrar con servicio de notificaciones
-              return of({ data: [], total: 0 });
+              return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
             })
-          )
-      )
-    );
-
-    this.subscription.add(
-      combined$.subscribe((response: PagedResponse<T>) => {
-        this.data$ = of(response.data);
-        this.totalRecords.set(response.total);
-        this.isLoading.set(false);
-        this.selectionService.clear();
+          );
       })
     );
+
+    // Convertimos el stream de datos en una signal
+    this.pagedResponse = toSignal(pagedResponse$, { initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } });
   }
 
+  // ngOnDestroy ya no es estrictamente necesario si solo gestionaba la subscripción de `combined$`
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
@@ -168,5 +175,82 @@ export abstract class BaseAdminDirective<T extends { id: number }>
     this.form.reset();
   }
 
-  // ... (Aquí irían los métodos onSave, onDelete, etc.)
+  openConfirmDeleteModal(item: T): void {
+    this.itemToDelete.set(item);
+    this.isConfirmModalVisible.set(true);
+  }
+
+  closeConfirmDeleteModal(): void {
+    this.itemToDelete.set(null);
+    this.isConfirmModalVisible.set(false);
+  }
+
+
+  /**
+   * Gestiona el guardado de un item (creación o actualización).
+   * Valida el formulario y llama al servicio correspondiente.
+   */
+  onSave(): void {
+    this.form.markAllAsTouched();
+    if (this.form.invalid) {
+      return;
+    }
+
+    this.isSaving.set(true);
+    const itemData = this.form.value;
+    const currentItem = this.editingItem();
+
+    const saveOperation$: Observable<T> = currentItem
+      ? this.service.update(currentItem.id, itemData)
+      : this.service.create(itemData);
+
+    this.subscription.add(
+      saveOperation$
+        .pipe(
+          tap(() => {
+            // TODO: Mostrar notificación de éxito
+            this.closeModal();
+            this.refreshData();
+          }),
+          catchError(err => {
+            console.error('Error saving data:', err);
+            // TODO: Mostrar notificación de error
+            return of(null); // O manejar el error de otra forma
+          }),
+          finalize(() => this.isSaving.set(false))
+        )
+        .subscribe()
+    );
+  }
+
+  /**
+   * Gestiona el borrado de un item.
+   */
+  onDelete(): void {
+    const item = this.itemToDelete();
+    if (!item) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+
+    this.subscription.add(
+      this.service.delete(item.id)
+        .pipe(
+          tap(() => {
+            // TODO: Mostrar notificación de éxito
+            this.closeConfirmDeleteModal();
+            this.refreshData();
+            this.selectionService.clear(); // Limpiar selección si el item estaba seleccionado
+          }),
+          catchError(err => {
+            console.error('Error deleting data:', err);
+            // TODO: Mostrar notificación de error
+            return of(null);
+          }),
+          finalize(() => this.isDeleting.set(false))
+        )
+        .subscribe()
+    );
+  }
 }

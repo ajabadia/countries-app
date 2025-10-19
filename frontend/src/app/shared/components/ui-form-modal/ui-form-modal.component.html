@@ -1,0 +1,50 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-form-modal\ui-form-modal.component.html | Last Modified: 2025-10-19 -->
+
+@if (visible) {
+  <ng-container>
+    <div
+      class="ui-form-modal-backdrop"
+      (click)="onCancel()"
+      (keydown.escape)="onCancel()"
+      role="button"
+      tabindex="0"
+      aria-label="Cerrar modal"
+    ></div>
+
+    <div
+      class="ui-form-modal ui-form-modal--{{ variant }}"
+      role="dialog"
+      aria-modal="true"
+      [attr.aria-labelledby]="'ui-form-modal-title'"
+    >
+      <!-- 1. Cabecera del Modal -->
+      <app-ui-heading
+        id="ui-form-modal-title"
+        class="ui-form-modal__header"
+        [ui-heading-level]="3"
+        [ui-heading-title]="title"
+        [ui-icon-name]="headingIconName || iconName"
+      >
+        <button
+          app-ui-button
+          ui-icon-name="icon-close"
+          ui-icon-position="only"
+          ui-button-variant="ghost"
+          (click)="onCancel()"
+          aria-label="Cerrar modal"
+        ></button>
+      </app-ui-heading>
+
+      <!-- 2. Cuerpo del Modal -->
+      <div class="ui-form-modal__body">
+        <ng-content></ng-content>
+      </div>
+
+      <!-- 3. Pie de Página del Modal -->
+      <app-ui-toolbar-buttons
+        class="ui-form-modal__footer"
+        [ui-toolbar-buttons]="footerButtons"
+      ></app-ui-toolbar-buttons>
+    </div>
+  </ng-container>
+}

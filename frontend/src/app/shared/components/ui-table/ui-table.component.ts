@@ -8,9 +8,9 @@ import {
   TemplateRef,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SelectionService } from '../../services/selection.service';
-import { TableColumn, Sort } from '../../types/table.types';
-import { SortDirection } from '../../types/sort.type';
+import { SelectionService } from '@shared/services/selection.service';
+import { TableColumn } from './table.types';
+import { Sort, SortDirection } from '@shared/types/sort.type';
 
 @Component({
   selector: 'app-ui-table',
@@ -20,7 +20,7 @@ import { SortDirection } from '../../types/sort.type';
   styleUrls: ['./ui-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiTableComponent<T extends { id: number }> {
+export class UiTableComponent<T extends { id: number | string }> {
   @Input() data: T[] | null = [];
   @Input() columns: TableColumn<T>[] = [];
   @Input() selection: SelectionService<T> | null = null;

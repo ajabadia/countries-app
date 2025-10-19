@@ -1,0 +1,76 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-stat-card\ui-stat-card.component.scss | Last Modified: 2025-10-19
+
+:host {
+  display: block;
+}
+
+.ui-stat-card {
+  // --- Estructura y Layout ---
+  display: flex;
+  flex-direction: column;
+  background: var(--color-surface);
+  border-radius: var(--radius-lg);
+  box-shadow: var(--shadow-base);
+  overflow: hidden; // Asegura que los hijos respeten el borde redondeado
+  transition: all 0.2s ease-in-out;
+  border: 1px solid var(--color-border);
+  outline: none;
+
+  // --- Interacción ---
+  &[role='button'] {
+    cursor: pointer;
+
+    &:hover,
+    &:focus {
+      box-shadow: var(--shadow-lg);
+      transform: translateY(-4px);
+      border-color: var(--color-primary-light);
+    }
+
+    &:focus {
+      outline: 2px solid var(--color-primary);
+      outline-offset: 2px;
+    }
+
+    &:active {
+      transform: translateY(-1px);
+      box-shadow: var(--shadow-md);
+    }
+  }
+}
+
+// --- Zona Superior (Icono) ---
+.ui-stat-card__top {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  padding: var(--space-l) 0;
+  background: var(--color-tertiary-dark); // Fondo oscuro como solicitado
+}
+
+// --- Zona Inferior (Contenido) ---
+.ui-stat-card__bottom {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-m);
+  text-align: center;
+  width: 100%;
+}
+
+// --- Elementos de Texto ---
+.ui-stat-card__value {
+  font-size: var(--font-size-3xl);
+  font-weight: 700;
+  color: var(--color-text);
+  line-height: 1.1;
+}
+
+.ui-stat-card__label {
+  font-size: var(--font-size-base);
+  font-weight: 500;
+  color: var(--color-text-muted);
+  margin-top: var(--space-xs);
+}

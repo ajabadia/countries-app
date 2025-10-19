@@ -1,0 +1,21 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toolbar-buttons\ui-toolbar-buttons.component.scss | Last Modified: 2025-10-19
+
+/*
+  Este componente solo se encarga de la disposición (layout) de los botones.
+  El estilo de los botones es responsabilidad exclusiva del componente `ui-button`.
+*/
+:host {
+  display: grid;
+  width: 100%; // Asegura que ocupe todo el espacio del contenedor padre (ej. el modal-footer)
+  gap: var(--space-m); // Espacio entre botones, definido por las variables globales.
+
+  /*
+    Esta es la regla clave para el balanceo automático del layout:
+    - `auto-fit`: Crea tantas columnas como quepan en el espacio disponible.
+    - `minmax(120px, 1fr)`: Cada columna tendrá un tamaño mínimo de 120px y se expandirá
+      para ocupar el espacio disponible de forma equitativa (1fr).
+    Esto asegura que los botones se distribuyan de forma balanceada y se apilen
+    correctamente en pantallas más pequeñas sin necesidad de media queries.
+  */
+  grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+}

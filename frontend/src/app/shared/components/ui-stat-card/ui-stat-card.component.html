@@ -1,0 +1,27 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-stat-card\ui-stat-card.component.html | Last Modified: 2025-10-19 -->
+
+<div
+  class="ui-stat-card"
+  tabindex="0"
+  role="button"
+  [attr.aria-label]="label + ': ' + value"
+  (click)="onClick()"
+>
+  <!-- Zona Superior: Icono -->
+  @if (iconName) {
+    <div class="ui-stat-card__top">
+      <app-ui-icon
+        [ui-icon-name]="iconName"
+        [ui-icon-type]="iconType"
+        [ui-icon-size]="iconSize"
+        [ui-icon-color]="iconColor || 'var(--color-primary-contrast)'"
+      ></app-ui-icon>
+    </div>
+  }
+
+  <!-- Zona Inferior: Contenido -->
+  <div class="ui-stat-card__bottom">
+    <div class="ui-stat-card__value">{{ value }}</div>
+    <div class="ui-stat-card__label">{{ label }}</div>
+  </div>
+</div>

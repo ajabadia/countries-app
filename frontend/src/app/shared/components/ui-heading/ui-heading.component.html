@@ -1,5 +1,3 @@
-<!-- File: /frontend/src/app/shared/components/ui-heading/ui-heading.component.html -->
-
 <!--
   Este ng-container renderiza la etiqueta H correcta (h1, h2, etc.)
   y le pasa el contenido definido en #headingContent.
@@ -18,17 +16,17 @@
   Esto sigue el principio DRY (Don't Repeat Yourself).
 -->
 <ng-template #headingContent>
-  <app-ui-icon
-    *ngIf="name && position === 'left'"
-    [name]="name"
-    [size]="iconSize"
-    [type]="type"
-    [color]="color" />
+  <app-ui-icon 
+    *ngIf="iconName && iconPosition === 'left'" 
+    [ui-icon-name]="iconName" 
+    [ui-icon-size]="finalIconSize" 
+    [ui-icon-type]="iconType" 
+    [ui-icon-color]="iconColor" />
   <span>{{ title }}</span>
-  <app-ui-icon
-    *ngIf="name && position === 'right'"
-    [name]="name"
-    [size]="iconSize"
-    [type]="type"
-    [color]="color" />
+  <app-ui-icon 
+    *ngIf="iconName && iconPosition === 'right'" 
+    [ui-icon-name]="iconName" 
+    [ui-icon-size]="finalIconSize" 
+    [ui-icon-type]="iconType" 
+    [ui-icon-color]="iconColor" />
 </ng-template>
