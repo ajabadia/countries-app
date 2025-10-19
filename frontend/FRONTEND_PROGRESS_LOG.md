@@ -1,5 +1,51 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
 
+## 2025-10-20: Refactorización y Alineación Arquitectónica
+
+### 1. Refactor de Servicios: Centralización de Lógica de UI
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Centralización de la lógica de presentación de acciones en `ActionService`.
+-   **Propósito**: Alinear el código con la arquitectura del proyecto (patrón `ActionService`) y el principio DRY.
+-   **Cambios Realizados**:
+    -   Se ha movido la lógica para agrupar acciones de navegación y mapear sus títulos de categoría desde `UiHamburgerMenuComponent` al `ActionService`.
+    -   Se han creado los nuevos métodos `getGroupedNavActions()` y `getCategoryTitle()` en `ActionService`.
+    -   `UiHamburgerMenuComponent` ha sido refactorizado para ser un componente "tonto" que simplemente consume los datos pre-procesados del servicio.
+-   **Beneficio**: La lógica de negocio está ahora centralizada, mejorando la mantenibilidad y la reutilización. El `ActionService` se consolida como la única fuente de verdad para las acciones.
+
+### 2. Refactor de Estilos (SCSS): Optimización de la Tipografía
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Optimización de la arquitectura de tipografía en SCSS.
+-   **Propósito**: Mejorar la mantenibilidad, escalabilidad y adherencia al principio DRY en la gestión de los estilos de encabezado.
+-   **Cambios Realizados**:
+    -   **`_typography.scss`**: Se han reemplazado los múltiples mixins estáticos (e.g., `h1-base`) por un único mixin dinámico: `heading-styles($level)`. Se ha introducido un mapa de Sass (`$heading-styles-map`) para centralizar toda la configuración.
+    -   **`_base.scss`**: Se ha actualizado para consumir el nuevo mixin dinámico, simplificando el código y asegurando que los estilos se obtienen de la fuente única de verdad.
+-   **Beneficio**: El código de estilos es ahora más limpio y fácil de mantener. Cualquier cambio en la tipografía se realiza en un solo lugar, reduciendo la duplicación y el riesgo de errores.
+
+### 3. Refactor de Estilos (SCSS): Centralización de la Carga de Módulos
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Refactorización de la arquitectura de carga de estilos globales.
+-   **Propósito**: Simplificar el punto de entrada principal (`styles.scss`) y consolidar `_tools.scss` como el único punto de verdad para la configuración y carga de la base de estilos.
+-   **Cambios Realizados**:
+    -   **`_tools.scss`**: Ahora utiliza `@use` para cargar todos los parciales base (`_reset`, `_base`, `_grid`, etc.), además de reenviar (`@forward`) las herramientas.
+    -   **`styles.scss`**: Se ha simplificado drásticamente. Su única responsabilidad ahora es cargar `_tools.scss` y aplicar el mixin del tema oscuro.
+-   **Beneficio**: La arquitectura de estilos es más clara y mantenible. `_tools.scss` se convierte en el "índice" definitivo del sistema de diseño, facilitando la comprensión y la adición de nuevos ficheros de estilos globales.
+
+### 4. Creación de la Página de Inicio (HomeComponent)
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Creación de un nuevo `HomeComponent` y establecimiento como la página de inicio principal.
+-   **Propósito**: Definir una página de bienvenida limpia y alinear la ruta raíz (`/`) con la arquitectura de `features`.
+-   **Cambios Realizados**:
+    -   Se ha creado el nuevo `HomeComponent` en `src/app/features/public/home/`.
+    -   Se ha configurado `app.routes.ts` para que cargue `HomeComponent` en la ruta `''`.
+    -   Se ha eliminado el componente de "landing page" anterior, que ahora era redundante.
+-   **Beneficio**: El proyecto tiene ahora una página de inicio clara y dedicada, se ha eliminado código muerto y se refuerza la estructura de directorios basada en features.
+
+---
+
 # Creación del Componente Reutilizable `UiSearchBoxComponent`
 
 -   **Fecha**: 2025-10-19

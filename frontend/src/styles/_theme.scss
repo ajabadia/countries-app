@@ -5,7 +5,10 @@
 // con el sistema de theming basado en variables CSS definido en `_variables.scss`.
 // Ahora, el cambio de tema se gestiona únicamente cambiando el valor de las variables,
 // lo que unifica el sistema y soluciona las inconsistencias visuales.
-@use 'tools' as t; // Importamos el fichero de herramientas
+
+// ✅ REFACTOR: Se importan los módulos necesarios directamente para evitar dependencias circulares.
+@use 'mixins-definitions' as m;
+@use 'variables-dark' as d;
 
 
 // ==================================
@@ -45,13 +48,13 @@
 .theme-toggle {
   // ✅ REFACTOR: Se reemplaza `@extend` por `@include` para ser compatible con el sistema de módulos de Sass.
   // `@extend` no puede cruzar los límites de los módulos, mientras que los mixins están diseñados para esto.
-  @include t.button-base;
-  @include t.button-variant('ghost');
+  @include m.button-base;
+  @include m.button-variant('ghost');
   // ✅ CORRECCIÓN: Se añade el namespace 'm' que faltaba para llamar al mixin.
-  @include t.size(40px);
+  @include m.size(40px);
   padding: 0;
   &__icon {
-    @include t.size(20px);
+    @include m.size(20px);
     transition: transform var(--transition-base);
   }
   &:hover {
@@ -67,7 +70,7 @@
   :root:not([data-theme]) {
     // ✅ MEJORA: Activamos el tema oscuro por defecto si el sistema operativo del usuario lo prefiere.
     // Simplemente aplicamos las mismas sobreescrituras de variables que en [data-theme='dark'].
-    @include t.dark-theme-variables;
+    @include d.dark-theme-variables;
   }
 }
 @media (prefers-reduced-motion: reduce) {

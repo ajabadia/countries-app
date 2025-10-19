@@ -1,30 +1,29 @@
 // src/styles/components.scss
 
-// ✅ REFACTOR: Se importa el fichero de herramientas para tener acceso a los mixins
-// y variables necesarios para definir los componentes.
-@use 'tools' as t;
+// ✅ REFACTOR: Se importan directamente los mixins para evitar dependencias circulares.
+@use 'mixins-definitions' as m;
 
 .btn {
-  @include t.button-base;
-  @include t.button-size('md');
-  @include t.focus-visible;
+  @include m.button-base;
+  @include m.button-size('md');
+  @include m.focus-visible;
 
-  &--primary { @include t.button-variant('primary'); }
-  &--secondary { @include t.button-variant('secondary'); }
-  &--outline { @include t.button-variant('outline'); }
-  &--ghost { @include t.button-variant('ghost'); }
-  &--danger { @include t.button-variant('danger'); }
+  &--primary { @include m.button-variant('primary'); }
+  &--secondary { @include m.button-variant('secondary'); }
+  &--outline { @include m.button-variant('outline'); }
+  &--ghost { @include m.button-variant('ghost'); }
+  &--danger { @include m.button-variant('danger'); }
 
-  &--xs { @include t.button-size('xs'); }
-  &--sm { @include t.button-size('sm'); }
-  &--lg { @include t.button-size('lg'); }
-  &--xl { @include t.button-size('xl'); }
+  &--xs { @include m.button-size('xs'); }
+  &--sm { @include m.button-size('sm'); }
+  &--lg { @include m.button-size('lg'); }
+  &--xl { @include m.button-size('xl'); }
 
   &--full-width { width: 100%; }
-  &--loading { @include t.state-loading; }
+  &--loading { @include m.state-loading; }
 
   &__icon {
-    @include t.size(1em);
+    @include m.size(1em);
 
     &--left { margin-right: var(--space-xs); }
     &--right { margin-left: var(--space-xs); }
@@ -33,9 +32,9 @@
 
 // CARD BASE
 .card {
-  @include t.card-base;
+  @include m.card-base;
 
-  &--elevated { @include t.card-elevated; }
+  &--elevated { @include m.card-elevated; }
   &--interactive {
     cursor: pointer;
     transition: all var(--transition-base);
@@ -94,7 +93,7 @@
   }
 
   &__content {
-    @include t.card-base;
+    @include m.card-base;
     position: relative;
     max-width: 90vw;
     max-height: 90vh;
@@ -112,7 +111,7 @@
   }
 
   &__header {
-    @include t.flex-between;
+    @include m.flex-between;
     padding: var(--space-m);
     // ✅ REFACTOR: Usamos la variable de borde principal en lugar de una específica del modal.
     border-bottom: var(--border-width) solid var(--color-border);
@@ -127,9 +126,9 @@
   }
 
   &__close {
-    @include t.button-reset;
-    @include t.size(32px);
-    @include t.flex-center;
+    @include m.button-reset;
+    @include m.size(32px);
+    @include m.flex-center;
     border-radius: var(--radius-md);
     color: var(--color-text-muted);
     transition: all var(--transition-fast);
@@ -147,7 +146,7 @@
   }
 
   &__footer {
-    @include t.flex-between;
+    @include m.flex-between;
     padding: var(--space-m);
     // ✅ REFACTOR: Usamos la variable de borde principal.
     border-top: var(--border-width) solid var(--color-border);

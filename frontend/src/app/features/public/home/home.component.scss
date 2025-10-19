@@ -1,0 +1,19 @@
+/* File: d:\desarrollos\countries2\frontend\src\app\features\public\home\home.component.scss | New File */
+@use '../../../../styles/tools' as t;
+
+.home-container {
+  @include t.flex-center;
+  flex-direction: column;
+  text-align: center;
+  padding: var(--space-xl);
+  height: 100%;
+
+  &__title {
+    @include t.heading-styles('h1');
+  }
+
+  &__subtitle {
+    font-size: var(--font-size-l);
+    color: var(--color-text-secondary);
+  }
+}

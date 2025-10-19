@@ -15,12 +15,12 @@ import { Subject, Subscription } from 'rxjs';
 import { debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
-import { UiButtonDirective } from '@shared/components/ui-button/ui-button.directive';
+import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
 
 @Component({
   selector: 'app-ui-search-box',
   standalone: true,
-  imports: [CommonModule, UiIconComponent, UiButtonDirective],
+  imports: [CommonModule, UiIconComponent, UiButtonComponent],
   templateUrl: './ui-search-box.component.html',
   styleUrls: ['./ui-search-box.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -11,13 +11,13 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
-import { UiButtonDirective } from '@shared/components/ui-button/ui-button.directive';
+import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
 import { PaginatorChangeEvent, PAGE_SIZE_OPTIONS } from './ui-paginator.types';
 
 @Component({
   selector: 'app-ui-paginator',
   standalone: true,
-  imports: [CommonModule, FormsModule, UiIconComponent, UiButtonDirective],
+  imports: [CommonModule, FormsModule, UiIconComponent, UiButtonComponent],
   templateUrl: './ui-paginator.component.html',
   styleUrls: ['./ui-paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

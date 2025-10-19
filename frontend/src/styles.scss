@@ -1,21 +1,18 @@
 // File: d:\desarrollos\countries2\frontend\src\styles.scss | Last Modified: 2025-10-19
-// ✅ REFACTOR: Este fichero es ahora el único punto de entrada para todos los estilos globales.
-// Importa todos los parciales en el orden correcto.
-// Gracias a esto, las variables, mixins y placeholders están disponibles
-// en toda la aplicación a través de la importación de 'tools'.
+
+// =============================================================================
+// PUNTO DE ENTRADA PRINCIPAL DE ESTILOS GLOBALES
+// =============================================================================
+// Este fichero importa todos los parciales en el orden correcto.
+// El fichero `tools` agrupa variables y mixins para que estén disponibles
+// en toda la aplicación y carga la base de estilos.
+
 @use 'styles/tools' as t;
-@use 'styles/reset';
-@use 'styles/base';
-@use 'styles/grid';
-// ✅ CORRECCIÓN: Se reordena la importación. `_components.scss` debe cargarse antes
-// que `_theme.scss` para que las clases de componentes (como `.btn--ghost`) estén
-// disponibles y puedan ser extendidas por las utilidades de tema.
-@use 'styles/components';
-@use 'styles/theme';
 
 // === TEMA OSCURO ===
-// ✅ REFACTOR: Se aplica el tema oscuro aquí para romper la dependencia circular
-// que existía en `_variables.scss`.
+// Se aplica el tema oscuro aquí, en el nivel más alto, para asegurar
+// que las variables se sobreescriban correctamente.
+// El mixin `dark-theme-variables` es expuesto a través de `_tools.scss`.
 [data-theme='dark'] {
-  @include t.dark-theme-variables;
+  @include t.dark-theme-variables; // El mixin con las variables del tema oscuro.
 }

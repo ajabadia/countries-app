@@ -1,44 +1,51 @@
 // File: d:\desarrollos\countries2\frontend\src\styles\_typography.scss | Last Modified: 2025-10-19
 
+// ✅ REFACTOR: Se importa el módulo `sass:map` para usar la sintaxis moderna.
+@use 'sass:map';
+
 // --- Mixins para Estilos de Encabezados ---
-// Estos mixins reemplazan los placeholders (%h-base) para evitar los
-// efectos secundarios de @extend.
+// Este fichero define un mixin dinámico para los estilos de encabezado,
+// centralizando la configuración en un mapa para mejorar la mantenibilidad y seguir el principio DRY.
 
-@mixin h1-base {
-  font-size: var(--font-size-xxl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1.2;
-  margin-bottom: var(--space-m);
-}
+// 1. Mapa de configuración para los estilos de encabezado.
+// Centraliza todos los valores en un solo lugar para fácil mantenimiento.
+$heading-styles-map: (
+  'h1': (
+    font-size: var(--font-size-xxl),
+    font-weight: var(--font-weight-bold),
+    line-height: 1.2,
+    margin-bottom: var(--space-m)
+  ),
+  'h2': (
+    font-size: var(--font-size-xl),
+    font-weight: var(--font-weight-bold),
+    line-height: 1.3,
+    margin-bottom: var(--space-m)
+  ),
+  'h3': (
+    font-size: var(--font-size-l),
+    font-weight: var(--font-weight-semibold),
+    line-height: 1.4,
+    margin-bottom: var(--space-s)
+  ),
+  'h4': (
+    font-size: var(--font-size-m),
+    font-weight: var(--font-weight-semibold),
+    line-height: 1.4,
+    margin-bottom: var(--space-xs)
+  ),
+  'h5': (font-size: var(--font-size-s), font-weight: var(--font-weight-bold)),
+  'h6': (font-size: var(--font-size-xs), font-weight: var(--font-weight-bold), text-transform: uppercase)
+);
 
-@mixin h2-base {
-  font-size: var(--font-size-xl);
-  font-weight: var(--font-weight-bold);
-  line-height: 1.3;
-  margin-bottom: var(--space-m);
-}
-
-@mixin h3-base {
-  font-size: var(--font-size-l);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.4;
-  margin-bottom: var(--space-s);
-}
-
-@mixin h4-base {
-  font-size: var(--font-size-m);
-  font-weight: var(--font-weight-semibold);
-  line-height: 1.4;
-  margin-bottom: var(--space-xs);
-}
-
-@mixin h5-base {
-  font-size: var(--font-size-s);
-  font-weight: var(--font-weight-bold);
-}
-
-@mixin h6-base {
-  font-size: var(--font-size-xs);
-  font-weight: var(--font-weight-bold);
-  text-transform: uppercase;
+// 2. Mixin dinámico para aplicar estilos de encabezado.
+@mixin heading-styles($level) {
+  @if map.has-key($heading-styles-map, $level) {
+    $styles: map.get($heading-styles-map, $level);
+    @each $property, $value in $styles {
+      #{$property}: $value;
+    }
+  } @else {
+    @warn "El nivel de encabezado '#{$level}' no está definido en $heading-styles-map.";
+  }
 }

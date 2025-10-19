@@ -66,3 +66,21 @@ Durante la implementación del `UiHamburgerMenuComponent`, se produjo un error d
 La integración entre `UiHamburgerMenuComponent` y `UiAccordionComponent` falló inicialmente con errores `TS2322` y `NG8002`. El problema radicaba en un intento de pasar una plantilla (`ng-template`) a través de un `@Input` directamente en el HTML. La API del `UiAccordionComponent` estaba diseñada para recibir la referencia a la plantilla a través de la lógica del componente (`.ts`) usando `@ViewChild`.
 
 -   **Conclusión**: No se puede asumir cómo funciona la API de un componente, especialmente con patrones complejos como la proyección de contenido con `ng-template`. Es fundamental **consultar la documentación del componente (`README.md`)** para entender si la API espera un binding directo en la plantilla o una referencia programática desde la clase del componente.
+
+### 9. Entender el Orden de Carga y las Dependencias Circulares en Sass
+
+Durante la refactorización de la arquitectura de estilos, se produjo un error de "Module loop" o dependencia circular. El fichero `_base.scss` intentaba importar `_tools.scss` (`@use 'tools'`), pero `_tools.scss` ya estaba importando `_base.scss`.
+
+-   **Conclusión**: La arquitectura de carga de Sass debe ser unidireccional. Un fichero "agregador" como `_tools.scss` puede importar muchos parciales, pero esos parciales no deben intentar importar de vuelta al agregador. Si un parcial (`_base.scss`) necesita un mixin, ese mixin debe ser definido en un fichero que se importe *antes* que el parcial dentro del agregador. Esto refuerza la importancia de `_tools.scss` como el único orquestador del orden de carga.
+
+### 10. Las Rutas de Importación en Componentes son Relativas al Fichero
+
+Se produjeron múltiples errores de "Can't find stylesheet to import" porque los ficheros SCSS de los componentes usaban `@use 'styles/tools' as t;`. Esta ruta asume una configuración global en `angular.json` que no estaba presente.
+
+-   **Conclusión**: A menos que se configure explícitamente un `includePaths` en las opciones del preprocesador de Sass, todas las importaciones (`@use`) dentro de los ficheros de estilo de un componente deben usar rutas relativas (ej. `@use '../../../../styles/tools' as t;`) para que el compilador pueda resolverlas correctamente.
+
+### 11. El Ámbito (Scope) de los Módulos de Sass con `@use`
+
+Se produjo un error de `Undefined mixin` en `_base.scss` después de solucionar una dependencia circular. Aunque `_tools.scss` importaba tanto `_mixins-definitions.scss` como `_base.scss`, los mixins del primero no estaban disponibles en el segundo.
+
+-   **Conclusión**: La directiva `@use` crea un ámbito encapsulado. Un fichero no hereda automáticamente los miembros de otros ficheros que son importados al mismo nivel en un fichero "agregador". Si un parcial (`_base.scss`) necesita un mixin, debe importarlo explícitamente con su propia directiva `@use` (ej. `@use 'mixins-definitions' as m;`). Esto garantiza la encapsulación y previene conflictos de nombres.

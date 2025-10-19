@@ -1,8 +1,21 @@
-// src/styles/_tools.scss
-// ✅ NUEVO FICHERO: Este es el "índice de herramientas" de Sass.
-// Reenvía (`@forward`) todas las utilidades (variables, mixins, placeholders)
-// para que puedan ser consumidas desde un único punto con `@use 'tools'`.
+// File: d:\desarrollos\countries2\frontend\src\styles\_tools.scss | Last Modified: 2025-10-20
+
+// =============================================================================
+// ÍNDICE DE ESTILOS GLOBALES
+// =============================================================================
+// Este fichero actúa como el único punto de entrada para toda la arquitectura de estilos.
+// 1. Reenvía (`@forward`) todas las herramientas (variables, mixins) para que estén disponibles en los componentes.
+// 2. Carga (`@use`) todos los estilos base, de componentes y de layout en el orden correcto.
+
+// --- 1. Reenvío de Herramientas ---
 @forward 'variables';
 @forward 'variables-dark';
 @forward 'mixins-definitions';
 @forward 'typography';
+
+// --- 2. Carga de Estilos Base ---
+@use 'reset';
+@use 'base';
+@use 'grid';
+@use 'components';
+@use 'theme';
