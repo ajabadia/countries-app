@@ -84,3 +84,15 @@ Se produjeron múltiples errores de "Can't find stylesheet to import" porque los
 Se produjo un error de `Undefined mixin` en `_base.scss` después de solucionar una dependencia circular. Aunque `_tools.scss` importaba tanto `_mixins-definitions.scss` como `_base.scss`, los mixins del primero no estaban disponibles en el segundo.
 
 -   **Conclusión**: La directiva `@use` crea un ámbito encapsulado. Un fichero no hereda automáticamente los miembros de otros ficheros que son importados al mismo nivel en un fichero "agregador". Si un parcial (`_base.scss`) necesita un mixin, debe importarlo explícitamente con su propia directiva `@use` (ej. `@use 'mixins-definitions' as m;`). Esto garantiza la encapsulación y previene conflictos de nombres.
+
+### 12. Completando el Patrón de Dependencias Unidireccionales en Sass
+
+El último error de `Module loop` se encontró en `_theme.scss`, que seguía el mismo patrón incorrecto que `_base.scss` y `_components.scss`: intentaba importar el fichero agregador `_tools.scss`, que a su vez ya lo importaba a él.
+
+-   **Conclusión**: Esta serie de errores refuerza una regla arquitectónica fundamental para nuestro sistema de estilos: **La carga de módulos debe ser estrictamente unidireccional.** El fichero agregador (`_tools.scss`) es el único que importa los parciales base. Estos parciales, a su vez, deben importar directamente sus dependencias específicas (ej. `_mixins-definitions.scss`) en lugar de intentar acceder al agregador. Con esta última corrección, la arquitectura de estilos ha quedado completamente estabilizada y libre de dependencias circulares.
+
+### 13. `ActionService` es el Registro Central de Navegación
+
+Se detectó que, tras crear una nueva página principal (`HomeComponent`), esta no aparecía en el menú de navegación. El problema era que la acción correspondiente no había sido registrada.
+
+-   **Conclusión**: El `ActionService` actúa como la única fuente de verdad para todos los elementos de navegación de la UI. Por tanto, cada vez que se crea una nueva página o "feature" principal que deba ser accesible desde menús globales, es **mandatorio** añadir su correspondiente objeto `AppAction` al array `allActions` dentro de `action.service.ts`. Olvidar este paso hará que la nueva sección sea inaccesible desde la navegación principal.

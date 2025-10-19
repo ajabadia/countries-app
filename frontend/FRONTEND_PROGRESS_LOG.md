@@ -44,6 +44,25 @@
     -   Se ha eliminado el componente de "landing page" anterior, que ahora era redundante.
 -   **Beneficio**: El proyecto tiene ahora una página de inicio clara y dedicada, se ha eliminado código muerto y se refuerza la estructura de directorios basada en features.
 
+### 5. Corrección de Navegación: Añadir "Inicio" al Menú Principal
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Se ha añadido la acción de navegación para la página de inicio en `ActionService`.
+-   **Propósito**: Solucionar la omisión del enlace a la página principal (`/`) en los menús de navegación de la aplicación.
+-   **Cambios Realizados**:
+    -   Se ha verificado y añadido la entrada `{ id: 'home', ... }` al array `allActions` en `action.service.ts`.
+-   **Beneficio**: La navegación principal está ahora completa, permitiendo a los usuarios volver a la página de inicio de forma intuitiva desde cualquier punto de la aplicación.
+
+### 6. Corrección Final del Enrutador y Limpieza
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Eliminación de ficheros de rutas obsoletos y corrección del enrutador principal.
+-   **Propósito**: Solucionar el último error de compilación (`TS2307: Cannot find module`) que impedía el arranque de la aplicación.
+-   **Cambios Realizados**:
+    -   Se ha actualizado `app.routes.ts` para que cargue el nuevo `HomeComponent` directamente con `loadComponent`, eliminando la dependencia de ficheros de rutas intermedios.
+    -   Se ha eliminado el fichero obsoleto `src/app/features/home/home.routes.ts` que aún hacía referencia al antiguo `HomeComponent`.
+-   **Beneficio**: El proyecto compila limpiamente. La configuración de rutas es ahora más simple, moderna y está completamente alineada con la arquitectura de componentes `standalone`.
+
 ---
 
 # Creación del Componente Reutilizable `UiSearchBoxComponent`
