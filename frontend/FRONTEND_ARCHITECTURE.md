@@ -99,8 +99,11 @@ Esta estructura está diseñada para ser:
     *   **Propósito**: El arsenal de componentes y utilidades **reutilizables** en diferentes `features`. La clave de la filosofía **DRY**.
     *   **Contenido**:
         *   **Componentes "tontos" (Dumb Components)**: Botones, tablas genéricas, modales, selectores. Componentes que no tienen lógica de negocio, solo reciben datos (`@Input`) y emiten eventos (`@Output`).
-        *   **Directivas y Pipes**: Funcionalidades comunes que se pueden aplicar a elementos del DOM o transformar datos. Aquí es perfecto para ubicar tu `BaseAdminComponent` (que ahora propongo como `base-admin.directive.ts` para seguir las mejores prácticas de clases base en Angular).
-        *   **Servicios Genéricos**: Tu `BaseCrudService`, `IconService` y `SelectionService` son el ejemplo perfecto. Son reutilizables por definición.
+        *   **Directivas y Pipes**: Funcionalidades comunes que se pueden aplicar a elementos del DOM o transformar datos. Aquí se ubica la directiva `BaseAdminDirective` que encapsula la lógica común de las páginas de administración.
+        *   **Servicios Genéricos**: Servicios reutilizables que no dependen de un `feature` específico. Ejemplos:
+            *   `BaseCrudService`: Proporciona una base para los servicios de datos.
+            *   `IconService`: Gestiona el registro y uso de iconos SVG.
+            *   `ActionService`: Centraliza la definición y adaptación de acciones de la UI (ej. menús, barras de herramientas), actuando como una única fuente de verdad para la navegación y operaciones.
     *   **Por qué así**: Evita la duplicación de código a toda costa. Si un componente se va a usar en más de un sitio, debe vivir aquí.
 
 ### Plan de Migración Sugerido

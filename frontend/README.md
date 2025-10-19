@@ -1,48 +1,49 @@
-<!-- File: d:\desarrollos\countries2\frontend\src\styles\README.md | Last Modified: 2025-10-19 -->
+<!-- File: d:\desarrollos\countries2\frontend\README.md | Last Modified: 2025-10-19 -->
 
-# Arquitectura de Estilos (Styling)
+# Frontend - Aplicación de Países
 
-Este documento explica la arquitectura de estilos del proyecto, basada en una estructura similar a ITCSS (Inverted Triangle CSS), la metodología BEM y un sistema de theming con variables CSS.
+Este proyecto es una Single-Page Application (SPA) desarrollada con Angular para visualizar y gestionar información sobre países del mundo.
 
-## 1. Filosofía
+## 1. Stack Tecnológico
 
--   **Modularidad**: Los estilos están divididos en ficheros parciales con responsabilidades únicas.
--   **Reutilización**: Se prioriza el uso de variables y mixins para mantener la consistencia.
--   **Theming**: El uso de variables CSS (`:root`) permite cambiar la apariencia de la aplicación (ej. tema claro/oscuro) de forma dinámica.
--   **BEM (Block, Element, Modifier)**: Todas las clases personalizadas deben seguir la sintaxis BEM para evitar colisiones y mejorar la legibilidad.
+-   **Framework**: Angular v17+
+-   **Lenguaje**: TypeScript
+-   **Estilos**: SCSS con metodología BEM y variables CSS para theming.
+-   **Arquitectura de Componentes**: `standalone: true` como estándar para una mayor modularidad.
+-   **Gestión de Estado**: Uso nativo de `Signals` de Angular para el estado reactivo y `RxJS` para la gestión de flujos de datos asíncronos complejos (ej. eventos de UI con `debounce`).
 
-## 2. Estructura de Ficheros
+## 2. Arquitectura
 
-La carpeta `src/styles` contiene todos los estilos globales, organizados de la siguiente manera:
+El proyecto sigue una arquitectura modular y escalable, organizada por funcionalidades (`core`, `features`, `shared`). Para una explicación detallada de la estructura de directorios y los principios de diseño, consulta el documento de arquitectura:
 
--   `styles.scss`: **Punto de entrada principal**. Importa todos los demás parciales en el orden correcto de especificidad.
--   `_tools.scss`: **Índice de herramientas**. Reenvía (`@forward`) todos los ficheros de utilidades (variables, mixins) para que puedan ser consumidos desde un único punto con `@use 'styles/tools' as t;`.
--   `_variables.scss`: **Design Tokens (Tema Claro)**. Define todas las variables CSS para colores, espaciados, tipografía, sombras, etc. Es la fuente de la verdad del sistema de diseño.
--   `_variables-dark.scss`: **Design Tokens (Tema Oscuro)**. Contiene un mixin que sobreescribe las variables CSS para el tema oscuro.
--   `_reset.scss`: **Reseteo de CSS**. Normaliza los estilos por defecto de los navegadores.
--   `_base.scss`: **Estilos base**. Aplica estilos a etiquetas HTML desnudas (ej. `body`, `a`, `p`).
--   `_grid.scss`: **Sistema de Rejilla**. Define las clases `.grid` y `.grid__item` para el layout responsive.
--   `_components.scss`: **Estilos de componentes globales**. Contiene estilos para componentes de UI muy genéricos que se usan en toda la aplicación.
--   `_theme.scss`: **Utilidades de tema**. Clases de utilidad que aplican estilos directamente (ej. `.text-primary`, `.bg-surface`).
+-   **Ver Arquitectura del Frontend**
 
-## 3. Cómo Utilizar el Sistema de Diseño
+-   `/core`: Servicios singleton, interceptores y guardias.
+-   `/features`: Módulos de negocio (páginas).
+-   `/shared`: Componentes, directivas y pipes reutilizables.
 
-### 3.1. Uso de Variables
+## 3. Guías y Convenciones
 
-Nunca se deben "hardcodear" valores como colores o espaciados en los ficheros `.scss` de los componentes. Siempre se debe usar una variable CSS.
+Todas las directrices de código, convenciones y buenas prácticas están documentadas en los siguientes archivos. Es de lectura obligatoria antes de contribuir al proyecto:
 
-```scss
-/* mal */
-.mi-componente {
-  background-color: #ffffff;
-  padding: 16px;
-}
+-   **Directrices de Trabajo**: Reglas sobre formato de código, nomenclatura, estilos y convenciones de Angular.
+-   **Registro de Progreso**: Historial detallado de los cambios y decisiones tomadas durante el desarrollo.
 
-/* bien */
-.mi-componente {
-  background-color: var(--color-surface);
-  padding: var(--space-m);
-}
+## 4. Scripts Disponibles
+
+En el directorio del proyecto, puedes ejecutar:
+
+### `npm start`
+
+Inicia la aplicación en modo de desarrollo. Abre http://localhost:4200 para verla en tu navegador. La página se recargará automáticamente si realizas cambios.
+
+### `npm test`
+
+Ejecuta los tests unitarios a través de Karma.
+
+### `npm run build`
+
+Compila la aplicación para producción en el directorio `dist/`. La compilación optimiza el código para obtener el mejor rendimiento.
 ```
 
 ### 3.2. Uso del Sistema de Rejilla

@@ -113,20 +113,23 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   }
 
   private setupModalButtons(): void {
-    const modalActions = this.actionService.getActionsForCategories(['admin'])
+    // ✅ REFACTOR: Usar getActions y mover la lógica de transformación a la directiva.
+    const modalActions = this.actionService.getActions(['admin'])
       .filter(action => action.id === 'toolbar-save' || action.id === 'toolbar-cancel');
 
-    const handlers = {
-      actions: new Map<string, () => void>([
-        ['toolbar-save', () => this.onSave()],
-        ['toolbar-cancel', () => this.closeModal()],
-      ]),
-      disabled$: new Map<string, Observable<boolean>>([
-        ['toolbar-save', toObservable(this.isSaving.asReadonly())],
-      ])
-    };
+    const actionHandlers = new Map<string, () => void>([
+      ['toolbar-save', () => this.onSave()],
+      ['toolbar-cancel', () => this.closeModal()],
+    ]);
 
-    this.modalButtons = this.actionService.toToolbarButtonConfig(modalActions, handlers);
+    this.modalButtons = modalActions
+      .filter(action => actionHandlers.has(action.id))
+      .map(action => ({
+        id: action.id,
+        label: action.label,
+        icon: action.icon,
+        action: actionHandlers.get(action.id)!,
+      }));
   }
 
   ngOnDestroy(): void {

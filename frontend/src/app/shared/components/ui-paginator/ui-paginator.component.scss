@@ -1,0 +1,53 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-paginator\ui-paginator.component.scss | Last Modified: 2025-10-19
+@use 'styles/tools' as t;
+
+:host {
+  display: block;
+}
+
+.ui-paginator {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-l);
+  padding: var(--space-m) 0;
+  font-size: var(--font-size-s);
+  border-top: 1px solid var(--color-border);
+
+  &__block {
+    display: flex;
+    align-items: center;
+    gap: var(--space-s);
+  }
+
+  &__summary {
+    color: var(--color-text-secondary);
+  }
+
+  &__controls {
+    // Los botones son app-ui-button, por lo que no necesitan estilos complejos aquí.
+    // Solo ajustamos el layout.
+    gap: var(--space-xs);
+  }
+
+  &__input,
+  &__select {
+    font-family: inherit;
+    font-size: var(--font-size-s);
+    padding: var(--space-xs) var(--space-s);
+    border: 1px solid var(--color-border);
+    border-radius: var(--border-radius-m);
+    background-color: var(--color-surface);
+    color: var(--color-text);
+    min-width: 60px;
+    text-align: center;
+
+    &:focus {
+      border-color: var(--color-primary);
+      outline: none;
+    }
+
+    @include t.focus-visible;
+  }
+}

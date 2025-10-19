@@ -1,0 +1,66 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-paginator\ui-paginator.component.html | Last Modified: 2025-10-19 -->
+
+@if (totalRecords() > 0) {
+  <nav class="ui-paginator" aria-label="Paginación">
+    <!-- Resumen de registros -->
+    <div class="ui-paginator__block">
+      <span class="ui-paginator__summary">
+        Mostrando <b>{{ startRecord() }} - {{ endRecord() }}</b> de <b>{{ totalRecords() }}</b>
+      </span>
+    </div>
+
+    <!-- Controles de navegación -->
+    <div class="ui-paginator__block ui-paginator__controls">
+      <button
+        app-ui-button
+        ui-button-variant="ghost"
+        (click)="goToPage(1)"
+        [disabled]="page() === 1"
+        aria-label="Primera página"
+      >
+        <app-ui-icon ui-icon-name="icon-first-page"></app-ui-icon>
+      </button>
+      <button
+        app-ui-button
+        ui-button-variant="ghost"
+        (click)="goToPage(page() - 1)"
+        [disabled]="page() === 1"
+        aria-label="Página anterior"
+      >
+        <app-ui-icon ui-icon-name="icon-chevron-left"></app-ui-icon>
+      </button>
+
+      <span class="ui-paginator__block">
+        Página
+        <input
+          class="ui-paginator__input"
+          type="number"
+          min="1"
+          [max]="totalPages()"
+          [value]="page()"
+          (change)="onGoToPageInputChange($event)"
+          (keydown.enter)="onGoToPageInputChange($event)"
+          aria-label="Ir a la página número"
+        />
+        de {{ totalPages() }}
+      </span>
+
+      <button app-ui-button ui-button-variant="ghost" (click)="goToPage(page() + 1)" [disabled]="page() === totalPages()" aria-label="Página siguiente">
+        <app-ui-icon ui-icon-name="icon-chevron-right"></app-ui-icon>
+      </button>
+      <button app-ui-button ui-button-variant="ghost" (click)="goToPage(totalPages())" [disabled]="page() === totalPages()" aria-label="Última página">
+        <app-ui-icon ui-icon-name="icon-last-page"></app-ui-icon>
+      </button>
+    </div>
+
+    <!-- Selector de tamaño de página -->
+    <div class="ui-paginator__block">
+      <label for="pageSizeSelect">Registros:</label>
+      <select id="pageSizeSelect" class="ui-paginator__select" [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange($event)">
+        @for (size of pageSizeOptions(); track size) {
+          <option [value]="size">{{ size }}</option>
+        }
+      </select>
+    </div>
+  </nav>
+}

@@ -1,0 +1,23 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-search-box\ui-search-box.component.html | Last Modified: 2025-10-19 -->
+
+<div class="ui-search-box">
+  <app-ui-icon class="ui-search-box__icon" ui-icon-name="icon-search"></app-ui-icon>
+
+  <input
+    #inputElement
+    type="text"
+    class="ui-search-box__input"
+    [placeholder]="uiSearchBoxPlaceholder()"
+    [value]="currentValue()"
+    (input)="onInputChange(inputElement.value)"
+    autocomplete="off"
+    spellcheck="false"
+    aria-label="Caja de búsqueda"
+  />
+
+  @if (currentValue()) {
+    <button app-ui-button ui-button-variant="ghost" class="ui-search-box__clear-btn" (click)="clear()" aria-label="Borrar búsqueda">
+      <app-ui-icon ui-icon-name="icon-close"></app-ui-icon>
+    </button>
+  }
+</div>

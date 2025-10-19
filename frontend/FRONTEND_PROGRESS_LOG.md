@@ -1,5 +1,32 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
 
+# Creación del Componente Reutilizable `UiSearchBoxComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Creación del nuevo componente compartido `UiSearchBoxComponent`.
+-   **Propósito**: Proporcionar un componente de búsqueda reutilizable y de alto rendimiento, con lógica de "debounce" incorporada para optimizar las interacciones del usuario.
+-   **Cambios Realizados**:
+    -   Se han creado los ficheros `.ts`, `.html`, `.scss` y `README.md` en `src/app/shared/components/ui-search-box`.
+    -   La lógica del componente utiliza una combinación de `signals` para el estado visual inmediato y `RxJS` (`Subject`, `debounceTime`) para gestionar la emisión de eventos de forma eficiente.
+    -   La API del componente sigue las convenciones del proyecto, con `inputs` (`uiSearchBoxValue`, etc.) y `outputs` (`uiSearchBoxValueChange`) prefijados.
+    -   Los estilos están completamente integrados con el sistema de diseño, utilizando variables CSS y la metodología BEM.
+
+---
+
+# Creación del Componente Reutilizable `UiPaginatorComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Creación del nuevo componente compartido `UiPaginatorComponent`.
+-   **Propósito**: Proporcionar un componente de paginación moderno, reutilizable y totalmente alineado con la arquitectura del proyecto para la navegación en conjuntos de datos.
+-   **Cambios Realizados**:
+    -   Se han creado los ficheros `.ts`, `.html`, `.scss`, `.types.ts` y `README.md` en `src/app/shared/components/ui-paginator`.
+    -   La lógica del componente se ha implementado utilizando `signals` para el estado y `computed signals` para los valores derivados (total de páginas, etc.), eliminando la necesidad de `ngOnChanges`.
+    -   La API del componente sigue las convenciones del proyecto, con `inputs` (`uiPaginatorTotalRecords`, etc.) y `outputs` (`uiPaginatorPageChange`) prefijados.
+    -   Los estilos se han adaptado para usar las variables CSS del sistema de diseño (`var(--color-...)`).
+    -   La plantilla utiliza los componentes `app-ui-button` y `app-ui-icon` para una total consistencia visual con el resto de la aplicación.
+
+---
+
 # Pasos Realizados en la Reconstrucción del Frontend
 
 Este documento registra el progreso realizado en la refactorización y reconstrucción del frontend.

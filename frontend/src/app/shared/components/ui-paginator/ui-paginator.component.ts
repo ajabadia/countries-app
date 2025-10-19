@@ -1,0 +1,83 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-paginator\ui-paginator.component.ts | Last Modified: 2025-10-19
+
+import {
+  Component,
+  ChangeDetectionStrategy,
+  input,
+  output,
+  computed,
+} from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { FormsModule } from '@angular/forms';
+
+import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
+import { UiButtonDirective } from '@shared/components/ui-button/ui-button.directive';
+import { PaginatorChangeEvent, PAGE_SIZE_OPTIONS } from './ui-paginator.types';
+
+@Component({
+  selector: 'app-ui-paginator',
+  standalone: true,
+  imports: [CommonModule, FormsModule, UiIconComponent, UiButtonDirective],
+  templateUrl: './ui-paginator.component.html',
+  styleUrls: ['./ui-paginator.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
+})
+export class UiPaginatorComponent {
+  // --- Entradas (Inputs) ---
+  totalRecords = input.required<number>({ alias: 'uiPaginatorTotalRecords' });
+  page = input(1, { alias: 'uiPaginatorPage' });
+  pageSize = input(10, { alias: 'uiPaginatorPageSize' });
+  pageSizeOptions = input(PAGE_SIZE_OPTIONS, { alias: 'uiPaginatorPageSizeOptions' });
+
+  // --- Salidas (Outputs) ---
+  pageChange = output<PaginatorChangeEvent>({ alias: 'uiPaginatorPageChange' });
+
+  // --- Estado Derivado (Computed Signals) ---
+  totalPages = computed(() => {
+    const total = this.totalRecords();
+    return total > 0 ? Math.ceil(total / this.pageSize()) : 0;
+  });
+
+  startRecord = computed(() => {
+    return this.totalRecords() > 0 ? (this.page() - 1) * this.pageSize() + 1 : 0;
+  });
+
+  endRecord = computed(() => {
+    return Math.min(this.page() * this.pageSize(), this.totalRecords());
+  });
+
+  // --- Métodos de Navegación ---
+
+  /**
+   * Navega a una página específica, asegurando que esté dentro de los límites.
+   */
+  goToPage(newPage: number): void {
+    const newValidPage = Math.max(1, Math.min(newPage, this.totalPages()));
+    if (this.page() !== newValidPage) {
+      this.emitPageChange(newValidPage, this.pageSize());
+    }
+  }
+
+  /**
+   * Gestiona el cambio en el selector de tamaño de página.
+   */
+  onPageSizeChange(newSize: number): void {
+    // Al cambiar el tamaño, volvemos a la primera página para evitar inconsistencias.
+    this.emitPageChange(1, newSize);
+  }
+
+  /**
+   * Gestiona el cambio en el input de "ir a página".
+   */
+  onGoToPageInputChange(event: Event): void {
+    const inputElement = event.target as HTMLInputElement;
+    const page = parseInt(inputElement.value, 10);
+    if (!isNaN(page)) {
+      this.goToPage(page);
+    }
+  }
+
+  private emitPageChange(page: number, pageSize: number): void {
+    this.pageChange.emit({ page, pageSize });
+  }
+}
