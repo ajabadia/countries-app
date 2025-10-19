@@ -1,0 +1,46 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toggle-checkbox\ui-toggle-checkbox.component.scss | Last Modified: 2025-10-19
+
+:host {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: var(--color-text-muted);
+  transition: color var(--transition-base);
+  font-size: 1.2em; // Un poco más grande que el texto para que sea fácil de clickar
+
+  // Para que el outline de foco se vea bien y no se corte
+  border-radius: var(--radius-sm);
+  padding: 2px;
+  margin: -2px;
+
+  &:hover {
+    color: var(--color-text);
+  }
+
+  &:focus-visible {
+    outline: 2px solid var(--color-primary);
+    outline-offset: 2px;
+  }
+}
+
+// Estilos basados en el estado, aplicados vía HostBinding en el componente
+
+:host(.toggle-checkbox--checked) {
+  color: var(--color-primary);
+  &:hover {
+    color: var(--color-primary-dark);
+  }
+}
+
+:host(.toggle-checkbox--indeterminate) {
+  color: var(--color-warning);
+  &:hover {
+    color: var(--color-warning-dark); // Asumiendo que esta variable existe o se añadirá
+  }
+}
+
+// El estado 'unchecked' usa los estilos por defecto del :host
+:host(.toggle-checkbox--unchecked) {
+  // No se necesitan estilos específicos, hereda los de :host
+}

@@ -1,0 +1,48 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-hamburger-menu\ui-hamburger-menu.component.html | Last Modified: 2025-10-19 -->
+
+<div class="hamburger-container">
+  <!-- Botón de Hamburguesa -->
+  <button
+    app-ui-button
+    ui-button-variant="ghost"
+    ui-icon-name="icon-menu"
+    ui-icon-position="only"
+    (click)="toggleMenu()"
+  >
+    <span class="visually-hidden">Abrir menú de navegación</span>
+  </button>
+
+  <!-- Panel del Menú Desplegable -->
+  @if (isMenuOpen()) {
+    <div class="menu-panel">
+      <app-ui-accordion [ui-accordion-items]="accordionItems"></app-ui-accordion>
+    </div>
+  }
+</div>
+
+<!--
+  Plantillas para el contenido de cada sección del acordeón.
+  El componente de acordeón usará estas plantillas a través de la propiedad `content`
+  de cada `AccordionItem` que le pasamos.
+-->
+<ng-template #publicTemplate>
+  @for (item of menuGroups[0]?.actions; track item.id) {
+    <a class="menu-item" [routerLink]="item.route" (click)="toggleMenu()">
+      @if (item.icon) {
+        <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
+      }
+      <span>{{ item.label }}</span>
+    </a>
+  }
+</ng-template>
+
+<ng-template #adminTemplate>
+  @for (item of menuGroups[1]?.actions; track item.id) {
+    <a class="menu-item" [routerLink]="item.route" (click)="toggleMenu()">
+      @if (item.icon) {
+        <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
+      }
+      <span>{{ item.label }}</span>
+    </a>
+  }
+</ng-template>

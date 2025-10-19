@@ -1,0 +1,23 @@
+// File: d:\desarrollos\countries2\frontend\src\app\app.component.scss | Last Modified: 2025-10-19
+
+:host {
+  display: block;
+  height: 100%;
+}
+
+.app-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: var(--space-s) var(--space-m);
+  background: var(--color-surface);
+  border-bottom: 1px solid var(--color-border);
+  box-shadow: var(--shadow-sm);
+  position: sticky;
+  top: 0;
+  z-index: var(--z-sticky);
+}
+
+.app-content {
+  padding: var(--space-l);
+}

@@ -1,0 +1,17 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toggle-checkbox\ui-toggle-checkbox.component.html | Last Modified: 2025-10-19 -->
+
+<!-- El HostListener en el .ts se encarga de la interacción -->
+<!-- El HostBinding en el .ts se encarga de la accesibilidad (role, tabindex, aria-checked) -->
+
+<!-- Usamos @switch para cambiar el icono según el estado -->
+@switch (state) {
+  @case ('checked') {
+    <app-ui-icon ui-icon-name="icon-check-square"></app-ui-icon>
+  }
+  @case ('indeterminate') {
+    <app-ui-icon ui-icon-name="icon-minus-square"></app-ui-icon>
+  }
+  @default {
+    <app-ui-icon ui-icon-name="icon-square"></app-ui-icon>
+  }
+}

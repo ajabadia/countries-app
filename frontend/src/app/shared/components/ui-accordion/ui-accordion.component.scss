@@ -1,0 +1,80 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-accordion\ui-accordion.component.scss | Last Modified: 2025-10-19
+
+:host {
+  display: block;
+  width: 100%;
+}
+
+.ui-accordion {
+  border: 1px solid var(--color-border);
+  border-radius: var(--radius-lg);
+  overflow: hidden;
+}
+
+.ui-accordion__item {
+  border-bottom: 1px solid var(--color-border);
+
+  &:last-child {
+    border-bottom: none;
+  }
+}
+
+.ui-accordion__header {
+  // --- Reset y Layout ---
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  background: var(--color-surface);
+  border: none;
+  padding: var(--space-m);
+  cursor: pointer;
+  text-align: left;
+  font-size: var(--font-size-base);
+  font-weight: 600;
+  color: var(--color-text);
+  transition: background-color var(--transition-base);
+
+  &:hover {
+    background: var(--color-surface-hover);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.6;
+    background: var(--color-surface-soft);
+  }
+}
+
+.ui-accordion__indicator {
+  transition: transform var(--transition-base) ease-in-out;
+  font-size: 1.2em;
+}
+
+.ui-accordion__content {
+  // --- Animación de Colapso/Expansión ---
+  display: grid;
+  grid-template-rows: 0fr; // Por defecto, el contenido no ocupa espacio
+  transition: grid-template-rows var(--transition-base) ease-in-out;
+  background: var(--color-surface-soft);
+}
+
+.ui-accordion__content-inner {
+  overflow: hidden;
+  padding: 0 var(--space-m);
+}
+
+// --- Estado Expandido ---
+.ui-accordion__item--expanded {
+  .ui-accordion__indicator {
+    transform: rotate(180deg);
+  }
+
+  .ui-accordion__content {
+    grid-template-rows: 1fr; // Al expandir, el contenido ocupa su espacio natural
+  }
+
+  .ui-accordion__content-inner {
+    padding: var(--space-m);
+  }
+}

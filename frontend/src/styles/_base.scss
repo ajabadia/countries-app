@@ -45,3 +45,16 @@ h5 { @extend %h5-base; }
 h6 { @extend %h6-base; }
 // No extendemos h7 y h8 ya que no son etiquetas HTML estándar,
 // pero están disponibles para usar con el componente ui-heading.
+
+// --- Clases de Utilidad para Accesibilidad ---
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}

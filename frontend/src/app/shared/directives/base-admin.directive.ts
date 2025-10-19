@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\directives\base-admin.directive.ts | Last Modified: 2025-10-19
+
 import {
   Directive,
   OnInit,
@@ -29,73 +31,55 @@ import {
   catchError,
   finalize,
 } from 'rxjs/operators';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toSignal, toObservable } from '@angular/core/rxjs-interop';
 
 import { BaseCrudService } from '@shared/services/base-crud.service';
 import { SelectionService } from '@shared/services/selection.service';
+import { ActionService } from '@core/services/action.service';
+import { ToolbarButtonConfig } from '@shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
 import { Sort } from '@shared/types/sort.type';
 import { PagedResponse } from '@shared/types/paged-response.interface';
 
-/**
- * Directiva base abstracta para gestionar la lógica común de las páginas de administración (CRUD).
- * Proporciona gestión de estado para paginación, búsqueda, ordenación, selección y operaciones CRUD.
- *
- * @template T El tipo de la entidad que se gestiona.
- */
 @Directive({
   selector: '[appBaseAdmin]',
   standalone: true,
 })
-export abstract class BaseAdminDirective<T extends { id: number }>
-  implements OnInit, OnDestroy
-{
+export abstract class BaseAdminDirective<T extends { id: number | string }> implements OnInit, OnDestroy {
   // --- Dependencias ---
   protected fb = inject(FormBuilder);
   private injector = inject(Injector);
+  private actionService = inject(ActionService);
 
-  // --- Propiedades Abstractas (deben ser implementadas por la clase hija) ---
-
-  /**
-   * El servicio CRUD específico para la entidad.
-   * Ejemplo: `service = inject(CountriesService);`
-   */
+  // --- Propiedades Abstractas ---
   abstract service: BaseCrudService<T>;
-
-  /**
-   * El formulario para crear/editar la entidad.
-   * Ejemplo: `form = this.fb.group({ name: ['', Validators.required] });`
-   */
   abstract form: FormGroup;
 
-  // --- Estado de la UI gestionado con Subjects ---
+  // --- Estado de la UI ---
   private page$ = new BehaviorSubject<number>(1);
   private pageSize$ = new BehaviorSubject<number>(10);
   private search$ = new BehaviorSubject<string>('');
-  private sort$ = new BehaviorSubject<Sort<T>>({
-    orderBy: 'id' as keyof T,
-    orderDir: 'asc',
-  });
+  private sort$ = new BehaviorSubject<Sort<T>>({ orderBy: 'id' as keyof T, orderDir: 'asc' });
   private refresh$ = new Subject<void>();
 
-  // --- Estado público y Observables ---
+  // --- Estado Público (Signals) ---
   private pagedResponse = toSignal<PagedResponse<T>>(EMPTY as Observable<PagedResponse<T>>);
   data = computed(() => this.pagedResponse()?.data ?? []);
   totalRecords = computed(() => this.pagedResponse()?.total ?? 0);
-  isLoading = signal(true); // Se gestiona con tap
-  selectionService!: SelectionService<T>; // Se inicializa en ngOnInit
+  isLoading = signal(true);
+  selectionService!: SelectionService<T>;
 
-  // --- Gestión de modales ---
+  // --- Gestión de Modales ---
   isModalVisible = signal(false);
   isConfirmModalVisible = signal(false);
   isSaving = signal(false);
   isDeleting = signal(false);
   editingItem: WritableSignal<T | null> = signal(null);
   itemToDelete: WritableSignal<T | null> = signal(null);
+  modalButtons: ToolbarButtonConfig[] = [];
 
   private subscription: Subscription = new Subscription();
 
   ngOnInit(): void {
-    // Inicializamos el servicio de selección dentro del contexto de inyección del componente hijo.
     runInInjectionContext(this.injector, () => {
       this.selectionService = new SelectionService<T>();
     });
@@ -105,60 +89,57 @@ export abstract class BaseAdminDirective<T extends { id: number }>
       this.pageSize$,
       this.search$.pipe(debounceTime(300), distinctUntilChanged()),
       this.sort$,
-      this.refresh$.pipe(startWith(null)), // Para refresco manual
+      this.refresh$.pipe(startWith(null)),
     ]).pipe(
       tap(() => this.isLoading.set(true)),
       switchMap(([page, pageSize, search, sort]) => {
-        let params = new HttpParams()
-          .set('page', page.toString())
-          .set('limit', pageSize.toString()); // O 'pageSize' si tu backend lo prefiere
-
-        if (search) {
-          params = params.set('search', search);
-        }
-        params = params.set('orderBy', sort.orderBy as string);
-        params = params.set('orderDir', sort.orderDir);
+        let params = new HttpParams().set('page', page.toString()).set('limit', pageSize.toString());
+        if (search) params = params.set('search', search);
+        params = params.set('orderBy', sort.orderBy as string).set('orderDir', sort.orderDir);
 
         return this.service.getAll(params).pipe(
-            catchError(err => {
-              console.error('Error fetching data:', err);
-              // TODO: Integrar con servicio de notificaciones
-              return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
-            })
-          );
+          catchError(err => {
+            console.error('Error fetching data:', err);
+            return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+          })
+        );
       })
     );
 
-    // Convertimos el stream de datos en una signal
     this.pagedResponse = toSignal(pagedResponse$, { initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } });
+
+    // --- Generar Botones del Modal usando ActionService ---
+    this.setupModalButtons();
   }
 
-  // ngOnDestroy ya no es estrictamente necesario si solo gestionaba la subscripción de `combined$`
+  private setupModalButtons(): void {
+    const modalActions = this.actionService.getActionsForCategories(['admin'])
+      .filter(action => action.id === 'toolbar-save' || action.id === 'toolbar-cancel');
+
+    const handlers = {
+      actions: new Map<string, () => void>([
+        ['toolbar-save', () => this.onSave()],
+        ['toolbar-cancel', () => this.closeModal()],
+      ]),
+      disabled$: new Map<string, Observable<boolean>>([
+        ['toolbar-save', toObservable(this.isSaving.asReadonly())],
+      ])
+    };
+
+    this.modalButtons = this.actionService.toToolbarButtonConfig(modalActions, handlers);
+  }
+
   ngOnDestroy(): void {
     this.subscription.unsubscribe();
   }
 
   // --- Métodos de control de la UI ---
-
-  onPageChange(page: number): void {
-    this.page$.next(page);
-  }
-
-  onSortChange(sort: Sort<T>): void {
-    this.sort$.next(sort);
-  }
-
-  onSearch(searchTerm: string): void {
-    this.search$.next(searchTerm);
-    this.page$.next(1); // Resetear a la primera página en cada búsqueda
-  }
-
-  refreshData(): void {
-    this.refresh$.next();
-  }
+  onPageChange(page: number): void { this.page$.next(page); }
+  onSortChange(sort: Sort<T>): void { this.sort$.next(sort); }
+  onSearch(searchTerm: string): void { this.search$.next(searchTerm); this.page$.next(1); }
+  refreshData(): void { this.refresh$.next(); }
 
   // --- Métodos para operaciones CRUD y modales ---
-
   openModal(item: T | null = null): void {
     this.editingItem.set(item);
     if (item) {
@@ -185,16 +166,9 @@ export abstract class BaseAdminDirective<T extends { id: number }>
     this.isConfirmModalVisible.set(false);
   }
 
-
-  /**
-   * Gestiona el guardado de un item (creación o actualización).
-   * Valida el formulario y llama al servicio correspondiente.
-   */
   onSave(): void {
     this.form.markAllAsTouched();
-    if (this.form.invalid) {
-      return;
-    }
+    if (this.form.invalid) return;
 
     this.isSaving.set(true);
     const itemData = this.form.value;
@@ -205,52 +179,38 @@ export abstract class BaseAdminDirective<T extends { id: number }>
       : this.service.create(itemData);
 
     this.subscription.add(
-      saveOperation$
-        .pipe(
-          tap(() => {
-            // TODO: Mostrar notificación de éxito
-            this.closeModal();
-            this.refreshData();
-          }),
-          catchError(err => {
-            console.error('Error saving data:', err);
-            // TODO: Mostrar notificación de error
-            return of(null); // O manejar el error de otra forma
-          }),
-          finalize(() => this.isSaving.set(false))
-        )
-        .subscribe()
+      saveOperation$.pipe(
+        tap(() => {
+          this.closeModal();
+          this.refreshData();
+        }),
+        catchError(err => {
+          console.error('Error saving data:', err);
+          return of(null as any);
+        }),
+        finalize(() => this.isSaving.set(false))
+      ).subscribe()
     );
   }
 
-  /**
-   * Gestiona el borrado de un item.
-   */
   onDelete(): void {
     const item = this.itemToDelete();
-    if (!item) {
-      return;
-    }
+    if (!item) return;
 
     this.isDeleting.set(true);
-
     this.subscription.add(
-      this.service.delete(item.id)
-        .pipe(
-          tap(() => {
-            // TODO: Mostrar notificación de éxito
-            this.closeConfirmDeleteModal();
-            this.refreshData();
-            this.selectionService.clear(); // Limpiar selección si el item estaba seleccionado
-          }),
-          catchError(err => {
-            console.error('Error deleting data:', err);
-            // TODO: Mostrar notificación de error
-            return of(null);
-          }),
-          finalize(() => this.isDeleting.set(false))
-        )
-        .subscribe()
+      this.service.delete(item.id).pipe(
+        tap(() => {
+          this.closeConfirmDeleteModal();
+          this.refreshData();
+          this.selectionService.clear();
+        }),
+        catchError(err => {
+          console.error('Error deleting data:', err);
+          return of(null as any);
+        }),
+        finalize(() => this.isDeleting.set(false))
+      ).subscribe()
     );
   }
 }
