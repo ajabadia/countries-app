@@ -39,3 +39,14 @@ El linter detectó problemas de accesibilidad en el modal (`ui-form-modal`) que 
 La búsqueda inicial de usos del componente `<app-ui-form-modal>` no arrojó resultados. Solo tras analizar la directiva `BaseAdminDirective.ts` se pudo entender que la directiva provee la lógica, pero es un futuro componente (aún no creado) el que debe implementar la plantilla HTML que usa el modal.
 
 -   **Conclusión**: No se puede asumir que un componente no se usa solo porque una búsqueda de texto en las plantillas no dé resultados. Es necesario entender la arquitectura y cómo las diferentes partes (especialmente directivas y componentes) se interconectan.
+
+---
+
+### 5. La Sintaxis de Alias para `@Input` y `@Output` es Diferente
+
+Durante la refactorización para aplicar la API prefijada, se cometió un error al asumir que la sintaxis para crear un alias era la misma para los `@Input` y los `@Output`.
+
+-   **`@Input`**: Acepta un objeto de configuración: `@Input({ alias: 'prefijo-nombre' })`.
+-   **`@Output`**: Acepta el alias como un `string` directamente: `@Output('prefijo-nombre')`.
+
+-   **Conclusión**: Confundir esta sintaxis resulta en un error de compilación (`NG1010`). Es un detalle importante de la API de Angular que debe tenerse en cuenta al refactorizar o crear componentes con APIs públicas.

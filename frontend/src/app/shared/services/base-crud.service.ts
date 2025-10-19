@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\services\base-crud.service.ts | Last Modified: 2025-10-19
+
 import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { PagedResponse } from '@shared/types/paged-response.interface';

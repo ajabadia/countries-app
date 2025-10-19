@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-icon\ui-icon.component.ts | Last Modified: 2025-10-19
+
 import {
   Component,
   Input,

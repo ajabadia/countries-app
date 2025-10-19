@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\services\selection.service.ts | Last Modified: 2025-10-19
+
 import { Injectable } from '@angular/core';
 import { BehaviorSubject, Observable } from 'rxjs';
 

@@ -33,8 +33,8 @@ onSave() { /* ... tu lógica de guardado ... */ }
 ```html
 <app-ui-form-modal
   [ui-form-modal-visible]="isModalVisible()"
-  (cancel)="closeModal()"
-  (save)="onSave()"
+  (cancelClick)="closeModal()"
+  (saveClick)="onSave()"
   ui-form-modal-title="Crear Nuevo País"
   [ui-form-modal-is-loading]="isSaving()"
 >
@@ -68,7 +68,7 @@ Estos inputs permiten controlar propiedades de los componentes anidados.
 
 ### Outputs
 
-| Output   | Emite      | Descripción                                                                 |
-| -------- | ---------- | --------------------------------------------------------------------------- |
-| `save`   | `void`     | Se emite cuando el usuario hace clic en el botón de guardar.                |
-| `cancel` | `void`     | Se emite cuando el usuario cierra el modal (botón cancelar, 'X' o backdrop). |
+| Output        | Emite      | Descripción                                                                 |
+| ------------- | ---------- | --------------------------------------------------------------------------- |
+| `saveClick`   | `void`     | Se emite cuando el usuario hace clic en el botón de guardar.                |
+| `cancelClick` | `void`     | Se emite cuando el usuario cierra el modal (botón cancelar, 'X' o backdrop). |

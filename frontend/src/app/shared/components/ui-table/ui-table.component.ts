@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-table\ui-table.component.ts | Last Modified: 2025-10-19
+
 import {
   Component,
   Input,
@@ -21,13 +23,13 @@ import { Sort, SortDirection } from '@shared/types/sort.type';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiTableComponent<T extends { id: number | string }> {
-  @Input() data: T[] | null = [];
-  @Input() columns: TableColumn<T>[] = [];
-  @Input() selection: SelectionService<T> | null = null;
-  @Input() sort: Sort<T> | null = null;
-  @Input() isLoading = false;
+  @Input({ alias: 'ui-table-data' }) data: T[] | null = [];
+  @Input({ alias: 'ui-table-columns' }) columns: TableColumn<T>[] = [];
+  @Input({ alias: 'ui-table-selection' }) selection: SelectionService<T> | null = null;
+  @Input({ alias: 'ui-table-sort' }) sort: Sort<T> | null = null;
+  @Input({ alias: 'ui-table-is-loading' }) isLoading = false;
 
-  @Output() sortChange = new EventEmitter<Sort<T>>();
+  @Output('ui-table-sort-change') sortChange = new EventEmitter<Sort<T>>();
 
   // Permite al componente padre proyectar una plantilla para la columna de acciones
   @ContentChild('actions', { read: TemplateRef })

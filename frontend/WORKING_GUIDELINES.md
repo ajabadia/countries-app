@@ -80,6 +80,14 @@ En situaciones donde se requiera una alta velocidad de ejecución para una tarea
 -   Al finalizar la tarea o el tiempo concedido, el agente debe intentar compilar y verificar su trabajo, corrigiendo los errores que surjan de sus propias modificaciones de forma autónoma.
 -   Una vez completado el ciclo, el agente volverá al modo de operación estándar.
 
+### 5.3. Ciclo de Retroalimentación con Lecciones Aprendidas
+
+Para asegurar que el conocimiento adquirido se retiene y se aplica, se seguirá el siguiente ciclo al abordar errores:
+
+1.  **Consultar Lecciones Previas**: Antes de iniciar la corrección de un nuevo conjunto de errores, se debe consultar el fichero `LESSONS_LEARNED.md` para aplicar aprendizajes de situaciones pasadas.
+2.  **Corregir Errores**: Aplicar el flujo de trabajo estándar (o el modo autónomo si está activo) para solucionar los problemas.
+3.  **Documentar Nuevas Lecciones**: Tras resolver los errores, si se han obtenido nuevas conclusiones sobre la arquitectura, las herramientas o las convenciones del proyecto, estas deben añadirse a `LESSONS_LEARNED.md`.
+
 ## 6. Registro de Lecciones Aprendidas
 
 Para fomentar la mejora continua y la transferencia de conocimiento, se establece un proceso para documentar las lecciones aprendidas.

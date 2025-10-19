@@ -1,3 +1,5 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-heading\README.md | Last Modified: 2025-10-19 -->
+
 # UI Heading Component (`<app-ui-heading>`)
 
 Componente para renderizar encabezados semánticos (`<h1>` a `<h6>`) de forma consistente en toda la aplicación.

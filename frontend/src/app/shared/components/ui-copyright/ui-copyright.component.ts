@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-copyright\ui-copyright.component.ts | Last Modified: 2025-10-19
+
 import { ChangeDetectionStrategy, Component, Input } from '@angular/core';
 import { CommonModule } from '@angular/common';
 
@@ -10,8 +12,8 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiCopyrightComponent {
-  @Input() companyName = 'CountriesApp';
-  @Input() startYear?: number;
+  @Input({ alias: 'ui-copyright-company-name' }) companyName = 'CountriesApp';
+  @Input({ alias: 'ui-copyright-start-year' }) startYear?: number;
 
   private readonly currentYear = new Date().getFullYear();
 

@@ -1,3 +1,5 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-icon\README.md | Last Modified: 2025-10-19 -->
+
 # UI Icon Component (`<app-ui-icon>`)
 
 Este componente es el método estándar para mostrar iconos en toda la aplicación. Está diseñado para ser flexible, eficiente y fácil de usar.

@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-logo\ui-logo.component.ts | Last Modified: 2025-10-19
+
 import {
   Component,
   Input,
@@ -15,9 +17,9 @@ import { CommonModule } from '@angular/common';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiLogoComponent {
-  @Input() src = 'assets/images/Ibercaja-logo-2025.svg';
-  @Input() alt = 'Ibercaja Logo';
-  @Input() width: string | number = 120;
+  @Input({ alias: 'ui-logo-src' }) src = 'assets/images/Ibercaja-logo-2025.svg';
+  @Input({ alias: 'ui-logo-alt' }) alt = 'Ibercaja Logo';
+  @Input({ alias: 'ui-logo-width' }) width: string | number = 120;
 
   @HostBinding('style.width')
   get hostWidth(): string {

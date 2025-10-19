@@ -1,4 +1,4 @@
-<!-- File: /frontend/src/app/shared/components/ui-button/README.md -->
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-button\README.md | Last Modified: 2025-10-19 -->
 
 # UI Button Component (`<button app-ui-button>`)
 
@@ -31,21 +31,21 @@ Este es el componente estándar para todas las acciones clickeables (botones y e
 
 ## API (Inputs)
 
-| Input                   | Tipo                                       | Por Defecto | Descripción                                                                                             |
-| ----------------------- | ------------------------------------------ | ----------- | ------------------------------------------------------------------------------------------------------- |
-| `ui-button-color`       | `'primary' \| 'secondary' \| 'danger' ...` | `'primary'` | El color temático del botón.                                                                            |
-| `ui-button-variant`     | `'solid' \| 'outline' \| 'ghost'`          | `'solid'`   | El estilo visual del botón.                                                                             |
-| `ui-button-size`        | `'s' \| 'm' \| 'l'`                        | `'m'`       | El tamaño del botón (padding, font-size).                                                               |
-| `ui-button-disabled`    | `boolean`                                  | `false`     | Si el botón está deshabilitado.                                                                         |
-| `ui-button-loading`     | `boolean`                                  | `false`     | Si es `true`, muestra un spinner y deshabilita el botón.                                                |
-| `ui-button-full-width`  | `boolean`                                  | `false`     | Si el botón debe ocupar todo el ancho disponible.                                                       |
-| `ui-button-aria-label`  | `string`                                   | `undefined` | Etiqueta de accesibilidad. Esencial para botones de solo icono.                                         |
-| `ui-icon-name`          | `string`                                   | `undefined` | El nombre del icono a mostrar (pasado a `app-ui-icon`).                                                   |
-| `ui-icon-position`      | `'left' \| 'right' \| 'only'`              | `'left'`    | La posición del icono. `'only'` crea un botón de icono cuadrado.                                        |
-| `ui-icon-type`          | `UiIconType`                               | `'system'`  | El tipo de icono a pasar a `app-ui-icon` (ej. 'system', 'flag').                                        |
-| `ui-icon-size`          | `UiIconSize \| 'inherit' \| string`        | `undefined` | El tamaño del icono (pasado a `app-ui-icon`).                                                           |
-| `ui-icon-color`         | `string`                                   | `undefined` | El color del icono (pasado a `app-ui-icon`).                                                            |
-| `ui-icon-class`         | `string`                                   | `''`        | Clases CSS adicionales para el icono (pasado a `app-ui-icon`).                                          |
+| Input                   | Tipo                                                             | Por Defecto | Descripción                                                                                             |
+| ----------------------- | ---------------------------------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------- |
+| `ui-button-color`       | `'primary' \| 'secondary' \| 'danger' \| 'success' \| 'warning'` | `'primary'` | El color temático del botón.                                                                            |
+| `ui-button-variant`     | `'solid' \| 'outline' \| 'ghost'`                                | `'solid'`   | El estilo visual del botón.                                                                             |
+| `ui-button-size`        | `'s' \| 'm' \| 'l'`                                              | `'m'`       | El tamaño del botón (padding, font-size).                                                               |
+| `ui-button-disabled`    | `boolean`                                                        | `false`     | Si el botón está deshabilitado.                                                                         |
+| `ui-button-loading`     | `boolean`                                                        | `false`     | Si es `true`, muestra un spinner y deshabilita el botón.                                                |
+| `ui-button-full-width`  | `boolean`                                                        | `false`     | Si el botón debe ocupar todo el ancho disponible.                                                       |
+| `ui-button-aria-label`  | `string`                                                         | `undefined` | Etiqueta de accesibilidad. Esencial para botones de solo icono.                                         |
+| `ui-icon-name`          | `string`                                                         | `undefined` | El nombre del icono a mostrar (pasado a `app-ui-icon`).                                                   |
+| `ui-icon-position`      | `'left' \| 'right' \| 'only'`                                    | `'left'`    | La posición del icono. `'only'` crea un botón de icono cuadrado.                                        |
+| `ui-icon-type`          | `UiIconType`                                                     | `'system'`  | El tipo de icono a pasar a `app-ui-icon` (ej. 'system', 'flag').                                        |
+| `ui-icon-size`          | `UiIconSize \| 'inherit' \| string`                              | `undefined` | El tamaño del icono (pasado a `app-ui-icon`).                                                           |
+| `ui-icon-color`         | `string`                                                         | `undefined` | El color del icono (pasado a `app-ui-icon`).                                                            |
+| `ui-icon-class`         | `string`                                                         | `''`        | Clases CSS adicionales para el icono (pasado a `app-ui-icon`).                                          |
 
 ## Ejemplos de Uso
 

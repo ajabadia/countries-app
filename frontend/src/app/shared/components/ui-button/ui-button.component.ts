@@ -1,3 +1,5 @@
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-button\ui-button.component.ts | Last Modified: 2025-10-19
+
 import { Component, Input, ChangeDetectionStrategy, HostBinding, ViewChild, ElementRef, AfterContentInit, OnChanges } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';

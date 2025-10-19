@@ -1,16 +1,41 @@
 <div class="home-container">
   <header class="home-header">
-    <app-ui-logo [width]="180"></app-ui-logo>
+    <app-ui-logo [ui-logo-width]="180"></app-ui-logo>
   </header>
 
   <main class="home-content">
     <app-ui-heading
       ui-heading-title="Landing Page de Bienvenida"
       [ui-heading-level]="2"
-      ui-icon-name="icon-flask"
+      ui-icon-name="icon-home"
       ui-icon-type="system"
       ui-icon-position="left">
     </app-ui-heading>
     <p>¡El sistema de componentes reutilizables está funcionando!</p>
+
+    <section class="stats-grid">
+      <app-ui-stat-card
+        ui-stat-card-label="Pruebas Superadas"
+        ui-stat-card-value="42"
+        ui-icon-name="icon-flask"
+        ui-icon-type="system"
+      ></app-ui-stat-card>
+
+      <app-ui-stat-card
+        ui-stat-card-label="Componentes"
+        ui-stat-card-value="11"
+        ui-icon-name="icon-table"
+        ui-icon-type="system"
+      ></app-ui-stat-card>
+
+      <app-ui-stat-card
+        ui-stat-card-label="Países"
+        ui-stat-card-value="195"
+        ui-icon-name="icon-world-globe"
+        ui-icon-type="system"
+        ui-stat-card-route="/admin/countries"
+      ></app-ui-stat-card>
+    </section>
+
   </main>
 </div>
