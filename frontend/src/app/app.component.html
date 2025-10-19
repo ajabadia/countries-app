@@ -1,14 +1,24 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\app.component.html | Last Modified: 2025-10-19 -->
 
-<header class="app-header">
-  <div class="app-header__logo">
-    <app-ui-logo></app-ui-logo>
-  </div>
-  <div class="app-header__nav">
-    <app-ui-hamburger-menu></app-ui-hamburger-menu>
-  </div>
-</header>
+<div class="app-layout">
+  <header class="app-header">
+    <div class="app-header__left">
+      <app-ui-hamburger-menu></app-ui-hamburger-menu>
+      <app-ui-logo></app-ui-logo>
+    </div>
+    <div class="app-header__center">
+      <h1 class="app-header__title">{{ pageTitle() }}</h1>
+    </div>
+    <div class="app-header__right">
+      <!-- Espacio para futuras acciones: perfil de usuario, notificaciones, etc. -->
+    </div>
+  </header>
 
-<main class="app-content">
-  <router-outlet></router-outlet>
-</main>
+  <main class="app-content">
+    <router-outlet></router-outlet>
+  </main>
+
+  <footer class="app-footer">
+    <span class="app-footer__copyright">© 2025 CountriesApp. Todos los derechos reservados.</span>
+  </footer>
+</div>

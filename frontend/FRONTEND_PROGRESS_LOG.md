@@ -4,6 +4,38 @@
 
 Este documento registra el progreso realizado en la refactorización y reconstrucción del frontend.
 
+## 32. Corrección de Ruta de Fichero (LayoutService)
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Corrección de la ubicación del fichero `layout.service.ts`.
+-   **Propósito**: Solucionar errores de compilación (`TS2307`) persistentes causados por una ruta de fichero incorrecta que impedía la resolución del alias `@core`.
+-   **Cambios Realizados**:
+    -   Se ha movido el fichero `layout.service.ts` a su ubicación definitiva en `src/app/core/services/`.
+
+---
+
+## 31. Corrección de Ruta de `LayoutService`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Corrección de la ubicación del fichero `layout.service.ts`.
+-   **Propósito**: Solucionar errores de compilación (`TS2307`) causados por una ruta de importación incorrecta.
+-   **Cambios Realizados**:
+    -   Se ha movido el fichero `layout.service.ts` desde la raíz del proyecto a su ubicación correcta en `src/app/core/services/`.
+
+---
+
+## 30. Creación del Layout Principal de la Aplicación
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Creación y refactorización del esqueleto principal de la aplicación en `AppComponent`.
+-   **Propósito**: Establecer una estructura visual coherente (header, content, footer) para todas las páginas y un mecanismo para títulos de página dinámicos.
+-   **Cambios Realizados**:
+    -   Se ha creado el `LayoutService` en `core/services` para gestionar el estado del layout, como el título de la página.
+    -   Se ha refactorizado `app.component.html` para incluir una cabecera con el orden (menú, logo, título), un área de contenido principal y un pie de página.
+    -   Se han actualizado los estilos en `app.component.scss` para implementar un layout flexible que ocupa toda la altura de la pantalla.
+
+---
+
 ## 29. Documentación de la Arquitectura de Estilos
 
 -   **Fecha**: 2025-10-19

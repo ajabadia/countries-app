@@ -1,23 +1,63 @@
 // File: d:\desarrollos\countries2\frontend\src\app\app.component.scss | Last Modified: 2025-10-19
 
 :host {
-  display: block;
+  display: flex;
+  flex-direction: column;
   height: 100%;
+}
+
+.app-layout {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
 }
 
 .app-header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: var(--space-s) var(--space-m);
+  gap: var(--space-m);
+  padding: var(--space-s) var(--space-l);
   background: var(--color-surface);
   border-bottom: 1px solid var(--color-border);
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
   z-index: var(--z-sticky);
+  height: var(--header-height);
+
+  &__left,
+  &__right,
+  &__center {
+    display: flex;
+    align-items: center;
+    gap: var(--space-m);
+  }
+
+  &__center {
+    flex-grow: 1;
+    justify-content: center;
+  }
+
+  &__title {
+    margin: 0;
+    font-size: var(--font-size-xl);
+    font-weight: 600;
+    color: var(--color-text);
+  }
 }
 
 .app-content {
+  flex-grow: 1; // Ocupa todo el espacio disponible
   padding: var(--space-l);
+  background-color: var(--color-background);
+}
+
+.app-footer {
+  padding: var(--space-m) var(--space-l);
+  background: var(--color-surface-accented);
+  border-top: 1px solid var(--color-border);
+  text-align: center;
+  color: var(--color-text-muted);
+  font-size: var(--font-size-sm);
 }
