@@ -4,6 +4,29 @@
 
 Este documento registra el progreso realizado en la refactorización y reconstrucción del frontend.
 
+## 29. Documentación de la Arquitectura de Estilos
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Creación de la documentación para el sistema de diseño y estilos.
+-   **Propósito**: Proporcionar una guía centralizada sobre la filosofía, estructura y uso de la arquitectura de estilos del proyecto.
+-   **Cambios Realizados**:
+    -   Se ha creado el fichero `src/styles/README.md` que detalla el funcionamiento del sistema de diseño.
+
+---
+
+## 28. Implementación del Nuevo Sistema de Diseño
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Integración de las nuevas directrices de diseño en la arquitectura de estilos existente.
+-   **Propósito**: Unificar la apariencia de la aplicación, mejorar la accesibilidad y establecer una base sólida para el desarrollo de la interfaz de usuario.
+-   **Cambios Realizados**:
+    -   Se ha refactorizado `_variables.scss` para actualizar la paleta de colores, el sistema de espaciado y las variables de layout según las nuevas especificaciones.
+    -   Se ha actualizado `_variables-dark.scss` para alinear el tema oscuro con la nueva paleta.
+    -   Se ha creado un nuevo fichero `_grid.scss` que implementa un sistema de rejilla responsive (4 columnas en móvil, 12 en escritorio) siguiendo la metodología BEM.
+    -   Se ha importado el nuevo sistema de rejilla en el fichero principal `styles.scss`.
+
+---
+
 ## 27. Corrección de la API de `UiAccordionComponent`
 
 -   **Fecha**: 2025-10-19

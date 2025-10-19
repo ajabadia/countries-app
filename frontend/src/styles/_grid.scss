@@ -1,0 +1,43 @@
+// File: d:\desarrollos\countries2\frontend\src\styles\_grid.scss | Last Modified: 2025-10-19
+
+// --- Breakpoints para Media Queries en SCSS ---
+// No se pueden usar variables CSS en media queries, por eso se definen como variables SCSS.
+$breakpoint-mobile: 375px;
+$breakpoint-tablet: 768px;
+$breakpoint-desktop-s: 1024px;
+$breakpoint-desktop-m: 1200px;
+$breakpoint-desktop-l: 1440px;
+$breakpoint-desktop-xl: 1680px;
+
+// --- Sistema de rejilla (Grid) basado en BEM ---
+
+.grid {
+  display: grid;
+  gap: var(--space-l, 24px); // Espacio entre columnas
+
+  // Por defecto (móvil), 4 columnas
+  grid-template-columns: repeat(4, 1fr);
+
+  // A partir de tablet, 12 columnas
+  @media (min-width: $breakpoint-tablet) {
+    grid-template-columns: repeat(12, 1fr);
+  }
+}
+
+.grid__item {
+  // Por defecto, cada item ocupa el ancho completo (4 columnas en móvil)
+  grid-column: span 4;
+
+  // Definimos modificadores para el span en desktop (12 columnas)
+  @media (min-width: $breakpoint-tablet) {
+    // Reseteamos el span por defecto para desktop
+    grid-column: auto;
+
+    // Modificadores para controlar el ancho de los items
+    @for $i from 1 through 12 {
+      &--span-#{$i} {
+        grid-column: span $i;
+      }
+    }
+  }
+}

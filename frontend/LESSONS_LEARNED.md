@@ -50,3 +50,11 @@ Durante la refactorización para aplicar la API prefijada, se cometió un error 
 -   **`@Output`**: Acepta el alias como un `string` directamente: `@Output('prefijo-nombre')`.
 
 -   **Conclusión**: Confundir esta sintaxis resulta en un error de compilación (`NG1010`). Es un detalle importante de la API de Angular que debe tenerse en cuenta al refactorizar o crear componentes con APIs públicas.
+
+---
+
+### 6. Auditar la Estructura Existente Antes de Proponer Cambios Globales
+
+Al intentar implementar un nuevo sistema de diseño, se ignoró la arquitectura de estilos existente en `src/styles/` y se creó una nueva en `src/assets/styles/`, sobrescribiendo el punto de entrada `src/styles.scss`. Esto causó una regresión y la pérdida del trabajo previo.
+
+-   **Conclusión**: Antes de realizar cambios que afecten a toda la aplicación (como la estructura de estilos, el enrutamiento o la configuración), es imperativo realizar una auditoría completa de la estructura existente. No se puede asumir que una parte del proyecto es simple o inexistente solo porque no se ha interactuado con ella previamente. El contexto proporcionado debe ser analizado en su totalidad.

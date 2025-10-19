@@ -5,96 +5,82 @@
 :root {
   // === PALETA DE COLORES CORPORATIVA ===
 
-  // --- 1. Azul Primario (Dominante) ---
-  --color-primary-darker: #073864;
-  --color-primary-dark: #095ca3;
+  // --- 1. Azul Primario (Dominante) --- #0b7ad0
   --color-primary: #0b7ad0;
-  --color-primary-light: #6eb5e9;
-  --color-primary-lighter: #e7f2fa; // Tono más claro de la gama
+  --color-primary-dark: #0962ab; // Derivado más oscuro para hovers
+  --color-primary-light: #e7f2fa; // Tono más claro de la gama
   --color-primary-contrast: #ffffff;
 
-  // Gama de azules para headings (de oscuro a claro)
-  --color-heading-h1: var(--color-primary-darker); // El más oscuro
-  --color-heading-h2: #145698;
-  --color-heading-h3: var(--color-primary); // El primario
-  --color-heading-h4: #187ac6;
-  --color-heading-h5: #2499e4;
-  --color-heading-h6: #5fcaff;
-  --color-heading-h7: #bde6ff;
-  --color-heading-h8: #e7f2fa; // El más claro
-
-  // 2. Azul Secundario
-  --color-secondary-dark: #1c3a51;
+  // --- 2. Azul Secundario --- #2d5b7f
   --color-secondary: #2d5b7f;
-  --color-secondary-light: #8eabc2;
+  --color-secondary-dark: #224662; // Derivado más oscuro para hovers
   --color-secondary-lighter: #eaeff2;
 
-  // 3. Negro Terciario
-  --color-tertiary-dark: #1a1d1f;
+  // --- 3. Negro Terciario --- #33393e
   --color-tertiary: #33393e;
-  --color-tertiary-light: #999c9e;
+  --color-tertiary-dark: #1a1d1f; // Derivado más oscuro
   --color-tertiary-lighter: #ebebec;
 
-  // 4. Rojo Cuaternario
-  --color-quaternary-red-dark: #b33d33;
-  --color-quaternary-red: #dd4c40;
-  --color-quaternary-red-light: #eeb2ad;
+  // --- 4. Rojo Cuaternario --- #dd4c40
+  --color-quaternary-red: #dd4c40; // Usado para errores destructivos
+  --color-quaternary-red-dark: #b33d33; // Derivado más oscuro
   --color-quaternary-red-lighter: #fcedec;
-
-  // 5. Blanco Quinario (usado para fondos muy sutiles)
-  --color-quinary-white: #fbf9f9; // Ajustado a un blanco roto para diferenciarlo del rojo
 
   // === COLORES DE SISTEMA (Verificación, Alertas) ===
   --color-success: #4ab83e; // Verificación
-  --color-error: #d83838;
+  --color-error: #d83838;   // Error
   --color-warning: #fdaf3c; // Alerta
-  --color-warning-dark: #e89c2e;
   --color-info: var(--color-primary); // Información
 
-  // === COLORES ALTERNATIVOS (Acentos) ===
-  --color-accent: #fdaf3c; // Principal
+  // === COLORES DE ACENTO (Highlights) ===
+  --color-accent-orange: #fdaf3c;
   --color-accent-cyan: #4fc4cf;
   --color-accent-purple: #8053e5;
-  --color-accent-pink: #d25bae;
+  --color-accent-magenta: #d25bae;
   --color-accent-yellow: #efe258;
 
   // === COLORES DE SUPERFICIE Y TEXTO ===
   // Paleta de fondos
-  --color-background-deep: #638da8;
-  --color-background-medium: #d3dee6;
-  --color-background-soft: #dce3ef;
-  --color-background-light: #f3f7fe;
-  --color-background: #f3f7fe; // Fondo principal de la app
+  --color-background: #f3f7fe;
   --color-surface: #ffffff;
-  // ✅ REFACTOR: Nueva variable semántica para fondos de cabeceras/pies de sección.
-  // Se usa en .card__header, .card__footer, .modal__header, etc.
-  --color-surface-accented: var(--color-secondary-lighter);
-  --color-border: #e6e8ea;
-  --color-text: var(--color-tertiary); // Usamos el negro terciario para el texto principal
+  --color-surface-soft: #dce3ef;
+  --color-surface-medium: #d3dee6;
+  --color-surface-deep: #638da8;
+  --color-surface-hover: var(--color-primary-light);
+  --color-surface-accented: var(--color-secondary-lighter); // Para cabeceras/pies de sección
+
+  --color-border: var(--color-surface-medium);
+  --color-text: var(--color-tertiary); // Negro terciario para texto principal (contraste AA)
   --color-text-contrast: #ffffff;
-  --color-text-muted: #69707a; 
-  // ✅ REFACTOR: El color de los enlaces debe usar la variable semántica de información.
+  --color-text-muted: var(--color-surface-deep);
   --color-link: var(--color-info);
   --color-loading-overlay: rgba(255, 255, 255, 0.5);
 
   // === ESPACIADO (Basado en bloques S, M, L) ===
   // Talla S
-  --space-xs: 4px;   // s1
-  --space-s: 8px;    // s2
-  --space-sm: 16px;  // s3
-  --space-m: 24px;   // s4
+  --space-s1: 4px;
+  --space-s2: 8px;
+  --space-s3: 16px;
+  --space-s4: 24px;
   // Talla M
-  --space-ml: 32px;  // m1
-  --space-l: 40px;   // m2
-  --space-xl: 48px;  // m3
-  --space-xxl: 56px; // m4
-  --space-3xl: 64px; // m5
+  --space-m1: 32px;
+  --space-m2: 40px;
+  --space-m3: 48px;
+  --space-m4: 56px;
+  --space-m5: 64px;
   // Talla L
-  --space-4xl: 80px;   // l1
-  --space-5xl: 104px;  // l2
-  --space-6xl: 144px;  // l3
-  --space-7xl: 208px;  // l4
-  --space-8xl: 296px;  // l5
+  --space-l1: 80px;
+  --space-l2: 104px;
+  --space-l3: 144px;
+  --space-l4: 208px;
+  --space-l5: 296px;
+
+  // Alias semánticos para espaciado (más fáciles de recordar)
+  --space-xs: var(--space-s1);
+  --space-s: var(--space-s2);
+  --space-m: var(--space-s3);
+  --space-l: var(--space-s4);
+  --space-xl: var(--space-m1);
 
   // === TIPOGRAFÍA ===
   --font-main: 'Roboto', 'Segoe UI', Arial, sans-serif;
@@ -128,24 +114,15 @@
   --shadow-lg: 0 10px 15px -3px rgba(37, 56, 137, 0.1), 0 4px 6px -2px rgba(37, 56, 137, 0.05);
   --shadow-active: 0 2px 16px rgba(37, 56, 137, 0.2);
 
-  // === LAYOUT ===
+  // === LAYOUT Y Z-INDEX ===
   --header-height: 68px;
   --sidebar-width: 280px;
   --container-max-width: 1200px;
-  // Breakpoints
-  --breakpoint-xs: 375px;
-  --breakpoint-sm: 768px;
-  --breakpoint-md: 1024px;
-  --breakpoint-lg: 1200px;
-  --breakpoint-xl: 1440px;
-  --breakpoint-xxl: 1680px;
 
-  // === Z-INDEX ===
-  --z-dropdown: 1000;
-  --z-sticky: 1020;
-  --z-fixed: 1030;
-  --z-modal-backdrop: 1040;
-  --z-modal: 1050;
+  --z-sticky: 10;
+  --z-overlay: 40;
+  --z-drawer: 50;
+  --z-modal: 100;
 
   // === TRANSICIONES ===
   --transition-base: 150ms ease-in-out;
