@@ -1,6 +1,6 @@
 // File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-hamburger-menu\ui-hamburger-menu.component.ts | Last Modified: 2025-10-19
 
-import { Component, OnInit, inject, signal, TemplateRef, ViewChild } from '@angular/core';
+import { Component, inject, signal, ChangeDetectionStrategy, computed, ViewChild, TemplateRef } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
@@ -10,10 +10,9 @@ import { UiButtonComponent } from '@shared/components/ui-button/ui-button.compon
 import { ActionService, AppAction, ActionCategory } from '@core/services/action.service';
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
 
-interface MenuGroup {
-  id: string;
-  title: string;
-  actions: AppAction[];
+// Interface para el contexto de la plantilla de cada grupo de menú
+export interface MenuGroupTemplateContext {
+  $implicit: AppAction[];
 }
 
 @Component({
@@ -22,43 +21,42 @@ interface MenuGroup {
   imports: [CommonModule, RouterModule, UiButtonComponent, UiAccordionComponent, UiIconComponent],
   templateUrl: './ui-hamburger-menu.component.html',
   styleUrls: ['./ui-hamburger-menu.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiHamburgerMenuComponent implements OnInit {
+export class UiHamburgerMenuComponent {
   private actionService = inject(ActionService);
 
+  // Obtenemos una referencia a la plantilla para poder asignarla dinámicamente
+  @ViewChild('menuLinkTemplate', { static: true }) menuLinkTemplate!: TemplateRef<any>;
+
   public isMenuOpen = signal(false);
-  public menuGroups: MenuGroup[] = [];
-  public accordionItems: AccordionItem[] = [];
 
-  // Obtenemos las plantillas para el contenido del acordeón
-  @ViewChild('publicTemplate', { static: true }) publicTemplate!: TemplateRef<any>;
-  @ViewChild('adminTemplate', { static: true }) adminTemplate!: TemplateRef<any>;
-
-  ngOnInit(): void {
-    // 1. Obtener todas las acciones de navegación
+  // TODO: Filtrar acciones según los permisos del usuario actual.
+  public accordionItems = computed(() => {
+    // 1. Obtener todas las acciones de navegación relevantes
     const navActions = this.actionService.getActionsForCategories(['public', 'admin']);
 
     // 2. Agrupar acciones por categoría
-    const grouped = navActions.reduce((acc, action) => {
-      (acc[action.category] = acc[action.category] || []).push(action);
-      return acc;
-    }, {} as Record<ActionCategory, AppAction[]>);
+    const groupedActions = navActions.reduce(
+      (acc, action) => {
+        const group = acc.get(action.category) || [];
+        group.push(action);
+        acc.set(action.category, group);
+        return acc;
+      },
+      new Map<ActionCategory, AppAction[]>()
+    );
 
-    // 3. Crear los grupos para la plantilla
-    this.menuGroups = Object.entries(grouped).map(([category, actions]) => ({
+    // 3. Convertir los grupos en items para el componente de acordeón
+    return Array.from(groupedActions.entries()).map(([category, actions]) => ({
       id: category,
-      title: this.getCategoryTitle(category as ActionCategory),
-      actions: actions,
+      title: this.getCategoryTitle(category),
+      // Pasamos las acciones directamente en el contexto para que la plantilla las reciba
+      content: this.menuLinkTemplate, // Asignamos la plantilla al contenido del acordeón
+      context: { $implicit: actions }, // El contexto se usará al renderizar la plantilla
+      expanded: category === 'public', // Expandir la sección pública por defecto
     }));
-
-    // 4. Crear los items para el componente de acordeón
-    this.accordionItems = this.menuGroups.map(group => ({
-      id: group.id,
-      title: group.title,
-      content: this.getTemplateForCategory(group.id as ActionCategory),
-      expanded: group.id === 'public', // Expandir la sección pública por defecto
-    }));
-  }
+  });
 
   toggleMenu(): void {
     this.isMenuOpen.set(!this.isMenuOpen());
@@ -73,12 +71,5 @@ export class UiHamburgerMenuComponent implements OnInit {
       test: 'Pruebas',
     };
     return titles[category] || 'General';
-  }
-
-  private getTemplateForCategory(category: ActionCategory): TemplateRef<any> {
-    if (category === 'admin') {
-      return this.adminTemplate;
-    }
-    return this.publicTemplate; // Fallback a la plantilla pública
   }
 }

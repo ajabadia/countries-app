@@ -1,27 +1,32 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-hamburger-menu\README.md | Last Modified: 2025-10-19 -->
 
-# UI Hamburger Menu Component (`<app-ui-hamburger-menu>`)
+# Componente: `ui-hamburger-menu`
 
-Este es un componente "inteligente" que renderiza un menú de navegación completo, accesible a través de un botón de hamburguesa. Utiliza `ActionService` como fuente de la verdad para los enlaces y `app-ui-accordion` para presentarlos de forma agrupada.
+El `UiHamburgerMenuComponent` proporciona un menú de navegación principal para toda la aplicación. Se presenta como un botón de "hamburguesa" que, al ser pulsado, despliega un panel lateral deslizable desde la izquierda.
 
-## Características
+## 1. Propósito y Funcionamiento
 
--   **Botón de Hamburguesa**: Un `ui-button` de solo icono que abre y cierra el panel del menú.
--   **Integración con `ActionService`**: Obtiene las acciones de navegación directamente del `ActionService`, asegurando que el menú siempre esté sincronizado con la estructura de la aplicación.
--   **Agrupación por Categorías**: Agrupa automáticamente los enlaces por su `category` (ej. "Navegación Principal", "Administración") y los muestra en un acordeón.
--   **Preparado para Permisos**: Al depender de `ActionService`, si en el futuro el servicio filtra las acciones según el rol del usuario, el menú se adaptará automáticamente sin necesidad de cambios.
+-   **Navegación Centralizada**: Actúa como el punto de acceso principal a las diferentes secciones de la aplicación.
+-   **Panel Lateral**: Muestra el menú en un panel lateral (`<aside>`) que se superpone al contenido principal, con un fondo (`overlay`) que oscurece el resto de la página.
+-   **Agrupación por Categorías**: Utiliza el `ActionService` para obtener las acciones de navegación y las agrupa por categorías (ej. "Navegación Principal", "Administración").
+-   **Acordeón**: Muestra estas categorías en un componente `ui-accordion`, permitiendo al usuario expandir y contraer cada sección.
 
-## Cómo Usarlo
+## 2. Dependencias
 
-El componente es autónomo. Simplemente colócalo en la plantilla donde quieras que aparezca el menú (normalmente en una cabecera o barra de navegación principal).
+-   `@core/services/action.service`: Utiliza este servicio como fuente de la verdad para obtener todas las acciones de navegación que se deben mostrar en el menú.
+-   `@shared/components/ui-accordion`: Delega la renderización de las secciones del menú a este componente.
+-   `@shared/components/ui-button`: Utilizado para los botones de apertura y cierre.
+-   `@shared/components/ui-icon`: Para mostrar los iconos del menú.
+
+## 3. Uso Básico
+
+El componente está diseñado para ser colocado en una cabecera principal de la aplicación, como en `app.component.html`. No requiere ningún `@Input`.
 
 ```html
-<app-ui-hamburger-menu></app-ui-hamburger-menu>
-```
+<!-- app.component.html -->
 
-El componente se encargará internamente de:
-1.  Llamar a `ActionService`.
-2.  Obtener las acciones de las categorías `public` y `admin`.
-3.  Agruparlas.
-4.  Generar los `AccordionItem[]` necesarios.
-5.  Pasar los datos al componente `app-ui-accordion` que renderiza en su plantilla.
+<header class="app-header">
+  <!-- ... otros elementos de la cabecera ... -->
+  <app-ui-hamburger-menu></app-ui-hamburger-menu>
+</header>
+```

@@ -1,43 +1,40 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-hamburger-menu\ui-hamburger-menu.component.html | Last Modified: 2025-10-19 -->
 
-<div class="hamburger-container">
-  <!-- Botón de Hamburguesa -->
-  <button
-    app-ui-button
-    ui-button-variant="ghost"
-    ui-icon-name="icon-menu"
-    ui-icon-position="only"
-    (click)="toggleMenu()"
-  >
-    <span class="visually-hidden">Abrir menú de navegación</span>
-  </button>
+<!-- Botón de Hamburguesa -->
+<button
+  app-ui-button
+  ui-button-variant="ghost"
+  ui-button-aria-label="Abrir menú de navegación"
+  (click)="toggleMenu()"
+  class="hamburger-menu__toggle"
+>
+  <app-ui-icon ui-icon-name="icon-menu"></app-ui-icon>
+</button>
 
-  <!-- Panel del Menú Desplegable -->
-  @if (isMenuOpen()) {
-    <div class="menu-panel">
-      <app-ui-accordion [ui-accordion-items]="accordionItems"></app-ui-accordion>
-    </div>
-  }
-</div>
+<!-- Fondo superpuesto -->
+<div class="hamburger-menu__overlay" [class.is-open]="isMenuOpen()" (click)="toggleMenu()"></div>
 
+<!-- Panel lateral del menú -->
+<aside class="hamburger-menu__panel" [class.is-open]="isMenuOpen()">
+  <header class="hamburger-menu__header">
+    <h2 class="hamburger-menu__title">Menú</h2>
+    <button app-ui-button ui-button-variant="ghost" (click)="toggleMenu()">
+      <app-ui-icon ui-icon-name="icon-close"></app-ui-icon>
+    </button>
+  </header>
+  <div class="hamburger-menu__content">
+      <app-ui-accordion
+        [ui-accordion-items]="accordionItems()"
+      ></app-ui-accordion>
+  </div>
+</aside>
 <!--
-  Plantillas para el contenido de cada sección del acordeón.
-  El componente de acordeón usará estas plantillas a través de la propiedad `content`
-  de cada `AccordionItem` que le pasamos.
+  Plantilla genérica para renderizar los enlaces de un grupo de menú.
+  El componente de acordeón instanciará esta plantilla para cada item,
+  pasándole el array de acciones a través del contexto ($implicit).
 -->
-<ng-template #publicTemplate>
-  @for (item of menuGroups[0]?.actions; track item.id) {
-    <a class="menu-item" [routerLink]="item.route" (click)="toggleMenu()">
-      @if (item.icon) {
-        <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
-      }
-      <span>{{ item.label }}</span>
-    </a>
-  }
-</ng-template>
-
-<ng-template #adminTemplate>
-  @for (item of menuGroups[1]?.actions; track item.id) {
+<ng-template #menuLinkTemplate let-actions>
+  @for (item of actions; track item.id) {
     <a class="menu-item" [routerLink]="item.route" (click)="toggleMenu()">
       @if (item.icon) {
         <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>

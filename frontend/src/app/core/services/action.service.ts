@@ -10,6 +10,7 @@ import { ButtonColor, ButtonVariant } from '@shared/components/ui-button/ui-butt
 
 export type ActionType = 'route' | 'href' | 'function';
 export type ActionCategory = 'public' | 'user' | 'admin' | 'dev' | 'test';
+export type ActionPermission = 'public' | 'admin' | 'user';
 
 export interface AppAction {
   id: string; // Identificador único, ej: 'nav-home', 'admin-countries-add'
@@ -17,6 +18,7 @@ export interface AppAction {
   icon?: string;
   type: ActionType;
   category: ActionCategory;
+  permission?: ActionPermission;
 
   // Propiedades específicas según el tipo de acción
   route?: string | any[];
@@ -44,18 +46,18 @@ export class ActionService {
    */
   private readonly _allActions: AppAction[] = [
     // --- Acciones Públicas ---
-    { id: 'public-home', label: 'Inicio', icon: 'icon-home', type: 'route', category: 'public', route: ['/'] },
-    { id: 'public-login', label: 'Iniciar Sesión', icon: 'icon-lock', type: 'route', category: 'public', route: ['/auth/login'] },
+    { id: 'public-home', label: 'Inicio', icon: 'icon-home', type: 'route', category: 'public', permission: 'public', route: ['/'] },
+    { id: 'public-login', label: 'Iniciar Sesión', icon: 'icon-lock', type: 'route', category: 'public', permission: 'public', route: ['/auth/login'] },
 
     // --- Acciones de Administración ---
-    { id: 'admin-dashboard', label: 'Dashboard', icon: 'icon-dashboard', type: 'route', category: 'admin', route: ['/admin'] },
-    { id: 'admin-countries', label: 'Países', icon: 'icon-country', type: 'route', category: 'admin', route: ['/admin/countries'] },
-    { id: 'admin-users', label: 'Usuarios', icon: 'icon-user', type: 'route', category: 'admin', route: ['/admin/users'] },
+    { id: 'admin-dashboard', label: 'Dashboard', icon: 'icon-dashboard', type: 'route', category: 'admin', permission: 'admin', route: ['/admin'] },
+    { id: 'admin-countries', label: 'Países', icon: 'icon-country', type: 'route', category: 'admin', permission: 'admin', route: ['/admin/countries'] },
+    { id: 'admin-users', label: 'Usuarios', icon: 'icon-user', type: 'route', category: 'admin', permission: 'admin', route: ['/admin/users'] },
 
     // --- Acciones de Toolbar (CRUD) ---
-    { id: 'toolbar-add', label: 'Añadir', icon: 'icon-add', type: 'function', category: 'admin', ui: { color: 'primary', variant: 'solid' } },
-    { id: 'toolbar-save', label: 'Guardar', icon: 'icon-save', type: 'function', category: 'admin', ui: { color: 'primary', variant: 'solid' } },
-    { id: 'toolbar-cancel', label: 'Cancelar', icon: 'icon-close', type: 'function', category: 'admin', ui: { color: 'secondary', variant: 'outline' } },
+    { id: 'toolbar-add', label: 'Añadir', icon: 'icon-add', type: 'function', category: 'admin', permission: 'admin', ui: { color: 'primary', variant: 'solid' } },
+    { id: 'toolbar-save', label: 'Guardar', icon: 'icon-save', type: 'function', category: 'admin', permission: 'admin', ui: { color: 'primary', variant: 'solid' } },
+    { id: 'toolbar-cancel', label: 'Cancelar', icon: 'icon-close', type: 'function', category: 'admin', permission: 'admin', ui: { color: 'secondary', variant: 'outline' } },
   ];
 
   /**

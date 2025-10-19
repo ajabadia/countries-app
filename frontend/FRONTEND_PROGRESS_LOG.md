@@ -4,6 +4,49 @@
 
 Este documento registra el progreso realizado en la refactorización y reconstrucción del frontend.
 
+## 27. Corrección de la API de `UiAccordionComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Corrección de la interacción entre `UiHamburgerMenuComponent` y `UiAccordionComponent`.
+-   **Propósito**: Solucionar errores de compilación (`TS2322`, `NG8002`) causados por un entendimiento incorrecto de la API del acordeón.
+-   **Cambios Realizados**:
+    -   Se ha modificado la lógica para obtener una referencia a la `ng-template` con `@ViewChild` y asignarla a la propiedad `content` de cada `AccordionItem`.
+    -   Se ha eliminado el binding incorrecto `[ui-accordion-item-template]` de la plantilla HTML.
+
+---
+
+## 26. Corrección de Errores de Binding en `UiHamburgerMenuComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Corrección de errores de binding en la plantilla de `UiHamburgerMenuComponent`.
+-   **Propósito**: Solucionar errores de compilación (`TS2322`, `NG8002`) relacionados con el uso de `signals` y la API del `UiAccordionComponent`.
+-   **Cambios Realizados**:
+    -   Se ha modificado la plantilla para invocar el `computed signal` como una función (`accordionItems()`).
+    -   Se ha corregido el nombre del input para la plantilla del acordeón a `[ui-accordion-item-template]`.
+
+---
+
+## 25. Corrección de Errores de Compilación en `UiHamburgerMenuComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Corrección de errores de sintaxis en la plantilla de `UiHamburgerMenuComponent`.
+-   **Propósito**: Solucionar errores de compilación (`NG5002`) causados por una llave de cierre (`}`) y una etiqueta `</div>` sobrantes.
+-   **Cambios Realizados**:
+    -   Se ha limpiado el archivo `ui-hamburger-menu.component.html` para eliminar los elementos que rompían la plantilla.
+
+---
+
+## 24. Refactorización de `UiHamburgerMenuComponent`
+
+-   **Fecha**: 2025-10-19
+-   **Acción**: Refactorización completa del `UiHamburgerMenuComponent`.
+-   **Propósito**: Convertir el menú desplegable simple en un panel lateral deslizable, mejorando la experiencia de usuario y alineándolo con los estándares modernos de navegación móvil.
+-   **Cambios Realizados**:
+    -   Se ha modificado la estructura HTML y los estilos (SCSS) para implementar un panel que se desliza desde la izquierda con un fondo superpuesto (`overlay`).
+    -   Se ha simplificado la lógica del componente (`.ts`) utilizando `computed signals` para generar los items del acordeón de forma más declarativa.
+
+---
+
 ## 23. Creación del Componente `UiHamburgerMenuComponent`
 
 -   **Fecha**: 2025-10-19 15:45:00
