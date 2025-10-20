@@ -13,5 +13,13 @@ export const ADMIN_ROUTES: Routes = [
     loadComponent: () =>
       import('./dashboard/dashboard.component').then(m => m.DashboardComponent), // <-- LÍNEA CORREGIDA
   },
-  // Aquí irán las otras rutas de admin: /countries, /users, etc.
+  {
+    path: 'users',
+    loadComponent: () =>
+      import('./users/users-admin.component').then(m => m.UsersAdminComponent),
+  },
+    {
+    path: 'countries',
+    loadComponent: () => import('./countries/countries-admin.component').then(m => m.CountriesAdminComponent),
+  },
 ];

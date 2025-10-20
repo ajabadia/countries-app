@@ -8,21 +8,24 @@ import {
   ChangeDetectionStrategy,
   ContentChild,
   TemplateRef,
+  OnChanges,
+  SimpleChanges,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectionService } from '@shared/services/selection.service';
 import { TableColumn } from './table.types';
 import { Sort, SortDirection } from '@shared/types/sort.type';
+import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components/ui-toggle-checkbox/ui-toggle-checkbox.component';
 
 @Component({
   selector: 'app-ui-table',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, UiToggleCheckboxComponent],
   templateUrl: './ui-table.component.html',
   styleUrls: ['./ui-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiTableComponent<T extends { id: number | string }> {
+export class UiTableComponent<T extends { id: number | string }> implements OnChanges {
   @Input({ alias: 'ui-table-data' }) data: T[] | null = [];
   @Input({ alias: 'ui-table-columns' }) columns: TableColumn<T>[] = [];
   @Input({ alias: 'ui-table-selection' }) selection: SelectionService<T> | null = null;
@@ -34,6 +37,16 @@ export class UiTableComponent<T extends { id: number | string }> {
   // Permite al componente padre proyectar una plantilla para la columna de acciones
   @ContentChild('actions', { read: TemplateRef })
   actionsTemplate: TemplateRef<{ $implicit: T }> | null = null;
+
+  // Estado para el checkbox de la cabecera con 3 estados.
+  public headerCheckboxState: UiToggleState = 'ui-toggle-unchecked';
+
+  ngOnChanges(changes: SimpleChanges): void {
+    // Si los items o la selección cambian, recalculamos el estado del checkbox de la cabecera.
+    if (this.selection && (changes['data'] || changes['selection'])) {
+      this.updateHeaderCheckboxState();
+    }
+  }
 
   // Helper para acceder al valor de una celda, incluso si la clave es anidada (ej: 'user.name')
   getCellValue(item: T, key: keyof T | string): any {
@@ -69,5 +82,47 @@ export class UiTableComponent<T extends { id: number | string }> {
     return (
       this.sort?.orderBy === column.key && this.sort?.orderDir === dir
     );
+  }
+
+  /**
+   * Maneja el cambio de estado del checkbox de la cabecera (seleccionar/deseleccionar todo).
+   */
+  onToggleAll(): void {
+    if (!this.selection || !this.data) return;
+
+    this.selection.toggleAll(this.data);
+    this.updateHeaderCheckboxState();
+  }
+
+  /**
+   * Maneja el clic en una fila para la selección.
+   * @param item El objeto de la fila.
+   */
+  onRowClick(item: T): void {
+    if (!this.selection) return;
+    this.selection.toggle(item);
+    this.updateHeaderCheckboxState();
+  }
+
+  /**
+   * Actualiza el estado del checkbox de la cabecera (on, off, intermediate).
+   */
+  private updateHeaderCheckboxState(): void {
+    if (!this.selection || !this.data || this.data.length === 0) {
+      this.headerCheckboxState = 'ui-toggle-unchecked';
+      return;
+    }
+
+    // Contamos cuántos de los items de la página actual están seleccionados
+    const numSelectedOnPage = this.data.filter(item => this.selection!.isSelected(item)).length;
+    const totalItemsOnPage = this.data.length;
+
+    if (numSelectedOnPage === 0) {
+      this.headerCheckboxState = 'ui-toggle-unchecked';
+    } else if (numSelectedOnPage === totalItemsOnPage) {
+      this.headerCheckboxState = 'ui-toggle-checked';
+    } else {
+      this.headerCheckboxState = 'ui-toggle-indeterminate';
+    }
   }
 }

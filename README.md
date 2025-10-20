@@ -18,10 +18,11 @@ El frontend demuestra un alto nivel de madurez, aplicando prácticas modernas de
     -   Se adopta el patrón de **Standalone Components** (ej. `SearchBoxComponent`, `UiHeadingComponent`), lo que simplifica la gestión de módulos y dependencias, alineándose con las prácticas actuales de Angular.
     -   El uso de `ChangeDetectionStrategy.OnPush` es la norma en los componentes, una práctica excelente para optimizar el rendimiento al minimizar los ciclos de detección de cambios.
 
--   **Gestión de Estado Reactivo con RxJS:**
+-   **Gestión de Estado Reactivo con RxJS y Signals:**
     -   Se utiliza `BehaviorSubject` y `Subject` para gestionar el estado de la UI (ej. `page$`, `search$`, `sort$` en `BaseAdminComponent`).
     -   Se combinan múltiples flujos de estado con `combineLatest` para reaccionar a los cambios y disparar la recarga de datos de forma eficiente.
     -   Se usa `debounceTime` y `distinctUntilChanged` para optimizar la entrada del usuario (ej. en `SearchBoxComponent`), previniendo un exceso de peticiones a la API.
+    -   Se utiliza `toSignal` para convertir observables en signals reactivas, pero se debe tener cuidado de llamarlo solo en un **contexto de inyección** (constructores o inicializadores de campo), como se corrigió en `BaseAdminDirective`.
 
 -   **Abstracción y Reusabilidad (Patrones Clave):**
     -   **`BaseCrudService<T>`:** Un servicio genérico que centraliza toda la lógica de comunicación con los endpoints CRUD del backend. Las clases hijas (`CountriesService`, `LanguagesService`, etc.) simplemente heredan y especifican el nombre del endpoint, eliminando código repetido.
@@ -36,12 +37,12 @@ Esta sección identifica inconsistencias entre la implementación actual del fro
 1.  **Parámetros de Paginación y Ordenación:**
     -   **Frontend (`BaseAdminComponent`) envía:** `sort` y `order`.
     -   **Backend (`BaseService`) espera:** `orderBy` y `orderDir`.
-    -   **Acción:** Modificar `BaseAdminComponent` para que envíe `orderBy` y `orderDir` en las peticiones `getAll`.
+    -   **Estado:** **¡Corregido!** `BaseAdminDirective` ya envía los parámetros `orderBy` y `orderDir` correctamente en las peticiones `getAll`.
 
 2.  **Endpoint de Eliminación (`delete`):**
     -   **Frontend (`BaseAdminComponent`) envía:** Una petición `DELETE` con un array de IDs en el body para eliminación múltiple.
     -   **Backend (`baseController`) espera:** Una petición `DELETE` a un endpoint con un único ID en la URL (ej. `/api/entities/:id`). No soporta eliminación múltiple.
-    -   **Acción:** Modificar el `onConfirmDelete` del frontend para que itere sobre los IDs seleccionados y envíe una petición `DELETE` por cada uno, o bien, evolucionar el backend para que acepte un array de IDs.
+    -   **Acción:** Modificar el método de borrado múltiple del frontend para que itere sobre los IDs seleccionados y envíe una petición `DELETE` por cada uno, o bien, evolucionar el backend para que acepte un array de IDs. La eliminación de un único elemento (`onDelete`) ya funciona correctamente.
 
 3.  **Estructura de la Respuesta `getAll`:**
     -   **Frontend (`admin-dashboard.component.ts`) espera:** Una respuesta con `{ data: T[], total: number }`.
@@ -68,4 +69,3 @@ Esta sección identifica inconsistencias entre la implementación actual del fro
 5.  **Refactorización de Rutas y Plantillas:**
     -   **Plantilla Genérica de Administración:** El componente `admin-languages.component.ts` apunta a su propia plantilla. Se debe crear una plantilla genérica (ej. `admin-base-page.component.html`) que contenga la estructura común (`ui-heading`, `toolbar-buttons`, `table`, etc.) y hacer que todos los componentes de administración la reutilicen.
     -   **Alias de Rutas:** Aunque las rutas relativas son robustas, el uso consistente de alias (`@shared`, `@services`, `@models`) configurados en `tsconfig.json` puede mejorar la legibilidad y facilitar la refactorización. Se debe asegurar que estos alias se usen de forma coherente en todo el proyecto.
-

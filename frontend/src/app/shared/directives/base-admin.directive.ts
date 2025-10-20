@@ -53,16 +53,50 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   // --- Propiedades Abstractas ---
   abstract service: BaseCrudService<T>;
   abstract form: FormGroup;
+  abstract searchableFields: (keyof T)[];
 
   // --- Estado de la UI ---
-  private page$ = new BehaviorSubject<number>(1);
-  private pageSize$ = new BehaviorSubject<number>(10);
-  private search$ = new BehaviorSubject<string>('');
-  private sort$ = new BehaviorSubject<Sort<T>>({ orderBy: 'id' as keyof T, orderDir: 'asc' });
-  private refresh$ = new Subject<void>();
+  protected page$ = new BehaviorSubject<number>(1);
+  protected pageSize$ = new BehaviorSubject<number>(10);
+  protected search$ = new BehaviorSubject<string>('');
+  protected sort$ = new BehaviorSubject<Sort<T>>({ orderBy: 'id' as keyof T, orderDir: 'asc' });
+  protected refresh$ = new Subject<void>();
+
+  // Define pagedResponse$ como un inicializador de campo para que toSignal pueda usarse en un contexto válido
+  private pagedResponse$ = combineLatest([
+    this.page$,
+    this.pageSize$,
+    this.search$.pipe(debounceTime(300), distinctUntilChanged()),
+    this.sort$,
+    this.refresh$.pipe(startWith(null)),
+  ]).pipe(
+    tap(() => this.isLoading.set(true)), // Establece isLoading a true antes de la llamada al servicio
+    switchMap(([page, pageSize, search, sort]) => {
+      let params = new HttpParams().set('page', page.toString()).set('limit', pageSize.toString());
+      if (search && this.searchableFields.length > 0) {
+        params = params.set('search', search);
+        this.searchableFields.forEach(field => { params = params.append('searchFields', field as string); });
+      }
+      params = params.set('orderBy', sort.orderBy as string).set('orderDir', sort.orderDir);
+
+      return this.service.getAll(params).pipe(
+        catchError(err => {
+          console.error('Error fetching data:', err);
+          // Asegura que isLoading se desactive incluso si hay un error
+          this.isLoading.set(false);
+          return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+        }),
+        // Mueve finalize aquí para asegurar que se ejecuta después de que la llamada al servicio se completa (éxito o error)
+        finalize(() => this.isLoading.set(false))
+      );
+    })
+  );
 
   // --- Estado Público (Signals) ---
-  private pagedResponse = toSignal<PagedResponse<T>>(EMPTY as Observable<PagedResponse<T>>);
+  protected pagedResponse = toSignal(this.pagedResponse$, {
+    // Proporcionamos un valor inicial para evitar errores antes de la primera emisión
+    initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } as PagedResponse<T>
+  });
   data = computed(() => this.pagedResponse()?.data ?? []);
   totalRecords = computed(() => this.pagedResponse()?.total ?? 0);
   isLoading = signal(true);
@@ -83,31 +117,8 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
     runInInjectionContext(this.injector, () => {
       this.selectionService = new SelectionService<T>();
     });
-
-    const pagedResponse$ = combineLatest([
-      this.page$,
-      this.pageSize$,
-      this.search$.pipe(debounceTime(300), distinctUntilChanged()),
-      this.sort$,
-      this.refresh$.pipe(startWith(null)),
-    ]).pipe(
-      tap(() => this.isLoading.set(true)),
-      switchMap(([page, pageSize, search, sort]) => {
-        let params = new HttpParams().set('page', page.toString()).set('limit', pageSize.toString());
-        if (search) params = params.set('search', search);
-        params = params.set('orderBy', sort.orderBy as string).set('orderDir', sort.orderDir);
-
-        return this.service.getAll(params).pipe(
-          catchError(err => {
-            console.error('Error fetching data:', err);
-            return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
-          })
-        );
-      })
-    );
-
-    this.pagedResponse = toSignal(pagedResponse$, { initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } });
-
+    // Ahora, pagedResponse$ y pagedResponse se inicializan como inicializadores de campo,
+    // por lo que no es necesario reasignarlos aquí.
     // --- Generar Botones del Modal usando ActionService ---
     this.setupModalButtons();
   }
@@ -139,7 +150,11 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   // --- Métodos de control de la UI ---
   onPageChange(page: number): void { this.page$.next(page); }
   onSortChange(sort: Sort<T>): void { this.sort$.next(sort); }
-  onSearch(searchTerm: string): void { this.search$.next(searchTerm); this.page$.next(1); }
+  onSearch(searchTerm: string): void {
+    this.search$.next(searchTerm);
+    this.page$.next(1);
+    this.selectionService.clear(); // Limpia la selección al realizar una nueva búsqueda
+  }
   refreshData(): void { this.refresh$.next(); }
 
   // --- Métodos para operaciones CRUD y modales ---
@@ -178,7 +193,7 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
     const currentItem = this.editingItem();
 
     const saveOperation$: Observable<T> = currentItem
-      ? this.service.update(currentItem.id, itemData)
+      ? this.service.update(currentItem.id, itemData) // Si currentItem existe, es una actualización
       : this.service.create(itemData);
 
     this.subscription.add(

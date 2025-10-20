@@ -4,11 +4,8 @@
       <tr>
         <!-- Columna de Selección (si se proporciona el servicio) -->
         <th *ngIf="selection" class="selection-cell">
-          <input
-            type="checkbox"
-            [checked]="selection.areAllSelected(data || [])"
-            (change)="selection.toggleAll(data || [])"
-          />
+          <app-ui-toggle-checkbox [ui-toggle-checkbox-state]="headerCheckboxState" (click)="onToggleAll()"
+            aria-label="Seleccionar todo"></app-ui-toggle-checkbox>
         </th>
 
         <!-- Columnas de Datos -->
@@ -36,9 +33,10 @@
       </tr>
 
       <!-- Filas de Datos -->
-      <tr *ngFor="let item of data">
+      <tr *ngFor="let item of data" (click)="onRowClick(item)" [class.selected]="selection?.isSelected(item)">
         <td *ngIf="selection" class="selection-cell">
-          <input type="checkbox" [checked]="selection.isSelected(item)" (change)="selection.toggle(item)" />
+          <app-ui-toggle-checkbox [ui-toggle-checkbox-state]="selection.isSelected(item) ? 'ui-toggle-checked' : 'ui-toggle-unchecked'"
+            (click)="$event.stopPropagation(); onRowClick(item)"></app-ui-toggle-checkbox>
         </td>
         <td *ngFor="let col of columns">{{ getCellValue(item, col.key) }}</td>
         <td *ngIf="actionsTemplate">

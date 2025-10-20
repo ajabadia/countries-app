@@ -9,7 +9,7 @@ class CountriesService extends BaseService {
         // Pasamos el nombre de la tabla y los campos de búsqueda al constructor padre.
         // El tipado genérico <Country> asegura que todos los métodos (getAll, getById, etc.)
         // trabajarán con objetos de tipo Country.
-        const searchableFields = ['defaultname', 'alpha2may', 'alpha3may'];
+        const searchableFields = ['id', 'defaultname', 'alpha2may', 'alpha3may', 'numeric'];
         super('countries', searchableFields);
     }
 }

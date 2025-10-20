@@ -5,7 +5,7 @@ import { CommonModule } from '@angular/common';
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
 
 // Tipo para el estado visual del toggle-checkbox
-export type ToggleState = 'checked' | 'unchecked' | 'indeterminate';
+export type UiToggleState = 'ui-toggle-checked' | 'ui-toggle-unchecked' | 'ui-toggle-indeterminate';
 
 @Component({
   selector: 'app-ui-toggle-checkbox',
@@ -16,8 +16,8 @@ export type ToggleState = 'checked' | 'unchecked' | 'indeterminate';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiToggleCheckboxComponent {
-  @Input({ alias: 'ui-toggle-state' }) state: ToggleState = 'unchecked';
-  @Output('ui-toggle-state-change') stateChange = new EventEmitter<ToggleState>();
+  @Input({ alias: 'ui-toggle-checkbox-state' }) state: UiToggleState = 'ui-toggle-unchecked';
+  @Output('ui-toggle-checkbox-state-change') stateChange = new EventEmitter<UiToggleState>();
 
   // Vinculamos el estado a una clase en el host para estilado fácil y coherente
   @HostBinding('class') get hostClass() {
@@ -28,8 +28,8 @@ export class UiToggleCheckboxComponent {
   @HostBinding('attr.role') role = 'checkbox';
   @HostBinding('attr.tabindex') tabindex = 0;
   @HostBinding('attr.aria-checked') get ariaChecked() {
-    if (this.state === 'checked') return 'true';
-    if (this.state === 'indeterminate') return 'mixed';
+    if (this.state === 'ui-toggle-checked') return 'true';
+    if (this.state === 'ui-toggle-indeterminate') return 'mixed';
     return 'false';
   }
 
@@ -49,7 +49,7 @@ export class UiToggleCheckboxComponent {
   private toggle(): void {
     // Si está 'checked', pasa a 'unchecked'.
     // Si está 'unchecked' o 'indeterminate', pasa a 'checked'.
-    this.state = this.state === 'checked' ? 'unchecked' : 'checked';
+    this.state = this.state === 'ui-toggle-checked' ? 'ui-toggle-unchecked' : 'ui-toggle-checked';
     this.stateChange.emit(this.state);
   }
 }
