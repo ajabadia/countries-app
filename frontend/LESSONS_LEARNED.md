@@ -96,3 +96,31 @@ El último error de `Module loop` se encontró en `_theme.scss`, que seguía el 
 Se detectó que, tras crear una nueva página principal (`HomeComponent`), esta no aparecía en el menú de navegación. El problema era que la acción correspondiente no había sido registrada.
 
 -   **Conclusión**: El `ActionService` actúa como la única fuente de verdad para todos los elementos de navegación de la UI. Por tanto, cada vez que se crea una nueva página o "feature" principal que deba ser accesible desde menús globales, es **mandatorio** añadir su correspondiente objeto `AppAction` al array `allActions` dentro de `action.service.ts`. Olvidar este paso hará que la nueva sección sea inaccesible desde la navegación principal.
+
+
+---
+
+## 2025-10-20: Depuración y Corrección del Menú de Navegación (`UiHamburgerMenuComponent`)
+
+Se ha llevado a cabo un proceso de depuración exhaustivo para solucionar los problemas que impedían el correcto funcionamiento del menú principal de la aplicación.
+
+### Problemas Solucionados:
+
+1.  **Iconos no visibles (`app-ui-icon`)**:
+    -   **Diagnóstico**: Se confirmó que el `IconService` funcionaba correctamente, pero no encontraba los ficheros SVG en las rutas esperadas. Su mecanismo de fallback, que terminaba mostrando un `?`, era el comportamiento correcto ante un fichero no encontrado.
+    -   **Solución**: Se identificó que la causa raíz era una incorrecta ubicación de los ficheros de iconos. Al moverlos a `/assets/icons/system/`, el problema se resolvió.
+
+2.  **Enlaces del menú no se renderizaban**:
+    -   **Diagnóstico**: El problema principal era que el `UiAccordionComponent` no mostraba el contenido (los enlaces) que le pasaba el `UiHamburgerMenuComponent`, a pesar de que los datos llegaban correctamente.
+    -   **Solución en Cadena**: La solución requirió varios ajustes finos:
+        1.  **Race Condition**: Se detectó una condición de carrera entre el cálculo de los `accordionItems` (que dependían de la plantilla) y la resolución de dicha plantilla con `viewChild`. Se solucionó cambiando de un `computed` a un `signal` que se actualiza mediante un `effect`, asegurando que el cálculo se realiza solo cuando la plantilla está disponible.
+        2.  **Proyección de Contenido**: Se encontró el error clave en `ui-accordion.component.html`. No se estaba pasando el contexto de datos (`item.data`) a la plantilla proyectada. Se solucionó añadiendo `[ngTemplateOutletContext]="{ $implicit: item.data }"`.
+        3.  **Tipado de Datos**: Lo anterior causó un error de compilación porque la interfaz `AccordionItem` no tenía definida la propiedad `data`. Se actualizó `ui-accordion.types.ts` para incluirla.
+
+3.  **Enrutamiento del Dashboard**:
+    -   **Diagnóstico**: Se detectó una inconsistencia entre la ruta definida en el `ActionService` (`/admin/dashboard`) y la configuración real del enrutador, que asignaba el `DashboardAdminComponent` a la ruta `/admin`.
+    -   **Solución**: Se corrigió el `routerLink` en `action.service.ts` a `/admin`.
+
+### Resultado:
+
+El menú de navegación (`UiHamburgerMenuComponent`) ahora es completamente funcional. Muestra correctamente todas las categorías y enlaces definidos en el `ActionService`, los iconos se cargan adecuadamente y la navegación a las distintas secciones funciona como se espera. El código de depuración ha sido eliminado.

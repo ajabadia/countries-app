@@ -16,32 +16,41 @@ Componente genérico y reutilizable para mostrar contenido en un formato de acor
 
 El componente padre debe definir un array de `AccordionItem` y las plantillas (`<ng-template>`) que se usarán para renderizar el contenido.
 
-**En tu componente `.ts`:**
+**En tu componente `.ts` (Ejemplo con datos dinámicos):**
 ```typescript
-import { Component, ViewChild, TemplateRef, OnInit } from '@angular/core';
+import { Component, ViewChild, TemplateRef, OnInit, signal, effect } from '@angular/core';
 import { AccordionItem } from './ui-accordion.types';
 
 @Component({ ... })
-export class MyComponent implements OnInit {
-  @ViewChild('templateA', { static: true }) templateA!: TemplateRef<any>;
-  @ViewChild('templateB', { static: true }) templateB!: TemplateRef<any>;
+export class MyComponent {
+  // 1. Obtener la referencia a la plantilla que se usará para el contenido.
+  contentTemplate = viewChild.required<TemplateRef<any>>('myContentTemplate');
 
-  accordionItems: AccordionItem[] = [];
+  // 2. Definir un signal para los items del acordeón.
+  accordionItems = signal<AccordionItem[]>([]);
 
-  ngOnInit(): void {
-    this.accordionItems = [
-      {
-        id: 'item-1',
-        title: 'Panel 1',
-        content: this.templateA,
-        expanded: true, // Este panel estará abierto por defecto
-      },
-      {
-        id: 'item-2',
-        title: 'Panel 2',
-        content: this.templateB,
-      },
-    ];
+  constructor() {
+    // 3. Usar un 'effect' para generar los items cuando la plantilla esté disponible.
+    effect(() => {
+      const template = this.contentTemplate();
+      if (template) {
+        this.accordionItems.set([
+          {
+            id: 'users',
+            title: 'Usuarios',
+            content: template,
+            data: [{ name: 'Alice' }, { name: 'Bob' }], // Datos para la plantilla
+            expanded: true,
+          },
+          {
+            id: 'roles',
+            title: 'Roles',
+            content: template,
+            data: [{ name: 'Admin' }, { name: 'Editor' }], // Datos para la plantilla
+          },
+        ]);
+      }
+    });
   }
 }
 ```

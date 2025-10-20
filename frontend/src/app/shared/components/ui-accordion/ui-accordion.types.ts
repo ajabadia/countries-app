@@ -11,4 +11,5 @@ export interface AccordionItem {
   content: TemplateRef<any>; // La plantilla para el contenido del panel
   disabled?: boolean; // Si el panel está deshabilitado
   expanded?: boolean; // Si el panel está expandido por defecto
+  data?: any;
 }

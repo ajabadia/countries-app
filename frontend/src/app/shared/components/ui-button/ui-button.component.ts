@@ -53,8 +53,13 @@ export class UiButtonComponent implements AfterContentInit, OnChanges {
   }
 
   private updateHasContent(): void {
-    const content = this.contentWrapper.nativeElement.textContent?.trim() ?? '';
-    this.hasContent = content.length > 0;
+    // ✅ CORRECCIÓN: Se añade una guarda para comprobar que `contentWrapper` existe
+    // antes de intentar acceder a `nativeElement`. Esto soluciona el error `TypeError`
+    // que ocurre cuando el botón no tiene contenido proyectado.
+    if (this.contentWrapper) {
+      const content = this.contentWrapper.nativeElement.textContent?.trim() ?? '';
+      this.hasContent = content.length > 0;
+    }
   }
 
   // --- Vinculación de clases al Host ---

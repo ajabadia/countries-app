@@ -3,12 +3,11 @@
 <!-- Botón de Hamburguesa -->
 <button
   app-ui-button
-  ui-button-variant="ghost"
-  ui-button-aria-label="Abrir menú de navegación"
+  ui-button-variant="ghost"  
   (click)="toggleMenu()"
-  class="hamburger-menu__toggle"
+  class="hamburger-menu__toggle"  
 >
-  <app-ui-icon ui-icon-name="icon-menu"></app-ui-icon>
+  <app-ui-icon [ui-icon-name]="'icon-menu'"></app-ui-icon>
 </button>
 
 <!-- Fondo superpuesto -->
@@ -19,27 +18,25 @@
   <header class="hamburger-menu__header">
     <h2 class="hamburger-menu__title">Menú</h2>
     <button app-ui-button ui-button-variant="ghost" (click)="toggleMenu()">
-      <app-ui-icon ui-icon-name="icon-close"></app-ui-icon>
+      <app-ui-icon [ui-icon-name]="'icon-close'"></app-ui-icon>
     </button>
   </header>
   <div class="hamburger-menu__content">
       <app-ui-accordion
         [ui-accordion-items]="accordionItems()"
       ></app-ui-accordion>
+
+      <!--
+        Plantilla genérica para renderizar los enlaces de un grupo de menú.
+        Se mueve aquí para asegurar que está en el mismo contexto que el acordeón.
+      -->
+      <ng-template #menuLinkTemplate let-data>
+        @for (item of data; track item.id) {
+          <a class="menu-item" [routerLink]="item.routerLink" (click)="toggleMenu()">
+            <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
+            <span>{{ item.label }}</span>
+          </a>
+        }
+      </ng-template>
   </div>
 </aside>
-<!--
-  Plantilla genérica para renderizar los enlaces de un grupo de menú.
-  El componente de acordeón instanciará esta plantilla para cada item,
-  pasándole el array de acciones a través del contexto ($implicit).
--->
-<ng-template #menuLinkTemplate let-actions>
-  @for (item of actions; track item.id) {
-    <a class="menu-item" [routerLink]="item.route" (click)="toggleMenu()">
-      @if (item.icon) {
-        <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
-      }
-      <span>{{ item.label }}</span>
-    </a>
-  }
-</ng-template>

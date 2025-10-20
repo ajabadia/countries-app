@@ -17,14 +17,14 @@ export class ActionService {
     {
       id: 'home',
       label: 'Inicio',
-      icon: 'home',
+      icon: 'icon-home',
       category: 'public',
       routerLink: '/',
     },
     {
       id: 'countries',
       label: 'Países',
-      icon: 'flag',
+      icon: 'icon-country',
       category: 'public',
       routerLink: '/countries',
     },
@@ -32,23 +32,39 @@ export class ActionService {
     {
       id: 'admin-dashboard',
       label: 'Dashboard',
-      icon: 'dashboard',
+      icon: 'icon-dashboard',
       category: 'admin',
       routerLink: '/admin',
     },
     {
       id: 'admin-countries',
       label: 'Gestionar Países',
-      icon: 'flag',
+      icon: 'icon-country',
       category: 'admin',
       routerLink: '/admin/countries',
     },
     {
       id: 'admin-users',
       label: 'Gestionar Usuarios',
-      icon: 'people',
+      icon: 'icon-user',
       category: 'admin',
       routerLink: '/admin/users',
+    },
+    // User
+    {
+      id: 'user-profile',
+      label: 'Mi Perfil',
+      icon: 'icon-user',
+      category: 'user',
+      routerLink: '/profile',
+    },
+    // General
+    {
+      id: 'general-settings',
+      label: 'Configuración',
+      icon: 'icon-settings',
+      category: 'general',
+      routerLink: '/settings',
     },
   ];
 
@@ -92,5 +108,13 @@ export class ActionService {
 
   private getCategoryTitle(category: ActionCategory): string {
     return this.categoryTitles[category] || 'General';
+  }
+
+  /**
+   * Devuelve todas las categorías de acciones disponibles en el servicio.
+   * @returns Un array con todas las claves de categoría.
+   */
+  getAllCategories(): ActionCategory[] {
+    return Object.keys(this.categoryTitles) as ActionCategory[];
   }
 }

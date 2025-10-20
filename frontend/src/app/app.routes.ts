@@ -11,5 +11,10 @@ export const routes: Routes = [
     loadComponent: () =>
       import('@features/public/home/home.component').then(m => m.HomeComponent),
   },
-  // Aquí añadiremos más rutas principales como 'admin', 'auth', etc.
+  {
+    path: 'admin',
+    // Carga diferida de todas las rutas de administración
+    loadChildren: () =>
+      import('@features/admin/admin.routes').then(m => m.ADMIN_ROUTES),
+  },
 ];

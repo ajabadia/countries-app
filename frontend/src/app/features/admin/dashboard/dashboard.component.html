@@ -1,0 +1,27 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\features\admin\dashboard\dashboard.component.html | New File -->
+
+<div class="dashboard-container">
+  <h1>Bienvenido al Dashboard</h1>
+  <div class="grid">
+    @for (stat of stats(); track stat.title) {
+      <div class="grid__item grid__item--span-3">
+        <!-- ✅ CORRECCIÓN: Se usan los inputs correctos y se proyecta el icono
+             dentro del componente, siguiendo la API de UiStatCardComponent. -->
+        <app-ui-stat-card [ui-stat-card-label]="stat.title" [ui-stat-card-value]="stat.value">
+          <app-ui-icon [ui-icon-name]="stat.icon"></app-ui-icon>
+        </app-ui-stat-card>
+      </div>
+    }
+    @empty {
+      <!-- Se muestra este bloque si el array 'stats' está vacío (cargando o error).
+           Esto proporciona un feedback visual inmediato al usuario. -->
+      @for (item of [1, 2, 3, 4]; track item) {
+        <div class="grid__item grid__item--span-3">
+          <app-ui-stat-card ui-stat-card-label="Cargando..." ui-stat-card-value="--">
+            <div class="skeleton-icon"></div>
+          </app-ui-stat-card>
+        </div>
+      }
+    }
+  </div>
+</div>

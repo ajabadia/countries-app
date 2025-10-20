@@ -1,13 +1,13 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-hamburger-menu\README.md | Last Modified: 2025-10-19 -->
 
-# Componente: `ui-hamburger-menu`
+# Componente: `UiHamburgerMenuComponent`
 
 El `UiHamburgerMenuComponent` proporciona un menú de navegación principal para toda la aplicación. Se presenta como un botón de "hamburguesa" que, al ser pulsado, despliega un panel lateral deslizable desde la izquierda.
 
 ## 1. Propósito y Funcionamiento
 
 -   **Navegación Centralizada**: Actúa como el punto de acceso principal a las diferentes secciones de la aplicación.
--   **Panel Lateral**: Muestra el menú en un panel lateral (`<aside>`) que se superpone al contenido principal, con un fondo (`overlay`) que oscurece el resto de la página.
+-   **Panel Lateral Deslizable**: Muestra el menú en un panel (`<aside>`) que se desliza desde la izquierda, con un fondo (`overlay`) que oscurece el resto de la página para mejorar el foco.
 -   **Agrupación por Categorías**: Utiliza el `ActionService` para obtener las acciones de navegación y las agrupa por categorías (ej. "Navegación Principal", "Administración").
 -   **Acordeón**: Muestra estas categorías en un componente `ui-accordion`, permitiendo al usuario expandir y contraer cada sección.
 

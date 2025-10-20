@@ -25,7 +25,13 @@
         [id]="'panel-' + item.id"
       >
         <div class="ui-accordion__content-inner">
-          <ng-container [ngTemplateOutlet]="item.content"></ng-container>
+          <!-- ✅ CORRECCIÓN: Se pasa el contexto de datos a la plantilla.
+               Esto conecta la propiedad 'data' de cada AccordionItem con el 'let-data'
+               de la ng-template en el componente del menú. -->
+          <ng-container
+            [ngTemplateOutlet]="item.content"
+            [ngTemplateOutletContext]="{ $implicit: item.data }"
+          ></ng-container>
         </div>
       </div>
 

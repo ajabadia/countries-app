@@ -1,5 +1,15 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
 
+### 9. Mejora de la Experiencia de Usuario en el Dashboard
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Implementación de un estado de carga (skeleton screen) para el grid de estadísticas del dashboard.
+-   **Propósito**: Asegurar que la estructura del grid sea visible inmediatamente, incluso antes de que los datos de la API se hayan cargado, para evitar una pantalla en blanco y mejorar la percepción de rendimiento.
+-   **Cambios Realizados**:
+    -   Se ha utilizado el bloque `@empty` de la nueva sintaxis de control de flujo (`@for`) en `dashboard.component.html`.
+    -   Cuando el `signal` `stats()` está vacío (durante la carga o en caso de error), se renderiza un conjunto de tarjetas de marcador de posición (`<app-ui-stat-card>`) con un estado de 'Cargando...'.
+-   **Beneficio**: La página del dashboard ahora proporciona un feedback visual inmediato, mejorando la experiencia de usuario y eliminando el efecto de "página en blanco" durante la carga de datos.
+
 ## 2025-10-20: Refactorización y Alineación Arquitectónica
 
 ### 1. Refactor de Servicios: Centralización de Lógica de UI
@@ -62,6 +72,29 @@
     -   Se ha actualizado `app.routes.ts` para que cargue el nuevo `HomeComponent` directamente con `loadComponent`, eliminando la dependencia de ficheros de rutas intermedios.
     -   Se ha eliminado el fichero obsoleto `src/app/features/home/home.routes.ts` que aún hacía referencia al antiguo `HomeComponent`.
 -   **Beneficio**: El proyecto compila limpiamente. La configuración de rutas es ahora más simple, moderna y está completamente alineada con la arquitectura de componentes `standalone`.
+
+### 7. Creación del Dashboard de Administración
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Creación del `DashboardAdminComponent` como página principal de la sección de administración.
+-   **Propósito**: Establecer una página de inicio para el área de administración que muestre estadísticas clave de la base de datos.
+-   **Cambios Realizados**:
+    -   Se ha creado el `DashboardAdminComponent` en `src/app/features/admin/dashboard/`.
+    -   Se ha creado un `DashboardService` para obtener el total de registros de las entidades (`countries`, `continents`, etc.) desde la API.
+    -   Se ha configurado la ruta `/admin` para cargar el nuevo dashboard.
+    -   Se ha utilizado el componente `UiStatCardComponent` para visualizar las estadísticas.
+-   **Beneficio**: La sección de administración tiene ahora una página de inicio funcional que proporciona una visión general del estado de los datos.
+
+### 8. Depuración y Estabilización del Menú de Navegación
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Solución de errores de compilación y de ejecución en los componentes de UI.
+-   **Propósito**: Lograr que el menú de hamburguesa (`UiHamburgerMenuComponent`) funcione correctamente y muestre todas las secciones de navegación.
+-   **Cambios Realizados**:
+    -   Se ha corregido un bug crítico en `UiButtonComponent` que causaba un `TypeError` al no manejar correctamente la ausencia de contenido proyectado, haciendo el componente más robusto.
+    -   Se ha ajustado la plantilla de `UiHamburgerMenuComponent` para consumir correctamente la API de los componentes `UiAccordionComponent` y `UiIconComponent`.
+    -   Se han eliminado los iconos de los enlaces del menú del acordeón para simplificar la interfaz, según solicitud.
+-   **Beneficio**: La aplicación es ahora estable, sin errores de consola, y el menú de navegación principal funciona como se espera, mostrando todas las secciones y enlaces correctamente.
 
 ---
 
