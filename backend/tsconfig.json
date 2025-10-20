@@ -4,8 +4,8 @@
     "target": "ES2022",
     "module": "NodeNext",
     "moduleResolution": "NodeNext",
-    "outDir": "./dist",
-    "rootDir": "./",
+    "outDir": "dist",
+    "rootDir": "src",
     "sourceMap": true,
 
     /* Chequeo de Tipos Estricto */
@@ -26,6 +26,6 @@
     "forceConsistentCasingInFileNames": true,
     "skipLibCheck": true
   },
-  "include": ["**/*.js", "**/*.ts"],
+  "include": ["src/**/*"],
   "exclude": ["node_modules", "dist"]
 }

@@ -50,6 +50,7 @@ export class UiIconComponent implements OnChanges {
   @HostBinding('style.--icon-size')
   get sizeStyle(): string {
     const predefinedSizes: UiIconSize[] = ['xs', 's', 'm', 'l', 'xl'];
+
     if (predefinedSizes.includes(this.size as UiIconSize)) {
       return `var(--icon-size-${this.size})`;
     }

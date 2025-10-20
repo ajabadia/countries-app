@@ -100,6 +100,28 @@ Se detectó que, tras crear una nueva página principal (`HomeComponent`), esta 
 
 ---
 
+## 2025-10-20: Depuración del Dashboard y Conexión con el Backend
+
+### 14. El Proxy de Desarrollo de Angular es Esencial
+
+**Lección:** Cuando el frontend y el backend se ejecutan en puertos diferentes, las llamadas a la API desde el frontend (ej. a `/api/countries`) fallarán debido a la política de mismo origen (CORS), resultando en errores 404 y una aplicación que no carga datos.
+
+**Solución Aplicada:** Usar un archivo `proxy.conf.json` y configurarlo en `angular.json`. Esto permite hacer peticiones a rutas relativas y el servidor de desarrollo de Angular las redirige de forma transparente al backend, como si todo se sirviera desde el mismo dominio.
+
+### 15. Depuración de Componentes Standalone en Blanco
+
+**Lección:** Si una ruta se activa pero el componente no se renderiza (página en blanco), las causas más comunes son:
+1.  **Falta de un proveedor esencial:** Por ejemplo, no haber añadido `provideHttpClient()` en la configuración de la aplicación (`app.config.ts` o `main.ts`) impide que cualquier componente que dependa de `HttpClient` (directa o indirectamente) se renderice.
+2.  **Una guarda de ruta (`Guard`) está bloqueando el acceso:** Si una ruta está protegida, la guarda puede estar impidiendo la navegación silenciosamente. Desactivarla temporalmente es una buena técnica de depuración.
+3.  **Un error en `forkJoin`:** Si una de las múltiples peticiones dentro de un `forkJoin` falla, todo el observable falla. Usar `catchError` en cada petición interna es crucial para la resiliencia y para poder depurar qué petición específica está fallando.
+
+### 16. La Configuración de `assets` en `angular.json` es Clave para los Iconos
+
+**Lección:** Si los iconos SVG no se cargan y en su lugar se muestra el texto del fallback (ej. "UNK"), significa que el `IconService` no está encontrando los archivos.
+
+**Solución Aplicada:** Es necesario configurar explícitamente la carpeta de iconos en la sección `assets` del archivo `angular.json`. Esto asegura que los archivos SVG se copien al directorio de `dist` durante la compilación y estén disponibles en la ruta esperada (ej. `/assets/icons/system/flag.svg`).
+---
+
 ## 2025-10-20: Depuración y Corrección del Menú de Navegación (`UiHamburgerMenuComponent`)
 
 Se ha llevado a cabo un proceso de depuración exhaustivo para solucionar los problemas que impedían el correcto funcionamiento del menú principal de la aplicación.

@@ -107,6 +107,13 @@
   --border-width: 1px;
   --border-width-thick: 2px;
 
+  // === TAMAÑOS DE ICONOS ===
+  --icon-size-xs: 0.75rem;  // 12px
+  --icon-size-s: 1rem;     // 16px
+  --icon-size-m: 1.5rem;   // 24px
+  --icon-size-l: 2.25rem;  // 36px
+  --icon-size-xl: 3rem;    // 48px
+
   // === SOMBRAS ===
   --shadow-sm: 0 1px 2px 0 rgba(37, 56, 137, 0.05);
   --shadow-base: 0 1px 3px 0 rgba(37, 56, 137, 0.08), 0 1px 2px 0 rgba(37, 56, 137, 0.04);

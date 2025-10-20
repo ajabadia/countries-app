@@ -67,10 +67,12 @@
           "builder": "@angular/build:dev-server",
           "configurations": {
             "production": {
+              "proxyConfig": "proxy.conf.json",
               "buildTarget": "frontend:build:production"
             },
             "development": {
-              "buildTarget": "frontend:build:development"
+              "buildTarget": "frontend:build:development",
+              "proxyConfig": "proxy.conf.json"
             }
           },
           "defaultConfiguration": "development"
@@ -92,7 +94,12 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              {
+                "glob": "**/*",
+                "input": "src/app/shared/icons",
+                "output": "/assets/icons/"
+              }
             ],
             "styles": [
               "src/styles.scss"

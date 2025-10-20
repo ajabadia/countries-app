@@ -2,26 +2,27 @@
 
 <div
   class="ui-stat-card"
-  tabindex="0"
-  role="button"
-  [attr.aria-label]="label + ': ' + value"
-  (click)="onClick()"
+  [class.is-loading]="isLoading"
+  [attr.aria-label]="isLoading ? 'Cargando estadística' : title + ': ' + value"
 >
-  <!-- Zona Superior: Icono -->
-  @if (iconName) {
+  @if (isLoading) {
+    <div class="ui-stat-card__loader"></div>
+  } @else {
+    <!-- Zona Superior: Icono -->
     <div class="ui-stat-card__top">
-      <app-ui-icon
-        [ui-icon-name]="iconName"
-        [ui-icon-type]="iconType"
-        [ui-icon-size]="iconSize"
-        [ui-icon-color]="iconColor || 'var(--color-primary-contrast)'"
-      ></app-ui-icon>
+      @if (icon) {
+        <app-ui-icon
+          [ui-icon-name]="icon"
+          ui-icon-size="xl"
+          ui-icon-color="var(--color-primary-contrast)"
+        />
+      }
+    </div>
+
+    <!-- Zona Inferior: Contenido -->
+    <div class="ui-stat-card__bottom">
+      <div class="ui-stat-card__value">{{ value }}</div>
+      <div class="ui-stat-card__title">{{ title }}</div>
     </div>
   }
-
-  <!-- Zona Inferior: Contenido -->
-  <div class="ui-stat-card__bottom">
-    <div class="ui-stat-card__value">{{ value }}</div>
-    <div class="ui-stat-card__label">{{ label }}</div>
-  </div>
 </div>

@@ -2,30 +2,24 @@
 
 # UI Stat Card Component (`<app-ui-stat-card>`)
 
-Componente reutilizable para mostrar una "tarjeta de estadística". Es ideal para dashboards y resúmenes visuales, mostrando un valor numérico o textual clave, una etiqueta descriptiva y un icono asociado.
-
-## Estructura
-
-El componente tiene un diseño de dos zonas verticales:
-
--   **Zona Superior**: Un área con un fondo oscuro (`--color-tertiary-dark`) que contiene el icono. El color del icono se contrasta automáticamente para ser visible.
--   **Zona Inferior**: Un área con el fondo principal de la tarjeta (`--color-surface`) que contiene el valor y la etiqueta.
+Este componente muestra una "tarjeta de estadística" visualmente atractiva, diseñada para dashboards y resúmenes de datos.
 
 ## Características
 
--   **API Prefijada**: Todos sus inputs propios siguen la convención `ui-stat-card-*`.
--   **Navegación Opcional**: Si se le proporciona una ruta (`ui-stat-card-route`), toda la tarjeta se vuelve un elemento interactivo que navega a dicha ruta al hacer clic o presionar Enter/Espacio.
--   **Accesibilidad**: Implementa `role="button"`, `tabindex="0"` y `aria-label` para una correcta interacción con lectores de pantalla y teclado cuando es navegable.
--   **Integración con `ui-icon`**: Permite personalizar completamente el icono pasando las propiedades a través de sus inputs (`ui-icon-*`).
+- **API Clara**: Usa inputs con alias (`ui-stat-card-*`) para una integración sencilla y predecible.
+- **Reactiva**: Muestra un título, un valor y un icono.
+- **Estado de Carga**: Incluye un estado de carga (`isLoading`) que muestra una animación de esqueleto, mejorando la experiencia del usuario mientras se obtienen los datos.
+- **Accesibilidad**: Incluye atributos `aria-label` para ser accesible a lectores de pantalla.
 
 ## Cómo Usarlo
 
+El componente se usa pasando los datos a través de sus inputs.
+
 ```html
 <app-ui-stat-card
-  ui-stat-card-label="Total de Países"
-  ui-stat-card-value="195"
-  ui-icon-name="icon-world-globe"
-  ui-stat-card-route="/admin/countries"
+  [ui-stat-card-title]="'Países'"
+  [ui-stat-card-value]="250"
+  [ui-stat-card-icon]="'flag'"
 ></app-ui-stat-card>
 ```
 

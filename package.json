@@ -1,0 +1,12 @@
+{
+  "name": "countries2-monorepo",
+  "private": true,
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "rimraf": "^6.0.1"
+  }
+}

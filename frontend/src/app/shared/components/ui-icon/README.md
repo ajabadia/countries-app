@@ -1,68 +1,45 @@
-<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-icon\README.md | Last Modified: 2025-10-19 -->
-
 # UI Icon Component (`<app-ui-icon>`)
 
-Este componente es el método estándar para mostrar iconos en toda la aplicación. Está diseñado para ser flexible, eficiente y fácil de usar.
+Componente reutilizable y de alto rendimiento para mostrar iconos SVG en toda la aplicación.
 
 ## Características
 
--   **API Prefijada**: Todos los inputs usan el prefijo `ui-icon-` para mayor claridad.
--   **Carga Eficiente**: Utiliza `IconService` para cargar cada icono SVG una sola vez y lo cachea para usos futuros. Esto lo hace ideal para usar en grandes listas o tablas.
--   **Renderizado Dual**: Puede renderizar un icono como un SVG inyectado (por defecto) o como una etiqueta `<img>`.
--   **Estilo Flexible**: Utiliza variables CSS para el tamaño y hereda el color del texto (`currentColor`), lo que facilita su integración con otros componentes.
+-   **API Prefijada**: Todos los inputs usan el prefijo `ui-icon-` para mayor claridad y consistencia.
+-   **Carga Eficiente**: Utiliza `IconService` para cargar cada icono SVG una sola vez y lo cachea para usos futuros. Esto lo hace ideal para usar en grandes listas o tablas sin degradar el rendimiento.
+-   **Renderizado Dual**: Puede renderizar un icono como un SVG inyectado en el DOM (por defecto) o como una etiqueta `<img>`, lo que ofrece flexibilidad.
+-   **Estilo Flexible**: Utiliza variables CSS centralizadas en `_variables.scss` para los tamaños predefinidos (`--icon-size-xs`, `--icon-size-xl`, etc.) y permite tamaños personalizados. El color se puede especificar directamente.
+-   **Fallback Automático**: Si un icono no se encuentra, el `IconService` está diseñado para cargar un icono de fallback (`UNK.svg`) para evitar errores visuales.
 
 ## Cómo Usarlo
 
-```html
-<app-ui-icon ui-icon-name="nombre-del-icono"></app-ui-icon>
-```
+### Icono Básico
 
-## API (Inputs)
-
-| Input                 | Tipo                                   | Por Defecto | Descripción                                                                                             |
-| --------------------- | -------------------------------------- | ----------- | ------------------------------------------------------------------------------------------------------- |
-| `ui-icon-name`        | `string`                               | **(req)**   | El nombre del archivo del icono (sin extensión).                                                        |
-| `ui-icon-type`        | `string`                               | `'system'`  | El subdirectorio dentro de `/assets/icons/` donde se encuentra el icono (ej. 'system', 'flags').         |
-| `ui-icon-render-type` | `'svg' \| 'image'`                     | `'svg'`     | Cómo se debe renderizar el icono. `'svg'` para inyección, `'image'` para una etiqueta `<img>` (busca `.png`). |
-| `ui-icon-size`        | `'xs'...'xl' \| 'inherit' \| string` | `'m'`       | El tamaño del icono. Acepta tamaños predefinidos, `inherit` o un valor CSS válido (ej. '32px').        |
-| `ui-icon-color`       | `string`                               | `undefined` | Un color CSS para aplicar directamente al icono. Sobrescribe el color heredado.                         |
-| `ui-icon-class`       | `string`                               | `''`        | Clases CSS personalizadas para aplicar al elemento host del icono.                                      |
-
-## Ejemplos de Uso
-
-### Icono Básico del Sistema
-
-Busca `/assets/icons/system/edit.svg`.
+Por defecto, usará el tamaño `m` y el color del texto del contenedor (`currentColor`).
 
 ```html
-<app-ui-icon ui-icon-name="edit"></app-ui-icon>
-```
-
-### Icono de Bandera (SVG)
-
-Busca el icono en `/assets/icons/flags/es.svg`.
-
-```html
-<app-ui-icon ui-icon-name="es" ui-icon-type="flags"></app-ui-icon>
-```
-
-### Icono de Bandera (Imagen)
-
-Renderiza como `<img>` buscando en `/assets/icons/flags/es.png`.
-
-```html
-<app-ui-icon
-  ui-icon-name="es"
-  ui-icon-type="flags"
-  ui-icon-render-type="image">
-</app-ui-icon>
+<app-ui-icon ui-icon-name="flag"></app-ui-icon>
 ```
 
 ### Icono con Tamaño y Color Específicos
 
 ```html
-<app-ui-icon ui-icon-name="add" ui-icon-size="l" ui-icon-color="green"></app-ui-icon>
+<app-ui-icon
+  ui-icon-name="globe"
+  ui-icon-size="xl"
+  ui-icon-color="var(--color-primary)"
+></app-ui-icon>
 
-<!-- O usando un tamaño personalizado -->
+<!-- O usando un tamaño personalizado en píxeles -->
 <app-ui-icon ui-icon-name="add" ui-icon-size="32px"></app-ui-icon>
 ```
+
+## API (Inputs)
+
+| Input | Tipo | Por Defecto | Descripción |
+| --- | --- | --- | --- |
+| `ui-icon-name` | `string` | **(req)** | El nombre del icono (sin la extensión `.svg`). |
+| `ui-icon-type` | `'system' \| 'flags' \| ...` | `'system'` | La categoría o carpeta donde se encuentra el icono. |
+| `ui-icon-render-type` | `'svg' \| 'image'` | `'svg'` | Cómo se debe renderizar el icono. |
+| `ui-icon-size` | `UiIconSize \| 'inherit' \| string` | `'m'` | El tamaño del icono. Acepta tamaños predefinidos (`xs`, `s`, `m`, `l`, `xl`), `inherit` o un valor CSS válido como `'2rem'`. |
+| `ui-icon-color` | `string` | `undefined` | El color del icono. Si no se especifica, hereda el color del texto (`currentColor`). |
+| `ui-icon-class` | `string` | `''` | Clases CSS adicionales para aplicar al elemento host del icono. |

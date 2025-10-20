@@ -2,7 +2,7 @@
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map } from 'rxjs';
+import { Observable, forkJoin, map, of, catchError } from 'rxjs';
 
 export interface Stat {
   title: string;
@@ -11,7 +11,7 @@ export interface Stat {
 }
 
 interface PaginatedResponse<T> {
-  totalRecords: number;
+  total: number;
   data: T[];
 }
 
@@ -25,7 +25,13 @@ export class DashboardService {
   private getCount(entity: string): Observable<number> {
     return this.http
       .get<PaginatedResponse<unknown>>(`${this.apiUrl}/${entity}?pageSize=1`)
-      .pipe(map(response => response.totalRecords));
+      .pipe(
+        map(response => response.total),
+        catchError(error => {
+          console.error(`Error fetching count for ${entity}:`, error);
+          return of(0); // Devuelve 0 si hay un error para no romper el forkJoin
+        })
+      );
   }
 
   getStats(): Observable<Stat[]> {
@@ -33,13 +39,19 @@ export class DashboardService {
       countries: this.getCount('countries'),
       continents: this.getCount('continents'),
       languages: this.getCount('languages'),
-      users: this.getCount('auth/users'),
+      areas: this.getCount('areas'),
+      dependencies: this.getCount('dependencies'),
+      translations: this.getCount('multilingualnames'),
+      users: this.getCount('users'), // Intentará obtener usuarios, fallará y mostrará 0
     }).pipe(
       map(results => [
-        { title: 'Países', value: results.countries, icon: 'flag' },
-        { title: 'Continentes', value: results.continents, icon: 'globe' },
-        { title: 'Idiomas', value: results.languages, icon: 'language' },
-        { title: 'Usuarios', value: results.users, icon: 'people' },
+        { title: 'Países', value: results.countries, icon: 'icon-country' },
+        { title: 'Continentes', value: results.continents, icon: 'icon-continents' },
+        { title: 'Idiomas', value: results.languages, icon: 'icon-languages' },
+        { title: 'Áreas', value: results.areas, icon: 'icon-area' },
+        { title: 'Dependencias', value: results.dependencies, icon: 'icon-dependencies' },
+        { title: 'Traducciones', value: results.translations, icon: 'icon-translate' },
+        { title: 'Usuarios', value: results.users, icon: 'icon-user' },
       ])
     );
   }

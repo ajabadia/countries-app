@@ -19,28 +19,11 @@ import { UiIconType, UiIconSize } from '@shared/services/icon.service';
 export class UiStatCardComponent {
   private router = inject(Router);
 
-  // === Entradas (Inputs) con API Prefijada ===
-  @Input({ alias: 'ui-stat-card-label', required: true }) label!: string;
+  // === Entradas (Inputs) ===
+  @Input({ alias: 'ui-stat-card-title', required: true }) title!: string;
   @Input({ alias: 'ui-stat-card-value', required: true }) value!: string | number;
-  @Input({ alias: 'ui-stat-card-route' }) detailRoute?: string | any[];
-
-  // --- Inputs de "Pass-through" para el icono ---
-  @Input({ alias: 'ui-icon-name' }) iconName?: string;
-  @Input({ alias: 'ui-icon-type' }) iconType: UiIconType = 'system';
-  @Input({ alias: 'ui-icon-color' }) iconColor?: string;
-  @Input({ alias: 'ui-icon-size' }) iconSize: UiIconSize | string = 'l';
-
-  /**
-   * Gestiona el clic en la tarjeta. Si tiene una ruta, navega.
-   */
-  onClick(): void {
-    if (this.detailRoute) {
-      const route = Array.isArray(this.detailRoute)
-        ? this.detailRoute
-        : [this.detailRoute];
-      this.router.navigate(route);
-    }
-  }
+  @Input({ alias: 'ui-stat-card-icon' }) icon?: string;
+  @Input({ alias: 'ui-stat-card-is-loading' }) isLoading = false;
 
   /**
    * Mejora de Accesibilidad: Permite activar la tarjeta con Enter o Espacio.
@@ -48,6 +31,6 @@ export class UiStatCardComponent {
   @HostListener('keydown.enter')
   @HostListener('keydown.space')
   onKeydown(): void {
-    this.onClick();
+    // Lógica de navegación futura si es necesario
   }
 }

@@ -2,7 +2,7 @@
 import dotenv from 'dotenv';
 import express from 'express';
 import logger from './config/logger.js';
-async function startServer() {
+export async function createApp() {
     // Load environment variables from .env file, but not in the test environment.
     // In 'test', jest.setup.ts is responsible for loading variables from .env.test.
     if (process.env.NODE_ENV !== 'test') {
@@ -21,6 +21,7 @@ async function startServer() {
     const areasRouter = (await import('./routes/areas.js')).default;
     const dependenciesRouter = (await import('./routes/dependencies.js')).default;
     const multilingualnamesRouter = (await import('./routes/multilingualnames.js')).default;
+    const usersRouter = (await import('./routes/users.js')).default;
     const app = express();
     // Stream for Morgan (HTTP logger) to use Winston.
     const stream = {
@@ -41,12 +42,20 @@ async function startServer() {
     app.use('/api/areas', areasRouter);
     app.use('/api/dependencies', dependenciesRouter);
     app.use('/api/multilingualnames', multilingualnamesRouter);
+    app.use('/api/users', usersRouter);
     // Error handling middleware (must be the last in the middleware chain)
     app.use(errorHandler);
+    return app;
+}
+async function startServer() {
+    const app = await createApp();
     const PORT = process.env.PORT || 3000;
     app.listen(PORT, () => {
         logger.info(`🚀 Server running on http://localhost:${PORT}`);
     });
 }
-startServer();
+// Start the server only if this file is executed directly
+if (process.env.NODE_ENV !== 'test') {
+    startServer();
+}
 //# sourceMappingURL=index.js.map

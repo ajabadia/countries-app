@@ -8,8 +8,11 @@ import bcrypt from 'bcryptjs';
 // En módulos ES6, __dirname no está disponible. Lo calculamos a partir de import.meta.url.
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
-// Permitimos que la ruta de la BD se sobrescriba para las pruebas en memoria.
-const dbPath = process.env.DB_PATH || path.resolve(__dirname, 'countries.db');
+// ✅ CORRECCIÓN: Se calcula la ruta a la carpeta 'src' de forma robusta.
+// Esto asegura que siempre encontremos los archivos de la base de datos
+// sin importar si el código se ejecuta desde 'src' o 'dist'.
+const srcDir = __dirname.includes('dist') ? path.resolve(__dirname, '..', '..', 'src') : __dirname;
+const dbPath = process.env.DB_PATH || path.resolve(srcDir, 'db', 'countries.db');
 let db;
 /**
  * Ejecuta el script de inicialización de la base de datos.
@@ -19,7 +22,7 @@ let db;
 async function initializeDatabase(dbInstance) {
     // ✅ CAMBIO RADICAL: Usamos la exportación JSON para crear y poblar la base de datos.
     // Esto es mucho más robusto y completo que crear las tablas manualmente.
-    const exportFilePath = path.resolve(__dirname, 'db_export', 'countries-db-export.json');
+    const exportFilePath = path.resolve(srcDir, 'db', 'db_export', 'countries-db-export.json');
     try {
         const exportFileContent = fs.readFileSync(exportFilePath, 'utf-8');
         const dbExport = JSON.parse(exportFileContent);
@@ -123,12 +126,14 @@ export async function getDB() {
         // Usamos nuestro logger para las consultas SQL en modo debug
         db = new Database(dbPath, {
             readonly: false,
-            verbose: (message) => logger.debug(message),
+            verbose: (message) => {
+                logger.debug(String(message));
+            },
         });
         // Solo inicializamos la base de datos si el archivo no existía previamente.
         if (!dbExists) {
             logger.info(`El archivo de base de datos no existe en "${dbPath}". Creando y poblando desde JSON...`);
-            await initializeDatabase(db);
+            await initializeDatabase(db); // ✅ CORRECCIÓN: Se añade 'await'
         }
         else {
             logger.info(`Conectado a la base de datos existente en "${dbPath}".`);
