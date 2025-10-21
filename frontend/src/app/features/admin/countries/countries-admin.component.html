@@ -12,6 +12,17 @@
     />
   </div>
 
+  <div class="load-more-container">
+    @if (canLoadMore()) {
+      <button app-ui-button
+        ui-button-variant="outline"
+        ui-icon-name="add"
+        (click)="loadMore()">
+        Cargar más
+      </button>
+    }
+  </div>
+
   <!-- Ejemplo de uso dentro de ui-table-columns -->
   <!--
   {
@@ -41,12 +52,14 @@
     </ng-template>
   </app-ui-table>
 
-  <!-- Contenedor para el enlace "Cargar más" -->
   <div class="load-more-container">
     @if (canLoadMore()) {
-      <a href="javascript:void(0)" (click)="loadMore()" class="load-more-link">
-        Cargar más resultados...
-      </a>
+      <button app-ui-button
+        ui-button-variant="outline"
+        ui-icon-name="add"
+        (click)="loadMore()">
+        Cargar más
+      </button>
     }
   </div>
 

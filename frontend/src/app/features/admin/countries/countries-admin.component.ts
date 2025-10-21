@@ -14,6 +14,7 @@ import { UiSearchBoxComponent } from '@app/shared/components/ui-search-box/ui-se
 import { UiToolbarButtonsComponent, ToolbarButtonConfig } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
 import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
 import { PaginatorChangeEvent } from '@app/shared/components/ui-paginator/ui-paginator.types';
+import { UiButtonComponent } from '@app/shared/components/ui-button/ui-button.component';
 
 @Component({
   selector: 'app-countries-admin',
@@ -26,6 +27,7 @@ import { PaginatorChangeEvent } from '@app/shared/components/ui-paginator/ui-pag
     UiSearchBoxComponent,
     UiToolbarButtonsComponent,
     UiIconComponent,
+    UiButtonComponent,
   ],
   templateUrl: './countries-admin.component.html',
 })
