@@ -36,4 +36,9 @@ export abstract class BaseCrudService<T> {
   delete(id: number | string): Observable<void> {
     return this.http.delete<void>(`${this.apiUrl}/${id}`);
   }
+
+  // Eliminar múltiples elementos
+  deleteMany(ids: (number | string)[]): Observable<void> {
+    return this.http.delete<void>(this.apiUrl, { body: { ids } });
+  }
 }

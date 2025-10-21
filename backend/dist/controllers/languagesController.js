@@ -10,6 +10,6 @@ const sanitizeLanguage = (body) => {
         sanitizedData.active = active;
     return sanitizedData;
 };
-const { getAll: getAllLanguages, getById: getLanguageById, create: createLanguage, update: updateLanguage, delete: deleteLanguage, } = createCrudController(languagesService, 'Language', sanitizeLanguage);
-export { getAllLanguages, getLanguageById, createLanguage, updateLanguage, deleteLanguage, };
+const { getAll: getAllLanguages, getById: getLanguageById, create: createLanguage, update: updateLanguage, delete: deleteLanguage, removeMany: deleteManyLanguages, } = createCrudController(languagesService, 'Language', sanitizeLanguage);
+export { getAllLanguages, getLanguageById, createLanguage, updateLanguage, deleteLanguage, deleteManyLanguages, };
 //# sourceMappingURL=languagesController.js.map

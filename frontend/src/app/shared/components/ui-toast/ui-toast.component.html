@@ -1,0 +1,13 @@
+<!-- File: d:/desarrollos/countries2/frontend/src/app/shared/components/ui-toast/ui-toast.component.html | Last Modified: 2025-10-20 -->
+
+<div class="ui-toast" [ngClass]="'ui-toast--' + toast.type" role="alert" aria-live="assertive">
+  <app-ui-icon [ui-icon-name]="toast.icon" class="ui-toast__icon" />
+  <p class="ui-toast__message">{{ toast.message }}</p>
+  <button
+    type="button"
+    class="ui-toast__close-button"
+    (click)="onClose()"
+    aria-label="Cerrar notificación">
+    <app-ui-icon [ui-icon-name]="'close'" />
+  </button>
+</div>

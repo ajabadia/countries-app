@@ -133,6 +133,13 @@
 
   // === TRANSICIONES ===
   --transition-base: 150ms ease-in-out;
+
+
+    // ... otras variables de feedback
+    --color-info: #0d6efd; // Un azul estándar para información
+    --color-warning: #ffc107; // Un ámbar estándar para advertencias
+
+
 }
 
 // === TEMA OSCURO ===

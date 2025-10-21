@@ -1,7 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { Router } from '@angular/router';
 import { BaseAdminDirective } from '@app/shared/directives/base-admin.directive';
 import { UsersService } from './users.service';
 import type { User } from '@app/core/types/user.types';
@@ -13,6 +12,7 @@ import { UiHeadingComponent } from '@app/shared/components/ui-heading/ui-heading
 import { UiPaginatorComponent } from '@app/shared/components/ui-paginator/ui-paginator.component';
 import { UiSearchBoxComponent } from '@app/shared/components/ui-search-box/ui-search-box.component';
 import { UiToolbarButtonsComponent, ToolbarButtonConfig } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
+import { PaginatorChangeEvent } from '@app/shared/components/ui-paginator/ui-paginator.types';
 
 @Component({
   selector: 'app-users-admin',
@@ -28,7 +28,7 @@ import { UiToolbarButtonsComponent, ToolbarButtonConfig } from '@app/shared/comp
   templateUrl: './users-admin.component.html',
 })
 export class UsersAdminComponent extends BaseAdminDirective<User> implements OnInit {
-  private router = inject(Router);
+
   protected override fb = inject(FormBuilder);
 
   // Implementación de propiedades abstractas
@@ -47,11 +47,8 @@ export class UsersAdminComponent extends BaseAdminDirective<User> implements OnI
   columns: TableColumn<User>[] = [];
   toolbarActions: ToolbarButtonConfig[] = [];
 
-  constructor() {
-    super();
-  }
-
   override ngOnInit(): void {
+    this.pageSize$.next(50); // Establecemos el tamaño de página inicial
     super.ngOnInit(); // Llamamos al ngOnInit de la directiva base
     this.pageTitle = 'Usuarios';
     this.columns = [
@@ -62,13 +59,17 @@ export class UsersAdminComponent extends BaseAdminDirective<User> implements OnI
       { key: 'createdAt', label: 'Creado', sortable: true, type: 'date' },
     ];
     this.toolbarActions = [
-      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.onToolbarAction('new') }
+      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.openModal() },
+      { id: 'delete-selected', label: 'Eliminar seleccionados', iconName: 'icon-trash', action: () => this.onDeleteSelected(), disabled$: this.isSelectionEmpty$, color: 'danger' }
     ];
   }
 
-  onToolbarAction(actionId: string): void {
-    if (actionId === 'new') {
-      this.openModal(); // Llama al método de la directiva base para abrir el modal
-    }
+  /**
+   * Maneja el evento de cambio del paginador.
+   * @param event El estado del paginador con la página y el tamaño de página.
+   */
+  onPaginatorChange(event: PaginatorChangeEvent): void {
+    this.page$.next(event.page);
+    this.pageSize$.next(event.pageSize);
   }
 }

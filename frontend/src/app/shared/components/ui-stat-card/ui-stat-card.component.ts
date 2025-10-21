@@ -6,7 +6,6 @@ import { Router, RouterModule } from '@angular/router';
 
 // Dependencias del Componente Standalone
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
-import { UiIconType, UiIconSize } from '@shared/services/icon.service';
 
 @Component({
   selector: 'app-ui-stat-card',

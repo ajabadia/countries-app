@@ -23,6 +23,7 @@ const {
   create: createCountry,
   update: updateCountry,
   delete: deleteCountry,
+  removeMany: deleteManyCountries,
 } = createCrudController(countriesService, 'Country', sanitizeCountry);
 
 /**
@@ -42,4 +43,4 @@ const getCountryTranslations = asyncHandler(async (req: Request, res: Response) 
   res.json(translations);
 });
 
-export { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, getCountryTranslations };
+export { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, deleteManyCountries, getCountryTranslations };

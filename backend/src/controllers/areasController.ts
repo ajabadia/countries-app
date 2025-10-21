@@ -17,6 +17,7 @@ const {
   create: createArea,
   update: updateArea,
   delete: deleteArea,
+  removeMany: deleteManyAreas,
 } = createCrudController(areasService, 'Area', sanitizeArea);
 
-export { getAllAreas, getAreaById, createArea, updateArea, deleteArea };
+export { getAllAreas, getAreaById, createArea, updateArea, deleteArea, deleteManyAreas };

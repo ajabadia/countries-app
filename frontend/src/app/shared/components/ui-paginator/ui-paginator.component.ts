@@ -26,7 +26,7 @@ export class UiPaginatorComponent {
   // --- Entradas (Inputs) ---
   totalRecords = input.required<number>({ alias: 'uiPaginatorTotalRecords' });
   page = input(1, { alias: 'uiPaginatorPage' });
-  pageSize = input(10, { alias: 'uiPaginatorPageSize' });
+  pageSize = input(PAGE_SIZE_OPTIONS[0], { alias: 'uiPaginatorPageSize' });
   pageSizeOptions = input(PAGE_SIZE_OPTIONS, { alias: 'uiPaginatorPageSizeOptions' });
 
   // --- Salidas (Outputs) ---
@@ -35,7 +35,8 @@ export class UiPaginatorComponent {
   // --- Estado Derivado (Computed Signals) ---
   totalPages = computed(() => {
     const total = this.totalRecords();
-    return total > 0 ? Math.ceil(total / this.pageSize()) : 0;
+    const size = this.pageSize();
+    return total > 0 && size > 0 ? Math.ceil(total / size) : 0;
   });
 
   startRecord = computed(() => {

@@ -9,6 +9,6 @@ const sanitizeArea = (body) => {
         sanitizedData.defaultname = defaultname;
     return sanitizedData;
 };
-const { getAll: getAllAreas, getById: getAreaById, create: createArea, update: updateArea, delete: deleteArea, } = createCrudController(areasService, 'Area', sanitizeArea);
-export { getAllAreas, getAreaById, createArea, updateArea, deleteArea };
+const { getAll: getAllAreas, getById: getAreaById, create: createArea, update: updateArea, delete: deleteArea, removeMany: deleteManyAreas, } = createCrudController(areasService, 'Area', sanitizeArea);
+export { getAllAreas, getAreaById, createArea, updateArea, deleteArea, deleteManyAreas };
 //# sourceMappingURL=areasController.js.map

@@ -10,6 +10,7 @@ import {
   signal,
   computed,
   WritableSignal,
+  Signal,
 } from '@angular/core';
 import { HttpParams } from '@angular/common/http';
 import { FormBuilder, FormGroup } from '@angular/forms';
@@ -30,8 +31,10 @@ import {
   tap,
   catchError,
   finalize,
+  shareReplay,
+  map,
 } from 'rxjs/operators';
-import { toSignal, toObservable } from '@angular/core/rxjs-interop';
+import { toSignal } from '@angular/core/rxjs-interop';
 
 import { BaseCrudService } from '@shared/services/base-crud.service';
 import { SelectionService } from '@shared/services/selection.service';
@@ -59,48 +62,18 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   protected page$ = new BehaviorSubject<number>(1);
   protected pageSize$ = new BehaviorSubject<number>(10);
   protected search$ = new BehaviorSubject<string>('');
-  protected sort$ = new BehaviorSubject<Sort<T>>({ orderBy: 'id' as keyof T, orderDir: 'asc' });
+  protected sort$ = new BehaviorSubject<Sort<T> | null>(null);
   protected refresh$ = new Subject<void>();
 
-  // Define pagedResponse$ como un inicializador de campo para que toSignal pueda usarse en un contexto válido
-  private pagedResponse$ = combineLatest([
-    this.page$,
-    this.pageSize$,
-    this.search$.pipe(debounceTime(300), distinctUntilChanged()),
-    this.sort$,
-    this.refresh$.pipe(startWith(null)),
-  ]).pipe(
-    tap(() => this.isLoading.set(true)), // Establece isLoading a true antes de la llamada al servicio
-    switchMap(([page, pageSize, search, sort]) => {
-      let params = new HttpParams().set('page', page.toString()).set('limit', pageSize.toString());
-      if (search && this.searchableFields.length > 0) {
-        params = params.set('search', search);
-        this.searchableFields.forEach(field => { params = params.append('searchFields', field as string); });
-      }
-      params = params.set('orderBy', sort.orderBy as string).set('orderDir', sort.orderDir);
-
-      return this.service.getAll(params).pipe(
-        catchError(err => {
-          console.error('Error fetching data:', err);
-          // Asegura que isLoading se desactive incluso si hay un error
-          this.isLoading.set(false);
-          return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
-        }),
-        // Mueve finalize aquí para asegurar que se ejecuta después de que la llamada al servicio se completa (éxito o error)
-        finalize(() => this.isLoading.set(false))
-      );
-    })
-  );
+  private pagedResponse$!: Observable<PagedResponse<T>>;
 
   // --- Estado Público (Signals) ---
-  protected pagedResponse = toSignal(this.pagedResponse$, {
-    // Proporcionamos un valor inicial para evitar errores antes de la primera emisión
-    initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } as PagedResponse<T>
-  });
+  protected pagedResponse!: Signal<PagedResponse<T>>;
   data = computed(() => this.pagedResponse()?.data ?? []);
   totalRecords = computed(() => this.pagedResponse()?.total ?? 0);
   isLoading = signal(true);
   selectionService!: SelectionService<T>;
+  isSelectionEmpty$!: Observable<boolean>;
 
   // --- Gestión de Modales ---
   isModalVisible = signal(false);
@@ -116,9 +89,44 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   ngOnInit(): void {
     runInInjectionContext(this.injector, () => {
       this.selectionService = new SelectionService<T>();
+      this.isSelectionEmpty$ = this.selectionService.selectionChanges.pipe(map(selection => selection.size === 0));
+
+      // Stream principal que reacciona a los cambios y carga los datos
+      this.pagedResponse$ = combineLatest([
+        this.page$,
+        this.pageSize$,
+        this.search$.pipe(debounceTime(300), distinctUntilChanged()),
+        this.sort$.pipe(startWith({ orderBy: 'id' as keyof T, orderDir: 'asc' })),
+        this.refresh$.pipe(startWith(null)),
+      ]).pipe(
+        tap(() => this.isLoading.set(true)),
+        switchMap(([page, pageSize, search, sort]) => {
+          let params = new HttpParams().set('page', page.toString()).set('limit', pageSize.toString());
+          if (search && this.searchableFields.length > 0) {
+            params = params.set('search', search);
+            this.searchableFields.forEach(field => { params = params.append('searchFields', field as string); });
+          }
+          if (sort) {
+            params = params.set('orderBy', sort.orderBy as string).set('orderDir', sort.orderDir);
+          }
+
+          return this.service.getAll(params).pipe(
+            catchError(err => {
+              console.error('Error fetching data:', err);
+              return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
+            }),
+            finalize(() => this.isLoading.set(false))
+          );
+        }),
+        shareReplay(1) // Cachea la última respuesta para evitar llamadas duplicadas
+      );
+
+      // Convertimos el observable a signal dentro del contexto de inyección
+      this.pagedResponse = toSignal(this.pagedResponse$, {
+        initialValue: { data: [], total: 0, page: 1, limit: 10, totalPages: 0, hasNextPage: false, hasPrevPage: false } as PagedResponse<T>,
+        injector: this.injector,
+      });
     });
-    // Ahora, pagedResponse$ y pagedResponse se inicializan como inicializadores de campo,
-    // por lo que no es necesario reasignarlos aquí.
     // --- Generar Botones del Modal usando ActionService ---
     this.setupModalButtons();
   }
@@ -161,7 +169,7 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   openModal(item: T | null = null): void {
     this.editingItem.set(item);
     if (item) {
-      this.form.patchValue(item as any);
+      this.form.patchValue(item);
     } else {
       this.form.reset();
     }
@@ -204,7 +212,7 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
         }),
         catchError(err => {
           console.error('Error saving data:', err);
-          return of(null as any);
+          return EMPTY;
         }),
         finalize(() => this.isSaving.set(false))
       ).subscribe()
@@ -225,6 +233,28 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
         }),
         catchError(err => {
           console.error('Error deleting data:', err);
+          return of(null as any);
+        }),
+        finalize(() => this.isDeleting.set(false))
+      ).subscribe()
+    );
+  }
+
+  onDeleteSelected(): void {
+    const selectedIds = this.selectionService.getSelectedIds();
+    if (selectedIds.length === 0) {
+      return;
+    }
+
+    this.isDeleting.set(true);
+    this.subscription.add(
+      this.service.deleteMany(selectedIds).pipe(
+        tap(() => {
+          this.refreshData();
+          this.selectionService.clear();
+        }),
+        catchError(err => {
+          console.error('Error deleting selected data:', err);
           return of(null as any);
         }),
         finalize(() => this.isDeleting.set(false))

@@ -44,7 +44,7 @@ export interface ToolbarButtonConfig {
         [ui-button-color]="button.color || 'primary'"
         [ui-button-variant]="button.variant || 'solid'"
         [ui-button-size]="button.size || 'm'"
-        [ui-button-loading]="(button.disabled$ | async) ?? false"
+        [ui-button-disabled]="(button.disabled$ | async) ?? false"
 
         [ui-icon-name]="button.iconName"
         [ui-icon-position]="button.iconPosition || 'left'"

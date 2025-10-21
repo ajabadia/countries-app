@@ -23,7 +23,8 @@
 
   <app-ui-paginator
     [uiPaginatorTotalRecords]="totalRecords()"
-    [uiPaginatorPageSize]="(pageSize$ | async) ?? 10"
-    (uiPaginatorPageChange)="onPageChange($event.page)"
+    [uiPaginatorPage]="(page$ | async) ?? 1"
+    [uiPaginatorPageSize]="(pageSize$ | async) ?? 50"
+    (uiPaginatorPageChange)="onPaginatorChange($event)"
   />
 </div>

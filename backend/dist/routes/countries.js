@@ -1,7 +1,7 @@
 // backend/routes/countries.ts
 import { Router } from 'express';
 import { body, param } from 'express-validator';
-import { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, getCountryTranslations } from '../controllers/countriesController.js';
+import { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, deleteManyCountries, getCountryTranslations } from '../controllers/countriesController.js';
 import { protect } from '../middleware/authMiddleware.js';
 const router = Router();
 // Reglas de validación para la creación de un país.
@@ -30,6 +30,8 @@ router.get('/:id', param('id').isString(), getCountryById);
 router.post('/', protect, countryValidationRules, createCountry);
 // PUT /api/countries/:id -> Actualiza un país existente.
 router.put('/:id', protect, countryUpdateValidationRules, updateCountry);
+// DELETE /api/countries -> Elimina múltiples países.
+router.delete('/', protect, deleteManyCountries);
 // DELETE /api/countries/:id -> Elimina un país.
 router.delete('/:id', protect, param('id').isString().withMessage('ID must be a string in the URL'), deleteCountry);
 export default router;

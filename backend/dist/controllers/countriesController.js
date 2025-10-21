@@ -17,7 +17,7 @@ const sanitizeCountry = (body) => {
         sanitizedData.numeric = numeric;
     return sanitizedData;
 };
-const { getAll: getAllCountries, getById: getCountryById, create: createCountry, update: updateCountry, delete: deleteCountry, } = createCrudController(countriesService, 'Country', sanitizeCountry);
+const { getAll: getAllCountries, getById: getCountryById, create: createCountry, update: updateCountry, delete: deleteCountry, removeMany: deleteManyCountries, } = createCrudController(countriesService, 'Country', sanitizeCountry);
 /**
  * Obtiene todas las traducciones para un país específico.
  */
@@ -32,5 +32,5 @@ const getCountryTranslations = asyncHandler(async (req, res) => {
     const translations = await multilingualnamesService.findByEntityId(id);
     res.json(translations);
 });
-export { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, getCountryTranslations };
+export { getAllCountries, getCountryById, createCountry, updateCountry, deleteCountry, deleteManyCountries, getCountryTranslations };
 //# sourceMappingURL=countriesController.js.map

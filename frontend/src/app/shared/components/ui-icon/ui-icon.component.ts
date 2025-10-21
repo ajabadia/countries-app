@@ -13,6 +13,7 @@ import { Observable, of } from 'rxjs';
 import { SafeHtml } from '@angular/platform-browser';
 import { IconService, UiIconType, UiIconSize } from '@shared/services/icon.service';
 
+export type UiIconTypeExtended = UiIconType | 'flag';
 export type UiIconRender = 'svg' | 'image';
 
 @Component({
@@ -36,7 +37,7 @@ export class UiIconComponent implements OnChanges {
 
   // --- Entradas (Inputs) ---
   @Input({ alias: 'ui-icon-name', required: true }) name!: string;
-  @Input({ alias: 'ui-icon-type' }) type: UiIconType = 'system';
+  @Input({ alias: 'ui-icon-type' }) type: UiIconTypeExtended = 'system';
   @Input({ alias: 'ui-icon-render-type' }) renderType: UiIconRender = 'svg';
   @Input({ alias: 'ui-icon-size' }) size: UiIconSize | 'inherit' | string = 'm';
   @Input({ alias: 'ui-icon-color' }) color?: string;

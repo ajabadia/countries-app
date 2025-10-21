@@ -6,7 +6,7 @@ import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { Observable, of } from 'rxjs';
 import { map, shareReplay, catchError } from 'rxjs/operators';
 
-export type UiIconType = 'system' | 'flag' | string;
+export type UiIconType = 'system' | 'flag' | 'circle-flag' | 'globe' | 'lang-circle-flag' | 'other-circle-flag' | string;
 export type UiIconSize = 'xs' | 's' | 'm' | 'l' | 'xl';
 
 @Injectable({
@@ -33,19 +33,41 @@ export class IconService {
       return this.iconCache.get(cacheKey)!;
     }
 
-    // Si no está en caché, crear la petición HTTP.
-    const iconUrl = `/assets/icons/${type}/${name}.svg`;
+    // Si no está en caché, crear la petición HTTP
+    let typePath = type;
+    // Usamos un mapeo para determinar la ruta, es más limpio que un switch largo.
+    const typeToPathMap: { [key: string]: string } = {
+      'flag': 'flags',
+      'circle-flag': 'flags/circle-flags',
+      'globe': 'globes',
+      'lang-circle-flag': 'flags/circle-flags/language',
+      'other-circle-flag': 'flags/circle-flags/other',
+      'system': 'system'
+    };
+
+    // Si el tipo existe en el mapa, usamos su ruta.
+    // Si no, usamos 'system' como fallback por defecto.
+    if (typeToPathMap[type]) {
+      typePath = typeToPathMap[type];
+    } else {
+      typePath = 'system';
+    }
+
+    const iconUrl = `/assets/icons/${typePath}/${name}.svg`;
     const icon$ = this.http.get(iconUrl, { responseType: 'text' }).pipe(
       // Sanitizar el SVG para prevenir ataques XSS al usar [innerHTML].
       map(svg => this.sanitizer.bypassSecurityTrustHtml(svg)),
       // En caso de error, intentar cargar un icono de fallback.
       catchError(() => {
         console.warn(`Icon "${name}" not found at ${iconUrl}`);
-        // Evita bucle infinito si el propio 'unknown' no se encuentra.
-        if (name === 'unknown') {
-          return of(this.sanitizer.bypassSecurityTrustHtml('?')); // Fallback final
+        // Si el icono que ha fallado es el propio 'UNK',
+        // evitamos un bucle infinito y devolvemos un SVG de fallback final.
+        if (name === 'UNK') {
+          const fallbackSvg = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="50" font-size="50" text-anchor="middle" dy=".3em">?</text></svg>`;
+          return of(this.sanitizer.bypassSecurityTrustHtml(fallbackSvg));
         }
-        return this.getIcon('unknown', 'system');
+        // Forzamos la búsqueda del icono de fallback en la categoría 'system'.
+        return this.getIcon('UNK', 'system');
       }),
       // shareReplay(1) es la clave: cachea el último valor emitido y lo comparte
       // con todos los suscriptores, asegurando que la petición HTTP solo se haga una vez.
@@ -65,6 +87,6 @@ export class IconService {
    * @returns La ruta completa al recurso de imagen.
    */
   getIconPath(name: string, type: UiIconType, extension: string): string {
-    return `/assets/icons/${type}/${name}.${extension}`;
+      return `/assets/icons/${type}/${name}.${extension}`;
   }
 }

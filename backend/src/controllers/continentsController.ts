@@ -15,6 +15,7 @@ const {
   create: createContinent,
   update: updateContinent,
   delete: deleteContinent,
+  removeMany: deleteManyContinents,
 } = createCrudController(continentsService, 'Continent', sanitizeContinent);
 export {
   getAllContinents,
@@ -22,4 +23,5 @@ export {
   createContinent,
   updateContinent,
   deleteContinent,
+  deleteManyContinents,
 };

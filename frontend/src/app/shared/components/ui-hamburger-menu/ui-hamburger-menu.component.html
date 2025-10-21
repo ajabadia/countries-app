@@ -11,7 +11,15 @@
 </button>
 
 <!-- Fondo superpuesto -->
-<div class="hamburger-menu__overlay" [class.is-open]="isMenuOpen()" (click)="toggleMenu()"></div>
+<div
+  class="hamburger-menu__overlay"
+  [class.is-open]="isMenuOpen()"
+  (click)="toggleMenu()"
+  (keydown.enter)="toggleMenu()"
+  role="button"
+  tabindex="0"
+  aria-label="Cerrar menú"
+></div>
 
 <!-- Panel lateral del menú -->
 <aside class="hamburger-menu__panel" [class.is-open]="isMenuOpen()">

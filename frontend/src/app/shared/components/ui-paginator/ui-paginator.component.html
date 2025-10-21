@@ -56,7 +56,7 @@
     <!-- Selector de tamaño de página -->
     <div class="ui-paginator__block">
       <label for="pageSizeSelect">Registros:</label>
-      <select id="pageSizeSelect" class="ui-paginator__select" [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange($event)">
+      <select id="pageSizeSelect" class="ui-paginator__select" [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange(+$event)">
         @for (size of pageSizeOptions(); track size) {
           <option [value]="size">{{ size }}</option>
         }

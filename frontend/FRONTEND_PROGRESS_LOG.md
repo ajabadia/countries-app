@@ -1,5 +1,53 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
 
+### 16. Completado del Registro de Acciones de Navegación y Toolbar
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Adición de todas las acciones de navegación y de barra de herramientas al `ActionService`.
+-   **Propósito**: Asegurar que el `ActionService` actúe como una fuente de verdad completa para todos los elementos interactivos de la UI, permitiendo que la navegación y las operaciones se construyan de forma dinámica y centralizada.
+-   **Cambios Realizados**:
+    -   Se han añadido al array `allActions` en `action.service.ts` las acciones para las páginas de autenticación (`login`, `register`).
+    -   Se han añadido las acciones para todas las páginas de administración (`countries`, `languages`, `users`, `continents`, `regions`, `subregions`, `currencies`).
+    -   Se han añadido las acciones de la barra de herramientas (`toolbar-save`, `toolbar-cancel`, `toolbar-add`, `toolbar-delete-selected`).
+    -   Se han corregido los nombres de los iconos para alinearlos con el `IconService`.
+-   **Beneficio**: El `ActionService` está ahora completo. El menú principal mostrará todas las secciones disponibles y los componentes como `BaseAdminDirective` podrán obtener la configuración de sus botones desde esta fuente central.
+
+### 13. Implementación de Carga Diferida (Lazy Loading)
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Configuración y verificación de la estrategia de carga diferida para las rutas de la aplicación.
+-   **Propósito**: Mejorar drásticamente el rendimiento inicial de la aplicación (Time to Interactive) al reducir el tamaño del paquete de JavaScript principal.
+-   **Cambios Realizados**:
+    -   **`app.routes.ts`**: Se ha configurado la ruta `/admin` para que utilice `loadChildren`. Esto agrupa todas las rutas de la sección de administración en un "chunk" que se carga bajo demanda.
+    -   **`admin.routes.ts`**: Dentro de la sección de administración, cada sub-ruta (`dashboard`, `users`, etc.) utiliza `loadComponent` para cargar los componentes de página de forma individual y diferida.
+-   **Beneficio**: El tiempo de carga inicial de la aplicación es significativamente más rápido, ya que el navegador solo descarga el código esencial para la página de inicio. El resto de las funcionalidades se cargan de forma transparente a medida que el usuario navega por la aplicación, mejorando la experiencia de usuario y la escalabilidad del enrutamiento.
+-   **Nota**: Esta es una de las "Mejoras Futuras" clave mencionadas en la documentación principal, y con esto se da por completada.
+
+### 12. Corrección de la Funcionalidad de Borrado Múltiple
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Refactorización de la lógica de borrado múltiple en `BaseAdminDirective`.
+-   **Propósito**: Solucionar la inconsistencia crítica entre el frontend y el backend, donde el frontend intentaba enviar un array de IDs en una petición `DELETE` que el backend no soportaba.
+-   **Cambios Realizados**:
+    -   Se ha modificado el método `onDeleteSelected()` en `base-admin.directive.ts`.
+    -   La nueva implementación itera sobre la lista de IDs seleccionados.
+    -   Utiliza `forkJoin` para ejecutar una serie de peticiones `DELETE` individuales en paralelo, una por cada ID.
+    -   Tras completarse todas las peticiones, se muestra una única notificación de éxito y se recargan los datos de la tabla.
+-   **Beneficio**: La funcionalidad de "Eliminar Seleccionados" ahora es completamente funcional y está alineada con la API del backend sin necesidad de modificar este último. Se ha eliminado una inconsistencia arquitectónica clave.
+-   **Nota**: Este cambio se realizó pero no se documentó inicialmente, lo que llevó a que la documentación (`README.md`) quedara desactualizada. Este registro corrige dicha omisión.
+
+### 11. Revisión y Acción sobre el Informe de Auditoría
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Revisión de los hallazgos del `AUDIT_REPORT.md` del 2025-10-19 y confirmación de su estado.
+-   **Propósito**: Asegurar que las desviaciones y oportunidades de mejora identificadas en la auditoría son abordadas, y documentar su resolución para evitar trabajo redundante.
+-   **Estado de los Hallazgos**:
+    -   **Uso de `@extend` en SCSS**: **Solucionado**. Este punto fue resuelto en el refactor de tipografía del 2025-10-20, donde se reemplazó `@extend` por un mixin dinámico (`heading-styles`).
+    -   **Lógica de Agrupación en `UiHamburgerMenuComponent`**: **Solucionado**. La lógica de agrupación y mapeo de títulos fue centralizada en `ActionService` el 2025-10-20, siguiendo las recomendaciones.
+    -   **Documentación Desactualizada (`frontend/README.md`)**: **Solucionado**. El `README.md` del frontend fue corregido para contener la información general del proyecto, no la de los estilos.
+    -   **Cabeceras de Archivo Inconsistentes**: **Pendiente**. Es una tarea de bajo impacto que se irá corrigiendo progresivamente a medida que se modifiquen los archivos afectados.
+-   **Beneficio**: Se tiene constancia de que el informe de auditoría ha sido procesado y sus puntos principales ya están resueltos, mejorando la eficiencia del desarrollo al no re-evaluar problemas ya solucionados.
+
 ### 10. Implementación y Depuración del Dashboard de Administración
 
 -   **Fecha**: 2025-10-20

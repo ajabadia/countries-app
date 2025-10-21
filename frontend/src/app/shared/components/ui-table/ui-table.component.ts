@@ -6,10 +6,11 @@ import {
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
-  ContentChild,
+  ContentChildren,
   TemplateRef,
   OnChanges,
   SimpleChanges,
+  QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { SelectionService } from '@shared/services/selection.service';
@@ -34,9 +35,9 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
 
   @Output('ui-table-sort-change') sortChange = new EventEmitter<Sort<T>>();
 
-  // Permite al componente padre proyectar una plantilla para la columna de acciones
-  @ContentChild('actions', { read: TemplateRef })
-  actionsTemplate: TemplateRef<{ $implicit: T }> | null = null;
+  // Usamos ContentChildren para buscar todas las plantillas proyectadas.
+  @ContentChildren(TemplateRef)
+  private templates: QueryList<TemplateRef<unknown>> | null = null;
 
   // Estado para el checkbox de la cabecera con 3 estados.
   public headerCheckboxState: UiToggleState = 'ui-toggle-unchecked';
@@ -48,15 +49,36 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
     }
   }
 
+  // Propiedad para acceder a la plantilla de acciones de forma más sencilla
+  get actionsTemplate(): TemplateRef<unknown> | null {
+    return this.getCellTemplate('actions');
+  }
+
+  // Helper para encontrar la plantilla de una columna específica
+  getCellTemplate(columnKey: keyof T | string): TemplateRef<unknown> | null {
+    if (!this.templates) {
+      return null;
+    }
+    // Buscamos una plantilla que tenga un nombre de variable de plantilla local
+    // que coincida con 'col_' + la clave de la columna (ej. #col_defaultname).
+    // Esta es una forma robusta de identificar plantillas sin directivas personalizadas.
+    const template = this.templates.find((tpl: TemplateRef<unknown>) => {
+      // Esta es una propiedad interna de Angular, pero es la forma más fiable
+      // de obtener el nombre de la variable de plantilla (#nombre).
+      return (tpl as any)._declarationTContainer?.localNames?.includes(`col_${String(columnKey)}`);
+    });
+    return template || null;
+  }
+
   // Helper para acceder al valor de una celda, incluso si la clave es anidada (ej: 'user.name')
-  getCellValue(item: T, key: keyof T | string): any {
+  getCellValue(item: T, key: keyof T | string): unknown {
     const keys = (key as string).split('.');
-    let value: any = item;
+    let value: unknown = item;
     for (const k of keys) {
       if (value === null || value === undefined) {
         return '';
       }
-      value = value[k];
+      value = (value as Record<string, unknown>)[k];
     }
     return value;
   }

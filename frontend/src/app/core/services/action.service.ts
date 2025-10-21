@@ -5,73 +5,119 @@ import {
   ActionCategory,
   AppAction,
   GroupedAppAction,
-  ToolbarButtonConfig,
 } from '@core/types/action.types';
 
 @Injectable({
   providedIn: 'root',
 })
 export class ActionService {
+  // --- Definición de todas las acciones de la aplicación ---
   private allActions: AppAction[] = [
-    // Public
+    // --- Acciones de Navegación Pública ---
     {
       id: 'home',
       label: 'Inicio',
-      icon: 'icon-home',
+      icon: 'home',
       category: 'public',
+      type: 'nav',
       routerLink: '/',
     },
     {
-      id: 'countries',
-      label: 'Países',
-      icon: 'icon-country',
-      category: 'public',
-      routerLink: '/countries',
+      id: 'auth-login',
+      label: 'Iniciar Sesión',
+      icon: 'login',
+      category: 'auth',
+      type: 'nav',
+      routerLink: '/auth/login',
     },
-    // Admin
+    {
+      id: 'auth-register',
+      label: 'Registro',
+      icon: 'person_add',
+      category: 'auth',
+      type: 'nav',
+      routerLink: '/auth/register',
+    },
+
+    // --- Acciones de Navegación de Administración ---
     {
       id: 'admin-dashboard',
       label: 'Dashboard',
-      icon: 'icon-dashboard',
+      icon: 'dashboard',
       category: 'admin',
+      type: 'nav',
       routerLink: '/admin',
     },
     {
       id: 'admin-countries',
-      label: 'Gestionar Países',
-      icon: 'icon-country',
+      label: 'Países',
+      icon: 'flag',
       category: 'admin',
+      type: 'nav',
       routerLink: '/admin/countries',
     },
     {
-      id: 'admin-users',
-      label: 'Gestionar Usuarios',
-      icon: 'icon-user',
+      id: 'admin-languages',
+      label: 'Idiomas',
+      icon: 'language',
       category: 'admin',
+      type: 'nav',
+      routerLink: '/admin/languages',
+    },
+    {
+      id: 'admin-users',
+      label: 'Usuarios',
+      icon: 'group',
+      category: 'admin',
+      type: 'nav',
       routerLink: '/admin/users',
     },
-    // User
     {
-      id: 'user-profile',
-      label: 'Mi Perfil',
-      icon: 'icon-user',
-      category: 'user',
-      routerLink: '/profile',
+      id: 'admin-continents',
+      label: 'Continentes',
+      icon: 'public',
+      category: 'admin',
+      type: 'nav',
+      routerLink: '/admin/continents',
     },
-    // General
     {
-      id: 'general-settings',
-      label: 'Configuración',
-      icon: 'icon-settings',
-      category: 'general',
-      routerLink: '/settings',
+      id: 'admin-regions',
+      label: 'Regiones',
+      icon: 'travel_explore',
+      category: 'admin',
+      type: 'nav',
+      routerLink: '/admin/regions',
     },
+    {
+      id: 'admin-subregions',
+      label: 'Subregiones',
+      icon: 'map',
+      category: 'admin',
+      type: 'nav',
+      routerLink: '/admin/subregions',
+    },
+    {
+      id: 'admin-currencies',
+      label: 'Monedas',
+      icon: 'payments',
+      category: 'admin',
+      type: 'nav',
+      routerLink: '/admin/currencies',
+    },
+
+    // --- Acciones de Barra de Herramientas (Toolbar) ---
+    { id: 'toolbar-save', label: 'Guardar', icon: 'save', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-cancel', label: 'Cancelar', icon: 'cancel', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-add', label: 'Añadir Nuevo', icon: 'add', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-delete-selected', label: 'Eliminar Seleccionados', icon: 'delete', category: 'toolbar', type: 'button' },
   ];
 
+  // --- Títulos para las categorías de acciones ---
   private categoryTitles: Record<ActionCategory, string> = {
     public: 'Navegación Principal',
     admin: 'Administración',
-    user: 'Mi Cuenta',
+    auth: 'Cuenta',
+    toolbar: 'Operaciones',
     general: 'General',
   };
 
@@ -79,15 +125,17 @@ export class ActionService {
     return this.allActions.filter(action => categories.includes(action.category));
   }
 
-  /**
-   * Obtiene acciones filtradas por categoría y las devuelve agrupadas.
-   * @param categories Las categorías de acciones a obtener.
-   * @returns Un array de grupos de acciones, cada uno con su título y lista de acciones.
-   */
-  getGroupedActions(categories: ActionCategory[]): GroupedAppAction[] {
-    const filteredActions = this.getActions(categories);
+  getNavActions(categories: ActionCategory[]): AppAction[] {
+    return this.allActions.filter(action => categories.includes(action.category) && action.type === 'nav');
+  }
 
-    const groupedMap = filteredActions.reduce(
+  getGroupedNavActions(categories: ActionCategory[]): GroupedAppAction[] {
+    const navActions = this.getNavActions(categories);
+    return this._groupActions(navActions);
+  }
+
+  private _groupActions(actions: AppAction[]): GroupedAppAction[] {
+    const groupedMap = actions.reduce(
       (acc, action) => {
         const group = acc.get(action.category) || [];
         group.push(action);
@@ -106,7 +154,7 @@ export class ActionService {
     );
   }
 
-  private getCategoryTitle(category: ActionCategory): string {
+  getCategoryTitle(category: ActionCategory): string {
     return this.categoryTitles[category] || 'General';
   }
 
@@ -116,5 +164,32 @@ export class ActionService {
    */
   getAllCategories(): ActionCategory[] {
     return Object.keys(this.categoryTitles) as ActionCategory[];
+  }
+
+  /**
+   * Obtiene una acción específica por su ID.
+   * @param id El identificador único de la acción.
+   * @returns La acción correspondiente o undefined si no se encuentra.
+   */
+  getActionById(id: string): AppAction | undefined {
+    return this.allActions.find(action => action.id === id);
+  }
+
+  /**
+   * Obtiene un conjunto de acciones por sus IDs.
+   * @param ids Un array de identificadores de acción.
+   * @returns Un array con las acciones encontradas.
+   */
+  getActionsByIds(ids: string[]): AppAction[] {
+    return this.allActions.filter(action => ids.includes(action.id));
+  }
+
+  /**
+   * Obtiene todas las acciones de una categoría específica.
+   * @param category La categoría de acciones a obtener.
+   * @returns Un array con las acciones de esa categoría.
+   */
+  getActionsByCategory(category: ActionCategory): AppAction[] {
+    return this.allActions.filter(action => action.category === category);
   }
 }

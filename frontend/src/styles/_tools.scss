@@ -8,6 +8,8 @@
 // 2. Carga (`@use`) todos los estilos base, de componentes y de layout en el orden correcto.
 
 // --- 1. Reenvío de Herramientas ---
+@forward 'functions'; // Make sure this line exists and points to your functions file.
+@forward 'mixins';
 @forward 'variables';
 @forward 'variables-dark';
 @forward 'mixins-definitions';
@@ -19,3 +21,5 @@
 @use 'grid';
 @use 'components';
 @use 'theme';
+
+

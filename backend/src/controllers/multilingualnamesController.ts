@@ -20,6 +20,7 @@ const {
   create: createMultilingualName,
   update: updateMultilingualName,
   delete: deleteMultilingualName,
+  removeMany: deleteManyMultilingualNames,
 } = createCrudController(multilingualnamesService, 'MultilingualName', sanitizeMultilingualName);
 
 export {
@@ -28,4 +29,5 @@ export {
   createMultilingualName,
   updateMultilingualName,
   deleteMultilingualName,
+  deleteManyMultilingualNames,
 };

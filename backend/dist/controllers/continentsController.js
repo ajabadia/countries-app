@@ -8,6 +8,6 @@ const sanitizeContinent = (body) => {
         sanitizedData.defaultname = defaultname;
     return sanitizedData;
 };
-const { getAll: getAllContinents, getById: getContinentById, create: createContinent, update: updateContinent, delete: deleteContinent, } = createCrudController(continentsService, 'Continent', sanitizeContinent);
-export { getAllContinents, getContinentById, createContinent, updateContinent, deleteContinent, };
+const { getAll: getAllContinents, getById: getContinentById, create: createContinent, update: updateContinent, delete: deleteContinent, removeMany: deleteManyContinents, } = createCrudController(continentsService, 'Continent', sanitizeContinent);
+export { getAllContinents, getContinentById, createContinent, updateContinent, deleteContinent, deleteManyContinents, };
 //# sourceMappingURL=continentsController.js.map

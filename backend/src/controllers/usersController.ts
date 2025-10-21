@@ -14,14 +14,24 @@ const sanitizeUser = (body: any): Partial<User> => {
   return sanitizedData;
 };
 
-const usersController = createCrudController<User>(
+const {
+  getAll: getAllUsers,
+  getById: getUserById,
+  create: createUser,
+  update: updateUser,
+  delete: deleteUser,
+  removeMany: deleteManyUsers,
+} = createCrudController<User>(
   usersService,
   'User', // Nombre de la entidad
   sanitizeUser // Función para limpiar el body
 );
 
-// Aquí podrías añadir métodos específicos para el controlador de usuarios si los necesitaras.
-// Por ejemplo:
-// usersController.changePassword = ...
-
-export default usersController;
+export {
+  getAllUsers,
+  getUserById,
+  createUser,
+  updateUser,
+  deleteUser,
+  deleteManyUsers,
+};

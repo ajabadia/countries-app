@@ -15,6 +15,6 @@ const sanitizeMultilingualName = (body) => {
         sanitizedData.type = type;
     return sanitizedData;
 };
-const { getAll: getAllMultilingualNames, getById: getMultilingualNameById, create: createMultilingualName, update: updateMultilingualName, delete: deleteMultilingualName, } = createCrudController(multilingualnamesService, 'MultilingualName', sanitizeMultilingualName);
-export { getAllMultilingualNames, getMultilingualNameById, createMultilingualName, updateMultilingualName, deleteMultilingualName, };
+const { getAll: getAllMultilingualNames, getById: getMultilingualNameById, create: createMultilingualName, update: updateMultilingualName, delete: deleteMultilingualName, removeMany: deleteManyMultilingualNames, } = createCrudController(multilingualnamesService, 'MultilingualName', sanitizeMultilingualName);
+export { getAllMultilingualNames, getMultilingualNameById, createMultilingualName, updateMultilingualName, deleteMultilingualName, deleteManyMultilingualNames, };
 //# sourceMappingURL=multilingualnamesController.js.map

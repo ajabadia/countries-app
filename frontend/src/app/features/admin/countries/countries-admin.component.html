@@ -12,6 +12,14 @@
     />
   </div>
 
+  <!-- Ejemplo de uso dentro de ui-table-columns -->
+  <!--
+  {
+    field: 'defaultname',
+    header: 'Name',
+    template: (row: any) => `<app-ui-icon ui-icon-name="${row.alpha2Code.toLowerCase()}" ui-icon-type="flag" ui-icon-size="s"></app-ui-icon> ${row.defaultname}`
+  }
+  -->
   <app-ui-table
     [ui-table-columns]="columns"
     [ui-table-data]="data()"
@@ -19,11 +27,24 @@
     [ui-table-selection]="selectionService"
     [ui-table-is-loading]="isLoading()"
     (ui-table-sort-change)="onSortChange($event)"
-  />
+  >
+    <!-- 
+      Aquí definimos la plantilla para la celda de la columna 'defaultname'.
+      El nombre 'col_defaultname' debe coincidir con la lógica en `ui-table.component.ts`.
+      La variable `let-country` recibe el objeto de la fila (el `$implicit` del contexto).
+    -->
+    <ng-template #col_defaultname let-country>
+      <div style="display: flex; align-items: center; gap: 0.5rem;">
+        <app-ui-icon [ui-icon-name]="country.id" ui-icon-type="circle-flag" ui-icon-size="s"></app-ui-icon>
+        <span>{{ country.defaultname }}</span>
+      </div>
+    </ng-template>
+  </app-ui-table>
 
   <app-ui-paginator
     [uiPaginatorTotalRecords]="totalRecords()"
-    [uiPaginatorPageSize]="(pageSize$ | async) ?? 10"
-    (uiPaginatorPageChange)="onPageChange($event.page)"
+    [uiPaginatorPage]="(page$ | async) ?? 1"
+    [uiPaginatorPageSize]="(pageSize$ | async) ?? 50"
+    (uiPaginatorPageChange)="onPaginatorChange($event)"
   />
 </div>

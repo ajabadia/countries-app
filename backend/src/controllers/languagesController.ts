@@ -17,6 +17,7 @@ const {
   create: createLanguage,
   update: updateLanguage,
   delete: deleteLanguage,
+  removeMany: deleteManyLanguages,
 } = createCrudController(languagesService, 'Language', sanitizeLanguage);
 export {
   getAllLanguages,
@@ -24,4 +25,5 @@ export {
   createLanguage,
   updateLanguage,
   deleteLanguage,
+  deleteManyLanguages,
 };

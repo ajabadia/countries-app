@@ -11,6 +11,6 @@ const sanitizeDependency = (body) => {
         sanitizedData.dependent_id = dependent_id;
     return sanitizedData;
 };
-const { getAll: getAllDependencies, getById: getDependencyById, create: createDependency, update: updateDependency, delete: deleteDependency, } = createCrudController(dependenciesService, 'Dependency', sanitizeDependency);
-export { getAllDependencies, getDependencyById, createDependency, updateDependency, deleteDependency };
+const { getAll: getAllDependencies, getById: getDependencyById, create: createDependency, update: updateDependency, delete: deleteDependency, removeMany: deleteManyDependencies, } = createCrudController(dependenciesService, 'Dependency', sanitizeDependency);
+export { getAllDependencies, getDependencyById, createDependency, updateDependency, deleteDependency, deleteManyDependencies };
 //# sourceMappingURL=dependenciesController.js.map

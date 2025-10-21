@@ -1,4 +1,4 @@
-<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-accordion\README.md | Last Modified: 2025-10-19 -->
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-accordion\README.md | Last Modified: 2025-10-21 -->
 
 # UI Accordion Component (`<app-ui-accordion>`)
 
@@ -94,3 +94,4 @@ Se define en `ui-accordion.types.ts`.
 | `content`  | `TemplateRef<any>`  | Sí        | La referencia a la plantilla (`<ng-template>`) que contiene el cuerpo del panel. |
 | `disabled` | `boolean`           | No        | Si es `true`, el panel no se puede abrir o cerrar.                       |
 | `expanded` | `boolean`           | No        | Si es `true`, el panel se mostrará expandido por defecto.                |
+| `data`     | `any`               | No        | Un objeto de datos opcional que se puede pasar al contexto de la plantilla. |

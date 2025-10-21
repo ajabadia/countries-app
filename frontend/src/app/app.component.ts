@@ -5,6 +5,7 @@ import { CommonModule } from '@angular/common';
 import { RouterOutlet } from '@angular/router';
 import { UiHamburgerMenuComponent } from '@shared/components/ui-hamburger-menu/ui-hamburger-menu.component';
 import { UiLogoComponent } from '@shared/components/ui-logo/ui-logo.component';
+import { UiToastContainerComponent } from '@shared/components/ui-toast-container/ui-toast-container.component';
 import { LayoutService } from '@core/services/layout.service';
 
 @Component({
@@ -15,6 +16,7 @@ import { LayoutService } from '@core/services/layout.service';
     RouterOutlet,
     UiHamburgerMenuComponent,
     UiLogoComponent,
+    UiToastContainerComponent,
   ],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss'],

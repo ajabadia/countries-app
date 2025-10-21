@@ -1,6 +1,7 @@
 Dime "hola estoy leyendo las instrucciones"
 Lee el archivo README.MD del proyecto e intenta comprender el proyecto en base a él.
 Entra en la carpeta frontend y:
-- lee README.md, gemini.md, FRONTEND_ARCHITECTURE.md, FRONTEND_PROGRESS_LOG.md, BACKEND_API_GUIDE.md, BACKEND_API_REFERENCE.md e intenta comprenderlos. Si detectas incoherencias, dímelo para actualizarlos.
-- Lee LESSONS_LEARNED.md y AUDIT_REPORT.md para comprender un poco mejor el proyecto, aunque la auditoría puede que esté desactualizada.
+- lee README.md, gemini.md, FRONTEND_ARCHITECTURE.md, FRONTEND_PROGRESS_LOG.md, BACKEND_API_GUIDE.md, BACKEND_API_REFERENCE.md e intenta comprenderlos. Si detectas incoherencias o que estén desactualizados, dímelo para revisarlos
+- Lee LESSONS_LEARNED.md y AUDIT_REPORT.md para comprender un poco mejor el proyecto, aunque la auditoría puede que esté desactualizada, no lo tomes como algo cierto.
 - Lee WORKING_GUIDELINES.md y tómalo como parte de tu prompt (destílatelo para que te sea más eficiente).
+- Ten en cuenta solo lo que hay en los directorios src del frontend y el backend, salvo si tienes que ir a la raíz para hacer algún ajuste en algún JSON.

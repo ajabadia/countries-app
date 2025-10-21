@@ -8,6 +8,7 @@ export interface TableColumn<T> {
   key: keyof T | string; // 'string' para poder acceder a propiedades anidadas si fuera necesario
   label: string;
   sortable?: boolean;
+  template?: boolean; // Indica si la columna usará una plantilla personalizada en lugar de renderizar texto.
   type?: 'text' | 'date' | 'number'; // El tipo de dato, para aplicar formatos especiales.
   cssClass?: string; // Clases CSS adicionales para la celda o cabecera.
 }

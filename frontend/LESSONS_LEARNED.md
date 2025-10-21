@@ -1,5 +1,25 @@
 <!-- File: d:\desarrollos\countries2\frontend\LESSONS_LEARNED.md | Last Modified: 2025-10-19 -->
 
+## 2025-10-20: Depuración Final y Estabilización de la Compilación
+
+### 14. Sincronización de Tipos e Implementaciones
+
+**Lección:** Una cascada de errores de compilación (`TS2353`, `TS2322`) se originó al modificar la estructura de los objetos en `ActionService` (añadiendo la propiedad `type` y nuevas categorías) sin actualizar su "contrato", la interfaz `AppAction` en `action.types.ts`.
+
+**Conclusión:** Al modificar la estructura de datos que un servicio provee, es **mandatorio actualizar primero la definición de tipos (interfaz) correspondiente**. Esto mantiene la integridad del contrato entre el proveedor de datos y sus consumidores, y permite que el compilador de TypeScript ofrezca errores claros y localizados en lugar de una avalancha de fallos en cadena.
+
+### 15. Sensibilidad al Formato (Case) en los Bindings de Inputs
+
+**Lección:** Se produjeron errores de compilación (`NG8008`, `NG8002`) al intentar usar un componente con un input requerido. El error `Can't bind to 'uiIconName' since it isn't a known property` fue la clave.
+
+**Conclusión:** El nombre utilizado para el binding de un input en la plantilla HTML debe coincidir **exactamente** con el nombre de la propiedad o el alias definido en la clase del componente. En este caso, el input era `[ui-icon-name]` (kebab-case) y se estaba intentando usar `[uiIconName]` (camelCase). Esto resalta la importancia de revisar la API exacta del componente que se está consumiendo.
+
+### 16. Las Advertencias de Deprecación son Deuda Técnica Futura
+
+**Lección:** El compilador de Sass mostró una advertencia (`Deprecation Warning`) sobre el uso de la función global `unitless()`, sugiriendo `math.is-unitless()` en su lugar.
+
+**Conclusión:** Las advertencias de deprecación no son errores, pero ignorarlas es acumular deuda técnica. Indican que una funcionalidad será eliminada en futuras versiones y el código dejará de funcionar. Es una buena práctica corregir estas advertencias tan pronto como aparecen para asegurar la compatibilidad y mantenibilidad a largo plazo del código.
+
 # Lecciones Aprendidas del Proyecto
 
 Este documento resume las conclusiones y lecciones clave obtenidas durante el desarrollo para fomentar la mejora continua y evitar errores recurrentes.

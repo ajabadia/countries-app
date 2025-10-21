@@ -1,0 +1,7 @@
+<!-- File: d:/desarrollos/countries2/frontend/src/app/shared/components/ui-toast-container/ui-toast-container.component.html | Last Modified: 2025-10-20 -->
+
+<div class="ui-toast-container">
+  @for (toast of toasts(); track toast.id) {
+    <app-ui-toast [uiToastData]="toast" (uiToastClose)="toastService.remove($event)" />
+  }
+</div>

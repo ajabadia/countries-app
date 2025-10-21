@@ -5,11 +5,11 @@ import { TemplateRef } from '@angular/core';
 /**
  * Define la estructura de un único item para el componente de acordeón.
  */
-export interface AccordionItem {
+export interface AccordionItem<T = unknown> {
   id: string;
   title: string;
-  content: TemplateRef<any>; // La plantilla para el contenido del panel
+  content: TemplateRef<T>; // La plantilla para el contenido del panel
   disabled?: boolean; // Si el panel está deshabilitado
   expanded?: boolean; // Si el panel está expandido por defecto
-  data?: any;
+  data?: T;
 }

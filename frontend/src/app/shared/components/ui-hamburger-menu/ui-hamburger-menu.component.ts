@@ -4,7 +4,6 @@ import {
   ChangeDetectionStrategy,
   Component,
   effect,
-  computed,
   inject,
   signal,
   TemplateRef,
@@ -14,7 +13,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { ActionService } from '@core/services/action.service';
-import { ActionCategory, GroupedAppAction } from '@core/types/action.types';
+import { AppAction, GroupedAppAction } from '@core/types/action.types';
 import { UiAccordionComponent } from '@shared/components/ui-accordion/ui-accordion.component';
 import { AccordionItem } from '@shared/components/ui-accordion/ui-accordion.types';
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
@@ -39,7 +38,7 @@ export class UiHamburgerMenuComponent {
 
   isMenuOpen = signal(false);
 
-  menuLinkTemplate = viewChild.required<TemplateRef<any>>('menuLinkTemplate');
+  menuLinkTemplate = viewChild.required<TemplateRef<{ $implicit: AppAction[] }>>('menuLinkTemplate');
 
   // 1. Los items del acordeón ahora son un signal escribible, inicializado como vacío.
   accordionItems = signal<AccordionItem[]>([]);
@@ -51,7 +50,7 @@ export class UiHamburgerMenuComponent {
       const template = this.menuLinkTemplate();
       if (template) {
         const categories = this.actionService.getAllCategories();
-        const groupedActions = this.actionService.getGroupedActions(categories);
+        const groupedActions = this.actionService.getGroupedNavActions(categories);
 
         const items = groupedActions.map((group: GroupedAppAction) => ({
           id: group.category,

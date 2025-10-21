@@ -18,6 +18,7 @@ const {
   create: createDependency,
   update: updateDependency,
   delete: deleteDependency,
+  removeMany: deleteManyDependencies,
 } = createCrudController(dependenciesService, 'Dependency', sanitizeDependency);
 
-export { getAllDependencies, getDependencyById, createDependency, updateDependency, deleteDependency };
+export { getAllDependencies, getDependencyById, createDependency, updateDependency, deleteDependency, deleteManyDependencies };

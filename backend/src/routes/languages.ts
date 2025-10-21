@@ -7,6 +7,7 @@ import {
   createLanguage,
   updateLanguage,
   deleteLanguage,
+  deleteManyLanguages,
 } from '../controllers/languagesController.js';
 import { protect } from '../middleware/authMiddleware.js';
 
@@ -26,6 +27,7 @@ router.get('/', getAllLanguages);
 router.get('/:id', param('id').isString(), getLanguageById);
 router.post('/', protect, createValidationRules, createLanguage);
 router.put('/:id', protect, param('id').isString(), updateValidationRules, updateLanguage);
+router.delete('/', protect, deleteManyLanguages);
 router.delete('/:id', protect, param('id').isString(), deleteLanguage);
 
 export default router;
