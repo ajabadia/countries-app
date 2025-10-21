@@ -1,5 +1,20 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
 
+### 17. Implementación de Paginación "Cargar Más" y Corrección de PageSize
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Refactorización de la lógica de paginación en `BaseAdminDirective` para soportar un modo "Cargar Más" y corrección de un bug relacionado con el tamaño de página.
+-   **Propósito**: Solucionar el problema por el cual el cambio de tamaño de página no se reflejaba en la UI y mejorar la experiencia de usuario al explorar grandes conjuntos de datos.
+-   **Cambios Realizados**:
+    -   **Corrección de Bug**: Se ha añadido el método `onPageSizeChange` a `BaseAdminDirective` para manejar el evento emitido por el paginador, actualizando el `pageSize$` y reseteando la paginación.
+    -   **Lógica "Cargar Más"**:
+        -   El `signal` `data` en la directiva ahora es un `WritableSignal` para permitir la acumulación de registros.
+        -   Se ha utilizado el operador `scan` de RxJS en el stream principal para acumular los datos de las páginas sucesivas en lugar de reemplazarlos.
+        -   Se ha añadido un nuevo método `loadMore()` que simplemente incrementa el número de página.
+        -   Se ha creado un `computed signal` `canLoadMore` para controlar la visibilidad del nuevo control en la UI.
+    -   **UI**: Se ha añadido un enlace "Cargar más resultados..." en la plantilla de las páginas de administración, que aparece dinámicamente cuando hay más registros por cargar.
+-   **Beneficio**: El paginador ahora funciona correctamente al cambiar el tamaño de página. La nueva funcionalidad "Cargar Más" ofrece una alternativa más fluida a la paginación tradicional, mejorando la usabilidad en las tablas de administración.
+
 ### 16. Completado del Registro de Acciones de Navegación y Toolbar
 
 -   **Fecha**: 2025-10-20

@@ -1,0 +1,17 @@
+// File: d:/desarrollos/countries2/frontend/src/app/features/admin/countries/countries-admin.component.scss | Last Modified: 2025-10-20
+
+.load-more-container {
+  display: flex;
+  justify-content: flex-end;
+  padding: var(--space-m) 0;
+}
+
+.load-more-link {
+  color: var(--color-link);
+  text-decoration: none;
+  font-weight: 500;
+
+  &:hover {
+    text-decoration: underline;
+  }
+}

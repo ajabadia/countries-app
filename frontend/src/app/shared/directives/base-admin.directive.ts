@@ -31,6 +31,7 @@ import {
   tap,
   catchError,
   finalize,
+  scan,
   shareReplay,
   map,
 } from 'rxjs/operators';
@@ -69,7 +70,7 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
 
   // --- Estado Público (Signals) ---
   protected pagedResponse!: Signal<PagedResponse<T>>;
-  data = computed(() => this.pagedResponse()?.data ?? []);
+  data: WritableSignal<T[]> = signal([]); // ✅ Ahora es un signal escribible para poder acumular datos.
   totalRecords = computed(() => this.pagedResponse()?.total ?? 0);
   isLoading = signal(true);
   selectionService!: SelectionService<T>;
@@ -83,6 +84,9 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
   editingItem: WritableSignal<T | null> = signal(null);
   itemToDelete: WritableSignal<T | null> = signal(null);
   modalButtons: ToolbarButtonConfig[] = [];
+
+  // --- Nuevo estado para "Cargar Más" ---
+  canLoadMore = computed(() => this.data().length < this.totalRecords());
 
   private subscription: Subscription = new Subscription();
 
@@ -115,6 +119,14 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
               console.error('Error fetching data:', err);
               return of({ data: [], total: 0, page: 1, limit: pageSize, totalPages: 0, hasNextPage: false, hasPrevPage: false });
             }),
+            // ✅ Lógica para acumular resultados en modo "Cargar Más"
+            scan((acc, res) => {
+              // Si es la primera página, reemplazamos los datos. Si no, los acumulamos.
+              const newData = page > 1 ? [...acc.data, ...res.data] : res.data;
+              // Actualizamos el signal de datos directamente aquí.
+              this.data.set(newData);
+              return { ...res, data: newData }; // Devolvemos la respuesta acumulada para pagedResponse
+            }, { data: [] as T[] } as PagedResponse<T>),
             finalize(() => this.isLoading.set(false))
           );
         }),
@@ -157,6 +169,11 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
 
   // --- Métodos de control de la UI ---
   onPageChange(page: number): void { this.page$.next(page); }
+  onPageSizeChange(size: number): void {
+    this.pageSize$.next(size);
+    this.page$.next(1); // Al cambiar el tamaño, volvemos a la primera página.
+    this.data.set([]); // Limpiamos los datos para empezar de nuevo.
+  }
   onSortChange(sort: Sort<T>): void { this.sort$.next(sort); }
   onSearch(searchTerm: string): void {
     this.search$.next(searchTerm);
@@ -164,6 +181,11 @@ export abstract class BaseAdminDirective<T extends { id: number | string }> impl
     this.selectionService.clear(); // Limpia la selección al realizar una nueva búsqueda
   }
   refreshData(): void { this.refresh$.next(); }
+
+  // --- Nuevo método para "Cargar Más" ---
+  loadMore(): void {
+    this.page$.next(this.page$.value + 1);
+  }
 
   // --- Métodos para operaciones CRUD y modales ---
   openModal(item: T | null = null): void {

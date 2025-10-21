@@ -41,10 +41,20 @@
     </ng-template>
   </app-ui-table>
 
+  <!-- Contenedor para el enlace "Cargar más" -->
+  <div class="load-more-container">
+    @if (canLoadMore()) {
+      <a href="javascript:void(0)" (click)="loadMore()" class="load-more-link">
+        Cargar más resultados...
+      </a>
+    }
+  </div>
+
   <app-ui-paginator
     [uiPaginatorTotalRecords]="totalRecords()"
     [uiPaginatorPage]="(page$ | async) ?? 1"
     [uiPaginatorPageSize]="(pageSize$ | async) ?? 50"
-    (uiPaginatorPageChange)="onPaginatorChange($event)"
+    (uiPaginatorPageChange)="onPageChange($event.page)"
+    (uiPaginatorPageSizeChange)="onPageSizeChange(+$event)"
   />
 </div>
