@@ -21,21 +21,21 @@ export type ButtonSize = 's' | 'm' | 'l';
 })
 export class UiButtonComponent implements AfterContentInit, OnChanges {
   // --- API del Botón ---
-  @Input({ alias: 'ui-button-color' }) color: ButtonColor = 'primary';
-  @Input({ alias: 'ui-button-variant' }) variant: ButtonVariant = 'solid';
-  @Input({ alias: 'ui-button-size' }) size: ButtonSize = 'm';
-  @Input({ alias: 'ui-button-disabled' }) disabled = false;
-  @Input({ alias: 'ui-button-loading' }) loading = false;
-  @Input({ alias: 'ui-button-full-width' }) fullWidth = false;
-  @Input({ alias: 'ui-button-aria-label' }) ariaLabel?: string;
+  @Input({ alias: 'uiButtonColor' }) color: ButtonColor = 'primary';
+  @Input({ alias: 'uiButtonVariant' }) variant: ButtonVariant = 'solid';
+  @Input({ alias: 'uiButtonSize' }) size: ButtonSize = 'm';
+  @Input({ alias: 'uiButtonDisabled' }) disabled = false;
+  @Input({ alias: 'uiButtonLoading' }) loading = false;
+  @Input({ alias: 'uiButtonFullWidth' }) fullWidth = false;
+  @Input({ alias: 'uiButtonAriaLabel' }) ariaLabel?: string;
 
   // --- API para el Icono (Pass-through) ---
-  @Input({ alias: 'ui-icon-name' }) iconName?: string;
-  @Input({ alias: 'ui-icon-position' }) iconPosition: 'left' | 'right' | 'only' = 'left';
-  @Input({ alias: 'ui-icon-type' }) iconType: UiIconType = 'system';
-  @Input({ alias: 'ui-icon-size' }) iconSize?: UiIconSize | 'inherit' | string;
-  @Input({ alias: 'ui-icon-color' }) iconColor?: string;
-  @Input({ alias: 'ui-icon-class' }) iconClass = '';
+  @Input({ alias: 'uiIconName' }) iconName?: string;
+  @Input({ alias: 'uiIconPosition' }) iconPosition: 'left' | 'right' | 'only' = 'left';
+  @Input({ alias: 'uiIconType' }) iconType: UiIconType = 'system';
+  @Input({ alias: 'uiIconSize' }) iconSize?: UiIconSize | 'inherit' | string;
+  @Input({ alias: 'uiIconColor' }) iconColor?: string;
+  @Input({ alias: 'uiIconClass' }) iconClass = '';
 
   // --- Detección de contenido ---
   @ViewChild('contentWrapper') private contentWrapper!: ElementRef<HTMLSpanElement>;

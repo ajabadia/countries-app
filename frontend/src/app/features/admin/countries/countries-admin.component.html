@@ -1,12 +1,17 @@
 <div class="admin-page-container">
-  <app-ui-heading [ui-heading-title]="pageTitle" />
+  <app-ui-heading [uiHeadingTitle]="currentPageTitle()" />
   <div class="toolbar">
     <app-ui-search-box
       class="toolbar__search"
       (uiSearchBoxValueChange)="manager.onSearch($event)"
     />
+    <app-ui-toolbar-buttons
+      class="toolbar__actions"
+      [uiToolbarButtonsConfig]="toolbarActions"
+    />
   </div>
 
+  <!-- TODO: Considerar mover la plantilla de la columna a un componente específico o a un archivo de plantilla compartido si se reutiliza -->
   <!-- Ejemplo de uso dentro de ui-table-columns -->
   <!--
   {
@@ -16,11 +21,12 @@
   }
   -->
   <app-ui-table
-    [ui-table-columns]="columns"
-    [ui-table-data]="manager.data()"
-    [ui-table-sort]="manager.sort()"
-    [ui-table-is-loading]="manager.isLoading()"
-    (ui-table-sort-change)="manager.onSortChange($event)"
+    [uiTableColumns]="columns"
+    [uiTableData]="manager.data()"
+    [uiTableSort]="manager.sort()"
+    [uiTableIsLoading]="manager.isLoading()"
+    [uiTableSelection]="manager.selectionService"
+    (uiTableSortChange)="manager.onSortChange($event)"
   >
     <!-- 
       Aquí definimos la plantilla para la celda de la columna 'defaultname'.
@@ -29,10 +35,11 @@
     -->
     <ng-template uiTableColumn="defaultname" let-item>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <app-ui-icon [ui-icon-name]="item.alpha2may.toLowerCase()" ui-icon-type="circle-flag" ui-icon-size="s"></app-ui-icon>
-        <a href="javascript:void(0)">{{ item.defaultname }}</a>
+        <app-ui-icon [uiIconName]="item.alpha2may.toLowerCase()" uiIconType="circle-flag" uiIconSize="s"></app-ui-icon>
+        <a href="javascript:void(0)" (click)="openModal(item)">{{ item.defaultname }}</a>
       </div>
     </ng-template>
+
   </app-ui-table>
 
   <app-ui-paginator
@@ -40,5 +47,42 @@
     [uiPaginatorPage]="manager.page()"
     [uiPaginatorPageSize]="manager.pageSize()"
     (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
-  ></app-ui-paginator>
+  />
 </div>
+
+<!-- Modal de Formulario (Crear/Editar) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isFormModalVisible()"
+  [uiFormModalTitle]="formModalTitle"
+  [uiFormModalIsLoading]="isSaving()"
+  (uiFormModalSave)="onSave()"
+  (uiFormModalClose)="closeModal()"
+>
+  <form [formGroup]="form">
+    <app-ui-dynamic-form [form]="form" [fields]="formFields" />
+  </form>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onDelete()"
+  (uiFormModalClose)="closeConfirmDeleteModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.
+  </p>
+</app-ui-form-modal>

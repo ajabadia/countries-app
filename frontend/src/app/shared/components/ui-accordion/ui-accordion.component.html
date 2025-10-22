@@ -14,7 +14,7 @@
         [id]="'header-' + item.id"
       >
         <span class="ui-accordion__title">{{ item.title }}</span>
-        <app-ui-icon class="ui-accordion__indicator" ui-icon-name="icon-chevron"></app-ui-icon>
+        <app-ui-icon class="ui-accordion__indicator" [uiIconName]="'icon-chevron'"></app-ui-icon>
       </button>
 
       <!-- Contenido del Item -->

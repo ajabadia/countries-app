@@ -40,15 +40,15 @@ export interface ToolbarButtonConfig {
       <button app-ui-button
         (click)="button.action()"
         [attr.data-cy]="'toolbar-button-' + button.id"
-        
-        [ui-button-color]="button.color || 'primary'"
-        [ui-button-variant]="button.variant || 'solid'"
-        [ui-button-size]="button.size || 'm'"
-        [ui-button-disabled]="(button.disabled$ | async) ?? false"
 
-        [ui-icon-name]="button.iconName"
-        [ui-icon-position]="button.iconPosition || 'left'"
-        [ui-icon-type]="button.iconType || 'system'"
+        [uiButtonColor]="button.color || 'primary'"
+        [uiButtonVariant]="button.variant || 'solid'"
+        [uiButtonSize]="button.size || 'm'"
+        [uiButtonDisabled]="(button.disabled$ | async) ?? false"
+
+        [uiIconName]="button.iconName"
+        [uiIconPosition]="button.iconPosition || 'left'"
+        [uiIconType]="button.iconType || 'system'"
       >
         {{ button.label }}
       </button>
@@ -61,5 +61,5 @@ export class UiToolbarButtonsComponent {
    * La configuración para los botones que se mostrarán en la barra.
    * Se aliasa con el prefijo del componente para seguir nuestras convenciones.
    */
-  @Input({ alias: 'ui-toolbar-buttons' }) buttons: ToolbarButtonConfig[] = [];
+  @Input({ alias: 'uiToolbarButtonsConfig' }) buttons: ToolbarButtonConfig[] = [];
 }

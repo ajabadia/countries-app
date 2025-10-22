@@ -12,6 +12,7 @@ export interface AppAction {
   category: ActionCategory;
   type: ActionType;
   routerLink?: string | any[];
+  pageTitle?: string;
 }
 
 export interface GroupedAppAction {
@@ -26,5 +27,3 @@ export interface ToolbarButtonConfig {
   icon?: string;
   action: () => void;
 }
-
-

@@ -5,7 +5,7 @@
 
 <!-- Usamos @switch para cambiar el icono según el estado -->
 @switch (state) {
-  @case ('ui-toggle-checked') { <app-ui-icon ui-icon-name="icon-check-square"></app-ui-icon> }
-  @case ('ui-toggle-indeterminate') { <app-ui-icon ui-icon-name="icon-minus-square"></app-ui-icon> }
-  @default { <app-ui-icon ui-icon-name="icon-square"></app-ui-icon> }
+  @case ('ui-toggle-checked') { <app-ui-icon [uiIconName]="'icon-check-square'"></app-ui-icon> }
+  @case ('ui-toggle-indeterminate') { <app-ui-icon [uiIconName]="'icon-minus-square'"></app-ui-icon> }
+  @default { <app-ui-icon [uiIconName]="'icon-square'"></app-ui-icon> }
 }

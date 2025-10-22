@@ -14,8 +14,8 @@ import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiAccordionComponent {
-  @Input({ alias: 'ui-accordion-items' }) items: AccordionItem[] = [];
-  @Input({ alias: 'ui-accordion-multi-expandable' }) multiExpandable = false;
+  @Input({ alias: 'uiAccordionItems' }) items: AccordionItem[] = [];
+  @Input({ alias: 'uiAccordionMultiExpandable' }) multiExpandable = false;
 
   toggleItem(clickedItem: AccordionItem): void {
     if (clickedItem.disabled) {

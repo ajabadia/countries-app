@@ -7,6 +7,7 @@ import { Subscription, combineLatest, of } from 'rxjs';
 import { switchMap, catchError, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
 
 import { BaseCrudService } from '@shared/services/base-crud.service';
+import { SelectionService } from '@app/shared/services/selection.service';
 import { PagedResponse } from '@shared/types/paged-response.interface';
 import { PaginatorChangeEvent } from '@shared/components/ui-paginator/ui-paginator.types';
 import { Sort } from '@shared/types/sort.type';
@@ -36,9 +37,22 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
   data = signal<T[]>([]);
   totalRecords = signal(0);
   isLoading = signal(true);
+  selectionService!: SelectionService<T>;
+  isSelectionEmpty = signal(true);
+  selectionCount = signal(0);
 
   private dataSubscription?: Subscription;
   private config?: AdminPageManagerConfig<T>;
+
+  constructor() {
+    // Inicializamos el servicio de selección aquí para que esté disponible inmediatamente.
+    this.selectionService = new SelectionService<T>();
+    // Nos suscribimos a los cambios en la selección para actualizar el signal
+    this.selectionService.selectionChanges.subscribe(selection => {
+      this.isSelectionEmpty.set(selection.size === 0);
+      this.selectionCount.set(selection.size);
+    });
+  }
 
   /**
    * Initializes the manager with the required configuration and starts the data stream.
@@ -107,6 +121,7 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
       this.data.set(response.data);
       this.totalRecords.set(response.total);
       this.isLoading.set(false);
+      this.selectionService.clear();
     });
   }
 
@@ -120,11 +135,20 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
 
   onSearch(newSearchTerm: string): void {
     this.page.set(1);
+    this.selectionService.clear();
     this.searchTerm.set(newSearchTerm);
   }
 
   onPageStateChange(event: PaginatorChangeEvent): void {
     this.page.set(event.page);
     this.pageSize.set(event.pageSize);
+  }
+
+  refreshData(): void {
+    this.onSearch(this.searchTerm());
+  }
+
+  private _triggerRefresh(): void {
+    // Este método podría usarse en el futuro si necesitamos un refresco más directo
   }
 }

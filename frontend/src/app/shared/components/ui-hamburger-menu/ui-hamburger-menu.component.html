@@ -3,11 +3,11 @@
 <!-- Botón de Hamburguesa -->
 <button
   app-ui-button
-  ui-button-variant="ghost"  
+  [uiButtonVariant]="'ghost'"
   (click)="toggleMenu()"
   class="hamburger-menu__toggle"  
 >
-  <app-ui-icon [ui-icon-name]="'icon-menu'"></app-ui-icon>
+  <app-ui-icon [uiIconName]="'icon-menu'"></app-ui-icon>
 </button>
 
 <!-- Fondo superpuesto -->
@@ -25,13 +25,13 @@
 <aside class="hamburger-menu__panel" [class.is-open]="isMenuOpen()">
   <header class="hamburger-menu__header">
     <h2 class="hamburger-menu__title">Menú</h2>
-    <button app-ui-button ui-button-variant="ghost" (click)="toggleMenu()">
-      <app-ui-icon [ui-icon-name]="'icon-close'"></app-ui-icon>
+    <button app-ui-button [uiButtonVariant]="'ghost'" (click)="toggleMenu()">
+      <app-ui-icon [uiIconName]="'icon-close'"></app-ui-icon>
     </button>
   </header>
   <div class="hamburger-menu__content">
       <app-ui-accordion
-        [ui-accordion-items]="accordionItems()"
+        [uiAccordionItems]="accordionItems()"
       ></app-ui-accordion>
 
       <!--
@@ -41,7 +41,7 @@
       <ng-template #menuLinkTemplate let-data>
         @for (item of data; track item.id) {
           <a class="menu-item" [routerLink]="item.routerLink" (click)="toggleMenu()">
-            <app-ui-icon [ui-icon-name]="item.icon"></app-ui-icon>
+            <app-ui-icon [uiIconName]="item.icon"></app-ui-icon>
             <span>{{ item.label }}</span>
           </a>
         }

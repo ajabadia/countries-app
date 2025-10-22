@@ -4,8 +4,8 @@
   <ng-container>
     <div
       class="ui-form-modal-backdrop"
-      (click)="onCancel()"
-      (keydown.escape)="onCancel()"
+      (click)="onClose()"
+      (keydown.escape)="onClose()"
       role="button"
       tabindex="0"
       aria-label="Cerrar modal"
@@ -21,16 +21,16 @@
       <app-ui-heading
         id="ui-form-modal-title"
         class="ui-form-modal__header"
-        [ui-heading-level]="3"
-        [ui-heading-title]="title"
-        [ui-icon-name]="headingIconName || iconName"
+        [uiHeadingLevel]="3"
+        [uiHeadingTitle]="title"
+        [uiIconName]="headingIconName || iconName"
       >
         <button
           app-ui-button
-          ui-icon-name="icon-close"
-          ui-icon-position="only"
-          ui-button-variant="ghost"
-          (click)="onCancel()"
+          [uiIconName]="'icon-close'"
+          [uiIconPosition]="'only'"
+          [uiButtonVariant]="'ghost'"
+          (click)="onClose()"
           aria-label="Cerrar modal"
         ></button>
       </app-ui-heading>
@@ -41,10 +41,10 @@
       </div>
 
       <!-- 3. Pie de Página del Modal -->
-      <app-ui-toolbar-buttons
-        class="ui-form-modal__footer"
-        [ui-toolbar-buttons]="buttons"
-      ></app-ui-toolbar-buttons>
+      <footer class="ui-form-modal__footer">
+        <button app-ui-button [uiButtonVariant]="'outline'" (click)="onClose()">Cancelar</button>
+        <button app-ui-button [uiButtonColor]="'primary'" (click)="onSave()" [uiButtonLoading]="isLoading">Guardar</button>
+      </footer>
     </div>
   </ng-container>
 }

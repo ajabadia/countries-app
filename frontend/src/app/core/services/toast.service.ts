@@ -1,7 +1,7 @@
 // File: d:/desarrollos/countries2/frontend/src/app/core/services/toast.service.ts | Last Modified: 2025-10-20
 
 import { Injectable, signal } from '@angular/core';
-import { Toast, ToastType } from '@shared/types/toast.types';
+import { Toast, ToastType } from '@core/types/toast.types';
 
 @Injectable({
   providedIn: 'root',

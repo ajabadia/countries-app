@@ -18,15 +18,15 @@
 <ng-template #headingContent>
   <app-ui-icon 
     *ngIf="iconName && iconPosition === 'left'" 
-    [ui-icon-name]="iconName" 
-    [ui-icon-size]="finalIconSize" 
-    [ui-icon-type]="iconType" 
-    [ui-icon-color]="iconColor" />
+    [uiIconName]="iconName" 
+    [uiIconSize]="finalIconSize" 
+    [uiIconType]="iconType" 
+    [uiIconColor]="iconColor" />
   <span>{{ title }}</span>
   <app-ui-icon 
     *ngIf="iconName && iconPosition === 'right'" 
-    [ui-icon-name]="iconName" 
-    [ui-icon-size]="finalIconSize" 
-    [ui-icon-type]="iconType" 
-    [ui-icon-color]="iconColor" />
+    [uiIconName]="iconName" 
+    [uiIconSize]="finalIconSize" 
+    [uiIconType]="iconType" 
+    [uiIconColor]="iconColor" />
 </ng-template>

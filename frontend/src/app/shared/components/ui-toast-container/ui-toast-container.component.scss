@@ -1,16 +1,12 @@
-// File: d:/desarrollos/countries2/frontend/src/app/shared/components/ui-toast-container/ui-toast-container.component.scss | Last Modified: 2025-10-20
+// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toast-container\ui-toast-container.component.scss | New File
 
-@use '../../../../styles/tools' as t;
-
-.ui-toast-container {
+.toast-container {
   position: fixed;
-  top: t.to-rem(20);
-  right: t.to-rem(20);
+  top: var(--space-l);
+  right: var(--space-l);
   z-index: var(--z-index-toast);
-  display: grid;
-  gap: t.to-rem(12);
-  width: 100%;
-  max-width: t.to-rem(360);
-  // Permite hacer clic a través del contenedor, pero no de los toasts individuales.
-  pointer-events: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-m);
+  max-width: 320px;
 }

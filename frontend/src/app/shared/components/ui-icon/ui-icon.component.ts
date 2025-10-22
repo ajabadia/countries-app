@@ -36,12 +36,12 @@ export class UiIconComponent implements OnChanges {
   private iconService = inject(IconService);
 
   // --- Entradas (Inputs) ---
-  @Input({ alias: 'ui-icon-name', required: true }) name!: string;
-  @Input({ alias: 'ui-icon-type' }) type: UiIconTypeExtended = 'system';
-  @Input({ alias: 'ui-icon-render-type' }) renderType: UiIconRender = 'svg';
-  @Input({ alias: 'ui-icon-size' }) size: UiIconSize | 'inherit' | string = 'm';
-  @Input({ alias: 'ui-icon-color' }) color?: string;
-  @Input({ alias: 'ui-icon-class' }) customClass = '';
+  @Input({ alias: 'uiIconName', required: true }) name!: string;
+  @Input({ alias: 'uiIconType' }) type: UiIconTypeExtended = 'system';
+  @Input({ alias: 'uiIconRenderType' }) renderType: UiIconRender = 'svg';
+  @Input({ alias: 'uiIconSize' }) size: UiIconSize | 'inherit' | string = 'm';
+  @Input({ alias: 'uiIconColor' }) color?: string;
+  @Input({ alias: 'uiIconClass' }) customClass = '';
 
   // --- Propiedades internas ---
   svgContent$: Observable<SafeHtml> = of('');

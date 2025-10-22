@@ -27,13 +27,13 @@ import { PAGE_SIZE_OPTIONS, PaginatorChangeEvent } from './ui-paginator.types';
 })
 export class UiPaginatorComponent implements OnInit {
   // --- Entradas (Inputs) ---
-  totalRecords = input.required<number>({ alias: 'uiPaginatorTotalRecords' });
-  page = input(1, { alias: 'uiPaginatorPage' });
-  pageSize = input(PAGE_SIZE_OPTIONS[0], { alias: 'uiPaginatorPageSize' });
-  pageSizeOptions = input(PAGE_SIZE_OPTIONS, { alias: 'uiPaginatorPageSizeOptions' });
+  totalRecords = input.required<number>({ alias: 'uiPaginatorTotalRecords' }); // Ya estaba bien
+  page = input(1, { alias: 'uiPaginatorPage' }); // Ya estaba bien
+  pageSize = input(PAGE_SIZE_OPTIONS[0], { alias: 'uiPaginatorPageSize' }); // Ya estaba bien
+  pageSizeOptions = input(PAGE_SIZE_OPTIONS, { alias: 'uiPaginatorPageSizeOptions' }); // Ya estaba bien
 
   // --- Salidas (Outputs) ---
-  pageStateChange = output<PaginatorChangeEvent>({ alias: 'uiPaginatorPageStateChange' });
+  pageStateChange = output<PaginatorChangeEvent>({ alias: 'uiPaginatorPageStateChange' }); // Ya estaba bien
 
   // --- Estado Derivado (Computed Signals) ---
   totalPages = computed(() => {

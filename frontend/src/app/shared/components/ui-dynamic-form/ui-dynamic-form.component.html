@@ -1,0 +1,41 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-dynamic-form\ui-dynamic-form.component.html | New File -->
+
+<div class="dynamic-form" [formGroup]="form">
+  @for (field of fields; track field.name) {
+    <div class="form-field">
+      <label [for]="field.name">{{ field.label }}</label>
+
+      @switch (field.type) {
+        @case ('select') {
+          <select [id]="field.name" [formControlName]="field.name">
+            @for (option of field.options; track option.value) {
+              <option [value]="option.value">{{ option.label }}</option>
+            }
+          </select>
+        }
+        @case ('textarea') {
+          <textarea
+            [id]="field.name"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+          ></textarea>
+        }
+        @default {
+          <input
+            [type]="field.type"
+            [id]="field.name"
+            [formControlName]="field.name"
+            [placeholder]="field.placeholder || ''"
+          />
+        }
+      }
+
+      @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
+        <div class="form-field__error">
+          <!-- Aquí se podrían mostrar mensajes de error más específicos -->
+          Campo inválido
+        </div>
+      }
+    </div>
+  }
+</div>

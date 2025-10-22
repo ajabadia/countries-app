@@ -16,15 +16,15 @@ export type HeadingLevel = 1 | 2 | 3 | 4 | 5 | 6;
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiHeadingComponent {
-  @Input({ alias: 'ui-heading-title' }) title = '';
-  @Input({ alias: 'ui-heading-level' }) level: HeadingLevel = 1;
+  @Input({ alias: 'uiHeadingTitle' }) title = '';
+  @Input({ alias: 'uiHeadingLevel' }) level: HeadingLevel = 1;
 
   // --- API para el Icono (Pass-through) ---
-  @Input({ alias: 'ui-icon-name' }) iconName?: string;
-  @Input({ alias: 'ui-icon-type' }) iconType: UiIconType = 'system';
-  @Input({ alias: 'ui-icon-position' }) iconPosition: 'left' | 'right' = 'left';
-  @Input({ alias: 'ui-icon-color' }) iconColor?: string;
-  @Input({ alias: 'ui-icon-size' }) iconSize?: UiIconSize | 'inherit' | string;
+  @Input({ alias: 'uiIconName' }) iconName?: string;
+  @Input({ alias: 'uiIconType' }) iconType: UiIconType = 'system';
+  @Input({ alias: 'uiIconPosition' }) iconPosition: 'left' | 'right' = 'left';
+  @Input({ alias: 'uiIconColor' }) iconColor?: string;
+  @Input({ alias: 'uiIconSize' }) iconSize?: UiIconSize | 'inherit' | string;
 
   /**
    * Determina el tamaño final del icono.

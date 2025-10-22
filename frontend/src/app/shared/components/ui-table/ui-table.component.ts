@@ -31,16 +31,16 @@ import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components
 })
 export class UiTableComponent<T extends { id: number | string }> implements OnChanges {
   // --- Inputs ---
-  data = input<T[] | null | undefined>([], { alias: 'ui-table-data' });
-  columns = input<TableColumn<T>[]>([], { alias: 'ui-table-columns' });
-  selection = input<SelectionService<T> | null>(null, { alias: 'ui-table-selection' });
-  sort = input<Sort<T> | null>(null, { alias: 'ui-table-sort' });
-  isLoadingInput = input<boolean | undefined>(undefined, { alias: 'ui-table-is-loading' });
+  data = input<T[] | null | undefined>([], { alias: 'uiTableData' });
+  columns = input<TableColumn<T>[]>([], { alias: 'uiTableColumns' });
+  selection = input<SelectionService<T> | null>(null, { alias: 'uiTableSelection' });
+  sort = input<Sort<T> | null>(null, { alias: 'uiTableSort' });
+  isLoadingInput = input<boolean | undefined>(undefined, { alias: 'uiTableIsLoading' });
 
   // --- Estado Interno y Derivado ---
   isLoading = computed(() => this.isLoadingInput() ?? this.data() === null);
 
-  @Output('ui-table-sort-change') sortChange = new EventEmitter<Sort<T>>();
+  @Output('uiTableSortChange') sortChange = new EventEmitter<Sort<T>>();
 
   // Usamos ContentChildren para buscar todas las plantillas proyectadas.
   @ContentChildren(UiTableColumnDirective)

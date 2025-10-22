@@ -2,7 +2,7 @@
 
 import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Toast } from '@shared/types/toast.types';
+import { Toast } from '@core/types/toast.types';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({

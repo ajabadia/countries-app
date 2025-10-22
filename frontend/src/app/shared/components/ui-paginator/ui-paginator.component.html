@@ -13,21 +13,21 @@
     <div class="ui-paginator__block ui-paginator__controls">
       <button
         app-ui-button
-        ui-button-variant="ghost"
+        [uiButtonVariant]="'ghost'"
         (click)="goToPage(1)"
         [disabled]="page() === 1"
         aria-label="Primera página"
       >
-        <app-ui-icon ui-icon-name="icon-first-page"></app-ui-icon>
+        <app-ui-icon [uiIconName]="'icon-first-page'"></app-ui-icon>
       </button>
       <button
         app-ui-button
-        ui-button-variant="ghost"
+        [uiButtonVariant]="'ghost'"
         (click)="goToPage(page() - 1)"
         [disabled]="page() === 1"
         aria-label="Página anterior"
       >
-        <app-ui-icon ui-icon-name="icon-chevron-left"></app-ui-icon>
+        <app-ui-icon [uiIconName]="'icon-chevron-left'"></app-ui-icon>
       </button>
 
       <span class="ui-paginator__block">
@@ -46,11 +46,11 @@
         de {{ totalPages() }}
       </span>
 
-      <button app-ui-button ui-button-variant="ghost" (click)="goToPage(page() + 1)" [disabled]="page() === totalPages()" aria-label="Página siguiente">
-        <app-ui-icon ui-icon-name="icon-chevron-right"></app-ui-icon>
+      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(page() + 1)" [disabled]="page() === totalPages()" aria-label="Página siguiente">
+        <app-ui-icon [uiIconName]="'icon-chevron-right'"></app-ui-icon>
       </button>
-      <button app-ui-button ui-button-variant="ghost" (click)="goToPage(totalPages())" [disabled]="page() === totalPages()" aria-label="Última página">
-        <app-ui-icon ui-icon-name="icon-last-page"></app-ui-icon>
+      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(totalPages())" [disabled]="page() === totalPages()" aria-label="Última página">
+        <app-ui-icon [uiIconName]="'icon-last-page'"></app-ui-icon>
       </button>
     </div>
 

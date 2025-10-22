@@ -1,3 +1,43 @@
 <div class="admin-page-container">
-  <app-ui-heading [ui-heading-title]="pageTitle" />
+  <app-ui-heading [uiHeadingTitle]="currentPageTitle()"></app-ui-heading>
+
+  <div class="toolbar">
+    <app-ui-search-box
+      class="toolbar__search"
+      (uiSearchBoxValueChange)="manager.onSearch($event)"
+    />
+    <app-ui-toolbar-buttons
+      class="toolbar__actions"
+      [uiToolbarButtonsConfig]="toolbarActions"
+    />
+  </div>
+
+  <app-ui-table
+    [uiTableColumns]="columns"
+    [uiTableData]="manager.data()"
+    [uiTableIsLoading]="manager.isLoading()"
+    [uiTableSort]="manager.sort()"
+    [uiTableSelection]="manager.selectionService"
+    (uiTableSortChange)="manager.onSortChange($event)"
+  />
+
+  <app-ui-paginator
+    [uiPaginatorTotalRecords]="manager.totalRecords()"
+    [uiPaginatorPage]="manager.page()"
+    [uiPaginatorPageSize]="manager.pageSize()"
+    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
+  />
 </div>
+
+<!-- Modal de Formulario (Crear/Editar) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isFormModalVisible()"
+  [uiFormModalTitle]="formModalTitle"
+  [uiFormModalIsLoading]="isSaving()"
+  (uiFormModalSave)="onSave()"
+  (uiFormModalClose)="closeModal()"
+>
+  <form [formGroup]="form">
+    <app-ui-dynamic-form [form]="form" [fields]="formFields" />
+  </form>
+</app-ui-form-modal>
