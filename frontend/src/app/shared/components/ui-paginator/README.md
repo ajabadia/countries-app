@@ -6,6 +6,7 @@ El `UiPaginatorComponent` es un componente reutilizable para la navegación a tr
 
 ## 1. Propósito y Funcionamiento
 
+-   **Sincronización Inicial**: El componente emite su estado inicial (`page` y `pageSize`) en el ciclo de vida `ngOnInit`, asegurando que el componente padre esté sincronizado desde el principio.
 -   **Componente "Tonto"**: El paginador no realiza ninguna llamada a la API. Su única responsabilidad es mostrar el estado de paginación actual y emitir eventos cuando el usuario interactúa con él.
 -   **Basado en Signals**: Utiliza `signals` de Angular para una gestión de estado moderna y reactiva.
 -   **API Clara**: Expone una API sencilla a través de `@Input`s prefijados y un único `@Output` para todos los cambios.
@@ -21,7 +22,8 @@ El `UiPaginatorComponent` es un componente reutilizable para la navegación a tr
 
 ### Salidas (`@Output`)
 
--   `uiPaginatorPageChange: PaginatorChangeEvent`: Se emite cada vez que el usuario solicita un cambio de página o de tamaño de página. El objeto del evento tiene la forma `{ page: number, pageSize: number }`.
+-   `uiPaginatorPageChange: number`: Se emite con el nuevo número de página cuando el usuario cambia de página.
+-   `uiPaginatorPageSizeChange: number`: Se emite con el nuevo tamaño de página cuando el usuario lo cambia en el selector.
 
 ## 3. Dependencias
 
@@ -42,6 +44,7 @@ El componente se integra en un componente "padre" que gestiona la lógica de obt
   [uiPaginatorPage]="currentPage()"
   [uiPaginatorPageSize]="pageSize()"
   (uiPaginatorPageChange)="onPageChange($event)"
+  (uiPaginatorPageSizeChange)="onPageSizeChange($event)"
 ></app-ui-paginator>
 ```
 

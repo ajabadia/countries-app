@@ -2,11 +2,13 @@
 
 import {
   Component,
-  Input,
+  input,
   Output,
   EventEmitter,
   ChangeDetectionStrategy,
   ContentChildren,
+  computed,
+  effect,
   TemplateRef,
   OnChanges,
   SimpleChanges,
@@ -16,6 +18,7 @@ import { CommonModule } from '@angular/common';
 import { SelectionService } from '@shared/services/selection.service';
 import { TableColumn } from './table.types';
 import { Sort, SortDirection } from '@shared/types/sort.type';
+import { UiTableColumnDirective } from './ui-table-column.directive';
 import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components/ui-toggle-checkbox/ui-toggle-checkbox.component';
 
 @Component({
@@ -27,47 +30,46 @@ import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiTableComponent<T extends { id: number | string }> implements OnChanges {
-  @Input({ alias: 'ui-table-data' }) data: T[] | null = [];
-  @Input({ alias: 'ui-table-columns' }) columns: TableColumn<T>[] = [];
-  @Input({ alias: 'ui-table-selection' }) selection: SelectionService<T> | null = null;
-  @Input({ alias: 'ui-table-sort' }) sort: Sort<T> | null = null;
-  @Input({ alias: 'ui-table-is-loading' }) isLoading = false;
+  // --- Inputs ---
+  data = input<T[] | null | undefined>([], { alias: 'ui-table-data' });
+  columns = input<TableColumn<T>[]>([], { alias: 'ui-table-columns' });
+  selection = input<SelectionService<T> | null>(null, { alias: 'ui-table-selection' });
+  sort = input<Sort<T> | null>(null, { alias: 'ui-table-sort' });
+  isLoadingInput = input<boolean | undefined>(undefined, { alias: 'ui-table-is-loading' });
+
+  // --- Estado Interno y Derivado ---
+  isLoading = computed(() => this.isLoadingInput() ?? this.data() === null);
 
   @Output('ui-table-sort-change') sortChange = new EventEmitter<Sort<T>>();
 
   // Usamos ContentChildren para buscar todas las plantillas proyectadas.
-  @ContentChildren(TemplateRef)
-  private templates: QueryList<TemplateRef<unknown>> | null = null;
+  @ContentChildren(UiTableColumnDirective)
+  private columnTemplates: QueryList<UiTableColumnDirective> | null = null;
 
   // Estado para el checkbox de la cabecera con 3 estados.
   public headerCheckboxState: UiToggleState = 'ui-toggle-unchecked';
 
   ngOnChanges(changes: SimpleChanges): void {
     // Si los items o la selección cambian, recalculamos el estado del checkbox de la cabecera.
-    if (this.selection && (changes['data'] || changes['selection'])) {
+    if (this.selection() && (changes['data'] || changes['selection'])) {
       this.updateHeaderCheckboxState();
     }
   }
 
   // Propiedad para acceder a la plantilla de acciones de forma más sencilla
-  get actionsTemplate(): TemplateRef<unknown> | null {
+  actionsTemplate = computed(() => {
     return this.getCellTemplate('actions');
-  }
+  });
 
   // Helper para encontrar la plantilla de una columna específica
   getCellTemplate(columnKey: keyof T | string): TemplateRef<unknown> | null {
-    if (!this.templates) {
+    if (!this.columnTemplates) {
       return null;
     }
-    // Buscamos una plantilla que tenga un nombre de variable de plantilla local
-    // que coincida con 'col_' + la clave de la columna (ej. #col_defaultname).
-    // Esta es una forma robusta de identificar plantillas sin directivas personalizadas.
-    const template = this.templates.find((tpl: TemplateRef<unknown>) => {
-      // Esta es una propiedad interna de Angular, pero es la forma más fiable
-      // de obtener el nombre de la variable de plantilla (#nombre).
-      return (tpl as any)._declarationTContainer?.localNames?.includes(`col_${String(columnKey)}`);
-    });
-    return template || null;
+    const templateDirective = this.columnTemplates.find(
+      (tpl) => tpl.columnName === columnKey
+    );
+    return templateDirective ? templateDirective.templateRef : null;
   }
 
   // Helper para acceder al valor de una celda, incluso si la clave es anidada (ej: 'user.name')
@@ -90,9 +92,9 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
 
     let orderDir: SortDirection = 'asc';
     if (
-      this.sort &&
-      this.sort.orderBy === column.key &&
-      this.sort.orderDir === 'asc'
+      this.sort() &&
+      this.sort()!.orderBy === column.key &&
+      this.sort()!.orderDir === 'asc'
     ) {
       orderDir = 'desc';
     }
@@ -102,7 +104,7 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
 
   isSorted(column: TableColumn<T>, dir: SortDirection): boolean {
     return (
-      this.sort?.orderBy === column.key && this.sort?.orderDir === dir
+      this.sort()?.orderBy === column.key && this.sort()?.orderDir === dir
     );
   }
 
@@ -110,9 +112,10 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
    * Maneja el cambio de estado del checkbox de la cabecera (seleccionar/deseleccionar todo).
    */
   onToggleAll(): void {
-    if (!this.selection || !this.data) return;
+    const selection = this.selection();
+    if (!selection || !this.data()) return;
 
-    this.selection.toggleAll(this.data);
+    selection.toggleAll(this.data()!);
     this.updateHeaderCheckboxState();
   }
 
@@ -121,8 +124,9 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
    * @param item El objeto de la fila.
    */
   onRowClick(item: T): void {
-    if (!this.selection) return;
-    this.selection.toggle(item);
+    const selection = this.selection();
+    if (!selection) return;
+    selection.toggle(item);
     this.updateHeaderCheckboxState();
   }
 
@@ -130,14 +134,15 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
    * Actualiza el estado del checkbox de la cabecera (on, off, intermediate).
    */
   private updateHeaderCheckboxState(): void {
-    if (!this.selection || !this.data || this.data.length === 0) {
+    const selection = this.selection();
+    if (!selection || !this.data() || this.data()!.length === 0) {
       this.headerCheckboxState = 'ui-toggle-unchecked';
       return;
     }
 
     // Contamos cuántos de los items de la página actual están seleccionados
-    const numSelectedOnPage = this.data.filter(item => this.selection!.isSelected(item)).length;
-    const totalItemsOnPage = this.data.length;
+    const numSelectedOnPage = this.data()!.filter(item => selection.isSelected(item)).length;
+    const totalItemsOnPage = this.data()!.length;
 
     if (numSelectedOnPage === 0) {
       this.headerCheckboxState = 'ui-toggle-unchecked';

@@ -8,10 +8,10 @@ import type { Database, RunResult } from 'better-sqlite3';
 export interface GetAllOptions {
   columns?: string[];
   orderBy?: string;
-  orderDir?: 'asc' | 'desc';
-  limit?: number;
+  orderDir?: 'asc' | 'desc';  pageSize?: number;
   offset?: number;
   search?: string | null;
+  searchFields?: string[];
 }
 
 /**
@@ -45,7 +45,7 @@ export default class BaseService<T extends { id: number | string }> {
    */
   async getAll(options: GetAllOptions = {}): Promise<{ data: T[]; total: number }> {
     const db = await getDB();
-    const { columns = ['*'], orderBy = 'id', orderDir = 'asc', limit, offset, search = null } = options;
+    const { columns = ['*'], orderBy = 'id', orderDir = 'asc', pageSize, offset, search = null, searchFields } = options;
 
     // --- Validación para prevenir SQL Injection ---
     const validColumnsInfo = db.prepare(`PRAGMA table_info(${this.tableName})`).all() as { name: string }[];
@@ -54,7 +54,7 @@ export default class BaseService<T extends { id: number | string }> {
     const safeOrderDir = ['asc', 'desc'].includes(orderDir.toLowerCase()) ? orderDir.toUpperCase() : 'ASC';
 
     const cols = columns.join(', ');
-    const { clause: whereClause, params: searchParams } = this._buildWhereClause(search);
+    const { clause: whereClause, params: searchParams } = this._buildWhereClause(search, searchFields);
 
     const totalQuery = `SELECT COUNT(*) as total FROM ${this.tableName} ${whereClause}`;
     const { total } = db.prepare(totalQuery).get(...searchParams) as { total: number };
@@ -62,9 +62,9 @@ export default class BaseService<T extends { id: number | string }> {
     let query = `SELECT ${cols} FROM ${this.tableName} ${whereClause} ORDER BY ${safeOrderBy} ${safeOrderDir}`;
     const queryParams = [...searchParams];
 
-    if (limit != null) {
+    if (pageSize != null) {
       query += ` LIMIT ?`;
-      queryParams.push(limit);
+      queryParams.push(pageSize);
     }
     if (offset != null) {
       query += ` OFFSET ?`;
@@ -166,12 +166,13 @@ export default class BaseService<T extends { id: number | string }> {
     return (await this.getById(id)) as T;
   }
 
-  private _buildWhereClause(search: string | null): WhereClause {
-    if (!search || this.searchableFields.length === 0) {
+  private _buildWhereClause(search: string | null, searchFields?: string[]): WhereClause {
+    const fieldsToSearch = searchFields && searchFields.length > 0 ? searchFields : this.searchableFields;
+    if (!search || fieldsToSearch.length === 0) {
       return { clause: '', params: [] };
     }
-    const clause = `WHERE ${this.searchableFields.map(field => `${field} LIKE ?`).join(' OR ')}`;
-    const params = this.searchableFields.map(() => `%${search}%`);
+    const clause = `WHERE ${fieldsToSearch.map(field => `${field} LIKE ?`).join(' OR ')}`;
+    const params = fieldsToSearch.map(() => `%${search}%`);
     return { clause, params };
   }
 }

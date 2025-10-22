@@ -1,57 +1,71 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-table\ui-table.component.html | Last Modified: 2025-10-20 -->
 <div class="table-container">
   <table>
     <thead>
       <tr>
         <!-- Columna de Selección (si se proporciona el servicio) -->
-        <th *ngIf="selection" class="selection-cell">
+        @if (selection()) {
+          <th class="selection-cell">
           <app-ui-toggle-checkbox [ui-toggle-checkbox-state]="headerCheckboxState" (click)="onToggleAll()"
             aria-label="Seleccionar todo"></app-ui-toggle-checkbox>
-        </th>
+          </th>
+        }
 
         <!-- Columnas de Datos -->
-        <th *ngFor="let col of columns" (click)="onSort(col)" [class.sortable]="col.sortable">
-          {{ col.label }}
-          <span *ngIf="col.sortable" class="sort-icon">
-            <span *ngIf="isSorted(col, 'asc')">▲</span>
-            <span *ngIf="isSorted(col, 'desc')">▼</span>
-          </span>
-        </th>
+        @for (col of columns(); track col.key) {
+          <th (click)="onSort(col)" [class.sortable]="col.sortable">
+            {{ col.label }}
+            @if (col.sortable) {
+              <span class="sort-icon">
+                @if (isSorted(col, 'asc')) { <span>▲</span> }
+                @if (isSorted(col, 'desc')) { <span>▼</span> }
+              </span>
+            }
+          </th>
+        }
 
         <!-- Columna de Acciones (si se proporciona la plantilla) -->
-        <th *ngIf="actionsTemplate">Actions</th>
+        @if (actionsTemplate()) { <th>Actions</th> }
       </tr>
     </thead>
     <tbody>
       <!-- Estado de Carga -->
-      <tr *ngIf="isLoading" data-state="info">
-        <td [attr.colspan]="columns.length + (selection ? 1 : 0) + (actionsTemplate ? 1 : 0)">Loading...</td>
-      </tr>
-
-      <!-- Estado Vacío -->
-      <tr *ngIf="!isLoading && (!data || data.length === 0)" data-state="info">
-        <td [attr.colspan]="columns.length + (selection ? 1 : 0) + (actionsTemplate ? 1 : 0)">No records found.</td>
-      </tr>
-
-      <!-- Filas de Datos -->
-      <tr *ngFor="let item of data" (click)="onRowClick(item)" [class.selected]="selection?.isSelected(item)">
-        <td *ngIf="selection" class="selection-cell">
-          <app-ui-toggle-checkbox [ui-toggle-checkbox-state]="selection.isSelected(item) ? 'ui-toggle-checked' : 'ui-toggle-unchecked'"
-            (click)="$event.stopPropagation(); onRowClick(item)"></app-ui-toggle-checkbox>
-        </td>
-        <td *ngFor="let col of columns">
-          <!-- Si la columna tiene una plantilla definida, la buscamos y la renderizamos -->
-          <ng-container *ngIf="col.template; else defaultCell">
-            <ng-container [ngTemplateOutlet]="getCellTemplate(col.key)" [ngTemplateOutletContext]="{ $implicit: item }">
-            </ng-container>
-          </ng-container>
-          <!-- Si no, mostramos el valor por defecto -->
-          <ng-template #defaultCell>{{ getCellValue(item, col.key) }}</ng-template>
-        </td>
-        <td *ngIf="actionsTemplate">
-          <!-- Proyecta aquí el contenido de la plantilla de acciones -->
-          <ng-container [ngTemplateOutlet]="actionsTemplate" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
-        </td>
-      </tr>
+      @if (isLoading()) {
+        <tr data-state="info">
+          <td [attr.colspan]="columns().length + (selection() ? 1 : 0) + (actionsTemplate() ? 1 : 0)">Loading...</td>
+        </tr>
+      } @else if (!data() || data()!.length === 0) {
+        <!-- Estado Vacío -->
+        <tr data-state="info">
+          <td [attr.colspan]="columns().length + (selection() ? 1 : 0) + (actionsTemplate() ? 1 : 0)">No records found.</td>
+        </tr>
+      } @else {
+        <!-- Filas de Datos -->
+        @for (item of data()!; track item.id) {
+          <tr (click)="onRowClick(item)" [class.selected]="selection()?.isSelected(item)">
+            @if (selection()) {
+              <td class="selection-cell">
+                <app-ui-toggle-checkbox [ui-toggle-checkbox-state]="selection()!.isSelected(item) ? 'ui-toggle-checked' : 'ui-toggle-unchecked'"
+                  (click)="$event.stopPropagation(); onRowClick(item)"></app-ui-toggle-checkbox>
+              </td>
+            }
+            @for (col of columns(); track col.key) {
+              <td>
+                @if (col.template === true) {
+                  <ng-container [ngTemplateOutlet]="getCellTemplate(col.key)" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                } @else {
+                  {{ getCellValue(item, col.key) }}
+                }
+              </td>
+            }
+            @if (actionsTemplate()) {
+              <td>
+                <ng-container [ngTemplateOutlet]="actionsTemplate()" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+              </td>
+            }
+          </tr>
+        }
+      }
     </tbody>
   </table>
 </div>

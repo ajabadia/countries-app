@@ -17,7 +17,7 @@ export class ActionService {
     {
       id: 'home',
       label: 'Inicio',
-      icon: 'home',
+      icon: 'icon-home',
       category: 'public',
       type: 'nav',
       routerLink: '/',
@@ -25,7 +25,7 @@ export class ActionService {
     {
       id: 'auth-login',
       label: 'Iniciar Sesión',
-      icon: 'login',
+      icon: 'icon-login',
       category: 'auth',
       type: 'nav',
       routerLink: '/auth/login',
@@ -33,7 +33,7 @@ export class ActionService {
     {
       id: 'auth-register',
       label: 'Registro',
-      icon: 'person_add',
+      icon: 'icon-add',
       category: 'auth',
       type: 'nav',
       routerLink: '/auth/register',
@@ -43,7 +43,7 @@ export class ActionService {
     {
       id: 'admin-dashboard',
       label: 'Dashboard',
-      icon: 'dashboard',
+      icon: 'icon-dashboard',
       category: 'admin',
       type: 'nav',
       routerLink: '/admin',
@@ -51,7 +51,7 @@ export class ActionService {
     {
       id: 'admin-countries',
       label: 'Países',
-      icon: 'flag',
+      icon: 'icon-country',
       category: 'admin',
       type: 'nav',
       routerLink: '/admin/countries',
@@ -59,7 +59,7 @@ export class ActionService {
     {
       id: 'admin-languages',
       label: 'Idiomas',
-      icon: 'language',
+      icon: 'icon-world-globe',
       category: 'admin',
       type: 'nav',
       routerLink: '/admin/languages',
@@ -67,7 +67,7 @@ export class ActionService {
     {
       id: 'admin-users',
       label: 'Usuarios',
-      icon: 'group',
+      icon: 'icon-user',
       category: 'admin',
       type: 'nav',
       routerLink: '/admin/users',
@@ -75,41 +75,41 @@ export class ActionService {
     {
       id: 'admin-continents',
       label: 'Continentes',
-      icon: 'public',
+      icon: 'icon-continents',
       category: 'admin',
       type: 'nav',
       routerLink: '/admin/continents',
     },
     {
-      id: 'admin-regions',
-      label: 'Regiones',
-      icon: 'travel_explore',
+      id: 'admin-areas',
+      label: 'Áreas',
+      icon: 'icon-area',
       category: 'admin',
       type: 'nav',
-      routerLink: '/admin/regions',
+      routerLink: '/admin/areas',
     },
     {
-      id: 'admin-subregions',
-      label: 'Subregiones',
-      icon: 'map',
+      id: 'admin-dependencies',
+      label: 'Dependiencias',
+      icon: 'icon-dependencies',
       category: 'admin',
       type: 'nav',
-      routerLink: '/admin/subregions',
+      routerLink: '/admin/dependencies',
     },
     {
-      id: 'admin-currencies',
-      label: 'Monedas',
-      icon: 'payments',
+      id: 'admin-multilingualnames',
+      label: 'Traducciones',
+      icon: 'icon-translations',
       category: 'admin',
       type: 'nav',
-      routerLink: '/admin/currencies',
+      routerLink: '/admin/multilingualnames',
     },
 
     // --- Acciones de Barra de Herramientas (Toolbar) ---
-    { id: 'toolbar-save', label: 'Guardar', icon: 'save', category: 'toolbar', type: 'button' },
-    { id: 'toolbar-cancel', label: 'Cancelar', icon: 'cancel', category: 'toolbar', type: 'button' },
-    { id: 'toolbar-add', label: 'Añadir Nuevo', icon: 'add', category: 'toolbar', type: 'button' },
-    { id: 'toolbar-delete-selected', label: 'Eliminar Seleccionados', icon: 'delete', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-save', label: 'Guardar', icon: 'icon-save', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-cancel', label: 'Cancelar', icon: 'icon-cancel', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-add', label: 'Añadir Nuevo', icon: 'icon-add', category: 'toolbar', type: 'button' },
+    { id: 'toolbar-delete-selected', label: 'Eliminar Seleccionados', icon: 'icon-delete', category: 'toolbar', type: 'button' },
   ];
 
   // --- Títulos para las categorías de acciones ---

@@ -1,0 +1,12 @@
+<div class="admin-page-container">
+  <app-ui-heading [ui-heading-title]="pageTitle" />
+
+  <app-ui-table
+    [ui-table-columns]="columns"
+    [ui-table-data]="manager.data()"
+    [ui-table-is-loading]="manager.isLoading()"
+    [ui-table-sort]="manager.sort()"
+    (ui-table-sort-change)="manager.onSortChange($event)"
+  >
+  </app-ui-table>
+</div>

@@ -31,16 +31,17 @@
       </button>
 
       <span class="ui-paginator__block">
-        Página
+        <label for="pageInput" class="ui-paginator__label">Página</label>
         <input
+          id="pageInput"
           class="ui-paginator__input"
           type="number"
           min="1"
           [max]="totalPages()"
-          [value]="page()"
+          [value]="currentPageInputValue()"
           (change)="onGoToPageInputChange($event)"
           (keydown.enter)="onGoToPageInputChange($event)"
-          aria-label="Ir a la página número"
+          aria-label="Página actual, de un total de {{totalPages()}}"
         />
         de {{ totalPages() }}
       </span>

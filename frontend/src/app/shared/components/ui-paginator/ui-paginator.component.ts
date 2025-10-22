@@ -4,15 +4,18 @@ import {
   Component,
   ChangeDetectionStrategy,
   input,
+  OnInit,
+  effect,
   output,
   computed,
+  signal,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';
 import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
-import { PaginatorChangeEvent, PAGE_SIZE_OPTIONS } from './ui-paginator.types';
+import { PAGE_SIZE_OPTIONS, PaginatorChangeEvent } from './ui-paginator.types';
 
 @Component({
   selector: 'app-ui-paginator',
@@ -22,7 +25,7 @@ import { PaginatorChangeEvent, PAGE_SIZE_OPTIONS } from './ui-paginator.types';
   styleUrls: ['./ui-paginator.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiPaginatorComponent {
+export class UiPaginatorComponent implements OnInit {
   // --- Entradas (Inputs) ---
   totalRecords = input.required<number>({ alias: 'uiPaginatorTotalRecords' });
   page = input(1, { alias: 'uiPaginatorPage' });
@@ -30,7 +33,7 @@ export class UiPaginatorComponent {
   pageSizeOptions = input(PAGE_SIZE_OPTIONS, { alias: 'uiPaginatorPageSizeOptions' });
 
   // --- Salidas (Outputs) ---
-  pageChange = output<PaginatorChangeEvent>({ alias: 'uiPaginatorPageChange' });
+  pageStateChange = output<PaginatorChangeEvent>({ alias: 'uiPaginatorPageStateChange' });
 
   // --- Estado Derivado (Computed Signals) ---
   totalPages = computed(() => {
@@ -47,6 +50,32 @@ export class UiPaginatorComponent {
     return Math.min(this.page() * this.pageSize(), this.totalRecords());
   });
 
+  // Signal interno para gestionar el valor del input de página de forma optimizada
+  currentPageInputValue = signal(this.page());
+
+  constructor() {
+    // Efecto para re-validar la página actual si el total de registros o el tamaño de página cambian
+    effect(() => {
+      const currentPage = this.page();
+      const total = this.totalPages();
+      // Sincroniza el valor del input solo cuando el signal de página cambia
+      this.currentPageInputValue.set(currentPage);
+
+      if (currentPage > total && total > 0) {
+        this.goToPage(total);
+      }
+    });
+  }
+
+  ngOnInit(): void {
+    // Al inicializar, emitimos el estado completo de la paginación.
+    // Esto es CRUCIAL para que los componentes padre que usan combineLatest
+    // reciban el estado inicial y puedan realizar la primera carga de datos.
+    this.pageStateChange.emit({
+      page: this.page(),
+      pageSize: this.pageSize(),
+    });
+  }
   // --- Métodos de Navegación ---
 
   /**
@@ -55,7 +84,7 @@ export class UiPaginatorComponent {
   goToPage(newPage: number): void {
     const newValidPage = Math.max(1, Math.min(newPage, this.totalPages()));
     if (this.page() !== newValidPage) {
-      this.emitPageChange(newValidPage, this.pageSize());
+      this.pageStateChange.emit({ page: newValidPage, pageSize: this.pageSize() });
     }
   }
 
@@ -63,8 +92,12 @@ export class UiPaginatorComponent {
    * Gestiona el cambio en el selector de tamaño de página.
    */
   onPageSizeChange(newSize: number): void {
-    // Al cambiar el tamaño, volvemos a la primera página para evitar inconsistencias.
-    this.emitPageChange(1, newSize);
+    // Al cambiar el tamaño de página, es una buena práctica volver a la primera página
+    // para evitar quedar en una página que ya no existe.
+    this.pageStateChange.emit({
+      page: 1,
+      pageSize: newSize,
+    });
   }
 
   /**
@@ -76,9 +109,5 @@ export class UiPaginatorComponent {
     if (!isNaN(page)) {
       this.goToPage(page);
     }
-  }
-
-  private emitPageChange(page: number, pageSize: number): void {
-    this.pageChange.emit({ page, pageSize });
   }
 }

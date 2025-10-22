@@ -100,6 +100,7 @@ La directiva expone las siguientes propiedades y métodos públicos para ser usa
 | Método                 | Parámetros              | Descripción                                                              |
 | ---------------------- | ----------------------- | ------------------------------------------------------------------------ |
 | `onPageChange`         | `page: number`          | Se llama para cambiar a una nueva página.                                |
+| `onPageSizeChange`     | `size: number`          | Se llama para cambiar el tamaño de la página.                            |
 | `onSortChange`         | `sort: Sort<T>`         | Se llama para cambiar el orden de los datos.                             |
 | `onSearch`             | `searchTerm: string`    | Se llama para filtrar los datos según un término de búsqueda.           |
 | `refreshData`          | `void`                  | Fuerza una recarga de los datos de la tabla.                             |

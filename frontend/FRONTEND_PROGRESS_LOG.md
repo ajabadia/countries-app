@@ -1,4 +1,32 @@
-<!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-19 -->
+<!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-22 -->
+
+### 19. Refactorización Final: Eliminación de `BaseAdminDirective`
+
+-   **Fecha**: 2025-10-22
+-   **Acción**: Eliminación completa de la `BaseAdminDirective` y refactorización de los componentes de administración (`ContinentsAdminComponent`, `CountriesAdminComponent`) para que contengan su propia lógica de gestión de datos.
+-   **Propósito**: Solucionar de raíz el error crítico y persistente `NG0950` causado por una condición de carrera en la inicialización de la directiva. El objetivo es reemplazar una abstracción frágil y compleja por un patrón más simple, explícito y robusto.
+-   **Cambios Realizados**:
+    -   Se ha eliminado el fichero `src/app/shared/directives/base-admin.directive.ts`.
+    -   Se ha refactorizado `ContinentsAdminComponent` para implementar su propio flujo de datos reactivo usando `signals` para el estado y un `stream` de `RxJS` (`combineLatest` + `switchMap`) para las llamadas a la API.
+    -   Se ha refactorizado `CountriesAdminComponent` para seguir exactamente el mismo patrón, asegurando la consistencia.
+    -   Se han limpiado todas las referencias a la directiva eliminada en las plantillas y clases de los componentes.
+-   **Beneficio**: La aplicación es ahora estable y funcional. Los componentes de administración son autónomos y su lógica es mucho más fácil de entender y depurar. Se ha establecido un patrón de arquitectura claro y exitoso para futuras páginas de administración.
+
+---
+
+## 2025-10-20: Depuración y Creación de Features
+
+### 18. Creación y Depuración de la Sección de Continentes
+
+-   **Fecha**: 2025-10-20
+-   **Acción**: Creación de una nueva página de administración para la entidad "Continentes" y depuración de los errores de enrutamiento y compilación asociados.
+-   **Propósito**: Validar el flujo de datos base (servicio -> componente -> tabla) en un entorno simplificado y, al mismo tiempo, expandir la funcionalidad de administración.
+-   **Cambios Realizados**:
+    -   **Creación de Componente**: Se crearon los archivos para `ContinentsAdminComponent`, `ContinentsService` y el tipo `Continent` en el frontend.
+    -   **Depuración de Rutas**: Se solucionó un error `NG04002: Cannot match any routes` causado por una incorrecta ubicación de los archivos del nuevo componente. Se movieron los archivos a su propio directorio `features/admin/continents/` y se aseguró que la ruta de carga diferida en `admin.routes.ts` fuera correcta.
+    -   **Depuración de `ActionService`**: Se corrigieron inconsistencias en los `routerLink` de `action.service.ts` para asegurar que todas las rutas de navegación del menú de administración fueran correctas, lo que contribuyó a estabilizar el enrutador.
+    -   **Depuración de Compilación**: Se resolvieron errores de TypeScript (`TS2554`, `TS2515`) actualizando `ContinentsService` y `ContinentsAdminComponent` para alinearlos con la API refactorizada de `BaseCrudService` (que ahora requiere una propiedad `apiUrl` y `HttpParams` en el método `getAll`).
+-   **Beneficio**: La nueva sección "Gestión de Continentes" es ahora funcional y sirve como un caso de prueba exitoso para la arquitectura CRUD. El proceso de depuración ha reforzado la importancia de la correcta organización de archivos y la sincronización entre las implementaciones y las interfaces base.
 
 ### 17. Implementación de Paginación "Cargar Más" y Corrección de PageSize
 

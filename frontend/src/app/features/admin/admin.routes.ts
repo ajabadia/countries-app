@@ -22,4 +22,9 @@ export const ADMIN_ROUTES: Routes = [
     path: 'countries',
     loadComponent: () => import('./countries/countries-admin.component').then(m => m.CountriesAdminComponent),
   },
+  {
+    path: 'continents',
+    loadComponent: () =>
+      import('./continents/continents-admin.component').then(m => m.ContinentsAdminComponent),
+  },
 ];

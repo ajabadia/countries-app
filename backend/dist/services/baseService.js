@@ -23,21 +23,21 @@ export default class BaseService {
      */
     async getAll(options = {}) {
         const db = await getDB();
-        const { columns = ['*'], orderBy = 'id', orderDir = 'asc', limit, offset, search = null } = options;
+        const { columns = ['*'], orderBy = 'id', orderDir = 'asc', pageSize, offset, search = null, searchFields } = options;
         // --- Validación para prevenir SQL Injection ---
         const validColumnsInfo = db.prepare(`PRAGMA table_info(${this.tableName})`).all();
         const validColumns = validColumnsInfo.map(c => c.name);
         const safeOrderBy = validColumns.includes(orderBy) ? orderBy : 'id';
         const safeOrderDir = ['asc', 'desc'].includes(orderDir.toLowerCase()) ? orderDir.toUpperCase() : 'ASC';
         const cols = columns.join(', ');
-        const { clause: whereClause, params: searchParams } = this._buildWhereClause(search);
+        const { clause: whereClause, params: searchParams } = this._buildWhereClause(search, searchFields);
         const totalQuery = `SELECT COUNT(*) as total FROM ${this.tableName} ${whereClause}`;
         const { total } = db.prepare(totalQuery).get(...searchParams);
         let query = `SELECT ${cols} FROM ${this.tableName} ${whereClause} ORDER BY ${safeOrderBy} ${safeOrderDir}`;
         const queryParams = [...searchParams];
-        if (limit != null) {
+        if (pageSize != null) {
             query += ` LIMIT ?`;
-            queryParams.push(limit);
+            queryParams.push(pageSize);
         }
         if (offset != null) {
             query += ` OFFSET ?`;
@@ -128,12 +128,13 @@ export default class BaseService {
         // Devolvemos la entidad completa actualizada
         return (await this.getById(id));
     }
-    _buildWhereClause(search) {
-        if (!search || this.searchableFields.length === 0) {
+    _buildWhereClause(search, searchFields) {
+        const fieldsToSearch = searchFields && searchFields.length > 0 ? searchFields : this.searchableFields;
+        if (!search || fieldsToSearch.length === 0) {
             return { clause: '', params: [] };
         }
-        const clause = `WHERE ${this.searchableFields.map(field => `${field} LIKE ?`).join(' OR ')}`;
-        const params = this.searchableFields.map(() => `%${search}%`);
+        const clause = `WHERE ${fieldsToSearch.map(field => `${field} LIKE ?`).join(' OR ')}`;
+        const params = fieldsToSearch.map(() => `%${search}%`);
         return { clause, params };
     }
 }

@@ -4,7 +4,7 @@ export interface PagedResponse<T> {
   data: T[];
   total: number;
   page: number;
-  limit: number;
+  pageSize: number;
   totalPages: number;
   hasNextPage: boolean;
   hasPrevPage: boolean;

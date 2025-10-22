@@ -1,26 +1,10 @@
 <div class="admin-page-container">
   <app-ui-heading [ui-heading-title]="pageTitle" />
-
   <div class="toolbar">
     <app-ui-search-box
       class="toolbar__search"
-      (uiSearchBoxValueChange)="onSearch($event)"
+      (uiSearchBoxValueChange)="manager.onSearch($event)"
     />
-    <app-ui-toolbar-buttons
-      class="toolbar__actions"
-      [ui-toolbar-buttons]="toolbarActions"
-    />
-  </div>
-
-  <div class="load-more-container">
-    @if (canLoadMore()) {
-      <button app-ui-button
-        ui-button-variant="outline"
-        ui-icon-name="add"
-        (click)="loadMore()">
-        Cargar más
-      </button>
-    }
   </div>
 
   <!-- Ejemplo de uso dentro de ui-table-columns -->
@@ -33,41 +17,28 @@
   -->
   <app-ui-table
     [ui-table-columns]="columns"
-    [ui-table-data]="data()"
-    [ui-table-sort]="sort$ | async"
-    [ui-table-selection]="selectionService"
-    [ui-table-is-loading]="isLoading()"
-    (ui-table-sort-change)="onSortChange($event)"
+    [ui-table-data]="manager.data()"
+    [ui-table-sort]="manager.sort()"
+    [ui-table-is-loading]="manager.isLoading()"
+    (ui-table-sort-change)="manager.onSortChange($event)"
   >
     <!-- 
       Aquí definimos la plantilla para la celda de la columna 'defaultname'.
       El nombre 'col_defaultname' debe coincidir con la lógica en `ui-table.component.ts`.
       La variable `let-country` recibe el objeto de la fila (el `$implicit` del contexto).
     -->
-    <ng-template #col_defaultname let-country>
+    <ng-template uiTableColumn="defaultname" let-item>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
-        <app-ui-icon [ui-icon-name]="country.id" ui-icon-type="circle-flag" ui-icon-size="s"></app-ui-icon>
-        <span>{{ country.defaultname }}</span>
+        <app-ui-icon [ui-icon-name]="item.alpha2may.toLowerCase()" ui-icon-type="circle-flag" ui-icon-size="s"></app-ui-icon>
+        <a href="javascript:void(0)">{{ item.defaultname }}</a>
       </div>
     </ng-template>
   </app-ui-table>
 
-  <div class="load-more-container">
-    @if (canLoadMore()) {
-      <button app-ui-button
-        ui-button-variant="outline"
-        ui-icon-name="add"
-        (click)="loadMore()">
-        Cargar más
-      </button>
-    }
-  </div>
-
   <app-ui-paginator
-    [uiPaginatorTotalRecords]="totalRecords()"
-    [uiPaginatorPage]="(page$ | async) ?? 1"
-    [uiPaginatorPageSize]="(pageSize$ | async) ?? 50"
-    (uiPaginatorPageChange)="onPageChange($event.page)"
-    (uiPaginatorPageSizeChange)="onPageSizeChange(+$event)"
-  />
+    [uiPaginatorTotalRecords]="manager.totalRecords()"
+    [uiPaginatorPage]="manager.page()"
+    [uiPaginatorPageSize]="manager.pageSize()"
+    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
+  ></app-ui-paginator>
 </div>

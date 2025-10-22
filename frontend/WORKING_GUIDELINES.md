@@ -87,6 +87,16 @@ La gestión de estado reactivo se rige por las siguientes normas:
 
 ### 4.3. Accesibilidad (a11y)
 
+### 4.3. Patrón para Páginas de Administración (CRUD)
+
+Tras la depuración de la `BaseAdminDirective`, se ha establecido el siguiente patrón como el estándar para las páginas que muestran listas de datos (ej. `countries`, `continents`):
+
+-   **Lógica en el Componente**: La lógica para obtener y gestionar los datos (paginación, ordenación, búsqueda) reside directamente en la clase del componente, no en una directiva o clase base abstracta.
+-   **Gestión de Estado con `signals`**: El estado de la UI (página actual, término de búsqueda, orden) se gestiona con `signals`.
+-   **Orquestación con `RxJS`**: Se utiliza `combineLatest` para combinar los `Observables` derivados de los `signals` de estado. El resultado se pasa a un `switchMap` que realiza la llamada a la API. Esto crea un flujo de datos reactivo, eficiente y fácil de seguir.
+
+### 4.4. Accesibilidad (a11y)
+
 La accesibilidad es un requisito no negociable.
 
 -   Todos los elementos interactivos (botones, enlaces) deben ser accesibles por teclado.
@@ -107,7 +117,6 @@ La aplicación se organiza en tres directorios principales, tal y como se detall
 ### 5.2. Patrón `ActionService`
 
 El `ActionService` (`@core/services`) es la **única fuente de la verdad** para las acciones de la UI (botones de la barra de herramientas, enlaces de menús, etc.).
-
 -   **Lógica Centralizada**: Los componentes de página (en `features`) son responsables de definir y registrar las acciones que necesitan en el `ActionService`.
 -   **Componentes de UI "Tontos"**: Los componentes de UI (como `UiToolbarButtonsComponent` o `UiHamburgerMenuComponent`) consumen las acciones del `ActionService` y se limitan a renderizarlas. No deben contener lógica sobre qué acciones mostrar.
 

@@ -9,18 +9,31 @@ import { NotFoundError, ValidationError } from '../errors/httpErrors.js';
  */
 export function createCrudController(service, entityName, sanitizer) {
     const getAll = asyncHandler(async (req, res) => {
-        const { page = '1', pageSize = '10', orderBy = 'id', orderDir = 'asc', search = null } = req.query;
+        const { page = '1', pageSize = '10', orderBy = 'id', orderDir = 'asc', search = null, searchFields } = req.query;
         const pageNumber = parseInt(page, 10) || 1;
         const pageSizeNumber = parseInt(pageSize, 10) || 10;
         const options = {
-            limit: pageSizeNumber,
+            pageSize: pageSizeNumber,
             offset: (pageNumber - 1) * pageSizeNumber,
             orderBy: orderBy,
             orderDir: orderDir,
             search: search,
+            // ✅ Sí que los necesitamos, para búsquedas dinámicas desde el frontend.
+            // Si no vienen en la query, el servicio usará los suyos por defecto.
+            searchFields: Array.isArray(searchFields) ? searchFields :
+                typeof searchFields === 'string' ? [searchFields] :
+                    undefined
         };
-        const result = await service.getAll(options);
-        res.json(result);
+        const { data, total } = await service.getAll(options);
+        res.json({
+            data,
+            total,
+            page: pageNumber,
+            pageSize: pageSizeNumber,
+            totalPages: Math.ceil(total / pageSizeNumber),
+            hasNextPage: pageNumber * pageSizeNumber < total,
+            hasPrevPage: pageNumber > 1,
+        });
     });
     const getById = asyncHandler(async (req, res) => {
         const { id } = req.params;

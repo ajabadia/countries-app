@@ -2,6 +2,8 @@
 import dotenv from 'dotenv';
 import express, { type Express } from 'express';
 import logger from './config/logger.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 export async function createApp(): Promise<Express> {
   // Load environment variables from .env file, but not in the test environment.
@@ -26,6 +28,12 @@ export async function createApp(): Promise<Express> {
   const usersRouter = (await import('./routes/users.js')).default;
 
   const app = express();
+
+  // --- Servir assets estáticos del frontend --- 
+  // NOTA: Esto se deja comentado. El servidor de desarrollo de Angular (`ng serve`)
+  // se encarga de servir los assets del frontend. Esta línea solo sería necesaria
+  // en un entorno de producción donde el backend sirve también el frontend compilado.
+  // app.use('/assets', express.static(path.join(path.dirname(fileURLToPath(import.meta.url)), '../../frontend/src/assets')));
 
   // Stream for Morgan (HTTP logger) to use Winston.
   const stream = {
