@@ -1,5 +1,19 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-22 -->
 
+### 27. Implementación del Flujo de Autenticación (Login/Registro)
+
+-   **Fecha**: 2025-10-22
+-   **Acción**: Se ha implementado la lógica de autenticación real y se han creado los componentes para el login y el registro de usuarios.
+-   **Propósito**: Permitir a los usuarios iniciar sesión y registrarse en la aplicación, sentando las bases para la seguridad y la protección de rutas.
+-   **Cambios Realizados**:
+    -   **`AuthService`**: Se ha refactorizado por completo para gestionar el estado de autenticación (`currentUser`, `isAuthenticated`) con `signals`, persistir el token en `localStorage` y comunicarse con los endpoints `/api/auth/login` y `/api/auth/register`.
+    -   **`LoginComponent`**: Se ha creado un nuevo componente para la página de inicio de sesión, con su formulario y lógica para llamar al `AuthService`.
+    -   **`RegisterComponent`**: Se ha creado un nuevo componente para la página de registro, completando el flujo de autenticación.
+    -   **Rutas de Autenticación**: Se ha creado un nuevo archivo de rutas (`auth.routes.ts`) que se carga de forma diferida, optimizando el rendimiento.
+-   **Beneficio**: La aplicación ahora cuenta con un sistema de autenticación funcional. Los usuarios pueden registrarse e iniciar sesión, y el estado de su sesión se mantiene de forma reactiva en toda la aplicación.
+
+---
+
 ### 26. Implementación de Sistema de Notificaciones (Toasts)
 
 -   **Fecha**: 2025-10-22
