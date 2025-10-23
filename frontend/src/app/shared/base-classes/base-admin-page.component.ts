@@ -118,10 +118,20 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
   // --- Métodos para operaciones CRUD y modales ---
   openModal(item: T | null = null): void {
     this.editingItem.set(item);
+    const primaryKeyField = this.formFields.find(f => f.isPrimaryKey);
+
     if (item) {
       this.form.patchValue(item);
+      // Al editar, deshabilitamos el campo de la clave primaria para evitar su modificación.
+      if (primaryKeyField) {
+        this.form.get(primaryKeyField.name)?.disable();
+      }
     } else {
       this.form.reset();
+      // Al crear, nos aseguramos de que el campo de la clave primaria esté habilitado.
+      if (primaryKeyField) {
+        this.form.get(primaryKeyField.name)?.enable();
+      }
     }
     this.isFormModalVisible.set(true);
   }

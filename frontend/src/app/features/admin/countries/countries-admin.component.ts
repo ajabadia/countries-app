@@ -44,23 +44,32 @@ export class CountriesAdminComponent extends BaseAdminPageComponent<Country> {
       name: 'id',
       label: 'ID (Código de País)',
       type: 'text',
+      placeholder: 'Código iso país | dos letras minúsculas',
       isPrimaryKey: true,
       validators: [Validators.required, Validators.minLength(2), Validators.maxLength(3)],
     },
-    { name: 'defaultname', label: 'Nombre', type: 'text', validators: [Validators.required] },
+    { name: 'defaultname', label: 'Nombre', type: 'text', placeholder: 'Nombre del país', validators: [Validators.required] },
     {
       name: 'alpha2may',
       label: 'Código ISO2',
       type: 'text',
+      placeholder: 'Código iso país | dos letras mayúsculas',
       validators: [Validators.required, Validators.minLength(2), Validators.maxLength(2)],
     },
     {
       name: 'alpha3may',
       label: 'Código ISO3',
       type: 'text',
+      placeholder: 'Código iso país | tres letras mayúsculas',
       validators: [Validators.required, Validators.minLength(3), Validators.maxLength(3)],
     },
-    { name: 'numeric', label: 'Código Numérico', type: 'text' },
+    {
+      name: 'numeric',
+      label: 'Código Numérico',
+      type: 'text',
+      placeholder: 'Código numérico del país, tres dígitos numéricos con ceros a la izquierda',
+      validators: [Validators.required],
+    },
   ];
   override searchableFields: (keyof Country)[] = ['id', 'defaultname', 'alpha2may', 'alpha3may', 'numeric'];
 

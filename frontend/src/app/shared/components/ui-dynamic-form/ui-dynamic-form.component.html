@@ -26,15 +26,15 @@
             [id]="field.name"
             [formControlName]="field.name"
             [placeholder]="field.placeholder || ''"
+            [title]="field.placeholder || ''"
+            [class.is-invalid]="form.get(field.name)?.invalid && form.get(field.name)?.touched"
           />
         }
       }
 
-      @if (form.get(field.name)?.invalid && form.get(field.name)?.touched) {
-        <div class="form-field__error">
-          <!-- Aquí se podrían mostrar mensajes de error más específicos -->
-          Campo inválido
-        </div>
+      <!-- Mostramos el componente de error solo si el campo ha sido "tocado" -->
+      @if (form.get(field.name)?.touched) {
+        <app-ui-form-field-error [control]="form.get(field.name)" />
       }
     </div>
   }

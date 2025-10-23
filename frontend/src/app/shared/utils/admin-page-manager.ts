@@ -3,8 +3,8 @@
 import { Injectable, Injector, OnDestroy, signal } from '@angular/core';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { HttpParams } from '@angular/common/http';
-import { Subscription, combineLatest, of } from 'rxjs';
-import { switchMap, catchError, tap, debounceTime, distinctUntilChanged } from 'rxjs/operators';
+import { Subscription, combineLatest, of, Subject } from 'rxjs';
+import { switchMap, catchError, tap, debounceTime, distinctUntilChanged, startWith } from 'rxjs/operators';
 
 import { BaseCrudService } from '@shared/services/base-crud.service';
 import { SelectionService } from '@app/shared/services/selection.service';
@@ -43,6 +43,7 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
 
   private dataSubscription?: Subscription;
   private config?: AdminPageManagerConfig<T>;
+  private refreshTrigger$ = new Subject<void>();
 
   constructor() {
     // Inicializamos el servicio de selección aquí para que esté disponible inmediatamente.
@@ -70,6 +71,7 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
         distinctUntilChanged()
       ),
       sort: toObservable(this.sort, { injector: this.config.injector }),
+      refresh: this.refreshTrigger$.pipe(startWith(undefined)), // Inicia la carga y permite refrescos manuales
     };
 
     this.dataSubscription = combineLatest([
@@ -77,6 +79,7 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
       sources$.pageSize,
       sources$.searchTerm,
       sources$.sort,
+      sources$.refresh,
     ]).pipe(
       tap(() => this.isLoading.set(true)),
       switchMap(([page, pageSize, search, sort]) => {
@@ -145,10 +148,7 @@ export class AdminPageManager<T extends { id: number | string }> implements OnDe
   }
 
   refreshData(): void {
-    this.onSearch(this.searchTerm());
-  }
-
-  private _triggerRefresh(): void {
-    // Este método podría usarse en el futuro si necesitamos un refresco más directo
+    // Dispara el observable de refresco para volver a cargar los datos.
+    this.refreshTrigger$.next();
   }
 }

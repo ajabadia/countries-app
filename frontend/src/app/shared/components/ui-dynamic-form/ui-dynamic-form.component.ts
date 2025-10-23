@@ -4,11 +4,12 @@ import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { FormField } from '@app/shared/types/form.types';
+import { UiFormFieldErrorComponent } from '../ui-form-field-error/ui-form-field-error.component';
 
 @Component({
   selector: 'app-ui-dynamic-form',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule, UiFormFieldErrorComponent],
   templateUrl: './ui-dynamic-form.component.html',
   styleUrls: ['./ui-dynamic-form.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,

@@ -16,6 +16,7 @@ El objetivo es que los componentes de administración (`ContinentsAdminComponent
 -   **Flujo de Datos Reactivo**: Orquesta las llamadas a la API mediante un `stream` de `RxJS` (`combineLatest` + `switchMap`), asegurando eficiencia y cancelando peticiones obsoletas.
 -   **API Pública Clara**: Expone `signals` (`data`, `totalRecords`, `isLoading`) y métodos (`onSortChange`, `onSearch`, `onPageStateChange`) para que la plantilla del componente anfitrión se conecte fácilmente.
 -   **Instanciación Manual**: **No es un servicio inyectable global**. Se debe crear una nueva instancia (`new AdminPageManager()`) en el constructor de cada componente de administración, lo que garantiza un ciclo de vida controlado y sin conflictos.
+-   **Refresco de Datos**: Incluye un método `refreshData()` para forzar la recarga de los datos manteniendo los filtros, ordenación y paginación actuales.
 
 ## Cómo Usarlo
 
@@ -64,4 +65,13 @@ El objetivo es que los componentes de administración (`ContinentsAdminComponent
       [uiPaginatorPageSize]="manager.pageSize()"
       (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
     ></app-ui-paginator>
+    ```
+
+3.  **Refrescando los datos (desde el componente):**
+
+    Después de una operación CRUD (crear, editar, borrar), simplemente llama al método `refreshData()` para actualizar la tabla.
+
+    ```typescript
+    // Dentro de la lógica de guardado/borrado del componente
+    this.manager.refreshData();
     ```

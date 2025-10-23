@@ -44,6 +44,7 @@ export class ContinentsAdminComponent extends BaseAdminPageComponent<Continent> 
       name: 'id',
       label: 'ID (Código de Continente)',
       type: 'text',
+      placeholder: 'Código numérico del continente, tres digitos numéticos con ceros a la izquierda',
       isPrimaryKey: true,
       validators: [Validators.required, Validators.pattern('^[0-9]{3}$')],
     },
@@ -51,6 +52,7 @@ export class ContinentsAdminComponent extends BaseAdminPageComponent<Continent> 
       name: 'defaultname',
       label: 'Nombre del Continente',
       type: 'text',
+      placeholder: 'Nombre del continente',
       validators: [Validators.required, Validators.minLength(3)],
     },
   ];
