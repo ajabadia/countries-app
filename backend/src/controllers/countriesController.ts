@@ -9,8 +9,9 @@ import { NotFoundError } from '../errors/httpErrors.js';
 
 // Función para sanitizar el body, extrayendo solo las propiedades permitidas para Country.
 const sanitizeCountry = (body: any): Partial<Country> => {
-  const { defaultname, alpha2may, alpha3may, numeric } = body;
+  const { id, defaultname, alpha2may, alpha3may, numeric } = body;
   const sanitizedData: Partial<Country> = {};
+  if (id !== undefined) sanitizedData.id = id;
   if (defaultname !== undefined) sanitizedData.defaultname = defaultname;
   if (alpha2may !== undefined) sanitizedData.alpha2may = alpha2may;
   if (alpha3may !== undefined) sanitizedData.alpha3may = alpha3may;

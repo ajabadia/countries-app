@@ -44,6 +44,7 @@ export class CountriesAdminComponent extends BaseAdminPageComponent<Country> {
       name: 'id',
       label: 'ID (Código de País)',
       type: 'text',
+      isPrimaryKey: true,
       validators: [Validators.required, Validators.minLength(2), Validators.maxLength(3)],
     },
     { name: 'defaultname', label: 'Nombre', type: 'text', validators: [Validators.required] },

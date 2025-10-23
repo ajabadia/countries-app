@@ -11,10 +11,10 @@ export class ToastService {
   private lastId = 0;
 
   private readonly ICONS: Record<ToastType, string> = {
-    success: 'success',
-    error: 'error',
-    info: 'info',
-    warning: 'warning',
+    success: 'icon-success',
+    error: 'icon-error',
+    info: 'icon-info',
+    warning: 'icon-warning',
   };
 
   show(type: ToastType, message: string, duration = 5000): void {

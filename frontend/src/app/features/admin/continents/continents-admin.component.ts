@@ -14,6 +14,7 @@ import { FormField } from '@app/shared/types/form.types';
 
 import { ContinentsService } from './continents.service';
 import { Continent } from '@app/core/types/continent.types';
+import { UiTableColumnDirective } from '@app/shared/components/ui-table/ui-table-column.directive';
 import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/ui-dynamic-form.component';
 
 @Component({
@@ -28,6 +29,7 @@ import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/u
     UiPaginatorComponent,
     UiTableComponent,
     UiFormModalComponent,
+    UiTableColumnDirective,
     UiDynamicFormComponent,
   ],
   templateUrl: './continents-admin.component.html',
@@ -36,16 +38,14 @@ export class ContinentsAdminComponent extends BaseAdminPageComponent<Continent> 
   // --- Implementación del "Contrato" de la clase base ---
   readonly actionId = 'admin-continents';
   service = inject(ContinentsService);
-  columns: TableColumn<Continent>[] = [
-    { key: 'id', label: 'ID', sortable: true },
-    { key: 'defaultname', label: 'Nombre', sortable: true },
-  ];
+  columns: TableColumn<Continent>[] = [];
   formFields: FormField[] = [
     {
       name: 'id',
       label: 'ID (Código de Continente)',
       type: 'text',
-      validators: [Validators.required, Validators.minLength(2), Validators.maxLength(2)],
+      isPrimaryKey: true,
+      validators: [Validators.required, Validators.pattern('^[0-9]{3}$')],
     },
     {
       name: 'defaultname',
@@ -54,5 +54,17 @@ export class ContinentsAdminComponent extends BaseAdminPageComponent<Continent> 
       validators: [Validators.required, Validators.minLength(3)],
     },
   ];
-  override searchableFields: (keyof Continent)[] = ['defaultname'];
+  override searchableFields: (keyof Continent)[] = ['id', 'defaultname'];
+
+  constructor() {
+    super();
+    this.initializeColumns();
+  }
+
+  private initializeColumns(): void {
+    this.columns = [
+      { key: 'id', label: 'ID', sortable: true },
+      { key: 'defaultname', label: 'Nombre', sortable: true, template: true },
+    ];
+  }
 }

@@ -4,8 +4,9 @@ import languagesService from '../services/languagesService.js';
 import type { Language } from '../types/language.types.js';
 
 const sanitizeLanguage = (body: any): Partial<Language> => {
-  const { name, active } = body;
+  const { id, name, active } = body;
   const sanitizedData: Partial<Language> = {};
+  if (id !== undefined) sanitizedData.id = id;
   if (name !== undefined) sanitizedData.name = name;
   if (active !== undefined) sanitizedData.active = active;
   return sanitizedData;

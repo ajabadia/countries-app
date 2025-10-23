@@ -8,6 +8,7 @@ const router = Router();
 
 // Reglas de validación para la creación de un país.
 const countryValidationRules = [
+  body('id').notEmpty().withMessage('ID is required').isString(),
   body('defaultname').notEmpty().withMessage('defaultname is required').isString(),
   body('alpha2may').isLength({ min: 2, max: 2 }).withMessage('alpha2may must be 2 characters'),
   body('alpha3may').isLength({ min: 3, max: 3 }).withMessage('alpha3may must be 3 characters'),
@@ -16,6 +17,7 @@ const countryValidationRules = [
 
 // Reglas de validación para la actualización (campos opcionales).
 const countryUpdateValidationRules = [
+  body('id').optional().isString(),
   body('defaultname').optional().isString(),
   body('alpha2may').optional().isLength({ min: 2, max: 2 }).withMessage('alpha2may must be 2 characters'),
   body('alpha3may').optional().isLength({ min: 3, max: 3 }).withMessage('alpha3may must be 3 characters'),

@@ -9,6 +9,7 @@ import { PagedResponse } from '@shared/types/paged-response.interface';
 // No se puede inyectar directamente, solo se puede heredar de ella.
 export abstract class BaseCrudService<T> {
   protected abstract readonly apiUrl: string;
+  protected readonly updateMethod: 'PUT' | 'PATCH' = 'PUT'; // Por defecto es PUT
 
   constructor(protected http: HttpClient) {}
 
@@ -29,7 +30,11 @@ export abstract class BaseCrudService<T> {
 
   // Actualizar un elemento existente
   update(id: number | string, item: Partial<T>): Observable<T> {
-    return this.http.put<T>(`${this.apiUrl}/${id}`, item);
+    if (this.updateMethod === 'PUT') {
+      return this.http.put<T>(`${this.apiUrl}/${id}`, item);
+    }
+    // Por defecto, o si se especifica 'PATCH'
+    return this.http.patch<T>(`${this.apiUrl}/${id}`, item);
   }
 
   // Eliminar un elemento

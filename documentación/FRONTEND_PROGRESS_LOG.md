@@ -1,5 +1,48 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-22 -->
 
+### 30. Resolución Final del CRUD y Depuración Profunda
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha completado la depuración del flujo CRUD para todas las entidades de administración, solucionando el problema persistente con la creación de nuevos registros en la sección de "Continentes".
+-   **Propósito**: Lograr que todas las páginas de administración sean 100% funcionales, consistentes y robustas.
+-   **Cambios Realizados**:
+    -   **Diagnóstico Profundo**: Se realizó una comparación exhaustiva entre los componentes `countries-admin` (funcional) y `continents-admin` (defectuoso).
+    -   **Identificación de la Causa Raíz**: Se descubrió que la propiedad `isPrimaryKey: true` faltaba en la definición del campo `id` dentro de `formFields` en `continents-admin.component.ts`. Esto impedía que la lógica de la clase base `BaseAdminPageComponent` habilitara el campo `id` al crear un nuevo registro, haciendo que el formulario fuera siempre inválido.
+    -   **Corrección de la Interfaz**: Se actualizó la interfaz `FormField` en `form.types.ts` para incluir la propiedad opcional `isPrimaryKey?: boolean`, solucionando los errores de compilación de TypeScript.
+    -   **Alineación de Reglas de Negocio**: Se ajustaron las reglas de validación tanto en el frontend (`Validators.pattern`) como en el backend (`express-validator`) para que el `id` de los continentes acepte un código de 3 dígitos en formato string, permitiendo ceros a la izquierda.
+-   **Beneficio**: Todas las funcionalidades CRUD (Crear, Leer, Actualizar, Borrar) son ahora completamente operativas en todas las páginas de administración. La arquitectura base ha demostrado ser robusta y el sistema es ahora estable y predecible.
+
+---
+
+### 29. Estandarización de IDs de Negocio en Formularios CRUD
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha estandarizado el manejo de identificadores de negocio en toda la aplicación, tanto en el backend como en el frontend.
+-   **Propósito**: Asegurar que entidades como `countries`, `continents`, `areas` y `languages` utilicen un `id` proporcionado por el usuario (ej. 'ES', 'EU') en lugar de un ID autoincremental, alineando la aplicación con las reglas de negocio.
+-   **Cambios Realizados**:
+    -   **Backend**: Se han actualizado los controladores (`sanitize` functions) y las rutas (`express-validator` rules) para todas las entidades afectadas, para que acepten y validen el `id` durante la creación de un nuevo registro.
+    -   **Frontend**: Se han actualizado los `formFields` en los componentes de administración (`countries-admin`, `continents-admin`, etc.) para incluir un campo de formulario para el `id`, permitiendo al usuario introducir el código de negocio.
+    -   **Base de Datos**: Se ha verificado que las tablas correspondientes en la base de datos no utilicen `AUTOINCREMENT` en sus columnas `id`, sino que sean `PRIMARY KEY` de tipo `TEXT`.
+    -   **UI/UX**: Se ha mejorado la usabilidad de las tablas de administración haciendo que el campo principal (nombre o ID) sea un enlace para abrir directamente el modal de edición.
+-   **Beneficio**: El flujo CRUD para todas las entidades de catálogo es ahora completamente funcional y coherente con los requisitos del negocio. Se han eliminado los errores `NOT NULL constraint failed` y los fallos de validación silenciosos.
+
+---
+
+### 28. Estabilización y Depuración del Flujo de Autenticación
+
+-   **Fecha**: 2025-10-22
+-   **Acción**: Se ha llevado a cabo un proceso de depuración exhaustivo para estabilizar el flujo de registro e inicio de sesión.
+-   **Propósito**: Asegurar que el sistema de autenticación sea completamente funcional y robusto, solucionando una serie de errores de configuración y datos que impedían su correcto funcionamiento.
+-   **Cambios Realizados**:
+    -   **Configuración del Proxy**: Se ha verificado y asegurado la correcta configuración del `proxy.conf.json` para solucionar errores 404 en las llamadas a la API.
+    -   **Sincronización Backend-Frontend**: Se ha corregido una discrepancia en el formulario de registro, alineando el campo `name` del frontend con la expectativa del backend para solucionar errores de validación.
+    -   **Configuración del Backend**: Se han añadido las variables de entorno (`REFRESH_TOKEN_SECRET`) necesarias en el fichero `.env` del backend para permitir la generación de tokens.
+    -   **Actualización de la Base de Datos**: Se ha modificado el esquema de la tabla `users` para añadir la columna `refreshToken`, solucionando un error `no such column` durante el login.
+    -   **Limpieza de Datos**: Se han eliminado los datos de usuario inconsistentes de la base de datos y se ha utilizado el propio flujo de registro de la aplicación para crear un usuario válido, garantizando la integridad de los hashes de contraseña.
+-   **Beneficio**: El sistema de autenticación está ahora 100% operativo. Los usuarios pueden registrarse, iniciar sesión y recibir los tokens de acceso y refresco correctamente. Se han eliminado todos los bloqueos que impedían el progreso en las funcionalidades protegidas.
+
+---
+
 ### 27. Implementación del Flujo de Autenticación (Login/Registro)
 
 -   **Fecha**: 2025-10-22

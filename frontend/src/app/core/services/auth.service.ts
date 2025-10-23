@@ -40,9 +40,7 @@ export class AuthService {
   }
 
   getToken(): string | null {
-    // TODO: Reemplazar con la lógica real de autenticación.
-    // Temporalmente, devolvemos un token falso para desarrollo.
-    return this.accessTokenSignal() || 'fake-jwt-token-for-development';
+    return this.accessTokenSignal();
   }
 
   login(credentials: AuthCredentials): Observable<AuthResponse> {

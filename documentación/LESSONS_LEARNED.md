@@ -1,5 +1,68 @@
 <!-- File: d:\desarrollos\countries2\frontend\LESSONS_LEARNED.md | Last Modified: 2025-10-22 -->
 
+### 25. El Flujo de Autenticación es una Cadena: Un Eslabón Roto la Rompe Entera
+
+**Lección:** La depuración del flujo de login/registro reveló que un fallo no es un evento aislado, sino una cadena de dependencias entre el frontend, el backend y la base de datos. Un error en un punto puede manifestarse como un síntoma completamente diferente en otro.
+
+**Conclusión:**
+1.  **Error 404 en la API**: El primer síntoma fue un error 404 en el frontend. La causa no era la ruta, sino la falta de un **proxy de desarrollo** (`proxy.conf.json`) para comunicar `localhost:4200` con `localhost:3000`.
+2.  **Error de Validación (`Name is required`)**: El registro fallaba con un error de validación. La causa era una **discrepancia de nombres** entre el `FormGroup` del frontend (`username`) y el campo esperado por el backend (`name`).
+3.  **Error Fatal en el Backend (`REFRESH_TOKEN_SECRET is not defined`)**: El login parecía funcionar, pero el backend fallaba al generar tokens. La causa era una **variable de entorno faltante** en el archivo `.env` del backend.
+4.  **Error de Base de Datos (`no such column: refreshToken`)**: Una vez solucionado lo anterior, el login seguía fallando. La causa era que el **esquema de la base de datos** no se había actualizado para incluir la nueva columna que el código del backend ya esperaba.
+5.  **Error de Credenciales (`Invalid credentials`)**: Incluso con todo lo anterior correcto, el login podía fallar si los datos en la base de datos eran inconsistentes (ej. contraseñas no hasheadas o hasheadas con un método antiguo). La solución fue **limpiar la base de datos y usar el propio flujo de registro de la app** como única fuente de verdad.
+
+**Lección Final:** La depuración full-stack requiere un enfoque holístico. Es necesario validar cada eslabón de la cadena: la configuración del frontend, la consistencia de los datos enviados, la configuración del backend (variables de entorno) y la estructura de la base de datos.
+
+---
+
+### 29. La Herencia de Clases Exige una Configuración Precisa
+
+**Lección:** La depuración del componente `continents-admin` reveló que, aunque parecía idéntico al funcional `countries-admin`, no podía crear nuevos registros. La causa era una mínima diferencia en la configuración que rompía la lógica de la clase base `BaseAdminPageComponent`.
+
+**Conclusión:**
+1.  **El Contrato Implícito**: La clase base tenía una lógica que dependía de una propiedad `isPrimaryKey: true` en la configuración de `formFields` para saber qué campo habilitar al crear un nuevo registro.
+2.  **El Silencio es Peligroso**: La ausencia de esta propiedad no causaba un error de compilación (hasta que se actualizó el tipo `FormField`), sino un fallo de comportamiento silencioso: el formulario era siempre inválido y el botón de guardar no hacía nada.
+3.  **La Depuración Comparativa es Clave**: Cuando un componente falla y otro similar funciona, la técnica más efectiva es una comparación exhaustiva y metódica de sus configuraciones, plantillas y dependencias. La diferencia, por pequeña que sea, suele ser la causa raíz.
+4.  **Sincronización de Validaciones**: El error final "campo inválido" se debió a una discrepancia entre la regla de negocio (ID de 3 dígitos) y la validación en el frontend (que esperaba 2 caracteres). Es crucial que las validaciones del frontend (`Validators`) y del backend (`express-validator`) estén siempre perfectamente sincronizadas.
+
+---
+
+### 28. El Error `ECONNREFUSED` Significa que el Servidor Backend no Está Corriendo
+
+**Lección:** Tras solucionar los problemas de lógica y plantillas en el frontend, la aplicación empezó a mostrar un error `ECONNREFUSED` en la consola del proxy. Este error de red significa "Connection Refused".
+
+**Conclusión:**
+1.  **El Ecosistema Completo**: En un proyecto full-stack (y especialmente en un monorepo), tanto el servidor del frontend (Angular en `localhost:4200`) como el del backend (Node.js en `localhost:3000`) deben estar ejecutándose simultáneamente para que la comunicación a través del proxy funcione.
+2.  **Flujo de Trabajo Eficiente**: La mejor manera de gestionar esto es utilizando una herramienta como `concurrently`. Se ha añadido un script `dev` al `package.json` raíz que lanza ambos servidores con un solo comando (`npm run dev`).
+3.  **Diagnóstico Rápido**: Un error `ECONNREFUSED` en el proxy es una señal inequívoca de que el servidor de destino no está en línea o no está escuchando en el puerto esperado. Es el primer punto a verificar antes de buscar errores en el código.
+
+---
+
+### 27. La Base de Datos Debe Coincidir con la Lógica de la Aplicación
+
+**Lección:** Al intentar crear un país, se produjo un error `500 Internal Server Error` en el frontend, causado por un `NOT NULL constraint failed: countries.id` en el backend. Esto ocurrió porque la tabla `countries` no tenía su columna `id` configurada como `PRIMARY KEY AUTOINCREMENT`.
+
+**Conclusión:**
+1.  **IDs Autoincrementales para Entidades Estándar**: Para la mayoría de las entidades (como `countries`), el `id` debe ser una clave subrogada gestionada por la base de datos. Es crucial definir la columna como `INTEGER PRIMARY KEY AUTOINCREMENT` en el esquema de la base de datos para que la inserción de nuevos registros funcione sin necesidad de enviar un `id`.
+2.  **IDs de Negocio y Formularios**: Para entidades con identificadores de negocio (como `continents` con `id: 'EU'`), el error se manifestó como "no hace nada" porque el frontend no enviaba el `id` que el backend ahora validaba como obligatorio. La solución fue añadir el campo `id` al `formFields` del componente de administración correspondiente en el frontend.
+3.  **Sincronización Total**: Este incidente subraya que cualquier cambio en las reglas de validación del backend o en la estructura de la base de datos debe reflejarse inmediatamente en las partes correspondientes del sistema (otros servicios, formularios del frontend, etc.).
+
+---
+
+### 26. El Diseño de la Base de Datos Sigue las Reglas de Negocio
+
+**Lección:** Durante la depuración del borrado de continentes, se asumió inicialmente que el error (`/api/continents/null`) se debía a la falta de un `id` autoincremental en la base de datos. Sin embargo, la regla de negocio real es que los IDs de los continentes son códigos específicos y fijos (ej. 'EU', 'AS') que debe proporcionar el usuario.
+
+**Conclusión:**
+1.  **No Asumir `AUTOINCREMENT`**: No todas las entidades deben tener un ID numérico autogenerado. Algunas entidades, especialmente las de tipo "catálogo" o "maestro", pueden usar identificadores de negocio como clave primaria.
+2.  **El `id` como Campo de Formulario**: Cuando el `id` es un identificador de negocio, debe ser tratado como cualquier otro campo. Esto implica:
+    -   Añadirlo al formulario del frontend (`formFields` en el `...-admin.component.ts`).
+    -   Validarlo en el backend (en las reglas de `express-validator`).
+    -   Incluirlo en la función `sanitize` del controlador para que se pase al servicio de creación.
+3.  **La Base de Datos Refleja la Realidad**: La columna `id` en la tabla `continents` debe ser de tipo `TEXT` (o `VARCHAR`) y `PRIMARY KEY`, pero **no** `AUTOINCREMENT`. Esto asegura la unicidad del código proporcionado por el usuario.
+
+---
+
 ### 24. La Duplicación de Archivos Conduce al Caos
 
 **Lección:** Durante la implementación del sistema de notificaciones, se crearon accidentalmente múltiples versiones de servicios (`NotificationService`, `ToastService`) y archivos de tipos (`toast.types.ts`) en diferentes directorios. Esto provocó una serie de errores de compilación confusos y difíciles de depurar, como `is not a module` y `No suitable injection token`.

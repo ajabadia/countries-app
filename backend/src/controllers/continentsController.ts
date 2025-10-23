@@ -4,8 +4,9 @@ import continentsService from '../services/continentsService.js';
 import type { Continent } from '../types/continent.types.js';
 
 const sanitizeContinent = (body: any): Partial<Continent> => {
-  const { defaultname } = body;
+  const { id, defaultname } = body;
   const sanitizedData: Partial<Continent> = {};
+  if (id !== undefined) sanitizedData.id = id;
   if (defaultname !== undefined) sanitizedData.defaultname = defaultname;
   return sanitizedData;
 };

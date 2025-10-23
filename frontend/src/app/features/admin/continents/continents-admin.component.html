@@ -19,7 +19,14 @@
     [uiTableSort]="manager.sort()"
     [uiTableSelection]="manager.selectionService"
     (uiTableSortChange)="manager.onSortChange($event)"
-  />
+  >
+    <!-- 
+      Plantilla para la columna 'defaultname' para que sea un enlace de edición.
+    -->
+    <ng-template uiTableColumn="defaultname" let-item>
+      <a href="javascript:void(0);" (click)="openModal(item)">{{ item.defaultname }}</a>
+    </ng-template>
+  </app-ui-table>
 
   <app-ui-paginator
     [uiPaginatorTotalRecords]="manager.totalRecords()"

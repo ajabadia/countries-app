@@ -3,8 +3,10 @@ import { createCrudController } from './baseController.js';
 import areasService from '../services/areasService.js';
 // Función para sanitizar el body, extrayendo solo las propiedades permitidas para Area.
 const sanitizeArea = (body) => {
-    const { defaultname } = body;
+    const { id, defaultname } = body;
     const sanitizedData = {};
+    if (id !== undefined)
+        sanitizedData.id = id;
     if (defaultname !== undefined)
         sanitizedData.defaultname = defaultname;
     return sanitizedData;

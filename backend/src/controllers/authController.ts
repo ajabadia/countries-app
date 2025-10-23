@@ -47,6 +47,9 @@ const LOCKOUT_TIME_MINUTES = 15;
  * @access  Public
  */
 export const register = asyncHandler(async (req: Request, res: Response) => {
+  // --- INICIO DE DEBUG ---
+  console.log('Datos recibidos en /register:', req.body);
+  // --- FIN DE DEBUG ---
   const errors = validationResult(req);
   if (!errors.isEmpty()) {
     throw new ValidationError(errors.array());
@@ -103,6 +106,11 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     const timeLeft = Math.ceil((user.lockUntil - Date.now()) / 60000);
     throw new AuthenticationError(`Account is locked. Please try again in ${timeLeft} minutes.`);
   }
+
+  // --- INICIO DE DEBUG ---
+  console.log('Password recibido del frontend:', password);
+  console.log('Hash almacenado en la BD:', user.password);
+  // --- FIN DE DEBUG ---
 
   const isMatch = await bcrypt.compare(password, user.password);
 

@@ -1,12 +1,20 @@
 // File: /frontend/src/main.ts
 
 import { bootstrapApplication } from '@angular/platform-browser';
+import { provideHttpClient, withInterceptors } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
-import { provideHttpClient } from '@angular/common/http';
 
 import { AppComponent } from '@app/app.component';
 import { routes } from '@app/app.routes';
+import { AuthInterceptor } from '@core/interceptors/auth.interceptor';
 
 bootstrapApplication(AppComponent, {
-  providers: [provideRouter(routes), provideHttpClient()],
+  providers: [
+    provideRouter(routes),
+    // Aquí está la clave: registra tu interceptor funcional.
+    provideHttpClient(
+      withInterceptors([AuthInterceptor])
+    )
+  ]
 }).catch(err => console.error(err));
+

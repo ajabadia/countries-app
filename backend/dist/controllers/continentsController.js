@@ -2,8 +2,10 @@
 import { createCrudController } from './baseController.js';
 import continentsService from '../services/continentsService.js';
 const sanitizeContinent = (body) => {
-    const { defaultname } = body;
+    const { id, defaultname } = body;
     const sanitizedData = {};
+    if (id !== undefined)
+        sanitizedData.id = id;
     if (defaultname !== undefined)
         sanitizedData.defaultname = defaultname;
     return sanitizedData;

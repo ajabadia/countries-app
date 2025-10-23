@@ -5,6 +5,9 @@
     "backend",
     "frontend"
   ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev --workspace=backend\" \"npm start --workspace=frontend\""
+  },
   "devDependencies": {
     "concurrently": "^9.2.1",
     "rimraf": "^6.0.1"

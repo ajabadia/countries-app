@@ -36,7 +36,7 @@
     <ng-template uiTableColumn="defaultname" let-item>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <app-ui-icon [uiIconName]="item.alpha2may.toLowerCase()" uiIconType="circle-flag" uiIconSize="s"></app-ui-icon>
-        <a href="javascript:void(0)" (click)="openModal(item)">{{ item.defaultname }}</a>
+        <a href="javascript:void(0);" (click)="openModal(item)">{{ item.defaultname }}</a>
       </div>
     </ng-template>
 

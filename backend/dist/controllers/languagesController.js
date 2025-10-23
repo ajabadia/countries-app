@@ -2,8 +2,10 @@
 import { createCrudController } from './baseController.js';
 import languagesService from '../services/languagesService.js';
 const sanitizeLanguage = (body) => {
-    const { name, active } = body;
+    const { id, name, active } = body;
     const sanitizedData = {};
+    if (id !== undefined)
+        sanitizedData.id = id;
     if (name !== undefined)
         sanitizedData.name = name;
     if (active !== undefined)

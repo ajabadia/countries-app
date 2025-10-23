@@ -5,10 +5,12 @@ import { getAllLanguages, getLanguageById, createLanguage, updateLanguage, delet
 import { protect } from '../middleware/authMiddleware.js';
 const router = Router();
 const createValidationRules = [
+    body('id').notEmpty().isString().withMessage('ID is required'),
     body('name').notEmpty().isString().withMessage('name is required'),
     body('active').isNumeric().withMessage('active must be a number (0 or 1)'),
 ];
 const updateValidationRules = [
+    body('id').optional().isString().withMessage('ID must be a string'),
     body('name').optional().isString().withMessage('name must be a string'),
     body('active').optional().isNumeric().withMessage('active must be a number (0 or 1)'),
 ];

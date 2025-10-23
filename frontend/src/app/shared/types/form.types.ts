@@ -8,6 +8,7 @@ export interface FormField {
   name: string; // Corresponde al formControlName
   label: string;
   type: FormFieldType;
+  isPrimaryKey?: boolean;
   placeholder?: string;
   validators?: ValidatorFn[];
   defaultValue?: any;
