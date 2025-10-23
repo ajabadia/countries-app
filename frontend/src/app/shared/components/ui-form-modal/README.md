@@ -3,12 +3,11 @@
 # UI Form Modal Component (`<app-ui-form-modal>`)
 
 Componente contenedor reutilizable y "tonto" (dumb component) para mostrar formularios de creación o edición dentro de un modal.
-
 ## Características
 
 -   **Contenedor Genérico**: No contiene lógica de formulario. Utiliza proyección de contenido (`ng-content`) para mostrar cualquier formulario que se le pase.
--   **API Prefijada**: Todos sus inputs propios siguen la convención `ui-form-modal-*`.
--   **Configuración Externa de Botones**: No genera sus propios botones. Recibe la configuración completa de los botones del pie de página a través de un `Input`, lo que lo hace altamente reutilizable y desacoplado de la lógica de negocio.
+-   **API Prefijada**: Todos sus inputs y outputs siguen la convención `uiFormModal*`.
+-   **Gestión de Estado de Formulario**: Puede recibir un `FormGroup` para deshabilitar automáticamente el botón de "Guardar" si el formulario es inválido.
 -   **Componentes Anidados**: Utiliza `app-ui-heading` para la cabecera y `app-ui-toolbar-buttons` para el pie de página.
 -   **Feedback Visual**: Admite una `variant` para cambiar el color de la cabecera y el icono, proporcionando feedback al usuario (ej. `error`, `success`).
 
@@ -16,27 +15,14 @@ Componente contenedor reutilizable y "tonto" (dumb component) para mostrar formu
 
 El componente es controlado entièrement por su padre. El padre define la visibilidad, el título y, más importante, la configuración de los botones del pie de página.
 
-**En tu componente `.ts` (ej. `BaseAdminDirective`):**
+**En tu componente `.ts` (ej. `BaseAdminPageComponent`):**
 ```typescript
-import { ToolbarButtonConfig } from '@shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
-
-// La directiva o componente padre es responsable de generar esta configuración.
-// Idealmente, usando el ActionService.
-modalButtons: ToolbarButtonConfig[] = [
-  {
-    id: 'cancel',
-    label: 'Cancelar',
-    action: () => this.closeModal(),
-    variant: 'outline',
-  },
-  {
-    id: 'save',
-    label: 'Guardar',
-    action: () => this.onSave(),
-    variant: 'solid',
-    disabled$: this.isSaving.asReadonly(), // El estado de carga se pasa aquí
-  },
-];
+import { FormGroup } from '@angular/forms';
+// ...
+export class MyAdminComponent extends BaseAdminPageComponent<MyEntity> {
+  // La clase base ya provee la propiedad `form: FormGroup`.
+  // ...
+}
 ```
 
 **En tu plantilla `.html`:**

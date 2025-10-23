@@ -15,6 +15,17 @@
 
 ---
 
+### 30. La Reutilización Inteligente vs. la Sobre-complicación
+
+**Lección:** Al intentar reutilizar el `UiFormModalComponent` tanto para formularios como para confirmaciones de borrado, se encontró un problema persistente: el botón principal ("Guardar"/"Aceptar") no se comportaba correctamente en el modo de confirmación.
+
+**Conclusión:**
+1.  **El Principio DRY tiene Límites**: Reutilizar el modal era una buena aplicación del principio DRY. Sin embargo, intentar que un único botón ("Guardar") sirviera para dos propósitos con lógicas de habilitación completamente diferentes (uno dependiente de un formulario, el otro no) llevó a una lógica interna compleja y frágil.
+2.  **La Composición y la Claridad Ganan**: La solución final y más robusta no fue añadir más complejidad a la lógica del botón, sino componer la UI del modal de forma condicional. Al introducir un `@Input` de `mode` (`'form'` vs `'confirm'`), el componente puede renderizar botones diferentes para cada caso.
+3.  **Código Explícito > Código "Inteligente"**: La nueva implementación, con dos botones separados dentro de bloques `@if`, es mucho más fácil de leer, entender y mantener que una única implementación que intenta ser demasiado "inteligente". A veces, un poco más de código explícito conduce a un sistema mucho más simple y menos propenso a errores.
+
+---
+
 ### 29. La Herencia de Clases Exige una Configuración Precisa
 
 **Lección:** La depuración del componente `continents-admin` reveló que, aunque parecía idéntico al funcional `countries-admin`, no podía crear nuevos registros. La causa era una mínima diferencia en la configuración que rompía la lógica de la clase base `BaseAdminPageComponent`.

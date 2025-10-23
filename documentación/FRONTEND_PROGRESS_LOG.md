@@ -1,5 +1,21 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-22 -->
 
+### 31. Refactorización del Modal para Soportar Múltiples Modos
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha refactorizado el componente `UiFormModalComponent` para diferenciar entre un modo "formulario" y un modo "confirmación".
+-   **Propósito**: Solucionar un problema de UX donde el botón de "Aceptar" en los modales de confirmación de borrado permanecía deshabilitado, ya que dependía incorrectamente de la validez de un formulario inexistente.
+-   **Cambios Realizados**:
+    -   **`UiFormModalComponent`**:
+        -   Se ha añadido un nuevo `@Input('uiFormModalMode')` que puede ser `'form'` (por defecto) o `'confirm'`.
+        -   La plantilla del modal ahora utiliza un bloque `@if` para renderizar condicionalmente los botones del pie de página:
+            -   En modo `'form'`, muestra un botón "Guardar" que se deshabilita si el formulario es inválido.
+            -   En modo `'confirm'`, muestra un botón "Aceptar" que siempre está habilitado (a menos que la operación esté en curso).
+    -   **Componentes de Administración**: Se han actualizado las plantillas de `countries-admin` y `continents-admin` para pasar `[uiFormModalMode]="'confirm'"` a los modales de confirmación de borrado.
+-   **Beneficio**: La lógica de los botones del modal es ahora explícita, simple y robusta. La experiencia de usuario es correcta en todos los casos de uso (creación, edición y confirmación), eliminando la confusión y los bloqueos.
+
+---
+
 ### 30. Resolución Final del CRUD y Depuración Profunda
 
 -   **Fecha**: 2025-10-23

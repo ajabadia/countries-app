@@ -32,8 +32,17 @@
     color: var(--color-text);
   }
 
+  // 1. Estado inicial para campos obligatorios: fondo azul. Se aplica solo si el usuario aún no ha interactuado con el campo.
+  input[required].ng-untouched,
+  select[required].ng-untouched,
+  textarea[required].ng-untouched {
+    background-color: var(--color-primary-light);
+  }
+
+  // 2. Estado de error: fondo rojo. Esta es la regla más importante y debe sobrescribir a las demás cuando el campo es inválido y ha sido tocado.
   .is-invalid {
     border-color: var(--color-danger);
+    background-color: var(--color-quaternary-red-lighter);
   }
 
   &__error {

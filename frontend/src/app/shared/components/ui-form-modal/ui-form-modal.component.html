@@ -1,6 +1,6 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-form-modal\ui-form-modal.component.html | Last Modified: 2025-10-19 -->
 
-@if (visible) {
+@if (isVisible) {
   <ng-container>
     <div
       class="ui-form-modal-backdrop"
@@ -42,8 +42,15 @@
 
       <!-- 3. Pie de Página del Modal -->
       <footer class="ui-form-modal__footer">
-        <button app-ui-button [uiButtonVariant]="'outline'" (click)="onClose()">Cancelar</button>
-        <button app-ui-button [uiButtonColor]="'primary'" (click)="onSave()" [uiButtonLoading]="isLoading">Guardar</button>
+        <button app-ui-button uiButtonVariant="outline" (click)="onClose()" [uiButtonDisabled]="isLoading">Cancelar</button>
+        
+        @if (mode === 'form') {
+          <button app-ui-button uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isFormInvalid() || isLoading">Guardar</button>
+        }
+        
+        @if (mode === 'confirm') {
+          <button app-ui-button uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isLoading">Aceptar</button>
+        }
       </footer>
     </div>
   </ng-container>
