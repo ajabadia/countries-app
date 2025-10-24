@@ -59,6 +59,9 @@ export const register = asyncHandler(async (req, res) => {
     const userData = { name, email, password: hashedPassword, role: 'user' }; // Rol por defecto 'user'
     // El servicio ahora devuelve la entidad completa.
     const createdUser = await usersService.create(userData);
+    if (!createdUser) {
+        throw new Error('Failed to create user.');
+    }
     const token = generateJWT(createdUser);
     res.status(201).json({
         id: createdUser.id,
@@ -308,6 +311,9 @@ export const resetPassword = asyncHandler(async (req, res) => {
         resetPasswordToken: null, // Usar null para consistencia con la BD
         resetPasswordExpire: null, // Usar null para consistencia con la BD
     });
+    if (!updatedUser) {
+        throw new Error('Failed to update user after password reset.');
+    }
     // Opcional: generar un nuevo JWT y loguear al usuario automáticamente
     const token = generateJWT(updatedUser);
     res.status(200).json({ message: 'Password reset successfully', token });
@@ -424,7 +430,7 @@ export const logout = asyncHandler(async (req, res) => {
     const foundUser = await usersService.findOneBy({ refreshToken });
     if (foundUser) {
         // Borrar el refresh token de la base de datos
-        await usersService.update(foundUser.id, { refreshToken: null }); // Usar null para consistencia con la BD
+        await usersService.update(foundUser.id, { refreshToken: null });
     }
     // Borrar la cookie del cliente
     res.clearCookie('jwt', { httpOnly: true, sameSite: 'strict', secure: process.env.NODE_ENV === 'production' });

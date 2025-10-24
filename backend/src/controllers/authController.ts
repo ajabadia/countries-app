@@ -72,6 +72,10 @@ export const register = asyncHandler(async (req: Request, res: Response) => {
   // El servicio ahora devuelve la entidad completa.
   const createdUser = await usersService.create(userData);
 
+  if (!createdUser) {
+    throw new Error('Failed to create user.');
+  }
+
   const token = generateJWT(createdUser);
 
   res.status(201).json({
@@ -374,6 +378,10 @@ export const resetPassword = asyncHandler(async (req: Request, res: Response) =>
     resetPasswordExpire: null, // Usar null para consistencia con la BD
   });
 
+  if (!updatedUser) {
+    throw new Error('Failed to update user after password reset.');
+  }
+
   // Opcional: generar un nuevo JWT y loguear al usuario automáticamente
   const token = generateJWT(updatedUser);
 
@@ -507,7 +515,7 @@ export const logout = asyncHandler(async (req: Request, res: Response) => {
   const foundUser = await usersService.findOneBy({ refreshToken });
   if (foundUser) {
     // Borrar el refresh token de la base de datos
-    await usersService.update(foundUser.id, { refreshToken: null }); // Usar null para consistencia con la BD
+    await usersService.update(foundUser.id, { refreshToken: null });
   }
 
   // Borrar la cookie del cliente

@@ -40,6 +40,7 @@
 <app-ui-form-modal
   [uiFormModalVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
+  [uiHeadingIconName]="editingItem() ? 'icon-edit' : 'icon-add'"
   [uiFormModalForm]="form"
   [uiFormModalIsLoading]="isSaving()"
   (uiFormModalSave)="onSave()"
@@ -54,6 +55,7 @@
 <app-ui-form-modal
   [uiFormModalVisible]="isConfirmModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalConfirmText]="'Aceptar'"
   [uiFormModalIsLoading]="isDeleting()"
@@ -67,6 +69,7 @@
 <app-ui-form-modal
   [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalConfirmText]="'Aceptar'"
   [uiFormModalIsLoading]="isDeleting()"

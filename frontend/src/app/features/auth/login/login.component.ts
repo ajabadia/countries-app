@@ -34,8 +34,8 @@ export class LoginComponent implements OnInit {
 
   constructor() {
     this.loginForm = this.fb.group({
-      email: ['test@test.com', [Validators.required, Validators.email]],
-      password: ['123456', [Validators.required]],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required]],
     });
   }
 
@@ -54,7 +54,7 @@ export class LoginComponent implements OnInit {
     this.authService.login(this.loginForm.value).pipe(
       finalize(() => this.isSubmitting.set(false))
     ).subscribe({
-      next: () => this.router.navigate(['/admin']),
+      next: () => this.router.navigate(['/']),
       error: (err) => this.toastService.showError(err.error?.message || 'Error en el inicio de sesión.'),
     });
   }

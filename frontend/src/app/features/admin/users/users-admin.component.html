@@ -19,7 +19,11 @@
     [uiTableSort]="manager.sort()"
     [uiTableSelection]="manager.selectionService"
     (uiTableSortChange)="manager.onSortChange($event)"
-  />
+  >
+    <ng-template uiTableColumn="name" let-item>
+      <a href="javascript:void(0);" (click)="openModal(item)">{{ item.name }}</a>
+    </ng-template>
+  </app-ui-table>
 
   <app-ui-paginator
     [uiPaginatorTotalRecords]="manager.totalRecords()"
@@ -33,6 +37,8 @@
 <app-ui-form-modal
   [uiFormModalVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
+  [uiHeadingIconName]="editingItem() ? 'icon-edit' : 'icon-add'"
+  [uiFormModalForm]="form"
   [uiFormModalIsLoading]="isSaving()"
   (uiFormModalSave)="onSave()"
   (uiFormModalClose)="closeModal()"
@@ -40,4 +46,60 @@
   <form [formGroup]="form">
     <app-ui-dynamic-form [form]="form" [fields]="formFields" />
   </form>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiHeadingIconName]="'icon-delete'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onDelete()"
+  (uiFormModalClose)="closeConfirmDeleteModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiHeadingIconName]="'icon-delete'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> usuarios seleccionados? Esta acción no se puede deshacer.
+  </p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiHeadingIconName]="'icon-delete'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onDelete()"
+  (uiFormModalClose)="closeConfirmDeleteModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiHeadingIconName]="'icon-delete'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsLoading]="isDeleting()"
+  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> usuarios seleccionados? Esta acción no se puede deshacer.
+  </p>
 </app-ui-form-modal>

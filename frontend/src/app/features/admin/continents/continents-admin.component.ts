@@ -33,6 +33,7 @@ import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/u
     UiDynamicFormComponent,
   ],
   templateUrl: './continents-admin.component.html',
+  styleUrls: ['./continents-admin.component.scss'],
 })
 export class ContinentsAdminComponent extends BaseAdminPageComponent<Continent> {
   // --- Implementación del "Contrato" de la clase base ---

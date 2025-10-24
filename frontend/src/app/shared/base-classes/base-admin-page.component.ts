@@ -66,12 +66,14 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     // La inicialización de `toolbarActions` debe estar en el constructor
     // para que `toObservable` se ejecute en un contexto de inyección válido.
     this.toolbarActions = [
-      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.openModal() },
+      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.openModal(), color: 'primary', variant: 'solid' },
       {
         id: 'edit',
         label: 'Editar',
         iconName: 'icon-edit',
         action: () => this.onEditSelected(),
+        color: 'primary',
+        variant: 'solid',
         // El botón se deshabilita si el número de seleccionados no es exactamente 1
         disabled$: toObservable(computed(() => this.manager.selectionCount() !== 1), { injector: this.injector })
       },

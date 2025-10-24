@@ -1,5 +1,5 @@
 // backend/services/usersService.ts
-import { getDB } from '../db/database.js';
+import { getAuthDB } from '../db/authDatabase.js';
 import BaseService from './baseService.js';
 /**
  * Servicio para la entidad 'User'.
@@ -10,23 +10,26 @@ class UsersService extends BaseService {
         // Define la tabla 'users' y los campos por los que se puede buscar.
         super('users', ['name', 'email']);
     }
+    async getDbInstance() {
+        return getAuthDB();
+    }
     /**
      * Busca un usuario por su dirección de email.
      * @param email El email del usuario a buscar.
-     * @returns El objeto User si se encuentra, de lo contrario undefined.
+     * @returns El objeto User si se encuentra, de lo contrario null.
      */
     async findByEmail(email) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const sql = `SELECT * FROM ${this.tableName} WHERE email = ?`;
         return db.prepare(sql).get(email);
     }
     /**
      * Busca un usuario por su token de reseteo de contraseña.
      * @param token El token de reseteo hasheado.
-     * @returns El objeto User si se encuentra, de lo contrario undefined.
+     * @returns El objeto User si se encuentra, de lo contrario null.
      */
     async findByResetToken(token) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const sql = `SELECT * FROM ${this.tableName} WHERE resetPasswordToken = ? AND resetPasswordExpire > ?`;
         return db.prepare(sql).get(token, Date.now());
     }

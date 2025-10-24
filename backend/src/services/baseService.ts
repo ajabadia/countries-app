@@ -28,14 +28,18 @@ export interface WhereClause {
  * @template T El tipo de la entidad que maneja el servicio. Debe tener una propiedad `id`.
  */
 export default class BaseService<T extends { id: number | string }> {
-  constructor(
-    protected tableName: string,
-    protected searchableFields: string[] = []
-  ) {
+  /**
+   * @param tableName El nombre de la tabla en la base de datos.
+   * @param searchableFields Un array de campos en los que buscar por defecto.
+   */
+  constructor(protected tableName: string, protected searchableFields: string[] = []) {
     if (!tableName) {
       throw new Error('Se requiere un nombre de tabla para el servicio.');
     }
-    // La conexión a la BD se obtendrá de forma asíncrona en cada método.
+  }
+
+  protected async getDbInstance(): Promise<Database> {
+    return getDB();
   }
 
   /**
@@ -44,7 +48,7 @@ export default class BaseService<T extends { id: number | string }> {
    * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
    */
   async getAll(options: GetAllOptions = {}): Promise<{ data: T[]; total: number }> {
-    const db = await getDB();
+    const db = await this.getDbInstance();
     const { columns = ['*'], orderBy = 'id', orderDir = 'asc', pageSize, offset, search = null, searchFields } = options;
 
     // --- Validación para prevenir SQL Injection ---
@@ -81,10 +85,10 @@ export default class BaseService<T extends { id: number | string }> {
    * @param columns Las columnas a seleccionar.
    * @returns La entidad encontrada o `undefined` si no existe.
    */
-  async getById(id: number | string, columns: string[] = ['*']): Promise<T | undefined> {
-    const db = await getDB();
+  async getById(id: number | string, columns: string[] = ['*']): Promise<T | null> {
+    const db = await this.getDbInstance();
     const cols = columns.join(', ');
-    return db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id) as T | undefined;
+    return db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id) as T | null;
   }
 
   /**
@@ -92,24 +96,25 @@ export default class BaseService<T extends { id: number | string }> {
    * @param criteria Un objeto donde las claves son columnas y los valores son los que se deben buscar.
    * @returns La entidad encontrada o `undefined` si no existe.
    */
-  async findOneBy(criteria: Partial<T>): Promise<T | undefined> {
-    const db = await getDB();
+  async findOneBy(criteria: Partial<T>): Promise<T | null> {
+    const db = await this.getDbInstance();
     const columns = Object.keys(criteria);
-    if (columns.length === 0) return undefined;
+    if (columns.length === 0) return null;
 
     const values = Object.values(criteria);
     const whereClause = columns.map(col => `${col} = ?`).join(' AND ');
     const sql = `SELECT * FROM ${this.tableName} WHERE ${whereClause} LIMIT 1`;
-    return db.prepare(sql).get(...values) as T | undefined;
+    return db.prepare(sql).get(...values) as T | null;
   }
 
   /**
    * Elimina un registro por su ID.
    * @param id El ID del registro a eliminar.
    */
-  async remove(id: number | string): Promise<RunResult> {
-    const db = await getDB();
-    return db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+  async remove(id: number | string): Promise<{ changes: number }> {
+    const db = await this.getDbInstance();
+    const result = db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+    return { changes: result.changes };
   }
 
   /**
@@ -117,17 +122,18 @@ export default class BaseService<T extends { id: number | string }> {
    * @param ids Un array de IDs de los registros a eliminar.
    * @returns El resultado de la ejecución de la consulta.
    */
-  async removeMany(ids: (string | number)[]): Promise<RunResult> {
-    const db = await getDB();
+  async removeMany(ids: (string | number)[]): Promise<{ changes: number }> {
+    const db = await this.getDbInstance();
     if (!Array.isArray(ids) || ids.length === 0) {
       // Devuelve un resultado que no indica cambios si el array está vacío.
-      return { changes: 0, lastInsertRowid: 0 };
+      return { changes: 0 };
     }
 
     // Crea los placeholders (?) para la consulta SQL
     const placeholders = ids.map(() => '?').join(',');
     const stmt = db.prepare(`DELETE FROM ${this.tableName} WHERE id IN (${placeholders})`);
-    return stmt.run(...ids);
+    const result = stmt.run(...ids);
+    return { changes: result.changes };
   }
 
   /**
@@ -135,8 +141,8 @@ export default class BaseService<T extends { id: number | string }> {
    * @param data Objeto con los datos a insertar.
    * @returns La entidad recién creada.
    */
-  async create(data: Partial<T>): Promise<T> {
-    const db = await getDB();
+  async create(data: Partial<T>): Promise<T | null> {
+    const db = await this.getDbInstance();
     const columns = Object.keys(data);
     const values = Object.values(data);
     const placeholders = columns.map(() => '?').join(', ');
@@ -144,7 +150,7 @@ export default class BaseService<T extends { id: number | string }> {
     const result = db.prepare(sql).run(...values);
 
     // Devolvemos la entidad completa recién creada
-    return (await this.getById(Number(result.lastInsertRowid))) as T;
+    return this.getById(Number(result.lastInsertRowid));
   }
 
   /**
@@ -152,8 +158,8 @@ export default class BaseService<T extends { id: number | string }> {
    * @param id El ID del registro a actualizar.
    * @param data Objeto con los datos a actualizar.
    */
-  async update(id: number | string, data: Partial<T>): Promise<T> {
-    const db = await getDB();
+  async update(id: number | string, data: Partial<T>): Promise<T | null> {
+    const db = await this.getDbInstance();
     const columns = Object.keys(data);
     if (columns.length === 0) throw new Error('No hay datos para actualizar.');
 
@@ -163,7 +169,7 @@ export default class BaseService<T extends { id: number | string }> {
     db.prepare(sql).run(...values, id);
 
     // Devolvemos la entidad completa actualizada
-    return (await this.getById(id)) as T;
+    return this.getById(id);
   }
 
   private _buildWhereClause(search: string | null, searchFields?: string[]): WhereClause {

@@ -34,6 +34,7 @@ import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/u
     UiDynamicFormComponent,
   ],
   templateUrl: './countries-admin.component.html',
+  styleUrls: ['./countries-admin.component.scss'],
 })
 export class CountriesAdminComponent extends BaseAdminPageComponent<Country> {
   readonly actionId = 'admin-countries';

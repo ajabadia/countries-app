@@ -45,11 +45,11 @@
         <button app-ui-button uiButtonVariant="outline" (click)="onClose()" [uiButtonDisabled]="isLoading">Cancelar</button>
         
         @if (mode === 'form') {
-          <button app-ui-button uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isFormInvalid() || isLoading">Guardar</button>
+          <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isFormInvalid() || isLoading">Guardar</button>
         }
         
         @if (mode === 'confirm') {
-          <button app-ui-button uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isLoading">Aceptar</button>
+          <button app-ui-button uiButtonVariant="solid" uiButtonColor="danger" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isLoading">Aceptar</button>
         }
       </footer>
     </div>

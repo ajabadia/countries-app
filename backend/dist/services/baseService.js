@@ -8,13 +8,19 @@ import { getDB } from '../db/database.js';
 export default class BaseService {
     tableName;
     searchableFields;
+    /**
+     * @param tableName El nombre de la tabla en la base de datos.
+     * @param searchableFields Un array de campos en los que buscar por defecto.
+     */
     constructor(tableName, searchableFields = []) {
         this.tableName = tableName;
         this.searchableFields = searchableFields;
         if (!tableName) {
             throw new Error('Se requiere un nombre de tabla para el servicio.');
         }
-        // La conexión a la BD se obtendrá de forma asíncrona en cada método.
+    }
+    async getDbInstance() {
+        return getDB();
     }
     /**
      * Obtiene todos los registros de la tabla con opciones de paginación, orden y búsqueda.
@@ -22,7 +28,7 @@ export default class BaseService {
      * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
      */
     async getAll(options = {}) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const { columns = ['*'], orderBy = 'id', orderDir = 'asc', pageSize, offset, search = null, searchFields } = options;
         // --- Validación para prevenir SQL Injection ---
         const validColumnsInfo = db.prepare(`PRAGMA table_info(${this.tableName})`).all();
@@ -53,7 +59,7 @@ export default class BaseService {
      * @returns La entidad encontrada o `undefined` si no existe.
      */
     async getById(id, columns = ['*']) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const cols = columns.join(', ');
         return db.prepare(`SELECT ${cols} FROM ${this.tableName} WHERE id = ?`).get(id);
     }
@@ -63,10 +69,10 @@ export default class BaseService {
      * @returns La entidad encontrada o `undefined` si no existe.
      */
     async findOneBy(criteria) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const columns = Object.keys(criteria);
         if (columns.length === 0)
-            return undefined;
+            return null;
         const values = Object.values(criteria);
         const whereClause = columns.map(col => `${col} = ?`).join(' AND ');
         const sql = `SELECT * FROM ${this.tableName} WHERE ${whereClause} LIMIT 1`;
@@ -77,8 +83,9 @@ export default class BaseService {
      * @param id El ID del registro a eliminar.
      */
     async remove(id) {
-        const db = await getDB();
-        return db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+        const db = await this.getDbInstance();
+        const result = db.prepare(`DELETE FROM ${this.tableName} WHERE id = ?`).run(id);
+        return { changes: result.changes };
     }
     /**
      * Elimina múltiples registros por sus IDs.
@@ -86,15 +93,16 @@ export default class BaseService {
      * @returns El resultado de la ejecución de la consulta.
      */
     async removeMany(ids) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         if (!Array.isArray(ids) || ids.length === 0) {
             // Devuelve un resultado que no indica cambios si el array está vacío.
-            return { changes: 0, lastInsertRowid: 0 };
+            return { changes: 0 };
         }
         // Crea los placeholders (?) para la consulta SQL
         const placeholders = ids.map(() => '?').join(',');
         const stmt = db.prepare(`DELETE FROM ${this.tableName} WHERE id IN (${placeholders})`);
-        return stmt.run(...ids);
+        const result = stmt.run(...ids);
+        return { changes: result.changes };
     }
     /**
      * Crea un nuevo registro.
@@ -102,14 +110,14 @@ export default class BaseService {
      * @returns La entidad recién creada.
      */
     async create(data) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const columns = Object.keys(data);
         const values = Object.values(data);
         const placeholders = columns.map(() => '?').join(', ');
         const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
         const result = db.prepare(sql).run(...values);
         // Devolvemos la entidad completa recién creada
-        return (await this.getById(Number(result.lastInsertRowid)));
+        return this.getById(Number(result.lastInsertRowid));
     }
     /**
      * Actualiza un registro por su ID.
@@ -117,7 +125,7 @@ export default class BaseService {
      * @param data Objeto con los datos a actualizar.
      */
     async update(id, data) {
-        const db = await getDB();
+        const db = await this.getDbInstance();
         const columns = Object.keys(data);
         if (columns.length === 0)
             throw new Error('No hay datos para actualizar.');
@@ -126,7 +134,7 @@ export default class BaseService {
         const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
         db.prepare(sql).run(...values, id);
         // Devolvemos la entidad completa actualizada
-        return (await this.getById(id));
+        return this.getById(id);
     }
     _buildWhereClause(search, searchFields) {
         const fieldsToSearch = searchFields && searchFields.length > 0 ? searchFields : this.searchableFields;
