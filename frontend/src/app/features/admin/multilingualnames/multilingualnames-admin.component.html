@@ -1,0 +1,97 @@
+<div class="admin-page-container">
+  <app-ui-heading [uiHeading]="currentPageTitle()" />
+  
+  <div class="toolbar">
+    <app-ui-search-box
+      class="toolbar__search"
+      (uiSearchBoxValueChange)="manager.onSearch($event)"
+    />
+    <app-ui-toolbar-buttons
+      class="toolbar__actions"
+      [uiToolbarButtonsActions]="toolbarActions"
+      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
+    />
+  </div>
+
+  <app-ui-table 
+    [uiTableColumns]="columns"
+    [uiTableData]="manager.data()"
+    [uiTableIsLoading]="manager.isLoading()"
+    [uiTableSort]="manager.sort()"
+    [uiTableSelection]="manager.selectionService"
+    (uiTableSortChange)="manager.onSortChange($event)"
+    (uiTableAction)="handleTableAction($event)"
+  >
+    <!-- Plantilla para la columna 'value' para que sea un enlace de edición. -->
+    <ng-template [appUiTableColumn]="'value'" let-item>
+      <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.value }}</a>
+    </ng-template>
+
+    <!-- Plantilla para la columna 'language' para mostrar el icono del idioma. -->
+    <ng-template [appUiTableColumn]="'language'" let-item>
+      <div class="cell-with-icon">
+        <app-ui-icon 
+          [uiIconName]="item.language" 
+          [uiIconType]="'lang-circle-flag'"
+          [uiIconSize]="'s'"/>
+
+        <span>{{ item.language }}</span>
+      </div>
+    </ng-template>
+
+    <!-- Plantilla para la columna 'entity_id' para mostrar el icono del país si aplica. -->
+    <ng-template [appUiTableColumn]="'entity_id'" let-item>
+      <div class="cell-with-icon">
+        @if (item.type === 'country') {
+        <app-ui-icon [uiIconName]="'circle-flag-' + item.entity_id" />
+        }
+        <span>{{ item.entity_id }}</span>
+      </div>
+    </ng-template>
+  </app-ui-table>
+
+  <app-ui-paginator
+    [uiPaginatorTotalRecords]="manager.totalRecords()"
+    [uiPaginatorPage]="manager.page()"
+    [uiPaginatorPageSize]="manager.pageSize()"
+    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
+  />
+</div>
+
+<!-- Modal de Formulario (Crear/Editar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isFormModalVisible()"
+  [uiFormModalTitle]="formModalTitle"
+  [uiFormModalFormGroup]="form"
+  [uiFormModalIsSaving]="isSaving()"
+  (uiFormModalSave)="onSave()"
+  (uiFormModalClose)="onCloseFormModal()"
+>
+  <app-ui-dynamic-form [form]="form" [fields]="formFields" />
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalClose)="onCloseConfirmModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.
+  </p>
+</app-ui-form-modal>
