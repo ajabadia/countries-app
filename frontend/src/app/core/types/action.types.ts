@@ -3,7 +3,8 @@
 // File: d:/desarrollos/countries2/frontend/src/app/core/types/action.types.ts | Last Modified: 2025-10-20
 
 export type ActionType = 'nav' | 'button';
-export type ActionCategory = 'public' | 'admin' | 'auth' | 'toolbar' | 'general';
+// ✅ CORRECCIÓN: Se añade la categoría 'user' para las acciones del perfil de usuario.
+export type ActionCategory = 'public' | 'admin' | 'auth' | 'toolbar' | 'general' | 'user';
 
 export interface AppAction {
   id: string;

@@ -1,6 +1,7 @@
 // File: d:\desarrollos\countries2\frontend\src\app\core\services\action.service.ts | Last Modified: 2025-10-19
 
 import { Injectable } from '@angular/core';
+import { Action } from 'rxjs/internal/scheduler/Action';
 import {
   ActionCategory,
   AppAction,
@@ -10,6 +11,12 @@ import {
 @Injectable({
   providedIn: 'root',
 })
+
+/**
+ * Servicio centralizado para gestionar todas las acciones posibles dentro de la aplicación.
+ * Define acciones de navegación, botones de barra de herramientas y otras operaciones,
+ * agrupándolas por categorías para un fácil acceso y reutilización.
+ */
 export class ActionService {
   // --- Definición de todas las acciones de la aplicación ---
   private allActions: AppAction[] = [
@@ -40,6 +47,17 @@ export class ActionService {
       pageTitle: 'Crear una Cuenta',
       type: 'nav',
       routerLink: '/auth/register',
+    },
+
+    // --- Acciones de Usuario Autenticado ---
+    {
+      id: 'user-profile',
+      label: 'Mi Perfil',
+      icon: 'icon-user',
+      category: 'user',
+      pageTitle: 'Mi Perfil',
+      type: 'nav',
+      routerLink: '/profile',
     },
 
     // --- Acciones de Navegación de Administración ---
@@ -128,6 +146,7 @@ export class ActionService {
     public: 'Navegación Principal',
     admin: 'Administración',
     auth: 'Cuenta',
+    user: 'Usuario',
     toolbar: 'Operaciones',
     general: 'General',
   };

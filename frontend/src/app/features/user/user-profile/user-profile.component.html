@@ -1,0 +1,53 @@
+<div class="profile-container">
+  <h1>Mi Perfil</h1>
+  <p>Gestiona tu información personal y tu seguridad.</p>
+
+  <div class="profile-cards">
+    <!-- Tarjeta de Datos del Perfil -->
+    <app-ui-card>
+      <h2 ui-card-title>Datos del Perfil</h2>
+      <div ui-card-content>
+        <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="profile-form">
+          <div class="form-field">
+            <label for="name">Nombre</label>
+            <input id="name" type="text" formControlName="name" appUiInput />
+          </div>
+          <div class="form-field">
+            <label for="email">Email</label>
+            <input id="email" type="email" formControlName="email" appUiInput />
+          </div>
+          <button app-ui-button type="submit" [disabled]="profileForm.pristine || profileForm.invalid">
+            Actualizar Perfil
+          </button>
+        </form>
+      </div>
+    </app-ui-card>
+
+    <!-- Tarjeta de Cambio de Contraseña -->
+    <app-ui-card>
+      <h2 ui-card-title>Cambiar Contraseña</h2>
+      <div ui-card-content>
+        <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="profile-form">
+          <div class="form-field">
+            <label for="currentPassword">Contraseña Actual</label>
+            <input id="currentPassword" type="password" formControlName="currentPassword" appUiInput />
+          </div>
+          <div class="form-field">
+            <label for="newPassword">Nueva Contraseña</label>
+            <input id="newPassword" type="password" formControlName="newPassword" appUiInput />
+          </div>
+          <div class="form-field">
+            <label for="confirmPassword">Confirmar Nueva Contraseña</label>
+            <input id="confirmPassword" type="password" formControlName="confirmPassword" appUiInput />
+            @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched) {
+              <small class="error-text">Las contraseñas no coinciden.</small>
+            }
+          </div>
+          <button app-ui-button type="submit" [disabled]="passwordForm.invalid">Cambiar Contraseña</button>
+        </form>
+      </div>
+    </app-ui-card>
+  </div>
+
+  <button app-ui-button (click)="onLogout()" ui-button-color="danger" class="logout-button">Cerrar Sesión</button>
+</div>

@@ -12,7 +12,17 @@
       <h1 class="app-header__title">{{ pageTitle() }}</h1>
     </div>
     <div class="app-header__right">
-      <!-- Espacio para futuras acciones: perfil de usuario, notificaciones, etc. -->
+      <!-- ✅ NUEVO: Se añaden los botones condicionales para el perfil y el login/logout -->
+      @if (authService.isAuthenticated()) {
+        <a routerLink="/profile" class="profile-link">Mi Perfil</a>
+        <button app-ui-button (click)="authService.logout()" ui-button-size="s" ui-button-color="secondary">
+          Cerrar Sesión
+        </button>
+      } @else {
+        <a routerLink="/auth/login">
+          <button app-ui-button ui-button-size="s">Iniciar Sesión</button>
+        </a>
+      }
     </div>
   </header>
 
