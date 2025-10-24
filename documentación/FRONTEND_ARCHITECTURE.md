@@ -29,6 +29,8 @@ Esta estructura está diseñada para ser:
     │   │   ├── /admin           # Contenedor para las rutas de administración
     │   │   │   ├── /countries
     │   │   │   │   └── countries-admin.component.ts/.html/.scss
+    │   │   │   ├── /areas
+    │   │   │   │   └── areas-admin.component.ts/.html/.scss
     │   │   │   ├── /languages
     │   │   │   │   └── languages-admin.component.ts/.html/.scss
     │   │   │   ├── /users

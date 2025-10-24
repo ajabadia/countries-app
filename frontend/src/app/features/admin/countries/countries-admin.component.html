@@ -1,16 +1,17 @@
 <div class="admin-page-container">
-  <app-ui-heading [uiHeadingTitle]="currentPageTitle()" />
-  <div class="toolbar">
+  <app-ui-heading [uiHeading]="currentPageTitle()" />
+  <div class="toolbar"> 
     <app-ui-toolbar-buttons
       class="toolbar__actions"
-      [uiToolbarButtonsConfig]="toolbarActions"
+      [uiToolbarButtonsActions]="toolbarActions"
+      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
     />
     <app-ui-search-box
       class="toolbar__search"
       (uiSearchBoxValueChange)="manager.onSearch($event)"
     />
   </div>
-
+  <!-- TODO: Considerar mover la plantilla de la columna a un componente específico o a un archivo de plantilla compartido si se reutiliza -->
   <!-- TODO: Considerar mover la plantilla de la columna a un componente específico o a un archivo de plantilla compartido si se reutiliza -->
   <!-- Ejemplo de uso dentro de ui-table-columns -->
   <!--
@@ -27,19 +28,19 @@
     [uiTableIsLoading]="manager.isLoading()"
     [uiTableSelection]="manager.selectionService"
     (uiTableSortChange)="manager.onSortChange($event)"
+    (uiTableAction)="handleTableAction($event)"
   >
     <!-- 
       Aquí definimos la plantilla para la celda de la columna 'defaultname'.
       El nombre 'col_defaultname' debe coincidir con la lógica en `ui-table.component.ts`.
       La variable `let-country` recibe el objeto de la fila (el `$implicit` del contexto).
     -->
-    <ng-template uiTableColumn="defaultname" let-item>
+    <ng-template [appUiTableColumn]="'defaultname'" let-item>
       <div style="display: flex; align-items: center; gap: 0.5rem;">
         <app-ui-icon [uiIconName]="item.alpha2may.toLowerCase()" uiIconType="circle-flag" uiIconSize="s"></app-ui-icon>
-        <a href="javascript:void(0);" (click)="openModal(item)">{{ item.defaultname }}</a>
+        <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.defaultname }}</a>
       </div>
     </ng-template>
-
   </app-ui-table>
 
   <app-ui-paginator
@@ -52,43 +53,36 @@
 
 <!-- Modal de Formulario (Crear/Editar) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isFormModalVisible()"
+  [uiFormModalIsVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
-  [uiHeadingIconName]="editingItem() ? 'icon-edit' : 'icon-add'"
-  [uiFormModalForm]="form"
-  [uiFormModalIsLoading]="isSaving()"
+  [uiFormModalFormGroup]="form"
+  [uiFormModalIsSaving]="isSaving()"
   (uiFormModalSave)="onSave()"
-  (uiFormModalClose)="closeModal()"
+  (uiFormModalClose)="onCloseFormModal()"
 >
-  <form [formGroup]="form">
-    <app-ui-dynamic-form [form]="form" [fields]="formFields" />
-  </form>
+  <app-ui-dynamic-form [form]="form" [fields]="formFields" />
 </app-ui-form-modal>
 
 <!-- Modal de Confirmación (Borrar) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isConfirmModalVisible()"
+  [uiFormModalIsVisible]="isConfirmModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación'"
-  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
-  [uiFormModalConfirmText]="'Aceptar'"
-  [uiFormModalIsLoading]="isDeleting()"
-  (uiFormModalSave)="onDelete()"
-  (uiFormModalClose)="closeConfirmDeleteModal()"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalClose)="onCloseConfirmModal()"
 >
   <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
 </app-ui-form-modal>
 
 <!-- Modal de Confirmación (Borrado Múltiple) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalIsVisible]="isConfirmMultiDeleteModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
-  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
-  [uiFormModalConfirmText]="'Aceptar'"
-  [uiFormModalIsLoading]="isDeleting()"
+  [uiFormModalIsSaving]="isDeleting()"
   (uiFormModalSave)="onConfirmDeleteSelected()"
-  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
+  (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
 >
   <p>
     ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.

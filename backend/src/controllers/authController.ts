@@ -166,9 +166,12 @@ export const login = asyncHandler(async (req: Request, res: Response) => {
     maxAge: 7 * 24 * 60 * 60 * 1000, // 7 días
   });
 
+  // Preparamos la respuesta del usuario, excluyendo datos sensibles.
+  const { password: _, refreshToken: __, ...userResponse } = user;
+
   res.json({
-    message: 'Logged in successfully',
     accessToken,
+    user: userResponse, // ✅ AÑADIDO: Incluimos el objeto de usuario en la respuesta.
   });
 });
 

@@ -1,65 +1,34 @@
-// File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toolbar-buttons\ui-toolbar-buttons.component.ts | Last Modified: 2025-10-19
-
-import { Component, Input, ChangeDetectionStrategy } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Observable } from 'rxjs';
-
-// Importamos los componentes y tipos necesarios de nuestros módulos compartidos
-import { UiButtonComponent, ButtonColor, ButtonVariant, ButtonSize } from '@shared/components/ui-button/ui-button.component';
-import { UiIconType } from '@shared/services/icon.service';
-
-/**
- * Define la configuración para un solo botón dentro de la barra de herramientas.
- * Esta interfaz está diseñada para pasar todas las propiedades necesarias a un `app-ui-button`.
- */
-export interface ToolbarButtonConfig {
-  id: string;
-  label: string;
-  action: () => void;
-  iconName?: string;
-  color?: ButtonColor;
-  variant?: ButtonVariant;
-  size?: ButtonSize;
-  iconPosition?: 'left' | 'right' | 'only';
-  iconType?: UiIconType;
-  disabled$?: Observable<boolean>;
-}
+import { toObservable } from '@angular/core/rxjs-interop';
+import { UiButtonComponent } from '@app/shared/components/ui-button/ui-button.component';
+import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
+import { ToolbarButtonConfig } from '@app/core/types/action.types';
 
 @Component({
   selector: 'app-ui-toolbar-buttons',
   standalone: true,
-  imports: [CommonModule, UiButtonComponent],
-  changeDetection: ChangeDetectionStrategy.OnPush,
+  imports: [CommonModule, UiButtonComponent, UiIconComponent],
   template: `
-    <!--
-      Este contenedor es un componente "tonto" que solo se encarga del layout.
-      Itera sobre la configuración y renderiza cada botón, delegando todo el estilo
-      y la lógica al componente 'app-ui-button'.
-    -->
-    @for (button of buttons; track button.id) {
-      <button app-ui-button
-        (click)="button.action()"
-        [attr.data-cy]="'toolbar-button-' + button.id"
-
-        [uiButtonColor]="button.color || 'primary'"
-        [uiButtonVariant]="button.variant || 'solid'"
-        [uiButtonSize]="button.size || 'm'"
-        [uiButtonDisabled]="(button.disabled$ | async) ?? false"
-
-        [uiIconName]="button.iconName"
-        [uiIconPosition]="button.iconPosition || 'left'"
-        [uiIconType]="button.iconType || 'system'"
+    @for (action of uiToolbarButtonsActions; track action.id) {
+      <button
+        app-ui-button
+        [uiButtonColor]="action.color || 'secondary'"
+        [uiButtonVariant]="action.variant || 'solid'"
+        [disabled]="action.disabled$ | async"
+        (click)="onButtonClick(action)"
       >
-        {{ button.label }}
+        @if (action.iconName) { <app-ui-icon [uiIconName]="action.iconName"></app-ui-icon> }
+        {{ action.label }}
       </button>
     }
   `,
-  styleUrls: ['./ui-toolbar-buttons.component.scss'],
 })
 export class UiToolbarButtonsComponent {
-  /**
-   * La configuración para los botones que se mostrarán en la barra.
-   * Se aliasa con el prefijo del componente para seguir nuestras convenciones.
-   */
-  @Input({ alias: 'uiToolbarButtonsConfig' }) buttons: ToolbarButtonConfig[] = [];
+  @Input() uiToolbarButtonsActions: ToolbarButtonConfig[] = [];
+  @Output() uiToolbarButtonsActionClick = new EventEmitter<string>();
+
+  onButtonClick(action: ToolbarButtonConfig): void {
+    this.uiToolbarButtonsActionClick.emit(action.id);
+  }
 }

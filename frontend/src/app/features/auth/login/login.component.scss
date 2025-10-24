@@ -2,68 +2,53 @@
 
 @use '../../../../styles/tools' as t;
 
-.login-container {
+.auth-container {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  min-height: 70vh;
-  padding: var(--space-l);
-}
+  min-height: 100%;
+  gap: var(--space-l);
 
-.login-form-wrapper {
-  background-color: var(--color-surface);
-  padding: var(--space-xl);
-  border-radius: var(--border-radius-l);
-  box-shadow: var(--shadow-m);
-  width: 100%;
-  max-width: 400px;
-  text-align: center;
-
-  &__subtitle {
-    color: var(--color-text-secondary);
-    margin-bottom: var(--space-l);
-  }
-
-  &__footer {
-    margin-top: var(--space-l);
-    font-size: var(--font-size-s);
-    color: var(--color-text-secondary);
-
-    a {
-      font-weight: var(--font-weight-semibold);
-      margin-left: var(--space-xxs);
-    }
+  app-ui-card {
+    width: 100%;
+    max-width: 400px;
   }
 }
 
-.login-form {
-  display: grid;
-  gap: var(--space-m);
-  text-align: left;
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
 }
 
 .form-field {
   display: flex;
   flex-direction: column;
+  gap: var(--space-xs);
 
   label {
-    margin-bottom: var(--space-xs);
-    font-weight: var(--font-weight-semibold);
-    font-size: var(--font-size-s);
+    font-weight: 500;
+    color: var(--color-text-muted);
   }
 
-  input {
-    padding: var(--space-s);
-    border: 1px solid var(--color-border);
-    border-radius: var(--border-radius-m);
-    font-size: var(--font-size-m);
-    background-color: var(--color-background-alt);
-    color: var(--color-text);
-    width: 100%;
+  .error-text {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+  }
+}
 
-    &:focus {
-      outline: 2px solid var(--color-primary);
-      border-color: transparent;
-    }
+.full-width {
+  width: 100%;
+}
+
+.auth-footer {
+  text-align: center;
+  color: var(--color-text-muted);
+
+  a {
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-left: var(--space-xs);
   }
 }

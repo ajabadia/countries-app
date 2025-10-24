@@ -1,0 +1,65 @@
+@use 'styles/tools' as t;
+
+.profile-container {
+  max-width: 900px;
+  margin: 0 auto;
+
+  h1 {
+    margin-bottom: var(--space-xs);
+  }
+
+  p {
+    margin-top: 0;
+    margin-bottom: var(--space-xl);
+    color: var(--color-text-muted);
+    font-size: var(--font-size-l);
+  }
+}
+
+.profile-cards {
+  gap: var(--space-l);
+  @include t.grid;
+
+  // ✅ CORRECCIÓN: Hacemos que cada tarjeta ocupe todo el ancho en móvil (comportamiento por defecto)
+  // y 6 de las 12 columnas en pantallas más grandes.
+  & > * {
+    @include t.breakpoint('tablet') {
+      grid-column: span 6;
+    }
+  }
+}
+
+.profile-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-s);
+
+  // ✅ CORRECCIÓN: Se añade un margen superior al último elemento del formulario (el botón)
+  // para separarlo del campo anterior.
+  & > button:last-child {
+    margin-top: var(--space-m);
+    width: 100%;
+  }
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+
+  label {
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .error-text {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+    margin-top: var(--space-xxs);
+  }
+}
+
+.logout-button {
+  display: block;
+  margin: var(--space-xl) auto 0;
+}

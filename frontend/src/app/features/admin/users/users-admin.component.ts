@@ -60,7 +60,7 @@ export class UsersAdminComponent extends BaseAdminPageComponent<User> {
       name: 'password',
       label: 'Contraseña',
       type: 'password',
-      placeholder: 'Dejar en blanco para no cambiar | longitud mínima seis caracteres',
+      placeholder: 'Dejar en blanco para no cambiar | Mínimo 6 caracteres',
     },
     {
       name: 'role',
@@ -89,17 +89,18 @@ export class UsersAdminComponent extends BaseAdminPageComponent<User> {
     ];
   }
 
-  // Sobrescribimos openModal para manejar la validación de la contraseña.
-  override openModal(item: User | null = null): void {
+  // Sobrescribimos onEdit para manejar la validación de la contraseña.
+  override onEdit(item: User | null = null): void {
     const passwordControl = this.form.get('password');
     if (item) {
       // Al editar, la contraseña es opcional.
       passwordControl?.clearValidators();
+      passwordControl?.setValidators([Validators.minLength(6)]);
     } else {
       // Al crear, la contraseña es obligatoria.
       passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
     }
     passwordControl?.updateValueAndValidity();
-    super.openModal(item); // Llamamos al método original de la clase base.
+    super.onEdit(item); // Llamamos al método original de la clase base.
   }
 }

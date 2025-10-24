@@ -17,7 +17,7 @@ interface JwtPayload {
 /**
  * Middleware para proteger rutas. Verifica el JWT y adjunta el usuario a la petición.
  */
-export const protect = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
+export const authenticateToken = asyncHandler(async (req: Request, res: Response, next: NextFunction) => {
   let token;
 
   // El token se espera en el formato 'Bearer <token>'
@@ -51,7 +51,7 @@ export const protect = asyncHandler(async (req: Request, res: Response, next: Ne
  */
 export const authorize = (allowedRoles: Array<'admin' | 'user'>) => {
   return [
-    protect, // Primero, siempre protegemos la ruta para obtener req.user
+    authenticateToken, // Primero, siempre protegemos la ruta para obtener req.user
     (req: Request, res: Response, next: NextFunction) => {
     // Si el rol del usuario no está en la lista de roles permitidos, denegamos el acceso.
       if (!req.user || !allowedRoles.includes(req.user.role || 'user')) {

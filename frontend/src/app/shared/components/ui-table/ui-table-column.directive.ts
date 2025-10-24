@@ -1,10 +1,10 @@
 import { Directive, Input, TemplateRef, inject } from '@angular/core';
 
 @Directive({
-  selector: 'ng-template[uiTableColumn]',
+  selector: 'ng-template[appUiTableColumn]',
   standalone: true,
 })
 export class UiTableColumnDirective {
-  @Input({ alias: 'uiTableColumn', required: true }) columnName!: string; // Este ya estaba bien, pero lo confirmo.
+  @Input({ alias: 'appUiTableColumn', required: true }) columnName!: string;
   public templateRef: TemplateRef<unknown> = inject(TemplateRef);
 }

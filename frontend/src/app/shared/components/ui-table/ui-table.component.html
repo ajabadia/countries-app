@@ -17,8 +17,8 @@
             {{ col.label }}
             @if (col.sortable) {
               <span class="sort-icon">
-                @if (isSorted(col, 'asc')) { <span>▲</span> }
-                @if (isSorted(col, 'desc')) { <span>▼</span> }
+                @if (isSorted(col, 'asc')) { <app-ui-icon uiIconName="icon-arrow_upward" uiIconSize="xs"></app-ui-icon> }
+                @if (isSorted(col, 'desc')) { <app-ui-icon uiIconName="icon-arrow_downward" uiIconSize="xs"></app-ui-icon> }
               </span>
             }
           </th>

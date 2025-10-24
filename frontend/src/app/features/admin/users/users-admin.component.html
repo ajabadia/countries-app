@@ -1,6 +1,6 @@
 <div class="admin-page-container">
-  <app-ui-heading [uiHeadingTitle]="currentPageTitle()"></app-ui-heading>
-
+  <app-ui-heading [uiHeading]="currentPageTitle()"></app-ui-heading>
+  
   <div class="toolbar">
     <app-ui-search-box
       class="toolbar__search"
@@ -8,7 +8,8 @@
     />
     <app-ui-toolbar-buttons
       class="toolbar__actions"
-      [uiToolbarButtonsConfig]="toolbarActions"
+      [uiToolbarButtonsActions]="toolbarActions"
+      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
     />
   </div>
 
@@ -19,9 +20,10 @@
     [uiTableSort]="manager.sort()"
     [uiTableSelection]="manager.selectionService"
     (uiTableSortChange)="manager.onSortChange($event)"
+    (uiTableAction)="handleTableAction($event)"
   >
-    <ng-template uiTableColumn="name" let-item>
-      <a href="javascript:void(0);" (click)="openModal(item)">{{ item.name }}</a>
+    <ng-template [appUiTableColumn]="'name'" let-item>
+      <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.name }}</a>
     </ng-template>
   </app-ui-table>
 
@@ -35,69 +37,36 @@
 
 <!-- Modal de Formulario (Crear/Editar) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isFormModalVisible()"
+  [uiFormModalIsVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
-  [uiHeadingIconName]="editingItem() ? 'icon-edit' : 'icon-add'"
-  [uiFormModalForm]="form"
-  [uiFormModalIsLoading]="isSaving()"
+  [uiFormModalFormGroup]="form"
+  [uiFormModalIsSaving]="isSaving()"
   (uiFormModalSave)="onSave()"
-  (uiFormModalClose)="closeModal()"
+  (uiFormModalClose)="onCloseFormModal()"
 >
-  <form [formGroup]="form">
-    <app-ui-dynamic-form [form]="form" [fields]="formFields" />
-  </form>
+  <app-ui-dynamic-form [form]="form" [fields]="formFields" />
 </app-ui-form-modal>
 
 <!-- Modal de Confirmación (Borrar) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isConfirmModalVisible()"
+  [uiFormModalIsVisible]="isConfirmModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación'"
-  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
-  [uiFormModalIsLoading]="isDeleting()"
-  (uiFormModalSave)="onDelete()"
-  (uiFormModalClose)="closeConfirmDeleteModal()"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalClose)="onCloseConfirmModal()"
 >
   <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
 </app-ui-form-modal>
 
 <!-- Modal de Confirmación (Borrado Múltiple) -->
 <app-ui-form-modal
-  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalIsVisible]="isConfirmMultiDeleteModalVisible()"
   [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
-  [uiHeadingIconName]="'icon-delete'"
   [uiFormModalMode]="'confirm'"
-  [uiFormModalIsLoading]="isDeleting()"
+  [uiFormModalIsSaving]="isDeleting()"
   (uiFormModalSave)="onConfirmDeleteSelected()"
-  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
->
-  <p>
-    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> usuarios seleccionados? Esta acción no se puede deshacer.
-  </p>
-</app-ui-form-modal>
-
-<!-- Modal de Confirmación (Borrar) -->
-<app-ui-form-modal
-  [uiFormModalVisible]="isConfirmModalVisible()"
-  [uiFormModalTitle]="'Confirmar Eliminación'"
-  [uiHeadingIconName]="'icon-delete'"
-  [uiFormModalMode]="'confirm'"
-  [uiFormModalIsLoading]="isDeleting()"
-  (uiFormModalSave)="onDelete()"
-  (uiFormModalClose)="closeConfirmDeleteModal()"
->
-  <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
-</app-ui-form-modal>
-
-<!-- Modal de Confirmación (Borrado Múltiple) -->
-<app-ui-form-modal
-  [uiFormModalVisible]="isConfirmMultiDeleteModalVisible()"
-  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
-  [uiHeadingIconName]="'icon-delete'"
-  [uiFormModalMode]="'confirm'"
-  [uiFormModalIsLoading]="isDeleting()"
-  (uiFormModalSave)="onConfirmDeleteSelected()"
-  (uiFormModalClose)="closeConfirmMultiDeleteModal()"
+  (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
 >
   <p>
     ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> usuarios seleccionados? Esta acción no se puede deshacer.

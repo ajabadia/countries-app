@@ -1,4 +1,50 @@
 // File: d:\desarrollos\countries2\frontend\src\app\features\auth\register\register.component.scss | New File
 
-// Reutilizamos los mismos estilos que el componente de login para mantener la consistencia.
-@use '../login/login.component.scss';
+@use 'styles/tools' as t;
+
+.auth-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 100%;
+  gap: var(--space-l);
+
+  app-ui-card {
+    width: 100%;
+    max-width: 400px;
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-xs);
+
+  label {
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  .error-text {
+    color: var(--color-danger);
+    font-size: var(--font-size-sm);
+  }
+}
+
+.auth-footer {
+  text-align: center;
+  color: var(--color-text-muted);
+
+  a {
+    color: var(--color-primary);
+    font-weight: 600;
+    margin-left: var(--space-xs);
+  }
+}

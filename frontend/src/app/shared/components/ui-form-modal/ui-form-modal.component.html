@@ -1,6 +1,6 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-form-modal\ui-form-modal.component.html | Last Modified: 2025-10-19 -->
 
-@if (isVisible) {
+@if (uiFormModalIsVisible) {
   <ng-container>
     <div
       class="ui-form-modal-backdrop"
@@ -12,7 +12,7 @@
     ></div>
 
     <div
-      class="ui-form-modal ui-form-modal--{{ variant }}"
+      class="ui-form-modal ui-form-modal--{{ uiFormModalMode }}"
       role="dialog"
       aria-modal="true"
       [attr.aria-labelledby]="'ui-form-modal-title'"
@@ -20,10 +20,8 @@
       <!-- 1. Cabecera del Modal -->
       <app-ui-heading
         id="ui-form-modal-title"
-        class="ui-form-modal__header"
+        [uiHeading]="uiFormModalTitle"
         [uiHeadingLevel]="3"
-        [uiHeadingTitle]="title"
-        [uiIconName]="headingIconName || iconName"
       >
         <button
           app-ui-button
@@ -42,14 +40,14 @@
 
       <!-- 3. Pie de Página del Modal -->
       <footer class="ui-form-modal__footer">
-        <button app-ui-button uiButtonVariant="outline" (click)="onClose()" [uiButtonDisabled]="isLoading">Cancelar</button>
+        <button app-ui-button uiButtonVariant="outline" (click)="onClose()" [uiButtonDisabled]="uiFormModalIsSaving">Cancelar</button>
         
-        @if (mode === 'form') {
-          <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isFormInvalid() || isLoading">Guardar</button>
+        @if (uiFormModalMode === 'form') {
+          <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving" [uiButtonDisabled]="isFormInvalid() || uiFormModalIsSaving">Guardar</button>
         }
         
-        @if (mode === 'confirm') {
-          <button app-ui-button uiButtonVariant="solid" uiButtonColor="danger" (click)="onSave()" [uiButtonLoading]="isLoading" [uiButtonDisabled]="isLoading">Aceptar</button>
+        @if (uiFormModalMode === 'confirm') {
+          <button app-ui-button uiButtonVariant="solid" uiButtonColor="danger" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving" [uiButtonDisabled]="uiFormModalIsSaving">Aceptar</button>
         }
       </footer>
     </div>

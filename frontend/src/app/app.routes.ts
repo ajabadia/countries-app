@@ -22,7 +22,8 @@ export const routes: Routes = [
     loadChildren: () => import('./features/auth/auth.routes').then(m => m.AUTH_ROUTES),
   },
   {
-    path: '',
+    // ✅ CORRECCIÓN: Se asigna un segmento de ruta explícito para las rutas de usuario.
+    path: 'user',
     loadChildren: () => import('./features/user/user.routes').then(m => m.USER_ROUTES)
   },
 ];

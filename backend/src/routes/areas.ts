@@ -1,6 +1,6 @@
 // backend/routes/areas.ts
 import { Router } from 'express';
-import { protect } from '../middleware/authMiddleware.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
 import { body, param } from 'express-validator';
 import {
   getAllAreas,
@@ -25,9 +25,9 @@ const updateValidationRules = [
 
 router.get('/', getAllAreas);
 router.get('/:id', param('id').isString().withMessage('ID must be a string'), getAreaById);
-router.post('/', protect, createValidationRules, createArea);
-router.put('/:id', protect, param('id').isString(), updateValidationRules, updateArea);
-router.delete('/', protect, deleteManyAreas);
-router.delete('/:id', protect, param('id').isString().withMessage('ID must be a string'), deleteArea);
+router.post('/', authenticateToken, createValidationRules, createArea);
+router.put('/:id', authenticateToken, param('id').isString(), updateValidationRules, updateArea);
+router.delete('/', authenticateToken, deleteManyAreas);
+router.delete('/:id', authenticateToken, param('id').isString().withMessage('ID must be a string'), deleteArea);
 
 export default router;

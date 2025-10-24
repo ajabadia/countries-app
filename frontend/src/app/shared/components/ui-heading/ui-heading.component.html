@@ -2,7 +2,7 @@
   Este ng-container renderiza la etiqueta H correcta (h1, h2, etc.)
   y le pasa el contenido definido en #headingContent.
 -->
-<ng-container [ngSwitch]="level">
+<ng-container [ngSwitch]="uiHeadingLevel">
   <h1 *ngSwitchCase="1"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h1>
   <h2 *ngSwitchCase="2"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h2>
   <h3 *ngSwitchCase="3"><ng-container *ngTemplateOutlet="headingContent"></ng-container></h3>
@@ -17,16 +17,16 @@
 -->
 <ng-template #headingContent>
   <app-ui-icon 
-    *ngIf="iconName && iconPosition === 'left'" 
-    [uiIconName]="iconName" 
-    [uiIconSize]="finalIconSize" 
-    [uiIconType]="iconType" 
-    [uiIconColor]="iconColor" />
-  <span>{{ title }}</span>
+    *ngIf="uiIconName && uiIconPosition === 'left'" 
+    [uiIconName]="uiIconName" 
+    [uiIconSize]="uiIconSize" 
+    [uiIconType]="uiIconType" 
+    [uiIconColor]="uiIconColor" />
+  <span>{{ uiHeading }}</span>
   <app-ui-icon 
-    *ngIf="iconName && iconPosition === 'right'" 
-    [uiIconName]="iconName" 
-    [uiIconSize]="finalIconSize" 
-    [uiIconType]="iconType" 
-    [uiIconColor]="iconColor" />
+    *ngIf="uiIconName && uiIconPosition === 'right'" 
+    [uiIconName]="uiIconName" 
+    [uiIconSize]="uiIconSize" 
+    [uiIconType]="uiIconType" 
+    [uiIconColor]="uiIconColor" />
 </ng-template>

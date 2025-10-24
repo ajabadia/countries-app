@@ -6,7 +6,7 @@ import { AuthenticationError, ForbiddenError } from '../errors/httpErrors.js'; /
 /**
  * Middleware para proteger rutas. Verifica el JWT y adjunta el usuario a la petición.
  */
-export const protect = asyncHandler(async (req, res, next) => {
+export const authenticateToken = asyncHandler(async (req, res, next) => {
     let token;
     // El token se espera en el formato 'Bearer <token>'
     if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
@@ -38,7 +38,7 @@ export const protect = asyncHandler(async (req, res, next) => {
  */
 export const authorize = (allowedRoles) => {
     return [
-        protect, // Primero, siempre protegemos la ruta para obtener req.user
+        authenticateToken, // Primero, siempre protegemos la ruta para obtener req.user
         (req, res, next) => {
             // Si el rol del usuario no está en la lista de roles permitidos, denegamos el acceso.
             if (!req.user || !allowedRoles.includes(req.user.role || 'user')) {

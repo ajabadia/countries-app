@@ -1,65 +1,61 @@
 // File: d:\desarrollos\countries2\frontend\src\app\features\auth\register\register.component.ts | New File
 
-import { Component, OnInit, inject, signal } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { Router, RouterModule } from '@angular/router';
-import { finalize } from 'rxjs';
+import { Router, RouterLink } from '@angular/router';
 
 import { AuthService } from '@core/services/auth.service';
-import { LayoutService } from '@core/services/layout.service';
-import { ActionService } from '@core/services/action.service';
 import { ToastService } from '@core/services/toast.service';
 
-import { UiHeadingComponent } from '@shared/components/ui-heading/ui-heading.component';
+import { UiCardComponent } from '@shared/components/ui-card/ui-card.component';
+import { UiInputDirective } from '@shared/components/ui-input/ui-input.directive';
 import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
 
 @Component({
   selector: 'app-register',
   standalone: true,
-  imports: [CommonModule, ReactiveFormsModule, RouterModule, UiHeadingComponent, UiButtonComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    RouterLink,
+    UiCardComponent,
+    UiInputDirective,
+    UiButtonComponent,
+  ],
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss'],
 })
-export class RegisterComponent implements OnInit {
+export class RegisterComponent {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private router = inject(Router);
-  private layoutService = inject(LayoutService);
-  private actionService = inject(ActionService);
   private toastService = inject(ToastService);
 
   registerForm: FormGroup;
-  isSubmitting = signal(false);
 
   constructor() {
     this.registerForm = this.fb.group({
       name: ['', [Validators.required, Validators.minLength(3)]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.minLength(6)]],
+      password: ['', [Validators.required, Validators.minLength(8)]],
     });
-  }
-
-  ngOnInit(): void {
-    const registerAction = this.actionService.getActionById('auth-register');
-    if (registerAction?.pageTitle) {
-      this.layoutService.setPageTitle(registerAction.pageTitle);
-    }
   }
 
   onSubmit(): void {
     if (this.registerForm.invalid) {
+      this.toastService.showError('Por favor, completa todos los campos correctamente.');
       return;
     }
-    this.isSubmitting.set(true);
-    this.authService.register(this.registerForm.value).pipe(
-      finalize(() => this.isSubmitting.set(false))
-    ).subscribe({
+
+    this.authService.register(this.registerForm.value).subscribe({
       next: () => {
         this.toastService.showSuccess('¡Registro completado! Ahora puedes iniciar sesión.');
         this.router.navigate(['/auth/login']);
       },
-      error: (err) => this.toastService.showError(err.error?.message || 'Error en el registro.'),
+      error: (err) => {
+        this.toastService.showError(err.error.message || 'Error durante el registro.');
+      },
     });
   }
 }

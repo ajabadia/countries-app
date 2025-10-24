@@ -53,11 +53,11 @@ export class ActionService {
     {
       id: 'user-profile',
       label: 'Mi Perfil',
-      icon: 'icon-user',
+      icon: 'icon-user', // Corregido de 'icon-user-circle'
       category: 'user',
       pageTitle: 'Mi Perfil',
       type: 'nav',
-      routerLink: '/profile',
+      routerLink: '/user',
     },
 
     // --- Acciones de Navegación de Administración ---

@@ -1,0 +1,101 @@
+<div class="admin-page-container">
+  <app-ui-heading [uiHeading]="currentPageTitle()" />
+  <div class="toolbar"> 
+    <app-ui-toolbar-buttons
+      class="toolbar__actions"
+      [uiToolbarButtonsActions]="toolbarActions"
+      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
+    />
+    <app-ui-search-box
+      class="toolbar__search"
+      (uiSearchBoxValueChange)="manager.onSearch($event)"
+    />
+  </div>
+
+  <!-- TODO: Considerar mover la plantilla de la columna a un componente específico o a un archivo de plantilla compartido si se reutiliza -->
+  <!-- Ejemplo de uso dentro de ui-table-columns -->
+  <!--
+  {
+    field: 'defaultname',
+    header: 'Name',
+    template: (row: any) => `<app-ui-icon ui-icon-name="${row.alpha2Code.toLowerCase()}" ui-icon-type="flag" ui-icon-size="s"></app-ui-icon> ${row.defaultname}`
+  }
+  -->
+  <app-ui-table
+    [uiTableColumns]="columns"
+    [uiTableData]="manager.data()"
+    [uiTableSort]="manager.sort()"
+    [uiTableIsLoading]="manager.isLoading()"
+    [uiTableSelection]="manager.selectionService"
+    (uiTableSortChange)="manager.onSortChange($event)"
+    (uiTableAction)="handleTableAction($event)"
+  >
+    <!-- 
+      Aquí definimos la plantilla para la celda de la columna 'name'.
+      La variable `let-item` recibe el objeto de la fila (el `$implicit` del contexto).
+    -->
+    <ng-template [appUiTableColumn]="'name'" let-item>
+      <div class="cell-content cell-content--name">
+        <app-ui-icon
+          [uiIconName]="item.id"
+          [uiIconType]="'lang-circle-flag'"
+          [uiIconSize]="'s'"
+        />
+        <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.name }}</a>
+      </div>
+    </ng-template>
+
+    <!-- Plantilla personalizada para la columna 'active' (Icono de estado) -->
+    <ng-template [appUiTableColumn]="'active'" let-item>
+      <app-ui-icon
+        [uiIconName]="item.active ? 'check_circle' : 'cancel'"
+        [uiIconType]="'system'"
+        [attr.class]="item.active ? 'icon--success' : 'icon--danger'"
+      />
+    </ng-template>
+  </app-ui-table>
+
+  <app-ui-paginator
+    [uiPaginatorTotalRecords]="manager.totalRecords()"
+    [uiPaginatorPage]="manager.page()"
+    [uiPaginatorPageSize]="manager.pageSize()"
+    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
+  />
+</div>
+
+<!-- Modal de Formulario (Crear/Editar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isFormModalVisible()"
+  [uiFormModalTitle]="formModalTitle"
+  [uiFormModalFormGroup]="form"
+  [uiFormModalIsSaving]="isSaving()"
+  (uiFormModalSave)="onSave()"
+  (uiFormModalClose)="onCloseFormModal()"
+>
+  <app-ui-dynamic-form [form]="form" [fields]="formFields" />
+</app-ui-form-modal>
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalClose)="onCloseConfirmModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.
+  </p>
+</app-ui-form-modal>

@@ -15,16 +15,17 @@ import {
   QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { SelectionService } from '@shared/services/selection.service';
+import { SelectionService } from '@app/shared/services/selection.service'; // Ruta corregida
 import { TableColumn } from './table.types';
-import { Sort, SortDirection } from '@shared/types/sort.type';
+import { Sort, SortDirection } from '@app/shared/types/sort.type'; // Ruta corregida
 import { UiTableColumnDirective } from './ui-table-column.directive';
 import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components/ui-toggle-checkbox/ui-toggle-checkbox.component';
+import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component'; // Añadido para los iconos de ordenación
 
 @Component({
   selector: 'app-ui-table',
   standalone: true,
-  imports: [CommonModule, UiToggleCheckboxComponent],
+  imports: [CommonModule, UiToggleCheckboxComponent, UiIconComponent], // Añadido UiIconComponent
   templateUrl: './ui-table.component.html',
   styleUrls: ['./ui-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -32,11 +33,12 @@ import { UiToggleCheckboxComponent, UiToggleState } from '@app/shared/components
 export class UiTableComponent<T extends { id: number | string }> implements OnChanges {
   // --- Inputs ---
   data = input<T[] | null | undefined>([], { alias: 'uiTableData' });
-  columns = input<TableColumn<T>[]>([], { alias: 'uiTableColumns' });
+  columns = input<TableColumn<T>[]>([], { alias: 'uiTableColumns' }); // Alias corregido
   selection = input<SelectionService<T> | null>(null, { alias: 'uiTableSelection' });
   sort = input<Sort<T> | null>(null, { alias: 'uiTableSort' });
   isLoadingInput = input<boolean | undefined>(undefined, { alias: 'uiTableIsLoading' });
 
+  // --- Outputs ---
   // --- Estado Interno y Derivado ---
   isLoading = computed(() => this.isLoadingInput() ?? this.data() === null);
 
@@ -46,6 +48,7 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
   @ContentChildren(UiTableColumnDirective)
   private columnTemplates: QueryList<UiTableColumnDirective> | null = null;
 
+  @Output() uiTableAction = new EventEmitter<{ action: string, item: T }>(); // Añadido Output faltante
   // Estado para el checkbox de la cabecera con 3 estados.
   public headerCheckboxState: UiToggleState = 'ui-toggle-unchecked';
 

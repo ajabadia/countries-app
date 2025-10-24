@@ -1,0 +1,31 @@
+// File: d:\desarrollos\countries2\frontend\src\styles\_forms.scss | Last Modified: 2025-10-23
+
+// =============================================================================
+// ESTILOS BASE PARA FORMULARIOS
+// =============================================================================
+
+.ui-input {
+  width: 100%;
+  padding: var(--space-s) var(--space-m);
+  background-color: var(--color-surface-accented);
+  border: 1px solid var(--color-border);
+  border-radius: var(--border-radius-md);
+  color: var(--color-text);
+  font-size: var(--font-size-m);
+  transition: border-color 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+  &:focus {
+    outline: none;
+    border-color: var(--color-primary);
+    box-shadow: 0 0 0 2px var(--color-primary-transparent);
+  }
+
+  &.ng-invalid.ng-touched, &.ng-invalid.ng-dirty { // ✅ Añadido .ng-dirty para que el error aparezca antes de perder el foco si se escribe mal.
+    border-color: var(--color-danger);
+  }
+
+  &:disabled {
+    background-color: var(--color-surface-disabled);
+    cursor: not-allowed;
+  }
+}

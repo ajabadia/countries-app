@@ -4,7 +4,8 @@ import { authGuard } from '../../core/auth/guards/auth.guard';
 
 export const USER_ROUTES: Routes = [
   {
-    path: 'profile',
+    // ✅ CORRECCIÓN: La ruta del perfil ahora es la ruta por defecto bajo '/user'.
+    path: '',
     canActivate: [authGuard],
     // ✅ CORRECCIÓN: Se añade la carpeta 'user-profile' a la ruta de importación del componente.
     loadComponent: () => import('./user-profile/user-profile.component').then(c => c.UserProfileComponent),

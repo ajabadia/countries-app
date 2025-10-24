@@ -27,46 +27,34 @@ export class IconService {
    * @returns Un Observable con el contenido HTML seguro del SVG.
    */
   getIcon(name: string, type: UiIconType = 'system'): Observable<SafeHtml> {
-    const cacheKey = `${type}:${name}`;
-    // Si el icono ya está en caché, devolver el Observable cacheado.
-    if (this.iconCache.has(cacheKey)) {
-      return this.iconCache.get(cacheKey)!;
-    }
-
-    // Si no está en caché, crear la petición HTTP
-    let typePath = type;
     // Usamos un mapeo para determinar la ruta, es más limpio que un switch largo.
     const typeToPathMap: { [key: string]: string } = {
-      'flag': 'flags',
+      'flag': 'flags/square-flags',
       'circle-flag': 'flags/circle-flags',
       'globe': 'globes',
-      'lang-circle-flag': 'flags/circle-flags/language',
-      'other-circle-flag': 'flags/circle-flags/other',
+      'lang-circle-flag': 'flags/language-flags',
+      'other-circle-flag': 'flags/other-flags',
       'system': 'system'
     };
 
-    // Si el tipo existe en el mapa, usamos su ruta.
-    // Si no, usamos 'system' como fallback por defecto.
-    if (typeToPathMap[type]) {
-      typePath = typeToPathMap[type];
-    } else {
-      typePath = 'system';
-    }
+    // Obtener la ruta específica del mapa. Si no existe, usar 'system' como fallback.
+    const typePath = typeToPathMap[type] || 'system';
 
     const iconUrl = `/assets/icons/${typePath}/${name}.svg`;
+    const cacheKey = iconUrl; // Usar la URL completa como clave de caché para evitar colisiones.
+
+    if (this.iconCache.has(cacheKey)) {
+      // console.log(`[IconService] Serving from cache: ${iconUrl}`);
+      return this.iconCache.get(cacheKey)!;
+    }
+
+    // console.log(`[IconService] Requesting new icon: ${iconUrl}`);
     const icon$ = this.http.get(iconUrl, { responseType: 'text' }).pipe(
       // Sanitizar el SVG para prevenir ataques XSS al usar [innerHTML].
       map(svg => this.sanitizer.bypassSecurityTrustHtml(svg)),
       // En caso de error, intentar cargar un icono de fallback.
       catchError(() => {
         console.warn(`Icon "${name}" not found at ${iconUrl}`);
-        // Si el icono que ha fallado es el propio 'UNK',
-        // evitamos un bucle infinito y devolvemos un SVG de fallback final.
-        if (name === 'UNK') {
-          const fallbackSvg = `<svg viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg"><text x="50" y="50" font-size="50" text-anchor="middle" dy=".3em">?</text></svg>`;
-          return of(this.sanitizer.bypassSecurityTrustHtml(fallbackSvg));
-        }
-        // Forzamos la búsqueda del icono de fallback en la categoría 'system'.
         return this.getIcon('UNK', 'system');
       }),
       // shareReplay(1) es la clave: cachea el último valor emitido y lo comparte

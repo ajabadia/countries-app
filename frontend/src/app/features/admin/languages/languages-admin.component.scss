@@ -1,0 +1,28 @@
+// File: d:\desarrollos\countries2\frontend\src\app\features\admin\languages\languages-admin.component.scss
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-l);
+  margin-bottom: var(--space-l);
+}
+
+.toolbar__search {
+  flex-grow: 1;
+  max-width: 400px;
+}
+
+.cell-content--name {
+  display: flex;
+  align-items: center;
+  gap: var(--space-s);
+}
+
+.icon--success {
+  color: var(--color-success);
+}
+
+.icon--danger {
+  color: var(--color-danger);
+}

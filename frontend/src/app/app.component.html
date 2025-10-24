@@ -14,13 +14,13 @@
     <div class="app-header__right">
       <!-- ✅ NUEVO: Se añaden los botones condicionales para el perfil y el login/logout -->
       @if (authService.isAuthenticated()) {
-        <a routerLink="/profile" class="profile-link">Mi Perfil</a>
+        <a routerLink="/user" class="profile-link">Mi Perfil</a>
         <button app-ui-button (click)="authService.logout()" ui-button-size="s" ui-button-color="secondary">
           Cerrar Sesión
         </button>
       } @else {
         <a routerLink="/auth/login">
-          <button app-ui-button ui-button-size="s">Iniciar Sesión</button>
+          <button app-ui-button ui-button-size="s" ui-button-color="primary">Iniciar Sesión</button>
         </a>
       }
     </div>

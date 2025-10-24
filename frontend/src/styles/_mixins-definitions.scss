@@ -162,3 +162,25 @@
     z-index: 1;
   }
 }
+
+// --- Mixin para Media Queries (Breakpoints) ---
+// Permite escribir media queries de forma semántica y centralizada.
+@mixin breakpoint($name) {
+  // Los breakpoints se definen en _grid.scss. Este es un mapa para acceder a ellos.
+  $breakpoints: (
+    'mobile': 375px,
+    'tablet': 768px,
+    'desktop-s': 1024px,
+    'desktop-m': 1200px,
+    'desktop-l': 1440px,
+    'desktop-xl': 1680px
+  );
+
+  @if map-has-key($breakpoints, $name) {
+    @media (min-width: map-get($breakpoints, $name)) {
+      @content;
+    }
+  } @else {
+    @warn "Breakpoint '#{$name}' no encontrado. Valores disponibles: #{map-keys($breakpoints)}";
+  }
+}

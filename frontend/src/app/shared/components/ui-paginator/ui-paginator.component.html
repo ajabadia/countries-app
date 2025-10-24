@@ -1,11 +1,11 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-paginator\ui-paginator.component.html | Last Modified: 2025-10-19 -->
 
-@if (totalRecords() > 0) {
+@if (uiPaginatorTotalRecords() > 0) {
   <nav class="ui-paginator" aria-label="Paginación">
     <!-- Resumen de registros -->
     <div class="ui-paginator__block">
       <span class="ui-paginator__summary">
-        Mostrando <b>{{ startRecord() }} - {{ endRecord() }}</b> de <b>{{ totalRecords() }}</b>
+        Mostrando <b>{{ startRecord() }} - {{ endRecord() }}</b> de <b>{{ uiPaginatorTotalRecords() }}</b>
       </span>
     </div>
 
@@ -15,7 +15,7 @@
         app-ui-button
         [uiButtonVariant]="'ghost'"
         (click)="goToPage(1)"
-        [disabled]="page() === 1"
+        [disabled]="uiPaginatorPage() === 1"
         aria-label="Primera página"
       >
         <app-ui-icon [uiIconName]="'icon-first-page'"></app-ui-icon>
@@ -23,8 +23,8 @@
       <button
         app-ui-button
         [uiButtonVariant]="'ghost'"
-        (click)="goToPage(page() - 1)"
-        [disabled]="page() === 1"
+        (click)="goToPage(uiPaginatorPage() - 1)"
+        [disabled]="uiPaginatorPage() === 1"
         aria-label="Página anterior"
       >
         <app-ui-icon [uiIconName]="'icon-chevron-left'"></app-ui-icon>
@@ -46,10 +46,10 @@
         de {{ totalPages() }}
       </span>
 
-      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(page() + 1)" [disabled]="page() === totalPages()" aria-label="Página siguiente">
+      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(uiPaginatorPage() + 1)" [disabled]="uiPaginatorPage() === totalPages()" aria-label="Página siguiente">
         <app-ui-icon [uiIconName]="'icon-chevron-right'"></app-ui-icon>
       </button>
-      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(totalPages())" [disabled]="page() === totalPages()" aria-label="Última página">
+      <button app-ui-button [uiButtonVariant]="'ghost'" (click)="goToPage(totalPages())" [disabled]="uiPaginatorPage() === totalPages()" aria-label="Última página">
         <app-ui-icon [uiIconName]="'icon-last-page'"></app-ui-icon>
       </button>
     </div>
@@ -57,7 +57,7 @@
     <!-- Selector de tamaño de página -->
     <div class="ui-paginator__block">
       <label for="pageSizeSelect">Registros:</label>
-      <select id="pageSizeSelect" class="ui-paginator__select" [ngModel]="pageSize()" (ngModelChange)="onPageSizeChange(+$event)">
+      <select id="pageSizeSelect" class="ui-paginator__select" [ngModel]="uiPaginatorPageSize()" (ngModelChange)="onPageSizeChange(+$event)">
         @for (size of pageSizeOptions(); track size) {
           <option [value]="size">{{ size }}</option>
         }

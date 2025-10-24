@@ -14,12 +14,12 @@
 @forward 'variables-dark';
 @forward 'mixins-definitions';
 @forward 'typography';
+@forward 'grid'; // ✅ AÑADIDO: Se expone el nuevo mixin 'grid'.
 
 // --- 2. Carga de Estilos Base ---
 @use 'reset';
 @use 'base';
 @use 'grid';
+@use 'forms';
 @use 'components';
 @use 'theme';
-
-

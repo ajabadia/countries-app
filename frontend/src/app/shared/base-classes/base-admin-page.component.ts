@@ -11,7 +11,7 @@ import { EMPTY, Observable, Subscription, catchError, finalize, of, tap, forkJoi
 import { AdminPageManager } from '@app/shared/utils/admin-page-manager';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { TableColumn } from '@app/shared/components/ui-table/table.types';
-import { ToolbarButtonConfig } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
+import { ToolbarButtonConfig } from '@app/core/types/action.types';
 import { FormField } from '@app/shared/types/form.types';
 
 /**
@@ -66,7 +66,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     // La inicialización de `toolbarActions` debe estar en el constructor
     // para que `toObservable` se ejecute en un contexto de inyección válido.
     this.toolbarActions = [
-      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.openModal(), color: 'primary', variant: 'solid' },
+      { id: 'new', label: 'Nuevo', iconName: 'icon-add', action: () => this.onEdit(), color: 'primary', variant: 'solid' },
       {
         id: 'edit',
         label: 'Editar',
@@ -118,7 +118,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
   }
 
   // --- Métodos para operaciones CRUD y modales ---
-  openModal(item: T | null = null): void {
+  onEdit(item: T | null = null): void {
     this.editingItem.set(item);
     const primaryKeyField = this.formFields.find(f => f.isPrimaryKey);
 
@@ -138,23 +138,23 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     this.isFormModalVisible.set(true);
   }
 
-  closeModal(): void {
+  onCloseFormModal(): void {
     this.isFormModalVisible.set(false);
     this.editingItem.set(null);
     this.form.reset();
   }
 
-  openConfirmDeleteModal(item: T): void {
+  requestConfirmDelete(item: T): void {
     this.itemToDelete.set(item);
     this.isConfirmModalVisible.set(true);
   }
 
-  closeConfirmDeleteModal(): void {
+  onCloseConfirmModal(): void {
     this.itemToDelete.set(null);
     this.isConfirmModalVisible.set(false);
   }
 
-  closeConfirmMultiDeleteModal(): void {
+  onCloseConfirmMultiDeleteModal(): void {
     this.isConfirmMultiDeleteModalVisible.set(false);
   }
 
@@ -180,7 +180,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
       saveOperation$.pipe(
         tap(() => {
           this.toastService.showSuccess('¡Guardado con éxito!');
-          this.closeModal();
+          this.onCloseFormModal();
           this.manager.refreshData();
         }),
         catchError(err => {
@@ -193,7 +193,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     );
   }
 
-  onDelete(): void {
+  onConfirmDelete(): void {
     const item = this.itemToDelete();
     if (!item) return;
 
@@ -202,7 +202,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
       this.service.delete(item.id).pipe(
         tap(() => {
           this.toastService.showSuccess('Elemento eliminado.');
-          this.closeConfirmDeleteModal();
+          this.onCloseConfirmModal();
           this.manager.refreshData();
         }),
         catchError(err => {
@@ -221,7 +221,7 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     }
     const itemToEdit = this.manager.data().find(item => item.id === selectedIds[0]);
     if (itemToEdit) {
-      this.openModal(itemToEdit);
+      this.onEdit(itemToEdit);
     }
   }
 
@@ -251,11 +251,30 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
       forkJoin(deleteObservables$).pipe(
         tap(() => {
           this.toastService.showSuccess(`${selectedIds.length} elementos eliminados.`);
+          this.manager.selectionService.clear();
           this.manager.refreshData();
-          this.closeConfirmMultiDeleteModal();
+          this.onCloseConfirmMultiDeleteModal();
         }),
         finalize(() => this.isDeleting.set(false))
       ).subscribe()
     );
+  }
+
+  handleToolbarAction(actionId: string): void {
+    const action = this.toolbarActions.find(a => a.id === actionId);
+    if (action && action.action) {
+      action.action();
+    }
+  }
+
+  handleTableAction(event: { action: string, item: T }): void {
+    switch (event.action) {
+      case 'edit':
+        this.onEdit(event.item);
+        break;
+      case 'delete':
+        this.requestConfirmDelete(event.item);
+        break;
+    }
   }
 }

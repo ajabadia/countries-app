@@ -2,7 +2,7 @@
 
 import { ValidatorFn } from '@angular/forms';
 
-export type FormFieldType = 'text' | 'number' | 'email' | 'password' | 'textarea' | 'select';
+export type FormFieldType = 'text' | 'number' | 'email' | 'password' | 'textarea' | 'select' | 'boolean';
 
 export interface FormField {
   name: string; // Corresponde al formControlName

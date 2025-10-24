@@ -3,6 +3,7 @@ import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angula
 import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@core/services/toast.service';
+import { LayoutService } from '@core/services/layout.service';
 import { User } from '@core/types/user.types';
 import { UiCardComponent } from '@shared/components/ui-card/ui-card.component';
 import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
@@ -25,6 +26,7 @@ export class UserProfileComponent implements OnInit {
   private fb = inject(FormBuilder);
   private authService = inject(AuthService);
   private toastService = inject(ToastService);
+  private layoutService = inject(LayoutService);
 
   currentUser = this.authService.currentUser;
 
@@ -32,6 +34,8 @@ export class UserProfileComponent implements OnInit {
   passwordForm!: FormGroup;
 
   ngOnInit(): void {
+    this.layoutService.setPageTitle('Mi Perfil');
+
     this.profileForm = this.fb.group({
       name: [this.currentUser()?.name || '', Validators.required],
       email: [this.currentUser()?.email || '', [Validators.required, Validators.email]],

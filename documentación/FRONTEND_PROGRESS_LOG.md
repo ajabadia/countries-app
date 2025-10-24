@@ -1,5 +1,119 @@
 <!-- File: d:\desarrollos\countries2\frontend\FRONTEND_PROGRESS_LOG.md | Last Modified: 2025-10-22 -->
 
+### 37. Creación de la Página de Administración de "Idiomas" (Languages)
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha creado la nueva página de administración para la entidad "Idiomas".
+-   **Propósito**: Permitir la gestión CRUD de la tabla `languages`, incluyendo campos específicos y una visualización personalizada.
+-   **Cambios Realizados**:
+    -   Se ha clonado la estructura de la página de "Países" como base, adaptándola para la entidad `Language`.
+    -   Se han creado los ficheros `languages-admin.component.ts`, `languages.service.ts`, y sus correspondientes plantillas y estilos.
+    -   Se ha definido el tipo `Language` con los campos `id`, `name` y `active`.
+    -   En `languages-admin.component.ts`, se han configurado los `formFields` para que coincidan con la entidad, incluyendo un campo de tipo `boolean` para el estado "activo".
+    -   En `languages-admin.component.html`, se han implementado plantillas personalizadas para las columnas de la tabla:
+        -   La columna `id` ahora muestra el icono de la bandera del idioma junto a su código.
+        -   La columna `active` muestra un icono de `check` o `cancel` según el estado.
+    -   Se han corregido una serie de errores de compilación en cascada, principalmente relacionados con la desincronización entre las plantillas HTML y la API de la clase base `BaseAdminPageComponent` tras refactorizaciones recientes.
+-   **Beneficio**: La aplicación cuenta con una nueva sección de administración para "Idiomas", completamente funcional y con una interfaz de usuario enriquecida. El proceso ha servido para estabilizar y alinear las plantillas de todas las páginas de administración con la API de la clase base.
+
+---
+
+### 36. Creación de la Página de Administración de "Áreas"
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha creado la nueva página de administración para la entidad "Áreas".
+-   **Propósito**: Expandir las capacidades de gestión de la aplicación, permitiendo el CRUD de la tabla `areas`.
+-   **Cambios Realizados**:
+    -   Se ha seguido el patrón de reutilización establecido por la arquitectura, copiando la estructura de la página de "Continentes" que era funcionalmente idéntica.
+    -   Se han creado los ficheros `areas-admin.component.ts`, `areas.service.ts` y sus correspondientes plantillas y estilos en `features/admin/areas/`.
+    -   Se ha modificado `areas-admin.component.ts` para que utilice `AreasService`, el tipo `Area`, y se han actualizado los identificadores y textos de la UI (títulos, placeholders).
+    -   El proceso ha sido extremadamente rápido y sin fricciones, validando el éxito de la clase base `BaseAdminPageComponent` y el patrón de herencia para las páginas CRUD.
+-   **Beneficio**: La aplicación cuenta con una nueva sección de administración completamente funcional. Se ha demostrado que la arquitectura actual permite añadir nuevas funcionalidades similares con un esfuerzo mínimo y un bajo riesgo de introducir errores.
+
+---
+
+### 35. Estandarización de la Página de Registro y Corrección del Tema Global
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha refactorizado la página de registro para alinearla con el diseño de las páginas de login y perfil, y se ha corregido el color de fondo global de la aplicación.
+-   **Propósito**: Asegurar la consistencia visual y la experiencia de usuario en todas las páginas de autenticación, y restaurar el color de fondo corporativo de la aplicación.
+-   **Cambios Realizados**:
+    -   **Corrección del Fondo Global**: Se ha identificado que el color de fondo de la aplicación era un gris-azulado debido a una variable incorrecta. Se ha corregido en `_variables.scss` para que `--color-background` sea blanco (`#ffffff`).
+    -   **Refactorización de `register.component.ts`**:
+        -   Se han actualizado las importaciones para incluir `UiCardComponent`, `UiInputDirective` y `UiButtonComponent`.
+        -   Se ha simplificado la lógica, eliminando `isSubmitting` y `ngOnInit` que ya no eran necesarios.
+        -   Se han ajustado los validadores de contraseña a `minLength(8)` para consistencia.
+    -   **Refactorización de `register.component.html`**:
+        -   Se ha adoptado la estructura basada en `app-ui-card` para el contenedor principal.
+        -   Se han añadido `placeholder` y `title` (tooltip) a los campos de entrada para mejorar la usabilidad.
+        -   Se ha implementado la lógica de visualización de mensajes de error dinámicos (`@if`) para cada campo, siguiendo el patrón de la página de perfil.
+        -   Se ha utilizado `appUiInput` para aplicar los estilos corporativos a los campos de entrada.
+        -   El botón de registro ahora usa `app-ui-button` con `ui-button-color="primary"` y `[disabled]="registerForm.invalid"`.
+    -   **Refactorización de `register.component.scss`**: Se han adaptado los estilos para que coincidan con la nueva estructura HTML y utilicen las variables de diseño corporativas.
+    -   **Mejora de Estilos de Formulario**: Se ha ajustado la regla CSS en `_forms.scss` para que los campos erróneos muestren el borde rojo no solo cuando se han tocado (`.ng-touched`), sino también cuando se están editando y son inválidos (`.ng-dirty`), proporcionando feedback inmediato.
+-   **Beneficio**: Todas las páginas de autenticación (login, registro, perfil) ahora comparten una apariencia y experiencia de usuario consistentes y profesionales. El fondo de la aplicación es el blanco corporativo, y los formularios ofrecen un feedback de validación claro y dinámico.
+
+---
+
+### 34. Refinamiento de Estilos y Arquitectura SCSS para la Página de Perfil
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha completado la implementación visual de la página "Mi Perfil", solucionando problemas de estilo y mejorando la arquitectura de SCSS.
+-   **Propósito**: Asegurar que la nueva sección se integre visualmente con el resto de la aplicación y que la arquitectura de estilos sea robusta, mantenible y coherente.
+-   **Cambios Realizados**:
+    -   **Estilos de Layout**: Se han añadido estilos específicos en `user-profile.component.scss` para maquetar la página, utilizando un sistema de rejilla para organizar las tarjetas de perfil y contraseña.
+    -   **Estilos de Formularios Globales**: Para unificar la apariencia de los campos de texto, se ha creado un nuevo parcial `_forms.scss` con los estilos corporativos para la clase `.ui-input`. Este parcial se ha importado de forma centralizada en `_tools.scss`.
+    -   **Mejora de la Experiencia de Usuario (UX)**: Se ha mejorado la plantilla `user-profile.component.html` para incluir mensajes de error dinámicos y específicos para cada campo del formulario, guiando al usuario de forma clara.
+    -   **Actualización del Título de Página**: Se ha implementado la lógica en `UserProfileComponent` para que actualice dinámicamente el título de la cabecera a "Mi Perfil" al navegar a esta página, utilizando el `LayoutService`.
+    -   **Refactorización de la Arquitectura SCSS**:
+        -   Se ha configurado `angular.json` para añadir `src` a los `includePaths` del preprocesador de Sass. Esto permite el uso de rutas de importación absolutas y limpias (ej. `@use 'styles/tools'`) desde cualquier componente.
+        -   Se ha refactorizado `_grid.scss` para definir un `mixin` reutilizable `@mixin grid`.
+        -   Se ha actualizado `_tools.scss` para que exponga (`@forward`) el nuevo mixin, solucionando un error de `Undefined mixin` y haciendo la lógica de la rejilla accesible globalmente de forma correcta.
+-   **Beneficio**: La página de perfil ahora tiene una apariencia profesional y es consistente con el sistema de diseño de la aplicación. La arquitectura de estilos se ha fortalecido, permitiendo importaciones más limpias y una mayor reutilización de la lógica de estilos a través de mixins.
+
+---
+
+### 33. Implementación de la Sección de Perfil de Usuario y Cierre de Sesión
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha implementado desde cero la sección "Mi Perfil", permitiendo a los usuarios gestionar su cuenta y cerrar la sesión.
+-   **Propósito**: Proporcionar funcionalidades esenciales de gestión de cuenta, completando el ciclo de vida de la autenticación del usuario.
+-   **Cambios Realizados**:
+    -   **Separación de Bases de Datos (Backend)**: Se ha completado la separación de la base de datos de usuarios (`auth.db`) de la base de datos principal (`countries.db`), aislando la lógica de autenticación.
+    -   **Nuevos Endpoints (Backend)**: Se han creado y unificado los endpoints necesarios en `routes/auth.ts` para gestionar el perfil:
+        -   `GET /api/auth/profile`: Para obtener los datos del usuario.
+        -   `PUT /api/auth/profile`: Para actualizar el nombre y el email.
+        -   `PUT /api/auth/profile/password`: Para cambiar la contraseña.
+        -   `POST /api/auth/logout`: Para el cierre de sesión.
+    -   **Componente de Perfil (Frontend)**: Se ha creado el nuevo `UserProfileComponent` con formularios reactivos para la gestión de datos y contraseña.
+    -   **Enrutamiento y Seguridad (Frontend)**:
+        -   Se ha creado `user.routes.ts` para definir la ruta `/profile`.
+        -   Se ha creado el guardián `auth.guard.ts` para proteger esta ruta y asegurar que solo usuarios autenticados puedan acceder.
+    -   **Integración en la UI (Frontend)**:
+        -   Se ha ampliado `AuthService` con los métodos `getProfile`, `updateProfile`, `changePassword` y `logout`.
+        -   Se ha modificado `app.component.html` para mostrar dinámicamente los botones "Mi Perfil" y "Cerrar Sesión" a los usuarios autenticados.
+    -   **Depuración Extensiva**: Se ha llevado a cabo un proceso de depuración completo que ha incluido la corrección de rutas de importación, la creación de componentes de UI faltantes (`ui-card`, `ui-input`), la corrección del uso de la directiva `ui-button` y la instalación de dependencias del backend (`zod`).
+-   **Beneficio**: La aplicación ahora cuenta con un flujo de gestión de perfil de usuario completo, seguro y funcional. Los usuarios tienen control sobre su cuenta y el sistema está estabilizado tras una depuración integral de frontend y backend.
+
+---
+
+### 32. Resolución de Errores de Compilación y Adaptación a la API de `UiButtonComponent`
+
+-   **Fecha**: 2025-10-23
+-   **Acción**: Se ha llevado a cabo una depuración final para resolver una cascada de errores de compilación (`NG8001`, `NG8002`) que impedían el renderizado de componentes.
+-   **Propósito**: Lograr que la aplicación compile sin errores, identificando y corrigiendo la causa raíz de los fallos en las plantillas.
+-   **Cambios Realizados**:
+    -   **Diagnóstico Profundo**: Se identificó que todos los errores `NG8001: 'app-ui-button' is not a known element` y `NG8002: Can't bind to '...'` estaban relacionados con el uso incorrecto del componente `UiButtonComponent`.
+    -   **Revisión de Documentación**: Siguiendo la intuición del desarrollador, se revisó la documentación (`README.md`) del `UiButtonComponent`. Se confirmó que no es un componente de elemento (`<app-ui-button>`), sino una **directiva de atributo** (`[app-ui-button]`).
+    -   **Refactorización de Plantillas**:
+        -   Se han modificado las plantillas `app.component.html` y `user-profile.component.html`.
+        -   Se han reemplazado las etiquetas `<app-ui-button>` por etiquetas estándar `<button>` a las que se les ha añadido la directiva `app-ui-button`.
+        -   Se han corregido los bindings de los inputs para que coincidan con la API de la directiva: `size` se ha cambiado por `ui-button-size`, `variant` por `ui-button-color`, y el binding de deshabilitación `[ui-button-disabled]` se ha corregido por el estándar `[disabled]`.
+    -   **Creación de `auth.guard.ts`**: Se ha creado el guardián de autenticación que faltaba en `core/auth/guards/`, solucionando los errores de enrutamiento pendientes.
+-   **Beneficio**: La aplicación compila ahora sin errores. Se ha resuelto una inconsistencia fundamental entre el uso y la implementación de un componente compartido clave, estabilizando el frontend y permitiendo continuar con el desarrollo de funcionalidades.
+
+---
+
 ### 31. Refactorización del Modal para Soportar Múltiples Modos
 
 -   **Fecha**: 2025-10-23

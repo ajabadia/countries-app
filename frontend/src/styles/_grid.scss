@@ -9,9 +9,8 @@ $breakpoint-desktop-m: 1200px;
 $breakpoint-desktop-l: 1440px;
 $breakpoint-desktop-xl: 1680px;
 
-// --- Sistema de rejilla (Grid) basado en BEM ---
-
-.grid {
+// ✅ NUEVO: Se crea un mixin para la lógica de la rejilla.
+@mixin grid {
   display: grid;
   gap: var(--space-l, 24px); // Espacio entre columnas
 
@@ -22,6 +21,12 @@ $breakpoint-desktop-xl: 1680px;
   @media (min-width: $breakpoint-tablet) {
     grid-template-columns: repeat(12, 1fr);
   }
+}
+
+// --- Sistema de rejilla (Grid) basado en BEM ---
+
+.grid {
+  @include grid; // La clase .grid ahora usa el mixin.
 }
 
 .grid__item {

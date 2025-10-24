@@ -10,11 +10,20 @@
         <form [formGroup]="profileForm" (ngSubmit)="onUpdateProfile()" class="profile-form">
           <div class="form-field">
             <label for="name">Nombre</label>
-            <input id="name" type="text" formControlName="name" appUiInput />
+            <input id="name" type="text" formControlName="name" appUiInput placeholder="Tu nombre completo" />
+            @if (profileForm.get('name')?.hasError('required') && profileForm.get('name')?.touched) {
+              <small class="error-text">El nombre es obligatorio.</small>
+            }
           </div>
           <div class="form-field">
             <label for="email">Email</label>
-            <input id="email" type="email" formControlName="email" appUiInput />
+            <input id="email" type="email" formControlName="email" appUiInput placeholder="tu.email@ejemplo.com" />
+            @if (profileForm.get('email')?.hasError('required') && profileForm.get('email')?.touched) {
+              <small class="error-text">El email es obligatorio.</small>
+            }
+            @if (profileForm.get('email')?.hasError('email') && profileForm.get('email')?.touched) {
+              <small class="error-text">Por favor, introduce un email válido.</small>
+            }
           </div>
           <button app-ui-button type="submit" [disabled]="profileForm.pristine || profileForm.invalid">
             Actualizar Perfil
@@ -30,15 +39,27 @@
         <form [formGroup]="passwordForm" (ngSubmit)="onChangePassword()" class="profile-form">
           <div class="form-field">
             <label for="currentPassword">Contraseña Actual</label>
-            <input id="currentPassword" type="password" formControlName="currentPassword" appUiInput />
+            <input id="currentPassword" type="password" formControlName="currentPassword" appUiInput placeholder="Tu contraseña actual" />
+            @if (passwordForm.get('currentPassword')?.hasError('required') && passwordForm.get('currentPassword')?.touched) {
+              <small class="error-text">La contraseña actual es obligatoria.</small>
+            }
           </div>
           <div class="form-field">
             <label for="newPassword">Nueva Contraseña</label>
-            <input id="newPassword" type="password" formControlName="newPassword" appUiInput />
+            <input id="newPassword" type="password" formControlName="newPassword" appUiInput placeholder="Mínimo 8 caracteres" />
+            @if (passwordForm.get('newPassword')?.hasError('required') && passwordForm.get('newPassword')?.touched) {
+              <small class="error-text">La nueva contraseña es obligatoria.</small>
+            }
+            @if (passwordForm.get('newPassword')?.hasError('minlength') && passwordForm.get('newPassword')?.touched) {
+              <small class="error-text">La nueva contraseña debe tener al menos 8 caracteres.</small>
+            }
           </div>
           <div class="form-field">
             <label for="confirmPassword">Confirmar Nueva Contraseña</label>
             <input id="confirmPassword" type="password" formControlName="confirmPassword" appUiInput />
+            @if (passwordForm.get('confirmPassword')?.hasError('required') && passwordForm.get('confirmPassword')?.touched) {
+              <small class="error-text">Confirmar la contraseña es obligatorio.</small>
+            }
             @if (passwordForm.hasError('mismatch') && passwordForm.get('confirmPassword')?.touched) {
               <small class="error-text">Las contraseñas no coinciden.</small>
             }

@@ -22,9 +22,14 @@ export interface GroupedAppAction {
   actions: AppAction[];
 }
 
+import { Observable } from 'rxjs';
+
 export interface ToolbarButtonConfig {
   id: string;
   label: string;
-  icon?: string;
+  iconName?: string;
   action: () => void;
+  color?: 'primary' | 'secondary' | 'danger' | 'success' | 'warning';
+  variant?: 'solid' | 'outline' | 'ghost';
+  disabled$?: Observable<boolean>;
 }
