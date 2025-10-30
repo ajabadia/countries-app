@@ -2,6 +2,6 @@
 
 <div class="ui-toast-container">
   @for (toast of toasts(); track toast.id) {
-    <app-ui-toast [uiToastData]="toast" (uiToastClose)="toastService.remove($event)" />
+    <app-ui-toast [toast]="toast" (closed)="toastService.remove(toast.id)" />
   }
 </div>

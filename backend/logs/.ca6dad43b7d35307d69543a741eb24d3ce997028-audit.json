@@ -29,6 +29,31 @@
             "date": 1761291290301,
             "name": "logs\\combined-2025-10-24.log",
             "hash": "d45af4d213e3c0cd3dce181067b9a3559996c2a4e0743de9eacdf3f93dafc3f6"
+        },
+        {
+            "date": 1761384061842,
+            "name": "logs\\combined-2025-10-25.log",
+            "hash": "add1ac5af973c38e570222880dc39b9dde636bbf7d093572a1d9627f5f181407"
+        },
+        {
+            "date": 1761557571422,
+            "name": "logs\\combined-2025-10-27.log",
+            "hash": "1727b646e036f294c495fdbb84dec994c791d2b4358a3b41e108ee53830543f1"
+        },
+        {
+            "date": 1761606313709,
+            "name": "logs\\combined-2025-10-28.log",
+            "hash": "a65445f79f692a8bc1fbc0db5401741b8a08e01e810d96d7f00d93f959ec969a"
+        },
+        {
+            "date": 1761727059055,
+            "name": "logs\\combined-2025-10-29.log",
+            "hash": "65bea8f0ebc422b1b78783d3445fff7eb9ffcf7f2f5d0746ffe15fee9cb773e6"
+        },
+        {
+            "date": 1761779195366,
+            "name": "logs\\combined-2025-10-30.log",
+            "hash": "310d2b4e8b72c7c7ce2a3abb76c9e464f00e4b5e704573c7e8ec42053a1489b4"
         }
     ],
     "hashType": "sha256"

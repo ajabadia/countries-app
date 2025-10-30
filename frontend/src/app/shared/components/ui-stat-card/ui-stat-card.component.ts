@@ -23,6 +23,7 @@ export class UiStatCardComponent {
   @Input({ alias: 'ui-stat-card-value', required: true }) value!: string | number;
   @Input({ alias: 'ui-stat-card-icon' }) icon?: string;
   @Input({ alias: 'ui-stat-card-is-loading' }) isLoading = false;
+  @Input({ alias: 'ui-stat-card-route' }) route?: string | any[];
 
   /**
    * Mejora de Accesibilidad: Permite activar la tarjeta con Enter o Espacio.

@@ -1,0 +1,9 @@
+Cómo Usar el Script
+Asegúrate de que el script tenga permisos de ejecución:
+bash
+chmod +x deploy.sh
+Ejecútalo desde la raíz de tu proyecto:
+bash
+./deploy.sh
+Al finalizar, tendrás una carpeta deployment_package con todo lo necesario, lista para ser subida a tu servidor.
+

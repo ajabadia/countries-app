@@ -1,4 +1,6 @@
-Este documento es una guía de arquitectura y un "prompt" de referencia para el desarrollo del proyecto. Su objetivo es documentar los patrones de diseño establecidos, asegurar la consistencia del código y definir una hoja de ruta para futuras mejoras.
+<!-- File: d:\desarrollos\countries2\README.md | Last Modified: 2025-10-28 -->
+
+# Proyecto `countries2` - Guía Principal
 
 ## 1. Arquitectura General
 
@@ -8,64 +10,59 @@ El proyecto sigue una arquitectura de aplicación web moderna con una clara sepa
 -   **Backend:** Una API RESTful construida sobre **Node.js** y **Express**, con una arquitectura por capas y patrones genéricos para escalabilidad.
 -   **Base de Datos:** **SQLite** a través de `better-sqlite3`.
 
-## 2. Patrones y Arquitectura del Frontend (`/frontend`)
+## 2. Estado Actual del Proyecto
 
-El frontend demuestra un alto nivel de madurez, aplicando prácticas modernas de Angular y un fuerte enfoque en la reusabilidad y el rendimiento.
+El proyecto ha alcanzado un hito de estabilidad y calidad excepcionales. Se han completado con éxito todas las fases del plan de refactorización, abordando la deuda técnica crítica, unificando la arquitectura del frontend y mejorando el rendimiento y la seguridad del backend.
 
-### Puntos Fuertes y Patrones de Diseño
+La aplicación es ahora robusta, mantenible y escalable. El código sigue un conjunto de directrices claras y documentadas, lo que facilita el desarrollo futuro y la incorporación de nuevas funcionalidades.
 
--   **Componentes Modernos (`standalone` y `OnPush`):**
-    -   Se adopta el patrón de **Standalone Components** (ej. `SearchBoxComponent`, `UiHeadingComponent`), lo que simplifica la gestión de módulos y dependencias, alineándose con las prácticas actuales de Angular.
-    -   El uso de `ChangeDetectionStrategy.OnPush` es la norma en los componentes, una práctica excelente para optimizar el rendimiento al minimizar los ciclos de detección de cambios.
+## 3. Arquitectura del Backend
 
--   **Gestión de Estado Reactivo con RxJS y Signals:**
-    -   Se utiliza `BehaviorSubject` y `Subject` para gestionar el estado de la UI (ej. `page$`, `search$`, `sort$` en `BaseAdminComponent`).
-    -   Se combinan múltiples flujos de estado con `combineLatest` para reaccionar a los cambios y disparar la recarga de datos de forma eficiente.
-    -   Se usa `debounceTime` y `distinctUntilChanged` para optimizar la entrada del usuario (ej. en `SearchBoxComponent`), previniendo un exceso de peticiones a la API.
-    -   Se utiliza `toSignal` para convertir observables en signals reactivas, pero se debe tener cuidado de llamarlo solo en un **contexto de inyección** (constructores o inicializadores de campo), como se corrigió en `BaseAdminDirective`.
+El backend se ha consolidado como una API RESTful eficiente y segura, construida sobre Node.js, Express y TypeScript. Su diseño se basa en los siguientes pilares:
 
--   **Abstracción y Reusabilidad (Patrones Clave):**
-    -   **`BaseCrudService<T>`:** Un servicio genérico que centraliza toda la lógica de comunicación con los endpoints CRUD del backend. Las clases hijas (`CountriesService`, `LanguagesService`, etc.) simplemente heredan y especifican el nombre del endpoint, eliminando código repetido.
-    -   **`BaseAdminComponent<T>`:** Una clase base abstracta (`@Directive`) que implementa toda la lógica de una página de administración (obtener datos, paginar, buscar, ordenar, gestionar modales y selección). Los componentes concretos (`AdminLanguagesComponent`) solo necesitan proporcionar la configuración específica (servicio, columnas de la tabla, formulario), siguiendo el **patrón Template Method**.
-    -   **`SelectionService<T>`:** Un servicio genérico y reutilizable para gestionar la selección de elementos en una lista. Su `providedIn: 'any'` es una decisión de diseño inteligente que crea una instancia única por cada componente que lo inyecta, aislando el estado de la selección.
-    -   **`IconService`:** Centraliza la carga y cacheo de iconos SVG, optimizando el rendimiento al evitar peticiones HTTP duplicadas.
+-   **Patrón CRUD Genérico**: La combinación de un `BaseService<T>` y una factoría `createCrudController` ha eliminado la duplicación de código, permitiendo que la creación de nuevos endpoints para entidades sea un proceso rápido y estandarizado.
+-   **Autenticación Segura**: Se utiliza un sistema de autenticación de dos tokens (Access y Refresh) con cookies `HttpOnly`, lo que proporciona un alto nivel de seguridad contra ataques XSS.
+-   **Separación de Responsabilidades**: La lógica de negocio está claramente delimitada. Un ejemplo clave es la separación de las rutas de autenticación (`/api/auth`) de las de administración de usuarios (`/api/admin/users`), lo que mejora la claridad y la seguridad.
+-   **Optimización de Base de Datos**: Las operaciones de escritura ahora utilizan la cláusula `RETURNING *` de SQLite, reduciendo las consultas a la base de datos y mejorando la latencia.
 
-## 3. COLISIONES A MEJORAR (Frontend vs. Backend)
+## 4. Arquitectura del Frontend
 
-Esta sección identifica inconsistencias entre la implementación actual del frontend y la API del backend. Es prioritario alinear estos puntos para asegurar el correcto funcionamiento.
+El frontend ha sido la pieza central de la refactorización, transformándose en una aplicación Angular moderna, modular y extremadamente eficiente.
 
-1.  **Parámetros de Paginación y Ordenación:**
-    -   **Frontend (`BaseAdminComponent`) envía:** `sort` y `order`.
-    -   **Backend (`BaseService`) espera:** `orderBy` y `orderDir`.
-    -   **Estado:** **¡Corregido!** `BaseAdminDirective` ya envía los parámetros `orderBy` y `orderDir` correctamente en las peticiones `getAll`.
+-   **Estructura Modular (`core`, `features`, `shared`)**: La organización del código es clara y escalable, con una estricta separación entre la lógica de negocio, los servicios singleton y los componentes reutilizables.
 
-2.  **Endpoint de Eliminación (`delete`):**
-    -   **Frontend (`BaseAdminComponent`) envía:** Una petición `DELETE` con un array de IDs en el body para eliminación múltiple.
-    -   **Backend (`baseController`) espera:** Una petición `DELETE` a un endpoint con un único ID en la URL (ej. `/api/entities/:id`). No soporta eliminación múltiple.
-    -   **Acción:** Modificar el método de borrado múltiple del frontend para que itere sobre los IDs seleccionados y envíe una petición `DELETE` por cada uno, o bien, evolucionar el backend para que acepte un array de IDs. La eliminación de un único elemento (`onDelete`) ya funciona correctamente.
+-   **Patrón de Páginas de Administración**: Este es el logro más significativo. La arquitectura para las páginas CRUD se basa en tres componentes clave que trabajan en conjunto:
+    1.  **`BaseAdminPageComponent`**: Una clase base abstracta de la que heredan todas las páginas de administración. Centraliza toda la lógica de UI común (manejo de modales, acciones de guardado/borrado).
+    2.  **`UiAdminPageLayoutComponent`**: Un componente de presentación genérico que renderiza toda la estructura visual (título, tabla, paginador). Esto ha eliminado la duplicación masiva de HTML.
+    3.  **`AdminPageManager`**: Una clase de utilidad "headless" que gestiona todo el estado y la lógica de los datos de la tabla (paginación, búsqueda, ordenación, selección).
+    4.  **`FormBuilderService` y Registro de Metadatos**: Para eliminar la duplicación en la definición de formularios, se ha implementado un `FormBuilderService`. Este servicio lee una configuración centralizada (`field-definitions.config.ts`) que actúa como la "fuente única de la verdad" para todos los campos de la aplicación (etiquetas, validaciones, etc.) y construye dinámicamente los formularios. Los componentes de administración ya no definen sus campos manualmente.
 
-3.  **Estructura de la Respuesta `getAll`:**
-    -   **Frontend (`admin-dashboard.component.ts`) espera:** Una respuesta con `{ data: T[], total: number }`.
-    -   **Backend (`baseController.ts`) devuelve:** Una respuesta con `{ data: T[], total: number }`.
-    -   **Estado:** **¡Correcto!** La comunicación para obtener el total de registros ya está alineada.
+-   **`ActionService` como Fuente Única de Verdad**: Este servicio centraliza la definición de todas las acciones de la UI (menús, botones de la barra de herramientas). Los componentes simplemente consumen las acciones que necesitan, desacoplando la lógica de la presentación.
 
-## 4. Mejoras Futuras y Próximos Pasos (Frontend)
+El resultado es que la creación de una nueva página de administración se ha reducido a una tarea de configuración, en lugar de un proyecto de desarrollo.
 
-1.  **Autenticación y Gestión de Tokens:**
-    -   **Interceptor HTTP:** Crear un `HttpInterceptor` para añadir automáticamente el `Authorization: Bearer <token>` a todas las peticiones salientes. Esto centraliza la lógica y limpia los servicios.
-    -   **Servicio de Autenticación:** Implementar un `AuthService` que gestione el estado de autenticación del usuario (login, logout, almacenamiento seguro del token) y la lógica para refrescar el token usando el endpoint del backend.
-    -   **Guardias de Ruta (`CanActivate`):** Proteger las rutas del panel de administración para que solo usuarios autenticados (y con el rol adecuado) puedan acceder.
+## 5. Documentación Clave
 
-2.  **Manejo de Estado Global:**
-    -   Para una gestión de estado más compleja y predecible, considerar la adopción de una librería como **NgRx** o **Elf**. Esto sería beneficioso si la aplicación crece y necesita compartir estado entre módulos no relacionados.
+Para una comprensión más profunda, consulta los siguientes documentos en la carpeta `/documentación`:
 
-3.  **Optimización y Carga Diferida (Lazy Loading):**
-    -   Configurar el enrutador de Angular para que cargue los módulos (`AdminModule`, `PublicModule`) de forma diferida (`loadChildren`). Esto mejorará drásticamente el tiempo de carga inicial de la aplicación.
+-   **`REFACTORING_PLAN.md`**: La hoja de ruta que guió las mejoras del proyecto.
+-   **`FRONTEND_ARCHITECTURE_GUIDE.md`**: Detalles sobre la arquitectura del frontend.
+-   **`BACKEND_API_GUIDE.md`**: Guía de referencia para la API del backend.
+-   **`WORKING_GUIDELINES.md`**: Convenciones de código y buenas prácticas.
+-   **`LESSONS_LEARNED.md`**: Resumen de los aprendizajes técnicos clave obtenidos.
 
-4.  **Manejo de Errores y Notificaciones:**
-    -   Implementar un `HttpInterceptor` para capturar errores HTTP de forma centralizada.
-    -   Crear un servicio de notificaciones (ej. `ToastService`) para mostrar mensajes de éxito o error al usuario de forma no intrusiva, mejorando la experiencia de usuario.
+## 6. Scripts Disponibles
 
-5.  **Refactorización de Rutas y Plantillas:**
-    -   **Plantilla Genérica de Administración:** El componente `admin-languages.component.ts` apunta a su propia plantilla. Se debe crear una plantilla genérica (ej. `admin-base-page.component.html`) que contenga la estructura común (`ui-heading`, `toolbar-buttons`, `table`, etc.) y hacer que todos los componentes de administración la reutilicen.
-    -   **Alias de Rutas:** Aunque las rutas relativas son robustas, el uso consistente de alias (`@shared`, `@services`, `@models`) configurados en `tsconfig.json` puede mejorar la legibilidad y facilitar la refactorización. Se debe asegurar que estos alias se usen de forma coherente en todo el proyecto.
+En el directorio raíz del proyecto, puedes ejecutar:
+
+### `npm run dev`
+
+Inicia la aplicación en modo de desarrollo, lanzando **simultáneamente** el servidor del frontend (`localhost:4200`) y el del backend (`localhost:3000`). La página se recargará automáticamente si realizas cambios.
+
+### `npm test`
+
+Ejecuta los tests unitarios.
+
+### `npm run build`
+
+Compila la aplicación para producción en el directorio `dist/`.

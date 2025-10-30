@@ -1,6 +1,5 @@
-import { Component, Input, Output, EventEmitter, computed } from '@angular/core';
+import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { FormGroup } from '@angular/forms';
 import { UiHeadingComponent } from '@app/shared/components/ui-heading/ui-heading.component'; // Asumiendo esta ruta
 import { UiButtonComponent } from '@app/shared/components/ui-button/ui-button.component'; // Asumiendo esta ruta
 
@@ -15,21 +14,14 @@ export class UiFormModalComponent {
   // --- Inputs ---
   @Input() uiFormModalIsVisible: boolean = false;
   @Input() uiFormModalTitle: string = '';
-  @Input() uiFormModalFormGroup!: FormGroup; // Form group para el modo formulario
+  @Input() uiFormModalIsEditing: boolean = false; // Nuevo input para diferenciar Crear de Actualizar
   @Input() uiFormModalIsSaving: boolean = false;
   @Input() uiFormModalMode: 'form' | 'confirm' = 'form';
 
   // --- Outputs ---
   @Output() uiFormModalSave = new EventEmitter<void>();
   @Output() uiFormModalClose = new EventEmitter<void>();
-
-  // Propiedad computada para verificar si el formulario es inválido (solo relevante en modo 'form')
-  isFormInvalid = computed(() => {
-    if (this.uiFormModalMode === 'form' && this.uiFormModalFormGroup) {
-      return this.uiFormModalFormGroup.invalid;
-    }
-    return false;
-  });
+  @Output() uiFormModalConfirm = new EventEmitter<void>(); // Nuevo evento para el modo confirmación
 
   onClose(): void {
     this.uiFormModalClose.emit();
@@ -37,5 +29,9 @@ export class UiFormModalComponent {
 
   onSave(): void {
     this.uiFormModalSave.emit();
+  }
+
+  onConfirm(): void {
+    this.uiFormModalConfirm.emit();
   }
 }

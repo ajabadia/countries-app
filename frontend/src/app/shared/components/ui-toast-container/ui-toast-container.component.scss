@@ -1,10 +1,13 @@
 // File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-toast-container\ui-toast-container.component.scss | New File
 
-.toast-container {
+.ui-toast-container {
+  // ✅ CORRECCIÓN DEFINITIVA: Se posiciona de forma fija en la esquina superior derecha.
+  // Esto lo saca del flujo normal del documento y lo hace "flotar"
+  // sobre el resto del contenido, sin afectar al scroll de la página.
   position: fixed;
-  top: var(--space-l);
-  right: var(--space-l);
-  z-index: var(--z-index-toast);
+  top: var(--space-l, 24px);
+  right: var(--space-l, 24px);
+  z-index: var(--z-index-toast); // Mantenemos el z-index alto para que esté por encima de todo.
   display: flex;
   flex-direction: column;
   gap: var(--space-m);

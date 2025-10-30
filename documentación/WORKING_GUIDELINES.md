@@ -86,6 +86,22 @@ La gestión de estado reactivo se rige por las siguientes normas:
 -   **RxJS**: Se reserva para la gestión de **flujos de eventos asíncronos complejos**. Su uso principal es en los servicios para manejar peticiones HTTP y en componentes para orquestar eventos de UI (ej. `debounceTime` en un campo de búsqueda).
 
 ### 4.3. Accesibilidad (a11y)
+### 4.3. Inicialización de la Aplicación con `APP_INITIALIZER`
+
+Para ejecutar lógica asíncrona **antes** de que la aplicación se renderice por primera vez, se debe utilizar el token de proveedor `APP_INITIALIZER`.
+
+-   **Caso de Uso Principal**: Restaurar la sesión del usuario. Se debe crear una función que llame al método `authService.refreshSession()` y registrarla en los `providers` de `app.config.ts`.
+-   **Beneficio**: Este patrón previene "parpadeos" en la UI (donde el usuario ve brevemente la página de login antes de ser redirigido) y asegura que el estado de autenticación se conozca desde el arranque, permitiendo a los guardianes de ruta (`AuthGuard`) tomar decisiones correctas desde la primera navegación.
+
+```typescript
+// Ejemplo en app.config.ts
+{
+  provide: APP_INITIALIZER,
+  useFactory: (authService: AuthService) => () => authService.refreshSession(),
+  deps: [AuthService],
+  multi: true,
+}
+```
 
 ### 4.3. Patrón para Páginas de Administración (CRUD)
 

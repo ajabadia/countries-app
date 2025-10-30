@@ -1,0 +1,23 @@
+// File: d:\desarrollos\countries2\frontend\src\styles\layouts\_admin-page-layout.scss | New File
+
+// Contiene los estilos base para el layout de todas las páginas de administración.
+
+.admin-page-container {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-l);
+  padding: var(--space-l);
+}
+
+.toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-m);
+  flex-wrap: wrap; // Permite que los elementos se apilen en pantallas pequeñas
+
+  &__search {
+    flex-grow: 1;
+    max-width: 400px;
+  }
+}

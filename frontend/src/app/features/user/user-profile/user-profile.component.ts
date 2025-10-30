@@ -4,7 +4,7 @@ import { CommonModule } from '@angular/common';
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@core/services/toast.service';
 import { LayoutService } from '@core/services/layout.service';
-import { User } from '@core/types/user.types';
+import { User } from '@app/types/user.types';
 import { UiCardComponent } from '@shared/components/ui-card/ui-card.component';
 import { UiButtonComponent } from '@shared/components/ui-button/ui-button.component';
 import { UiInputDirective } from '@shared/components/ui-input/ui-input.directive';

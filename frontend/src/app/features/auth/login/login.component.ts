@@ -1,9 +1,10 @@
 // File: d:\desarrollos\countries2\frontend\src\app\features\auth\login\login.component.ts | New File
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@core/services/toast.service';
@@ -32,6 +33,7 @@ export class LoginComponent {
   private router = inject(Router);
   private toastService = inject(ToastService);
 
+  loading = signal(false);
   loginForm: FormGroup;
 
   constructor() {
@@ -47,14 +49,18 @@ export class LoginComponent {
       return;
     }
 
-    this.authService.login(this.loginForm.value).subscribe({
-      next: () => {
-        this.toastService.showSuccess('¡Bienvenido de nuevo!');
-        this.router.navigate(['/']);
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Error al iniciar sesión.');
-      },
-    });
+    this.loading.set(true);
+
+    this.authService.login(this.loginForm.value)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess('¡Bienvenido de nuevo!');
+          this.router.navigate(['/']);
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message || 'Error al iniciar sesión.');
+        },
+      });
   }
 }

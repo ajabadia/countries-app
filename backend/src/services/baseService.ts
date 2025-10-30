@@ -43,6 +43,17 @@ export default class BaseService<T extends { id: number | string }> {
   }
 
   /**
+   * Obtiene el número total de registros en la tabla.
+   * @returns Una promesa que resuelve al número total de registros.
+   */
+  async getCount(): Promise<number> {
+    const db = await this.getDbInstance();
+    const stmt = db.prepare(`SELECT COUNT(*) as count FROM ${this.tableName}`);
+    const result = stmt.get() as { count: number };
+    return result.count;
+  }
+
+  /**
    * Obtiene todos los registros de la tabla con opciones de paginación, orden y búsqueda.
    * @param options Opciones de consulta.
    * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
@@ -141,16 +152,17 @@ export default class BaseService<T extends { id: number | string }> {
    * @param data Objeto con los datos a insertar.
    * @returns La entidad recién creada.
    */
-  async create(data: Partial<T>): Promise<T | null> {
+  async create(data: Partial<T>): Promise<T> {
     const db = await this.getDbInstance();
     const columns = Object.keys(data);
     const values = Object.values(data);
     const placeholders = columns.map(() => '?').join(', ');
-    const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-    const result = db.prepare(sql).run(...values);
-
-    // Devolvemos la entidad completa recién creada
-    return this.getById(Number(result.lastInsertRowid));
+    
+    // ✅ OPTIMIZACIÓN: Se usa RETURNING * para obtener el registro creado en una sola consulta.
+    const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders}) RETURNING *`;
+    
+    // Usamos .get() porque INSERT...RETURNING devuelve una única fila.
+    return db.prepare(sql).get(...values) as T;
   }
 
   /**
@@ -158,18 +170,19 @@ export default class BaseService<T extends { id: number | string }> {
    * @param id El ID del registro a actualizar.
    * @param data Objeto con los datos a actualizar.
    */
-  async update(id: number | string, data: Partial<T>): Promise<T | null> {
+  async update(id: number | string, data: Partial<T>): Promise<T> {
     const db = await this.getDbInstance();
     const columns = Object.keys(data);
     if (columns.length === 0) throw new Error('No hay datos para actualizar.');
 
     const values = Object.values(data);
     const setClause = columns.map(col => `${col} = ?`).join(', ');
-    const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-    db.prepare(sql).run(...values, id);
 
-    // Devolvemos la entidad completa actualizada
-    return this.getById(id);
+    // ✅ OPTIMIZACIÓN: Se usa RETURNING * para obtener el registro actualizado en una sola consulta.
+    const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ? RETURNING *`;
+
+    // Usamos .get() porque UPDATE...RETURNING en una sola fila devuelve una única fila.
+    return db.prepare(sql).get(...values, id) as T;
   }
 
   private _buildWhereClause(search: string | null, searchFields?: string[]): WhereClause {

@@ -15,6 +15,7 @@
 @forward 'mixins-definitions';
 @forward 'typography';
 @forward 'grid'; // ✅ AÑADIDO: Se expone el nuevo mixin 'grid'.
+@forward 'utilities/helpers'; // ✅ AÑADIDO: Se reenvían las utilidades de estilos.
 
 // --- 2. Carga de Estilos Base ---
 @use 'reset';
@@ -22,4 +23,5 @@
 @use 'grid';
 @use 'forms';
 @use 'components';
+@use 'layouts/admin-page-layout'; // ✅ SOLUCIÓN: Se cargan los estilos de layout de administración.
 @use 'theme';

@@ -13,7 +13,7 @@ import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 
 import { ActionService } from '@core/services/action.service';
-import { AppAction, GroupedAppAction } from '@core/types/action.types';
+import { AppAction, GroupedAppAction } from '@app/types/action.types';
 import { UiAccordionComponent } from '@shared/components/ui-accordion/ui-accordion.component';
 import { AccordionItem } from '@shared/components/ui-accordion/ui-accordion.types';
 import { UiIconComponent } from '@shared/components/ui-icon/ui-icon.component';

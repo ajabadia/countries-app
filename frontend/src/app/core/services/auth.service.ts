@@ -1,15 +1,15 @@
 // File: d:\desarrollos\countries2\frontend\src\app\core\services\auth.service.ts | New File
 
 import { Injectable, computed, inject, signal } from '@angular/core';
-import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Observable, of, tap } from 'rxjs';
+import { HttpClient } from '@angular/common/http';
+import { Observable, of, tap, catchError } from 'rxjs';
 import { Router } from '@angular/router';
 
 import { ToastService } from './toast.service';
 // ✅ CORRECCIÓN: Se ajusta la ruta para que sea absoluta desde la raíz del proyecto.
 import { environment } from 'src/environments/environment'; 
-import type { User } from '../types/user.types';
-import type { AuthCredentials, AuthResponse } from '../types/auth.types';
+import type { User } from '@app/types/user.types';
+import type { AuthCredentials, AuthResponse } from '@app/types/auth.types';
 
 @Injectable({
   providedIn: 'root'
@@ -35,20 +35,7 @@ export class AuthService {
   private readonly TOKEN_KEY = 'access_token';
 
   constructor() {
-    // Al iniciar el servicio, intentamos cargar el token desde localStorage
-    // para mantener la sesión del usuario si recarga la página.
-    const token = localStorage.getItem(this.TOKEN_KEY);
-
-    if (token) {
-      this.accessTokenSignal.set(token);
-      // Al recargar, obtenemos el perfil del usuario para restaurar el estado.
-      this.getProfile().subscribe({
-        next: user => this.currentUserSignal.set(user),
-        error: () => {
-          this.clearAuthData(false); // Si el token es inválido, limpiamos sin notificar.
-        }
-      });
-    }
+    // El constructor se mantiene limpio. La lógica de inicialización se moverá a un APP_INITIALIZER.
   }
 
   getToken(): string | null {
@@ -80,40 +67,53 @@ export class AuthService {
     return this.http.put<User>(`${this.apiUrl}/profile`, data).pipe(
       tap(updatedUser => {
         this.currentUserSignal.set(updatedUser);
+        this.toastService.showSuccess('Tu perfil ha sido actualizado correctamente.');
       })
     );
   }
 
   changePassword(data: { currentPassword: string, newPassword: string }): Observable<void> {
-    return this.http.put<void>(`${this.apiUrl}/profile/password`, data);
+    return this.http.put<void>(`${this.apiUrl}/profile/password`, data).pipe(
+      tap(() => this.toastService.showSuccess('Contraseña actualizada con éxito.'))
+    );
   }
 
-  logout(): void {
-    // Llamamos al endpoint de logout en el backend para invalidar el refresh token.
-    this.http.post(`${this.apiUrl}/logout`, {}).subscribe({
-      next: () => this.clearAuthData(),
-      error: () => this.clearAuthData(), // Limpiamos igual aunque falle, por seguridad
-    });
+  logout(): Observable<any> {
+    // Llamamos al endpoint de logout para invalidar el refresh token en el servidor.
+    return this.http.post(`${this.apiUrl}/logout`, {}).pipe(
+      // Si la llamada al backend falla, lo capturamos pero no detenemos el flujo.
+      // El logout del lado del cliente DEBE completarse siempre.
+      catchError(error => {
+        console.error('La llamada al endpoint de logout falló, pero se procederá con el cierre de sesión local.', error);
+        return of(null); // Continuamos el flujo como si hubiera tenido éxito.
+      }),
+      // Usamos tap para el efecto secundario de limpiar los datos locales.
+      // Esto se ejecutará tanto si la llamada original tuvo éxito como si la capturamos en el catchError.
+      tap(() => {
+        this.clearAuthData();
+      })
+    );
   }
 
-  private clearAuthData(notify: boolean = true): void {
+  private clearAuthData(): void {
     // Limpiamos el estado local.
     this.currentUserSignal.set(null);
     this.accessTokenSignal.set(null);
     localStorage.removeItem(this.TOKEN_KEY);
-
-    if (notify) {
-      this.toastService.showInfo('Has cerrado la sesión.');
-    }
-    // Redirigimos al usuario a la página de login.
-    this.router.navigate(['/auth/login']);
   }
 
-  refreshToken(): Observable<{ accessToken: string }> {
-    return this.http.get<{ accessToken: string }>('/api/auth/refresh-token').pipe(
-      tap(response => {
-        this.accessTokenSignal.set(response.accessToken);
-        localStorage.setItem(this.TOKEN_KEY, response.accessToken);
+  /**
+   * Intenta refrescar la sesión del usuario. Se usa en el APP_INITIALIZER.
+   * Llama al endpoint de refresh-token. Si tiene éxito, el usuario se loguea.
+   * Si falla (ej. refresh token inválido), se asegura de que el estado quede limpio.
+   */
+  refreshSession(): Observable<AuthResponse | null> {
+    return this.http.post<AuthResponse>(`${this.apiUrl}/refresh-token`, {}).pipe(
+      tap(response => this.setAuthentication(response)),
+      catchError(() => {
+        // No es necesario un console.error aquí, ya que es un flujo esperado si no hay sesión.
+        this.clearAuthData(); // Limpiamos sin notificar ni redirigir.
+        return of(null); // Retornamos un observable que completa sin error.
       })
     );
   }

@@ -17,4 +17,23 @@ import { UiFormFieldErrorComponent } from '../ui-form-field-error/ui-form-field-
 export class UiDynamicFormComponent {
   @Input({ required: true }) form!: FormGroup;
   @Input({ required: true }) fields: FormField[] = [];
+
+  /**
+   * Transforma el valor de un campo de texto a mayúsculas o minúsculas
+   * según la configuración del campo.
+   * @param event El evento de input del campo.
+   * @param field La configuración del campo.
+   */
+  onInput(event: Event, field: FormField): void {
+    const control = this.form.get(field.name);
+    if (!control || !field.characterCasing) return;
+
+    let value = control.value as string;
+    if (field.characterCasing === 'uppercase') {
+      value = value.toUpperCase();
+    } else if (field.characterCasing === 'lowercase') {
+      value = value.toLowerCase();
+    }
+    control.setValue(value, { emitEvent: false });
+  }
 }

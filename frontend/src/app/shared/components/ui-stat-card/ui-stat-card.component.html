@@ -1,11 +1,22 @@
 <!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-stat-card\ui-stat-card.component.html | Last Modified: 2025-10-19 -->
 
-<div
-  class="ui-stat-card"
-  [class.is-loading]="isLoading"
-  [attr.aria-label]="isLoading ? 'Cargando estadística' : title + ': ' + value"
->
-  @if (isLoading) {
+<ng-container *ngIf="route; else noLink">
+  <a class="ui-stat-card" 
+     [routerLink]="route"
+     [class.is-loading]="isLoading"
+     [attr.aria-label]="isLoading ? 'Cargando estadística' : title + ': ' + value">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </a>
+</ng-container>
+
+<ng-template #noLink>
+  <div class="ui-stat-card" [class.is-loading]="isLoading" [attr.aria-label]="isLoading ? 'Cargando estadística' : title + ': ' + value">
+    <ng-container *ngTemplateOutlet="cardContent"></ng-container>
+  </div>
+</ng-template>
+
+<ng-template #cardContent>
+    @if (isLoading) {
     <div class="ui-stat-card__loader"></div>
   } @else {
     <!-- Zona Superior: Icono -->
@@ -25,4 +36,4 @@
       <div class="ui-stat-card__title">{{ title }}</div>
     </div>
   }
-</div>
+</ng-template>

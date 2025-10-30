@@ -37,6 +37,7 @@ Este es el componente estándar para todas las acciones clickeables (botones y e
 | `ui-button-variant`     | `'solid' \| 'outline' \| 'ghost'`                                | `'solid'`   | El estilo visual del botón.                                                                             |
 | `ui-button-size`        | `'s' \| 'm' \| 'l'`                                              | `'m'`       | El tamaño del botón (padding, font-size).                                                               |
 | `ui-button-loading`     | `boolean`                                                        | `false`     | Si es `true`, muestra un spinner y deshabilita el botón.                                                |
+| `ui-button-disabled`    | `boolean`                                                        | `false`     | Si es `true`, deshabilita el botón y aplica los estilos correspondientes.                               |
 | `ui-button-full-width`  | `boolean`                                                        | `false`     | Si el botón debe ocupar todo el ancho disponible.                                                       |
 | `ui-button-aria-label`  | `string`                                                         | `undefined` | Etiqueta de accesibilidad. Esencial para botones de solo icono.                                         |
 | `ui-icon-name`          | `string`                                                         | `undefined` | El nombre del icono a mostrar (pasado a `app-ui-icon`).                                                   |
@@ -46,10 +47,10 @@ Este es el componente estándar para todas las acciones clickeables (botones y e
 | `ui-icon-color`         | `string`                                                         | `undefined` | El color del icono (pasado a `app-ui-icon`).                                                            |
 | `ui-icon-class`         | `string`                                                         | `''`        | Clases CSS adicionales para el icono (pasado a `app-ui-icon`).                                          |
 
-**Nota sobre el estado `disabled`**: Para deshabilitar el botón, utiliza el atributo estándar `[disabled]` de HTML. La directiva detectará este atributo y aplicará los estilos correspondientes.
+**Nota sobre el estado `disabled`**: Para deshabilitar el botón, utiliza el input `[uiButtonDisabled]`. El componente se encargará de aplicar tanto el atributo `disabled` de HTML como los estilos visuales correctos.
 
 ```html
-<button app-ui-button [disabled]="form.invalid">Guardar</button>
+<button app-ui-button [uiButtonDisabled]="form.invalid">Guardar</button>
 ```
 
 ## Ejemplos de Uso

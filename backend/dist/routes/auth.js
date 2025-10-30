@@ -2,10 +2,11 @@
 import { Router } from 'express';
 import { check } from 'express-validator'; // Mantenemos express-validator
 import rateLimit from 'express-rate-limit';
-import { register, login, getProfile, refreshToken, logout, updateProfile, updatePassword, // Esta es la que necesitamos
-// ... el resto de tus controladores existentes
- } from '../controllers/authController.js'; // Aseguramos que apunta a tu controlador
-import { authenticateToken } from '../middleware/authMiddleware.js'; // Usamos tus middlewares
+import { register, login, getProfile, refreshToken, logout, updateProfile, updatePassword,
+// Se eliminan los controladores de administración de usuarios de aquí.
+ } from '../controllers/authController.js';
+import { authenticateToken } from '../middleware/authMiddleware.js';
+import { validateRequest } from '../middleware/validateRequest.js';
 const router = Router();
 /**
  * @route   POST /api/auth/register
@@ -16,7 +17,7 @@ router.post('/register', [
     check('name', 'Name is required').not().isEmpty(),
     check('email', 'Please include a valid email').isEmail(),
     check('password', 'Password must be 6 or more characters').isLength({ min: 6 }),
-], register);
+], validateRequest, register);
 /**
  * @route   POST /api/auth/login
  * @desc    Autentica un usuario y obtiene un token
@@ -31,7 +32,10 @@ const loginLimiter = rateLimit({
     legacyHeaders: false, // Deshabilita las cabeceras `X-RateLimit-*`
 });
 router.post('/login', loginLimiter, // Aplicamos el middleware de rate limiting aquí
-[check('email', 'Please include a valid email').isEmail(), check('password', 'Password is required').exists()], login);
+[
+    check('email', 'Please include a valid email').isEmail(),
+    check('password', 'Password is required').exists(),
+], validateRequest, login);
 /**
  * @route   GET /api/auth/profile
  * @desc    Obtiene el perfil del usuario autenticado
@@ -47,7 +51,7 @@ router.get('/profile', authenticateToken, getProfile);
 router.put('/profile', authenticateToken, [
     check('name', 'Name must be a string').optional().isString(),
     check('email', 'Please include a valid email').optional().isEmail(),
-], updateProfile);
+], validateRequest, updateProfile);
 /**
  * @route   PUT /api/auth/profile/password
  * @desc    Actualiza la contraseña del usuario autenticado
@@ -57,10 +61,14 @@ router.put('/profile/password', authenticateToken, // Protegemos la ruta
 [
     check('currentPassword', 'Current password is required').not().isEmpty(),
     check('newPassword', 'New password must be 8 or more characters').isLength({ min: 8 }),
-], 
+], validateRequest, 
 // ✅ CORRECCIÓN: Nos aseguramos de llamar a la función correcta de tu controlador.
 // La que yo propuse se llamaba 'changePassword', la tuya 'updatePassword'. Usamos la tuya.
 updatePassword);
+// --- RUTAS DE ADMINISTRACIÓN ELIMINADAS ---
+// Las rutas para GET /users, DELETE /users/:id y PUT /users/:id/role
+// han sido movidas a `backend/src/routes/users.ts` y se exponen
+// bajo el prefijo `/api/admin/users`.
 /**
  * @route   GET /api/auth/refresh-token
  * @desc    Obtiene un nuevo access token usando el refresh token

@@ -1,18 +1,27 @@
-// File: d:\desarrollos\countries2\frontend\src\app\features\admin\dashboard\dashboard.service.ts | New File
+// File: d:\desarrollos\countries2\frontend\src\app\features\admin\dashboard\dashboard.service.ts | Last Modified: 2025-10-29
 
 import { HttpClient } from '@angular/common/http';
 import { Injectable, inject } from '@angular/core';
-import { Observable, forkJoin, map, of, catchError } from 'rxjs';
+import { Observable, map, of, catchError } from 'rxjs';
+import { ActionService } from '@app/core/services/action.service';
 
 export interface Stat {
   title: string;
   value: number;
   icon: string;
+  route?: string | any[];
 }
 
-interface PaginatedResponse<T> {
-  total: number;
-  data: T[];
+interface DashboardStatsResponse {
+  countries: number;
+  users: number;
+  languages: number;
+  continents: number;
+  areas: number;
+  area_types: number;
+  dependencies: number;
+  multilingualnames: number;
+  [key: string]: number; // Index signature
 }
 
 @Injectable({
@@ -20,39 +29,34 @@ interface PaginatedResponse<T> {
 })
 export class DashboardService {
   private http = inject(HttpClient);
-  private apiUrl = '/api'; // Asumiendo una URL base
-
-  private getCount(entity: string): Observable<number> {
-    return this.http
-      .get<PaginatedResponse<unknown>>(`${this.apiUrl}/${entity}?pageSize=1`)
-      .pipe(
-        map(response => response.total),
-        catchError(error => {
-          console.error(`Error fetching count for ${entity}:`, error);
-          return of(0); // Devuelve 0 si hay un error para no romper el forkJoin
-        })
-      );
-  }
+  private actionService = inject(ActionService);
+  private apiUrl = '/api/admin/dashboard'; // ✅ El endpoint unificado y correcto
 
   getStats(): Observable<Stat[]> {
-    return forkJoin({
-      countries: this.getCount('countries'),
-      continents: this.getCount('continents'),
-      languages: this.getCount('languages'),
-      areas: this.getCount('areas'),
-      dependencies: this.getCount('dependencies'),
-      translations: this.getCount('multilingualnames'),
-      users: this.getCount('users'), // Intentará obtener usuarios, fallará y mostrará 0
-    }).pipe(
-      map(results => [
-        { title: 'Países', value: results.countries, icon: 'icon-country' },
-        { title: 'Continentes', value: results.continents, icon: 'icon-continents' },
-        { title: 'Idiomas', value: results.languages, icon: 'icon-languages' },
-        { title: 'Áreas', value: results.areas, icon: 'icon-area' },
-        { title: 'Dependencias', value: results.dependencies, icon: 'icon-dependencies' },
-        { title: 'Traducciones', value: results.translations, icon: 'icon-translate' },
-        { title: 'Usuarios', value: results.users, icon: 'icon-user' },
-      ])
+    return this.http.get<DashboardStatsResponse>(this.apiUrl).pipe(
+      map(backendStats => {
+        // Obtiene todas las acciones de la categoría 'admin'
+        const adminActions = this.actionService.getActionsByCategory('admin');
+
+        // Filtra para quedarse solo con las que tienen un 'routerLink' y no son el dashboard mismo
+        return adminActions
+          .filter(action => action.routerLink && action.id !== 'dashboard-admin')
+          .map(action => {
+            // Extrae la clave de la entidad del ID de la acción (ej. 'countries-admin' -> 'countries')
+            const entityKey = action.id.replace('-admin', '');
+
+            return {
+              title: action.label,
+              value: backendStats[entityKey] ?? 0,
+              icon: action.icon,
+              route: action.routerLink,
+            };
+          });
+      }),
+      catchError(error => {
+        console.error('Error fetching dashboard stats:', error);
+        return of([]); // Devuelve un array vacío en caso de error
+      })
     );
   }
 }

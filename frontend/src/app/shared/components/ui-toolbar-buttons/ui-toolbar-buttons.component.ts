@@ -3,7 +3,7 @@ import { CommonModule } from '@angular/common';
 import { toObservable } from '@angular/core/rxjs-interop';
 import { UiButtonComponent } from '@app/shared/components/ui-button/ui-button.component';
 import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
-import { ToolbarButtonConfig } from '@app/core/types/action.types';
+import { ToolbarButtonConfig } from '@app/types/action.types';
 
 @Component({
   selector: 'app-ui-toolbar-buttons',
@@ -15,7 +15,7 @@ import { ToolbarButtonConfig } from '@app/core/types/action.types';
         app-ui-button
         [uiButtonColor]="action.color || 'secondary'"
         [uiButtonVariant]="action.variant || 'solid'"
-        [disabled]="action.disabled$ | async"
+        [disabled]="(action.disabled$ | async) || false"
         (click)="onButtonClick(action)"
       >
         @if (action.iconName) { <app-ui-icon [uiIconName]="action.iconName"></app-ui-icon> }

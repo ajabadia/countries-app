@@ -1,0 +1,28 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\shared\components\ui-admin-page-layout\ui-admin-page-layout.component.html | New File -->
+
+<div class="admin-page-container">
+  <div class="toolbar">
+    <app-ui-search-box class="toolbar__search" (uiSearchBoxValueChange)="searchChange.emit($event)" />
+    <app-ui-toolbar-buttons class="toolbar__actions" [uiToolbarButtonsActions]="toolbarActions" (uiToolbarButtonsActionClick)="toolbarAction.emit($event)" />
+  </div>
+
+  <app-ui-table
+    [uiTableColumns]="columns"
+    class="admin-page-layout__table"
+    [uiTableData]="data"
+    [uiTableIsLoading]="isLoading"
+    [uiTableSort]="sort"
+    [uiTableSelection]="selection"
+    [uiTableCustomTemplates]="projectedColumns"
+    (uiTableSortChange)="sortChange.emit($event)"
+    (uiTableAction)="tableAction.emit($event)"
+  >
+  </app-ui-table>
+
+  <app-ui-paginator
+    [uiPaginatorTotalRecords]="totalRecords"
+    [uiPaginatorPage]="page"
+    [uiPaginatorPageSize]="pageSize"
+    (uiPaginatorPageStateChange)="pageStateChange.emit($event)"
+  />
+</div>

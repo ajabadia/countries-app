@@ -1,7 +1,7 @@
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
-import { Area } from '@app/core/types/area.types';
+import { Area } from '@app/types/area.types';
 
 @Injectable({
   providedIn: 'root'

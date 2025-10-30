@@ -53,8 +53,9 @@ Esta estructura está diseñada para ser:
     │   │   │   └── /confirm-modal
     │   │   │
     │   │   ├── /directives      # Directivas reutilizables
-    │   │   │   └── base-admin.directive.ts # La clase base para componentes de admin
     │   │   │
+    │   │   ├── /base-classes    # Clases base abstractas para herencia
+    │   │   │   └── base-admin-page.component.ts
     │   │   ├── /pipes           # Pipes reutilizables
     │   │   ├── /services        # Servicios genéricos y reutilizables
     │   │   │   ├── base-crud.service.ts
@@ -102,7 +103,7 @@ Esta estructura está diseñada para ser:
     *   **Contenido**:
         *   **Componentes "tontos" (Dumb Components)**: Botones, tablas genéricas, modales, selectores. Componentes que no tienen lógica de negocio, solo reciben datos (`@Input`) y emiten eventos (`@Output`).
         *   **Directivas y Pipes**: Funcionalidades comunes que se pueden aplicar a elementos del DOM o transformar datos. Aquí se ubica la directiva `BaseAdminDirective` que encapsula la lógica común de las páginas de administración.
-        *   **Servicios Genéricos**: Servicios reutilizables que no dependen de un `feature` específico. Ejemplos:
+        *   **Clases y Servicios Genéricos**: Clases base y servicios reutilizables que no dependen de un `feature` específico. Ejemplos:
             *   `BaseCrudService`: Proporciona una base para los servicios de datos.
             *   `IconService`: Gestiona el registro y uso de iconos SVG.
             *   `ActionService`: Centraliza la definición y adaptación de acciones de la UI (ej. menús, barras de herramientas), actuando como una única fuente de verdad para la navegación y operaciones.
@@ -115,7 +116,7 @@ Ahora que tenemos la estructura, el plan para mover el código de `frontend_old`
 1.  **Mover lo Reutilizable a `/shared`**:
     *   Copia `base-crud.service.ts`, `icon.service.ts` y `selection.service.ts` a `/src/shared/services`.
     *   Copia la clase `BaseAdminComponent` a `/src/shared/directives/base-admin.directive.ts` y asegúrate de que esté decorada con `@Directive()`.
-    *   Identifica componentes de UI puros en `frontend_old` (botones, modales, etc.) y muévelos a `/src/shared/components`, asegurándote de que sean `standalone`.
+    *   Identifica componentes de UI puros (botones, modales, etc.) y muévelos a `/src/shared/components`, asegurándote de que sean `standalone`.
 
 2.  **Implementar el `/core`**:
     *   Crea el `AuthService` en `/src/core/auth/auth.service.ts`.
@@ -125,7 +126,7 @@ Ahora que tenemos la estructura, el plan para mover el código de `frontend_old`
     *   Empieza por una sencilla, como `Countries`.
     *   Crea la carpeta `/src/features/admin/countries`.
     *   Crea el nuevo componente `countries-admin.component.ts`. En lugar de copiar y pegar el archivo antiguo, **crea uno nuevo y ve moviendo la lógica**. Esto te forzará a adaptarlo a la nueva estructura y a limpiar el código.
-    *   Haz que herede de la directiva `BaseAdminDirective` que ahora vive en `/shared`.
+    *   Haz que herede de la clase `BaseAdminPageComponent` que ahora vive en `/shared/base-classes`.
     *   Define su ruta en `admin.routes.ts`.
 
 4.  **Configurar el Enrutamiento Principal**:

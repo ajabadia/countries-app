@@ -43,11 +43,16 @@
         <button app-ui-button uiButtonVariant="outline" (click)="onClose()" [uiButtonDisabled]="uiFormModalIsSaving">Cancelar</button>
         
         @if (uiFormModalMode === 'form') {
-          <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving" [uiButtonDisabled]="isFormInvalid() || uiFormModalIsSaving">Guardar</button>
+          <!-- ✅ MEJORA: Se muestran botones diferentes para Crear y Actualizar -->
+          @if (uiFormModalIsEditing) {
+            <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving">Actualizar</button>
+          } @else {
+            <button app-ui-button uiButtonVariant="solid" uiButtonColor="primary" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving">Crear</button>
+          }
         }
         
         @if (uiFormModalMode === 'confirm') {
-          <button app-ui-button uiButtonVariant="solid" uiButtonColor="danger" (click)="onSave()" [uiButtonLoading]="uiFormModalIsSaving" [uiButtonDisabled]="uiFormModalIsSaving">Aceptar</button>
+          <button app-ui-button uiButtonVariant="solid" uiButtonColor="danger" (click)="onConfirm()" [uiButtonLoading]="uiFormModalIsSaving" [uiButtonDisabled]="uiFormModalIsSaving">Aceptar</button>
         }
       </footer>
     </div>

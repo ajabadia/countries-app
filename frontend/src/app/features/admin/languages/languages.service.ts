@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseCrudService } from '@app/shared/services/base-crud.service'; // Aseguramos la ruta correcta
-import type { Language } from '@app/core/types/language.types';
+import type { Language } from '@app/types/language.types';
 
 @Injectable({
   providedIn: 'root',

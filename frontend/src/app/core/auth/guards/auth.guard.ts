@@ -1,3 +1,5 @@
+// File: d/desarrollos/countries2/frontend/src/app/core/auth/guards/auth.guard.ts | Recovered File
+
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
 import { AuthService } from '@core/services/auth.service';

@@ -11,7 +11,7 @@ import { EMPTY, Observable, Subscription, catchError, finalize, of, tap, forkJoi
 import { AdminPageManager } from '@app/shared/utils/admin-page-manager';
 import { BaseCrudService } from '@app/shared/services/base-crud.service';
 import { TableColumn } from '@app/shared/components/ui-table/table.types';
-import { ToolbarButtonConfig } from '@app/core/types/action.types';
+import { ToolbarButtonConfig } from '@app/types/action.types';
 import { FormField } from '@app/shared/types/form.types';
 
 /**
@@ -74,10 +74,10 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
         action: () => this.onEditSelected(),
         color: 'primary',
         variant: 'solid',
-        // El botón se deshabilita si el número de seleccionados no es exactamente 1
         disabled$: toObservable(computed(() => this.manager.selectionCount() !== 1), { injector: this.injector })
       },
-      { id: 'delete-selected', label: 'Eliminar seleccionados', iconName: 'icon-delete', action: () => this.onDeleteSelected(), disabled$: toObservable(this.manager.isSelectionEmpty), color: 'danger' }
+      // ✅ CORRECCIÓN: Se usa la propiedad correcta `disabled$` y se convierte el signal a observable.
+      { id: 'delete-selected', label: 'Eliminar seleccionados', iconName: 'icon-delete', action: () => this.onDeleteSelected(), disabled$: toObservable(computed(() => this.manager.isSelectionEmpty()), { injector: this.injector }), color: 'danger' }
     ];
   }
 
@@ -121,7 +121,10 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
   onEdit(item: T | null = null): void {
     this.editingItem.set(item);
     const primaryKeyField = this.formFields.find(f => f.isPrimaryKey);
-
+    
+    // Siempre reseteamos el formulario al abrir el modal para asegurar un estado limpio.
+    this.form.reset();
+    
     if (item) {
       this.form.patchValue(item);
       // Al editar, deshabilitamos el campo de la clave primaria para evitar su modificación.
@@ -129,18 +132,21 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
         this.form.get(primaryKeyField.name)?.disable();
       }
     } else {
-      this.form.reset();
       // Al crear, nos aseguramos de que el campo de la clave primaria esté habilitado.
       if (primaryKeyField) {
         this.form.get(primaryKeyField.name)?.enable();
       }
     }
+
     this.isFormModalVisible.set(true);
   }
 
   onCloseFormModal(): void {
     this.isFormModalVisible.set(false);
     this.editingItem.set(null);
+    // ✅ CORRECCIÓN CLAVE: Restauramos el reset() al cerrar el modal.
+    // Esto es fundamental para limpiar el estado del formulario (valores, validez, pristine/dirty)
+    // y asegurar que la siguiente vez que se abra, funcione correctamente.
     this.form.reset();
   }
 
@@ -159,11 +165,21 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
   }
 
   onSave(): void {
+    // ✅ REFACTORIZACIÓN: La validación ahora se hace aquí, en el momento del clic.
     this.form.markAllAsTouched();
-    if (this.form.invalid) return;
+
+    if (this.form.invalid) {
+      // Si el formulario es inválido, mostramos una notificación y detenemos la ejecución.
+      this.toastService.showError('Por favor, revisa los campos del formulario. Hay errores o faltan datos.');
+      return;
+    }
 
     this.isSaving.set(true);
-    const itemData = { ...this.form.value };
+    // ✅ CORRECCIÓN: Usamos `getRawValue()` en lugar de `value`.
+    // `getRawValue()` incluye los valores de los controles deshabilitados (como el ID al editar),
+    // mientras que `.value` los excluye, lo que causaba que la actualización fallara
+    // al no enviar el ID del registro.
+    const itemData = { ...this.form.getRawValue() };
     const currentItem = this.editingItem();
 
     const saveOperation$: Observable<T> = currentItem
@@ -229,33 +245,34 @@ export abstract class BaseAdminPageComponent<T extends { id: number | string }> 
     if (this.manager.isSelectionEmpty()) return;
     this.isConfirmMultiDeleteModalVisible.set(true);
   }
-
+  
+  /**
+   * ✅ REFACTORIZADO: Confirma y ejecuta la eliminación masiva de registros.
+   * Ahora realiza una única llamada a `deleteMany` en lugar de múltiples llamadas `delete`.
+   * Esto mejora drásticamente el rendimiento y reduce la carga en el servidor.
+   */
   onConfirmDeleteSelected(): void {
+    // ✅ CORRECCIÓN: Se usa `selectionService` que es la propiedad correcta del manager.
     const selectedIds = this.manager.selectionService.getSelectedIds();
     if (selectedIds.length === 0) return;
 
-    this.isDeleting.set(true);
-
-    const deleteObservables$ = selectedIds.map(id =>
-      this.service.delete(id).pipe(
-        catchError(err => {
-          this.toastService.showError(`Error al eliminar ID ${id}.`);
-          console.error(`Error eliminando el elemento con ID ${id}:`, err);
-          // Devolvemos un observable que emite null para que forkJoin no se cancele.
-          return of(null);
-        })
-      )
-    );
+    // ✅ CORRECCIÓN: Se usa el signal `isLoading` directamente con `.set()`.
+    this.manager.isLoading.set(true);
 
     this.crudSubscription.add(
-      forkJoin(deleteObservables$).pipe(
+      this.service.deleteMany(selectedIds).pipe(
         tap(() => {
-          this.toastService.showSuccess(`${selectedIds.length} elementos eliminados.`);
+          this.toastService.showSuccess(`${selectedIds.length} registro(s) eliminado(s) con éxito.`);
           this.manager.selectionService.clear();
           this.manager.refreshData();
           this.onCloseConfirmMultiDeleteModal();
         }),
-        finalize(() => this.isDeleting.set(false))
+        catchError(err => {
+          this.toastService.showError('Error al eliminar los registros. Por favor, inténtelo de nuevo.');
+          console.error('Error during bulk delete:', err); 
+          return of(null); // Devolvemos un observable que completa para que finalize se ejecute.
+        }),
+        finalize(() => this.manager.isLoading.set(false))
       ).subscribe()
     );
   }

@@ -126,22 +126,19 @@
   --sidebar-width: 280px;
   --container-max-width: 1200px;
 
-  --z-sticky: 10;
-  --z-overlay: 40;
-  --z-drawer: 50;
-  --z-modal: 100;
-
   // === TRANSICIONES ===
   --transition-base: 150ms ease-in-out;
 
 
-    // ... otras variables de feedback
-    --color-info: #0d6efd; // Un azul estándar para información
-    --color-warning: #ffc107; // Un ámbar estándar para advertencias
-
-
+// ==========================================================================
+// # Z-INDEX
+// ==========================================================================
+// Define la pila de apilamiento para toda la aplicación.
+// Usamos valores altos para asegurar que los elementos flotantes
+// no sean ocultados por contenido normal.
+  --z-index-dropdown: 1000;
+  --z-index-header: 1100;
+  --z-index-modal-backdrop: 1200;
+  --z-index-modal: 1300;
+  --z-index-toast: 9999; // Valor muy alto para que siempre esté por encima de todo.
 }
-
-// === TEMA OSCURO ===
-// ✅ REFACTOR: The dark theme is now applied in the main `styles.scss` file
-// to break the circular dependency. This file should only contain variable definitions.

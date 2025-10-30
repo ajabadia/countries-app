@@ -23,7 +23,9 @@
   box-shadow: var(--shadow-sm);
   position: sticky;
   top: 0;
-  z-index: var(--z-sticky);
+  // ✅ CORRECCIÓN: Se asigna un valor de z-index alto y explícito para asegurar
+  // que la cabecera principal siempre esté por encima de cualquier otro contenido "sticky".
+  z-index: 1050;
   height: var(--header-height);
 
   &__left,
@@ -48,7 +50,8 @@
 }
 
 .app-content {
-  flex-grow: 1; // Ocupa todo el espacio disponible
+  // ✅ CORRECCIÓN: Se usa flex: 1 para que ocupe todo el espacio disponible.
+  flex: 1;
   padding: var(--space-l);
   background-color: var(--color-background);
 }

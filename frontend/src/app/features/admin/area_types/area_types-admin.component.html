@@ -1,0 +1,66 @@
+<!-- File: d:\desarrollos\countries2\frontend\src\app\features\admin\area_types\area_types-admin.component.html | New File -->
+hola
+<!-- ✅ REFACTORIZACIÓN: Se usa el nuevo componente de layout. -->
+<app-ui-admin-page-layout
+  [title]="currentPageTitle()"
+  [toolbarActions]="toolbarActions"
+  [columns]="columns"
+  [data]="manager.data()"
+  [isLoading]="manager.isLoading()"
+  [sort]="manager.sort()"
+  [selection]="manager.selectionService"
+  [totalRecords]="manager.totalRecords()"
+  [page]="manager.page()"
+  [pageSize]="manager.pageSize()"
+  (searchChange)="manager.onSearch($event)"
+  (toolbarAction)="handleToolbarAction($event)"
+  (tableAction)="handleTableAction($event)"
+  (sortChange)="manager.onSortChange($event)"
+  (pageStateChange)="manager.onPageStateChange($event)"
+>
+  <!--
+    Aquí es donde proyectamos el contenido específico de esta página.
+    En este caso, la plantilla para la columna 'area_id'.
+  -->
+  <ng-template [appUiTableColumn]="'area_id'" let-item>
+    <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.area_id }}</a>
+  </ng-template>
+</app-ui-admin-page-layout>
+
+<!-- Modal de Formulario (Crear/Editar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isFormModalVisible()"
+  [uiFormModalTitle]="formModalTitle"
+  [uiFormModalIsEditing]="!!editingItem()"
+  [uiFormModalIsSaving]="isSaving()"
+  (uiFormModalSave)="onSave()"
+  (uiFormModalClose)="onCloseFormModal()"
+>
+  <app-ui-dynamic-form [form]="form" [fields]="formFields" />
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrar) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalConfirm)="onConfirmDelete()"
+  (uiFormModalClose)="onCloseConfirmModal()"
+>
+  <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
+</app-ui-form-modal>
+
+<!-- Modal de Confirmación (Borrado Múltiple) -->
+<app-ui-form-modal
+  [uiFormModalIsVisible]="isConfirmMultiDeleteModalVisible()"
+  [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
+  [uiFormModalMode]="'confirm'"
+  [uiFormModalIsSaving]="isDeleting()"
+  (uiFormModalConfirm)="onConfirmDeleteSelected()"
+  (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
+>
+  <p>
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.
+  </p>
+</app-ui-form-modal>

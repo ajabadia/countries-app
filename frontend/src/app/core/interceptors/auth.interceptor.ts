@@ -1,76 +1,83 @@
-import { inject } from '@angular/core';
+// File: d:\desarrollos\countries2\frontend\src\app\core\interceptors\auth.interceptor.ts | Last Modified: 2025-10-24
+
+import { Injectable, inject } from '@angular/core';
 import {
-  HttpEvent,
+  HttpInterceptor,
   HttpRequest,
+  HttpHandler,
+  HttpEvent,
   HttpErrorResponse,
   HttpInterceptorFn,
   HttpHandlerFn,
 } from '@angular/common/http';
 import { Observable, throwError, BehaviorSubject } from 'rxjs';
-import { catchError, filter, switchMap, take } from 'rxjs/operators';
+import { catchError, switchMap, filter, take } from 'rxjs/operators';
 import { AuthService } from '@core/services/auth.service';
-import { ToastService } from '@core/services/toast.service';
 
 let isRefreshing = false;
-const refreshTokenSubject: BehaviorSubject<string | null> = new BehaviorSubject<string | null>(null);
+const refreshTokenSubject: BehaviorSubject<any> = new BehaviorSubject<any>(null);
 
-const addAuthToken = (request: HttpRequest<any>, token: string): HttpRequest<any> => {
+export const authInterceptor: HttpInterceptorFn = (req, next) => {
+  const authService = inject(AuthService);
+  const accessToken = authService.getToken();
+
+  // ✅ SOLUCIÓN: Añadimos withCredentials a todas las peticiones.
+  // Esto es necesario para que el navegador envíe la cookie HttpOnly al backend.
+  req = req.clone({
+    withCredentials: true,
+  });
+
+  if (accessToken) {
+    req = addToken(req, accessToken);
+  }
+
+  return next(req).pipe(
+    catchError(error => {
+      // ✅ CORRECCIÓN CLAVE: Se añade una condición para romper el bucle.
+      // Si la petición que falla ya es de autenticación (login o refresh-token),
+      // no intentamos refrescar de nuevo. Simplemente dejamos que el error continúe.
+      if (error instanceof HttpErrorResponse && error.status === 401 && !req.url.includes('/auth/')) {
+        return handle401Error(req, next, authService);
+      }
+      return throwError(() => error);
+    })
+  );
+};
+
+function addToken(request: HttpRequest<any>, token: string) {
   return request.clone({
     setHeaders: {
       Authorization: `Bearer ${token}`,
     },
   });
-};
+}
 
-const handle401Error = (
-  request: HttpRequest<any>,
-  next: HttpHandlerFn,
-  authService: AuthService
-): Observable<HttpEvent<any>> => {
+function handle401Error(request: HttpRequest<any>, next: HttpHandlerFn, authService: AuthService): Observable<HttpEvent<any>> {
   if (!isRefreshing) {
     isRefreshing = true;
     refreshTokenSubject.next(null);
 
-    return authService.refreshToken().pipe(
-      switchMap((token: { accessToken: string }) => {
+    return authService.refreshSession().pipe(
+      switchMap((response) => {
         isRefreshing = false;
-        refreshTokenSubject.next(token.accessToken);
-        return next(addAuthToken(request, token.accessToken));
+        const newAccessToken = response?.accessToken;
+        refreshTokenSubject.next(newAccessToken);
+        return next(addToken(request, newAccessToken || ''));
       }),
       catchError((err) => {
         isRefreshing = false;
-        authService.logout(); // Si el refresh token falla, deslogueamos
+        authService.logout(); // Si el refresh token falla, deslogueamos al usuario.
         return throwError(() => err);
       })
     );
+  } else {
+    // Si ya se está refrescando, ponemos la petición en cola.
+    return refreshTokenSubject.pipe(
+      filter(token => token != null),
+      take(1),
+      switchMap(jwt => {
+        return next(addToken(request, jwt));
+      })
+    );
   }
-
-  // Si ya se está refrescando, esperamos a que el nuevo token esté disponible
-  return refreshTokenSubject.pipe(
-    filter(token => token !== null),
-    take(1),
-    switchMap((jwtToken) => next(addAuthToken(request, jwtToken as string)))
-  );
-};
-
-export const AuthInterceptor: HttpInterceptorFn = (req, next) => {
-  const authService = inject(AuthService);
-  const toastService = inject(ToastService);
-  const token = authService.getToken();
-
-  const authReq = token ? addAuthToken(req, token) : req;
-
-  return next(authReq).pipe(
-    catchError((error: HttpErrorResponse) => {
-      if (error.status === 401) {
-        return handle401Error(authReq, next, authService);
-      }
-
-      const errorMessage = (typeof error.error === 'object' && error.error !== null && error.error.message)
-        || error.message
-        || 'Ocurrió un error inesperado.';
-      toastService.showError(errorMessage);
-      return throwError(() => error);
-    })
-  );
-};
+}

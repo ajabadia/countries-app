@@ -1,45 +1,38 @@
-<div class="admin-page-container">
-  <app-ui-heading [uiHeading]="currentPageTitle()"></app-ui-heading>
-  
-  <div class="toolbar">
-    <app-ui-search-box
-      class="toolbar__search"
-      (uiSearchBoxValueChange)="manager.onSearch($event)"
-    />
-    <app-ui-toolbar-buttons
-      class="toolbar__actions"
-      [uiToolbarButtonsActions]="toolbarActions"
-      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
-    />
-  </div>
 
-  <app-ui-table
-    [uiTableColumns]="columns"
-    [uiTableData]="manager.data()"
-    [uiTableIsLoading]="manager.isLoading()"
-    [uiTableSort]="manager.sort()"
-    [uiTableSelection]="manager.selectionService"
-    (uiTableSortChange)="manager.onSortChange($event)"
-    (uiTableAction)="handleTableAction($event)"
-  >
-    <ng-template [appUiTableColumn]="'name'" let-item>
+<app-ui-admin-page-layout
+  [title]="currentPageTitle()"
+  [toolbarActions]="toolbarActions"
+  [columns]="columns"
+  [data]="manager.data()"
+  [isLoading]="manager.isLoading()"
+  [sort]="manager.sort()"
+  [selection]="manager.selectionService"
+  [totalRecords]="manager.totalRecords()"
+  [page]="manager.page()"
+  [pageSize]="manager.pageSize()"
+  (searchChange)="manager.onSearch($event)"
+  (toolbarAction)="handleToolbarAction($event)"
+  (tableAction)="handleTableAction($event)"
+  (sortChange)="manager.onSortChange($event)"
+  (pageStateChange)="manager.onPageStateChange($event)"
+>
+  <!--
+    Aquí es donde proyectamos el contenido específico de esta página.
+    En este caso, la plantilla para la columna 'name'.
+  -->
+  <ng-template [appUiTableColumn]="'name'" let-item>
+    <div class="cell-with-icon">
+      <app-ui-icon [uiIconName]="'icon-user'" [uiIconType]="'system'"></app-ui-icon>
       <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.name }}</a>
-    </ng-template>
-  </app-ui-table>
-
-  <app-ui-paginator
-    [uiPaginatorTotalRecords]="manager.totalRecords()"
-    [uiPaginatorPage]="manager.page()"
-    [uiPaginatorPageSize]="manager.pageSize()"
-    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
-  />
-</div>
+    </div>
+  </ng-template>
+</app-ui-admin-page-layout>
 
 <!-- Modal de Formulario (Crear/Editar) -->
 <app-ui-form-modal
   [uiFormModalIsVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
-  [uiFormModalFormGroup]="form"
+  [uiFormModalIsEditing]="!!editingItem()"
   [uiFormModalIsSaving]="isSaving()"
   (uiFormModalSave)="onSave()"
   (uiFormModalClose)="onCloseFormModal()"
@@ -53,10 +46,10 @@
   [uiFormModalTitle]="'Confirmar Eliminación'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalIsSaving]="isDeleting()"
-  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalConfirm)="onConfirmDelete()"
   (uiFormModalClose)="onCloseConfirmModal()"
 >
-  <p>¿Estás seguro de que deseas eliminar este usuario? Esta acción no se puede deshacer.</p>
+  <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
 </app-ui-form-modal>
 
 <!-- Modal de Confirmación (Borrado Múltiple) -->
@@ -65,10 +58,10 @@
   [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalIsSaving]="isDeleting()"
-  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalConfirm)="onConfirmDeleteSelected()"
   (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
 >
   <p>
-    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> usuarios seleccionados? Esta acción no se puede deshacer.
+    ¿Estás seguro de que deseas eliminar los <b>{{ manager.selectionCount() }}</b> elementos seleccionados? Esta acción no se puede deshacer.
   </p>
 </app-ui-form-modal>

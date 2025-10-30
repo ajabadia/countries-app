@@ -1,80 +1,41 @@
-// File: d:\desarrollos\countries2\frontend\src\app\features\admin\users\users-admin.component.ts | Last Modified: 2025-10-23
 
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
-
+import { ChangeDetectionStrategy } from '@angular/core';
 import { BaseAdminPageComponent } from '@app/shared/base-classes/base-admin-page.component';
-import { UiHeadingComponent } from '@app/shared/components/ui-heading/ui-heading.component';
-import { UiToolbarButtonsComponent } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
 import { UiFormModalComponent } from '@app/shared/components/ui-form-modal/ui-form-modal.component';
-import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/ui-dynamic-form.component';
-import { UiTableComponent } from '@app/shared/components/ui-table/ui-table.component';
-import { UiPaginatorComponent } from '@app/shared/components/ui-paginator/ui-paginator.component';
-import { UiSearchBoxComponent } from '@app/shared/components/ui-search-box/ui-search-box.component';
+import { FormField } from '@app/shared/types/form.types';
 import { UiTableColumnDirective } from '@app/shared/components/ui-table/ui-table-column.directive';
+import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/ui-dynamic-form.component';
+import { UiAdminPageLayoutComponent } from '@app/shared/components/ui-admin-page-layout/ui-admin-page-layout.component';
+import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
+import { TableColumn } from '@app/shared/components/ui-table/table.types';
 
 import { UsersService } from './users.service';
-import type { User } from '@app/core/types/user.types';
-import { FormField } from '@app/shared/types/form.types';
-import { TableColumn } from '@app/shared/components/ui-table/table.types';
+import { FormBuilderService } from '@app/shared/services/form-builder.service';
+import { User } from '@app/types/user.types';
 
 @Component({
   selector: 'app-users-admin',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    UiHeadingComponent,
-    UiToolbarButtonsComponent,
     UiFormModalComponent,
-    UiDynamicFormComponent,
-    UiTableComponent,
-    UiPaginatorComponent,
-    UiSearchBoxComponent,
-    UiTableColumnDirective,
+    UiTableColumnDirective, // Se mantiene porque se usa en la ng-template.
+    UiDynamicFormComponent, // Se usa dentro del modal.
+    UiAdminPageLayoutComponent, // El nuevo componente de layout.
+    UiIconComponent,
   ],
   templateUrl: './users-admin.component.html',
   styleUrls: ['./users-admin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UsersAdminComponent extends BaseAdminPageComponent<User> {
-  readonly actionId = 'admin-users';
+  // --- Implementación del "Contrato" de la clase base ---
+  readonly actionId = 'users-admin'; // ID único para esta página
+  private formBuilderService = inject(FormBuilderService);
   service = inject(UsersService);
   columns: TableColumn<User>[] = [];
-  formFields: FormField[] = [
-    {
-      name: 'name',
-      label: 'Nombre',
-      type: 'text',
-      placeholder: 'Nombre del usuario | Mínimo tres caracteres',
-      validators: [Validators.required, Validators.minLength(3)],
-    },
-    {
-      name: 'email',
-      label: 'Correo Electrónico',
-      type: 'email',
-      placeholder: 'email@ejemplo.com',
-      validators: [Validators.required, Validators.email],
-    },
-    {
-      name: 'password',
-      label: 'Contraseña',
-      type: 'password',
-      placeholder: 'Dejar en blanco para no cambiar | Mínimo 6 caracteres',
-    },
-    {
-      name: 'role',
-      label: 'Rol',
-      type: 'select',
-      placeholder: 'Seleccione una opción',
-      validators: [Validators.required],
-      options: [
-        { value: 'user', label: 'Usuario' },
-        { value: 'admin', label: 'Administrador' },
-      ],
-    },
-  ];
-  override searchableFields: (keyof User)[] = ['name', 'email'];
+  formFields: FormField[] = this.formBuilderService.buildFormFields('users');
+  override searchableFields: (keyof User)[] = ['id', 'name', 'email', 'role'];
 
   constructor() {
     super();
@@ -83,24 +44,10 @@ export class UsersAdminComponent extends BaseAdminPageComponent<User> {
 
   private initializeColumns(): void {
     this.columns = [
-      { key: 'name', label: 'Nombre', sortable: true, template: true },
+      { key: 'id', label: 'ID', sortable: true },
+      { key: 'name', label: 'Usuario', sortable: true, template: true }, // Habilitamos la plantilla
       { key: 'email', label: 'Email', sortable: true },
       { key: 'role', label: 'Rol', sortable: true },
     ];
-  }
-
-  // Sobrescribimos onEdit para manejar la validación de la contraseña.
-  override onEdit(item: User | null = null): void {
-    const passwordControl = this.form.get('password');
-    if (item) {
-      // Al editar, la contraseña es opcional.
-      passwordControl?.clearValidators();
-      passwordControl?.setValidators([Validators.minLength(6)]);
-    } else {
-      // Al crear, la contraseña es obligatoria.
-      passwordControl?.setValidators([Validators.required, Validators.minLength(6)]);
-    }
-    passwordControl?.updateValueAndValidity();
-    super.onEdit(item); // Llamamos al método original de la clase base.
   }
 }

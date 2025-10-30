@@ -16,6 +16,10 @@ El objetivo de este feature es proporcionar una vista de alto nivel con estadís
 ### `DashboardService`
 
 - **Responsabilidad**: Encapsula toda la lógica para comunicarse con la API y obtener los datos necesarios para el dashboard.
-- **Lógica**: Utiliza `forkJoin` de RxJS para realizar múltiples peticiones `GET` a los endpoints de la API en paralelo. Si una petición falla, utiliza `catchError` para devolver un valor por defecto (0) y registrar el error, asegurando que el resto del dashboard pueda cargarse.
+- **Lógica Dinámica y Extensible**:
+    1.  Realiza una **única petición `GET`** al endpoint unificado `/api/admin/dashboard` del backend para obtener todos los conteos.
+    2.  Obtiene todas las acciones de la categoría `'admin'` desde el `ActionService`.
+    3.  **Construye dinámicamente** la lista de tarjetas de estadísticas (`Stat[]`) a partir de las acciones obtenidas. Para cada acción, utiliza su `label`, `icon` y `routerLink`, y asocia el conteo correspondiente que viene del backend.
+- **Beneficio**: Este diseño hace que el dashboard sea **automáticamente extensible**. Si en el futuro se añade una nueva página de administración al `ActionService`, su tarjeta de estadísticas aparecerá en el dashboard sin necesidad de modificar este servicio.
 
 ---

@@ -23,6 +23,16 @@ export default class BaseService {
         return getDB();
     }
     /**
+     * Obtiene el número total de registros en la tabla.
+     * @returns Una promesa que resuelve al número total de registros.
+     */
+    async getCount() {
+        const db = await this.getDbInstance();
+        const stmt = db.prepare(`SELECT COUNT(*) as count FROM ${this.tableName}`);
+        const result = stmt.get();
+        return result.count;
+    }
+    /**
      * Obtiene todos los registros de la tabla con opciones de paginación, orden y búsqueda.
      * @param options Opciones de consulta.
      * @returns Un objeto con los datos y el total de registros que coinciden con la búsqueda.
@@ -114,10 +124,10 @@ export default class BaseService {
         const columns = Object.keys(data);
         const values = Object.values(data);
         const placeholders = columns.map(() => '?').join(', ');
-        const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders})`;
-        const result = db.prepare(sql).run(...values);
-        // Devolvemos la entidad completa recién creada
-        return this.getById(Number(result.lastInsertRowid));
+        // ✅ OPTIMIZACIÓN: Se usa RETURNING * para obtener el registro creado en una sola consulta.
+        const sql = `INSERT INTO ${this.tableName} (${columns.join(', ')}) VALUES (${placeholders}) RETURNING *`;
+        // Usamos .get() porque INSERT...RETURNING devuelve una única fila.
+        return db.prepare(sql).get(...values);
     }
     /**
      * Actualiza un registro por su ID.
@@ -131,10 +141,10 @@ export default class BaseService {
             throw new Error('No hay datos para actualizar.');
         const values = Object.values(data);
         const setClause = columns.map(col => `${col} = ?`).join(', ');
-        const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ?`;
-        db.prepare(sql).run(...values, id);
-        // Devolvemos la entidad completa actualizada
-        return this.getById(id);
+        // ✅ OPTIMIZACIÓN: Se usa RETURNING * para obtener el registro actualizado en una sola consulta.
+        const sql = `UPDATE ${this.tableName} SET ${setClause} WHERE id = ? RETURNING *`;
+        // Usamos .get() porque UPDATE...RETURNING en una sola fila devuelve una única fila.
+        return db.prepare(sql).get(...values, id);
     }
     _buildWhereClause(search, searchFields) {
         const fieldsToSearch = searchFields && searchFields.length > 0 ? searchFields : this.searchableFields;

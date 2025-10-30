@@ -35,7 +35,7 @@ Un servicio que herede de `BaseCrudService` deberá implementar la propiedad `ap
 import { Injectable, inject } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { BaseCrudService } from '@shared/services/base-crud.service';
-import { Country } from '@core/types/country.interface';
+import { Country } from '@app/types/country.interface';
 
 @Injectable({ providedIn: 'root' })
 export class CountriesService extends BaseCrudService<Country> {

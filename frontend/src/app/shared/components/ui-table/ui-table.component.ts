@@ -12,6 +12,7 @@ import {
   TemplateRef,
   OnChanges,
   SimpleChanges,
+  AfterContentInit,
   QueryList,
 } from '@angular/core';
 import { CommonModule } from '@angular/common';
@@ -30,12 +31,18 @@ import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.componen
   styleUrls: ['./ui-table.component.scss'],
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
-export class UiTableComponent<T extends { id: number | string }> implements OnChanges {
+export class UiTableComponent<T extends { id: number | string }> implements OnChanges, AfterContentInit {
   // --- Inputs ---
   data = input<T[] | null | undefined>([], { alias: 'uiTableData' });
   columns = input<TableColumn<T>[]>([], { alias: 'uiTableColumns' }); // Alias corregido
   selection = input<SelectionService<T> | null>(null, { alias: 'uiTableSelection' });
   sort = input<Sort<T> | null>(null, { alias: 'uiTableSort' });
+  /**
+   * Permite pasar plantillas personalizadas desde un componente padre anidado.
+   * Esencial para cuando la tabla está dentro de otro componente de layout.
+   * @alias uiTableCustomTemplates
+   */
+  customTemplatesInput = input<QueryList<UiTableColumnDirective> | undefined>(undefined, { alias: 'uiTableCustomTemplates' });
   isLoadingInput = input<boolean | undefined>(undefined, { alias: 'uiTableIsLoading' });
 
   // --- Outputs ---
@@ -48,6 +55,10 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
   @ContentChildren(UiTableColumnDirective)
   private columnTemplates: QueryList<UiTableColumnDirective> | null = null;
 
+  // ✅ CORRECCIÓN CLAVE: Propiedad para almacenar las plantillas procesadas.
+  // Este mapa contendrá las plantillas personalizadas, usando el nombre de la columna como clave.
+  public customTemplates: { [key: string]: TemplateRef<unknown> } = {};
+
   @Output() uiTableAction = new EventEmitter<{ action: string, item: T }>(); // Añadido Output faltante
   // Estado para el checkbox de la cabecera con 3 estados.
   public headerCheckboxState: UiToggleState = 'ui-toggle-unchecked';
@@ -59,21 +70,36 @@ export class UiTableComponent<T extends { id: number | string }> implements OnCh
     }
   }
 
+  // ✅ CORRECCIÓN CLAVE: Se implementa AfterContentInit para procesar las plantillas.
+  // Este hook del ciclo de vida se ejecuta una vez después de que el contenido proyectado (<ng-content>) ha sido inicializado.
+  ngAfterContentInit(): void {
+    if (this.columnTemplates) {
+      // Combina las plantillas proyectadas directamente con las pasadas a través del Input.
+      // Esto hace que el componente sea flexible y funcione en ambos escenarios.
+      const allTemplates = new QueryList<UiTableColumnDirective>();
+      const templates: UiTableColumnDirective[] = [];
+
+      if (this.columnTemplates?.length) {
+        templates.push(...this.columnTemplates.toArray());
+      }
+      if (this.customTemplatesInput()?.length) {
+        templates.push(...this.customTemplatesInput()!.toArray());
+      }
+      allTemplates.reset(templates);
+
+      // Convertimos la lista de directivas de plantilla en un mapa clave-valor para un acceso rápido.
+      this.customTemplates = allTemplates.reduce((acc, t) => {
+        acc[t.columnName] = t.templateRef;
+        return acc;
+      }, {} as { [key: string]: TemplateRef<any> });
+    }
+  }
+
   // Propiedad para acceder a la plantilla de acciones de forma más sencilla
   actionsTemplate = computed(() => {
-    return this.getCellTemplate('actions');
+    // Ahora busca en el mapa `customTemplates`.
+    return this.customTemplates['actions'] || null;
   });
-
-  // Helper para encontrar la plantilla de una columna específica
-  getCellTemplate(columnKey: keyof T | string): TemplateRef<unknown> | null {
-    if (!this.columnTemplates) {
-      return null;
-    }
-    const templateDirective = this.columnTemplates.find(
-      (tpl) => tpl.columnName === columnKey
-    );
-    return templateDirective ? templateDirective.templateRef : null;
-  }
 
   // Helper para acceder al valor de una celda, incluso si la clave es anidada (ej: 'user.name')
   getCellValue(item: T, key: keyof T | string): unknown {

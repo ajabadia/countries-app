@@ -41,8 +41,14 @@
           }
         </div>
 
-        <button app-ui-button type="submit" [disabled]="registerForm.invalid" ui-button-color="primary" class="full-width">
-          Registrarse
+        <button
+          app-ui-button
+          type="submit"
+          uiButtonColor="primary"
+          uiButtonFullWidth
+          [uiButtonLoading]="loading()"
+          [disabled]="registerForm.invalid">
+          Crear Cuenta
         </button>
       </form>
     </div>

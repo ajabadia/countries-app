@@ -6,6 +6,13 @@
       <label [for]="field.name">{{ field.label }}</label>
 
       @switch (field.type) {
+        @case ('boolean') {
+          <input
+            type="checkbox"
+            [id]="field.name"
+            [formControlName]="field.name"
+          />
+        }
         @case ('select') {
           <select [id]="field.name" [formControlName]="field.name">
             @for (option of field.options; track option.value) {
@@ -25,9 +32,11 @@
             [type]="field.type"
             [id]="field.name"
             [formControlName]="field.name"
-            [placeholder]="field.placeholder || ''"
-            [title]="field.placeholder || ''"
+            [placeholder]="field.helpText || field.label"
+            [title]="field.helpText || field.label"
             [class.is-invalid]="form.get(field.name)?.invalid && form.get(field.name)?.touched"
+            [attr.maxlength]="field.maxLength"
+            (input)="onInput($event, field)"
           />
         }
       }

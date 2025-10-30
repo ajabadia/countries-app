@@ -16,4 +16,8 @@ export interface FormField {
     value: string | number;
     label: string;
   }[];
+  isHidden?: boolean;
+  helpText?: string;
+  maxLength?: number;
+  characterCasing?: 'uppercase' | 'lowercase';
 }

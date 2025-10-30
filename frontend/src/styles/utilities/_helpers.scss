@@ -1,0 +1,11 @@
+// File: d:\desarrollos\countries2\frontend\src\styles\utilities\_helpers.scss | New File
+
+/**
+ * Clase de utilidad para celdas de tabla que contienen un icono y texto.
+ * Asegura la alineación vertical y añade un espaciado consistente.
+ */
+.cell-with-icon {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem; // Espacio entre el icono y el texto.
+}

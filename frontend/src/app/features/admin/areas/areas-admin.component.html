@@ -1,48 +1,38 @@
-<div class="admin-page-container">
-  <app-ui-heading [uiHeading]="currentPageTitle()" />
-  
-  <div class="toolbar">
-    <app-ui-search-box
-      class="toolbar__search"
-      (uiSearchBoxValueChange)="manager.onSearch($event)"
-    />
-    <app-ui-toolbar-buttons
-      class="toolbar__actions"
-      [uiToolbarButtonsActions]="toolbarActions"
-      (uiToolbarButtonsActionClick)="handleToolbarAction($event)"
-    />
-  </div>
-
-  <app-ui-table 
-    [uiTableColumns]="columns"
-    [uiTableData]="manager.data()"
-    [uiTableIsLoading]="manager.isLoading()"
-    [uiTableSort]="manager.sort()"
-    [uiTableSelection]="manager.selectionService"
-    (uiTableSortChange)="manager.onSortChange($event)"
-    (uiTableAction)="handleTableAction($event)"
-  >
-    <!-- 
-      Plantilla para la columna 'defaultname' para que sea un enlace de edición.
-    -->
-    <ng-template [appUiTableColumn]="'defaultname'" let-item>
-      <a href="javascript:void(0);" (click)="onEdit(item)">{{ item.defaultname }}</a>
-    </ng-template>
-  </app-ui-table>
-
-  <app-ui-paginator
-    [uiPaginatorTotalRecords]="manager.totalRecords()"
-    [uiPaginatorPage]="manager.page()"
-    [uiPaginatorPageSize]="manager.pageSize()"
-    (uiPaginatorPageStateChange)="manager.onPageStateChange($event)"
-  />
-</div>
+<!-- File: d:\desarrollos\countries2\frontend\src\app\features\admin\areas\areas-admin.component.html | Last Modified: 2025-10-28 -->
+<app-ui-admin-page-layout
+  [title]="currentPageTitle()"
+  [toolbarActions]="toolbarActions"
+  [columns]="columns"
+  [data]="manager.data()"
+  [isLoading]="manager.isLoading()"
+  [sort]="manager.sort()"
+  [selection]="manager.selectionService"
+  [totalRecords]="manager.totalRecords()"
+  [page]="manager.page()"
+  [pageSize]="manager.pageSize()"
+  (searchChange)="manager.onSearch($event)"
+  (toolbarAction)="handleToolbarAction($event)"
+  (tableAction)="handleTableAction($event)"
+  (sortChange)="manager.onSortChange($event)"
+  (pageStateChange)="manager.onPageStateChange($event)"
+>
+  <!--
+    Aquí es donde proyectamos el contenido específico de esta página.
+    En este caso, la plantilla para la columna 'defaultname'.
+  -->
+  <ng-template [appUiTableColumn]="'defaultname'" let-item>
+    <div class="cell-with-icon">
+      <app-ui-icon [uiIconName]="item.id" [uiIconType]="'area'"></app-ui-icon>
+      <span>{{ item.defaultname }}</span>
+    </div>
+  </ng-template>
+</app-ui-admin-page-layout>
 
 <!-- Modal de Formulario (Crear/Editar) -->
 <app-ui-form-modal
   [uiFormModalIsVisible]="isFormModalVisible()"
   [uiFormModalTitle]="formModalTitle"
-  [uiFormModalFormGroup]="form"
+  [uiFormModalIsEditing]="!!editingItem()"
   [uiFormModalIsSaving]="isSaving()"
   (uiFormModalSave)="onSave()"
   (uiFormModalClose)="onCloseFormModal()"
@@ -56,7 +46,7 @@
   [uiFormModalTitle]="'Confirmar Eliminación'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalIsSaving]="isDeleting()"
-  (uiFormModalSave)="onConfirmDelete()"
+  (uiFormModalConfirm)="onConfirmDelete()"
   (uiFormModalClose)="onCloseConfirmModal()"
 >
   <p>¿Estás seguro de que deseas eliminar este registro? Esta acción no se puede deshacer.</p>
@@ -68,7 +58,7 @@
   [uiFormModalTitle]="'Confirmar Eliminación Múltiple'"
   [uiFormModalMode]="'confirm'"
   [uiFormModalIsSaving]="isDeleting()"
-  (uiFormModalSave)="onConfirmDeleteSelected()"
+  (uiFormModalConfirm)="onConfirmDeleteSelected()"
   (uiFormModalClose)="onCloseConfirmMultiDeleteModal()"
 >
   <p>

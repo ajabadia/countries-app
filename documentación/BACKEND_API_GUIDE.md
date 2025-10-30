@@ -1,4 +1,4 @@
-<!-- File: d:\desarrollos\countries2\frontend\BACKEND_API_GUIDE.md | Last Modified: 2025-10-19 -->
+<!-- File: d:\desarrollos\countries2\documentación\BACKEND_API_GUIDE.md | Last Modified: 2025-10-27 -->
 
 # Backend API - Visión General del Proyecto
 
@@ -9,7 +9,7 @@ Este documento sirve como una guía completa de la arquitectura, patrones y conv
 -   **Runtime:** Node.js
 -   **Framework:** Express.js
 -   **Lenguaje:** TypeScript
--   **Base de Datos:** `better-sqlite3` (SQLite)
+-   **Base de Datos:** `better-sqlite3` (SQLite). Se utilizan dos bases de datos separadas: `countries.db` para datos de la aplicación y `auth.db` para usuarios y autenticación.
 -   **Manejo de Errores Asíncronos:** `express-async-handler`
 -   **Validación de Peticiones:** `express-validator`
 -   **Autenticación:** `jsonwebtoken` (JWT) para tokens, `bcryptjs` para hashing de contraseñas.
@@ -22,7 +22,7 @@ Este documento sirve como una guía completa de la arquitectura, patrones y conv
 El backend sigue una arquitectura por capas, con una clara separación de responsabilidades:
 
 -   `/config`: Contiene la configuración de servicios externos, como el logger (`logger.ts`).
--   `/db`: Contiene la configuración de la conexión a la base de datos (`database.ts`) y el fichero de la base de datos.
+-   `/db`: Contiene la lógica de conexión a las bases de datos (`database.ts`, `authDatabase.ts`) y los ficheros de base de datos (`.db`).
 -   `/errors`: Define clases de error personalizadas (`HttpError`, `NotFoundError`, `ValidationError`) para un manejo semántico y centralizado.
 -   `/middleware`: Contiene los middlewares de Express, como el manejador de errores (`errorHandler.ts`) y el de autenticación (`authMiddleware.ts`).
 -   `/routes`: Define los endpoints de la API, sus verbos HTTP y las reglas de validación de entrada.
@@ -33,153 +33,107 @@ El backend sigue una arquitectura por capas, con una clara separación de respon
 
 ## 3. Patrones de Arquitectura Clave
 
-La API está construida sobre dos patrones genéricos y reutilizables que son fundamentales para su escalabilidad y mantenibilidad.
+La API está construida sobre varios patrones reutilizables que son fundamentales para su escalabilidad y mantenibilidad.
 
 ### 3.1. Patrón CRUD Genérico
 
-Para evitar la duplicación de código, se utiliza una combinación de un servicio base y una factoría de controladores, ambos completamente asíncronos.
+Para evitar la duplicación de código, se utiliza una combinación de un servicio base y una factoría de controladores.
 
--   **`BaseService<T>`:** Una clase genérica que implementa toda la lógica CRUD común (getAll, getById, create, update, remove), incluyendo paginación, búsqueda y ordenación.
--   **`createCrudController<T>`:** Una función factoría que recibe una instancia de un servicio, el nombre de la entidad y una función `sanitizer`. Devuelve un objeto con todos los controladores CRUD (`getAll`, `getById`, etc.) ya implementados y listos para ser usados en las rutas.
-
-#### Cómo Añadir una Nueva Entidad (Ej: `regions`)
-
-1.  **Crear el Tipo:** `backend/types/region.types.ts`
-    ```typescript
-    export interface Region { id: string; name: string; }
-    ```
-2.  **Crear el Servicio:** `backend/services/regionsService.ts`. El servicio hereda de `BaseService` y es un singleton.
-    ```typescript
-    import BaseService from './baseService.js';
-    import type { Region } from '../types/region.types.js';
-
-    class RegionsService extends BaseService<Region> {
-      constructor() {
-        super('regions', ['name']); // 1. Nombre de la tabla, 2. Campos de búsqueda
-      }
-    }
-    export default new RegionsService();
-    ```
-3.  **Crear el Controlador:** `backend/controllers/regionsController.ts`. Se usa la factoría para generar los controladores.
-    ```typescript
-    import { createCrudController } from './baseController.js';
-    import regionsService from '../services/regionsService.js';
-    import type { Region } from '../types/region.types.js';
-
-    // Función para limpiar y validar el body de la petición
-    const sanitizeRegion = (body: any): Partial<Region> => ({ name: body.name });
-
-    export const { 
-      getAll: getAllRegions, 
-      getById: getRegionById, 
-      create: createRegion, 
-      update: updateRegion, 
-      delete: deleteRegion 
-    } = createCrudController(regionsService, 'Region', sanitizeRegion);
-    ```
-4.  **Crear las Rutas:** `backend/routes/regions.ts`. Se definen los endpoints y se asocian los controladores y validaciones.
-    ```typescript
-    import { Router } from 'express';
-    import { getAllRegions, getRegionById, createRegion, updateRegion, deleteRegion } from '../controllers/regionsController.js';
-    import { body, param } from 'express-validator';
-    
-    const router = Router();
-    router.get('/', getAllRegions);
-    router.get('/:id', getRegionById);
-    router.post('/', body('name').notEmpty(), createRegion);
-    // ... resto de rutas
-    export default router;
-    ```
-5.  **Registrar en `index.ts`:**
-    ```typescript
-    import regionsRouter from './routes/regions.js';
-    app.use('/api/regions', regionsRouter);
-    ```
+-   **`BaseService<T>`:** Una clase genérica que implementa toda la lógica CRUD común (`getAll`, `getById`, `create`, `update`, `remove`, y `removeMany`), incluyendo paginación, búsqueda y ordenación.
+-   **`createCrudController<T>`:** Una función factoría que recibe una instancia de un servicio y devuelve un objeto con todos los controladores CRUD (`getAll`, `getById`, etc.) listos para ser usados en las rutas.
 
 ### 3.2. Patrón de Manejo de Errores Centralizado
 
-Toda la lógica de respuesta a errores reside en `middleware/errorHandler.ts`. Los controladores y servicios no usan bloques `try/catch` para errores HTTP, sino que **lanzan errores semánticos** definidos en `errors/httpErrors.ts`. El middleware `express-async-handler` captura estas excepciones y las delega al `errorHandler`.
-
--   `throw new NotFoundError('Recurso no encontrado')` -> El `errorHandler` lo convierte en una respuesta **404**.
--   `throw new ValidationError(errors.array())` -> El `errorHandler` lo convierte en una respuesta **400** con el detalle de los errores de validación.
--   `throw new AuthenticationError('Credenciales inválidas')` -> Respuesta **401**.
--   `throw new ForbiddenError('Acceso denegado')` -> Respuesta **403**.
+Toda la lógica de respuesta a errores reside en `middleware/errorHandler.ts`. Los controladores lanzan errores semánticos (ej. `NotFoundError`) y el middleware se encarga de generar la respuesta HTTP correcta.
 
 ### 3.3. Patrón de Autenticación y Seguridad
 
-La autenticación se basa en un sistema de **Access Tokens** y **Refresh Tokens** para una mayor seguridad y una mejor experiencia de usuario.
+La autenticación se basa en un sistema de **Access Tokens** y **Refresh Tokens**.
 
--   **Access Token (JWT):**
-    -   Corta duración (ej. 2 horas).
-    -   Se envía en la cabecera `Authorization: Bearer <token>`.
-    -   Se valida en rutas protegidas por el middleware `protect`.
--   **Refresh Token (JWT):**
-    -   Larga duración (ej. 7 días).
-    -   Se almacena en una **cookie `HttpOnly`**, lo que impide su acceso desde JavaScript en el cliente, mitigando ataques XSS.
-    -   Se utiliza en el endpoint `/api/auth/refresh-token` para generar un nuevo Access Token sin que el usuario tenga que volver a iniciar sesión.
--   **Seguridad Adicional:**
-    -   **Bloqueo de Cuentas:** Se implementa una política de bloqueo temporal de cuentas tras múltiples intentos de login fallidos para prevenir ataques de fuerza bruta.
-    -   **Rate Limiting:** El endpoint de login está protegido con `express-rate-limit` para limitar el número de intentos desde una misma IP.
-    -   **Auditoría:** Eventos críticos como cambios de rol o bloqueos de cuenta se registran usando un `auditLogService`.
+-   **Access Token (JWT):** Corta duración (2h), se envía en la cabecera `Authorization`.
+-   **Refresh Token (JWT):** Larga duración (7d), se almacena en una **cookie `HttpOnly`**, lo que impide su acceso desde JavaScript. Se usa para generar nuevos Access Tokens de forma silenciosa.
 
-## 4. Logging
+### 3.4. Inicialización de la Base de Datos desde JSON
+### 3.5. Seguridad Adicional: Bloqueo de Cuenta
 
-Se utiliza `winston` para un sistema de logging avanzado y estructurado.
+-   **Descripción**: Para prevenir ataques de fuerza bruta, el sistema implementa un mecanismo de bloqueo de cuenta temporal.
+-   **Reglas**:
+    -   **Intentos Fallidos Máximos**: 5 (`MAX_FAILED_ATTEMPTS`).
+    -   **Tiempo de Bloqueo**: 15 minutos (`LOCKOUT_TIME_MINUTES`).
+-   **Funcionamiento**: Si un usuario introduce una contraseña incorrecta 5 veces seguidas, su cuenta se bloqueará y no podrá iniciar sesión durante 15 minutos. Cualquier intento de login durante este período devolverá un error `403 Forbidden` con el mensaje "Account is locked. Please try again in X minutes."
 
--   **Niveles de Log:** `error`, `warn`, `info`, `http`, `debug`.
--   **Transportes:**
-    -   **Consola:** Logs coloridos y legibles en desarrollo.
-    -   **Archivos:** Logs en formato JSON para producción, separados por nivel (`error.log`, `combined.log`).
--   **Rotación de Archivos:** Se usa `winston-daily-rotate-file` para rotar los logs diariamente, comprimir los antiguos y eliminarlos tras un periodo configurable (ej. 14 días).
--   **Integración con Morgan:** Las peticiones HTTP se capturan con `morgan` y se redirigen al stream de `winston`, centralizando todos los logs.
+#### Desbloqueo Manual para Desarrollo
 
-## 5. Endpoints de la API
+Durante el desarrollo y las pruebas, puede ser necesario desbloquear una cuenta manualmente. Para ello, se debe ejecutar la siguiente consulta SQL en la base de datos de autenticación (`backend/db/auth.db`):
+
+```sql
+UPDATE users
+SET
+  lockUntil = NULL,
+  failedLoginAttempts = 0
+WHERE
+  email = 'tu-email@ejemplo.com';
+```
+
+### 3.4. Inicialización de la Base de Datos desde JSON
+
+-   **Descripción:** El esquema y los datos iniciales de las bases de datos no se definen con sentencias `CREATE TABLE` en el código. En su lugar, al arrancar la aplicación, el sistema lee los archivos `db/db_export/countries-db-export.json` y `db/db_export/auth-db-export.json`.
+-   **Proceso:**
+    1.  Si el archivo `.db` no existe, se crea.
+    2.  Se lee el archivo `.json` correspondiente.
+    3.  Se ejecutan las sentencias DDL (`CREATE TABLE ...`) contenidas en el JSON.
+    4.  Si la tabla recién creada está vacía, se puebla con los datos (`rows`) del JSON.
+-   **Ventaja:** Permite gestionar el esquema y los datos iniciales de forma declarativa y versionable.
+
+## 4. Endpoints de la API
 
 La API expone endpoints CRUD estándar para las siguientes entidades:
 
 -   `/api/countries`
 -   `/api/continents`
 -   `/api/languages`
--   `/api/areas`
--   `/api/dependencies`
--   `/api/multilingualnames`
+-   `/api/users` (Administración)
+-   ... y más.
 
-### 5.1. Parámetros de Consulta Comunes (para `GET /`)
+### 4.1. Endpoints CRUD Comunes
+
+Para cada entidad (ej. `countries`), se exponen los siguientes endpoints:
+
+-   `GET /api/countries`: Devuelve una lista paginada de elementos.
+-   `GET /api/countries/:id`: Devuelve un elemento por su ID.
+-   `POST /api/countries`: Crea un nuevo elemento.
+-   `PUT /api/countries/:id`: Actualiza un elemento existente.
+-   `DELETE /api/countries/:id`: Elimina un elemento específico.
+-   `DELETE /api/countries`: **Elimina múltiples elementos**. Requiere un body con un array de IDs: `{ "ids": ["1", "2", "3"] }`.
+
+### 4.2. Parámetros de Consulta Comunes (para `GET /`)
 
 -   `page`: Número de página (defecto: 1).
 -   `pageSize`: Tamaño de la página (defecto: 10).
 -   `orderBy`: Campo por el que ordenar (defecto: `id`).
 -   `orderDir`: Dirección de ordenación (`asc` o `desc`, defecto: `asc`).
--   `search`: Término de búsqueda a aplicar en los campos definidos en el servicio.
+-   `search`: Término de búsqueda a aplicar en los campos definidos por defecto en el servicio.
+-   `searchFields`: **(Opcional)** Un array o string de campos específicos en los que buscar. Permite al frontend anular los campos de búsqueda por defecto. Ejemplo: `?search=test&searchFields=name&searchFields=description`.
 
-### 5.2. Endpoints de Autenticación (`/api/auth`)
+### 4.3. Endpoints de Autenticación (`/api/auth`)
 
 -   `POST /register`: Registra un nuevo usuario.
 -   `POST /login`: Autentica un usuario y devuelve un Access Token, estableciendo el Refresh Token en una cookie.
--   `GET /refresh-token`: Genera un nuevo Access Token usando el Refresh Token de la cookie.
+-   `POST /refresh-token`: Genera un nuevo Access Token usando el Refresh Token de la cookie.
 -   `POST /logout`: Invalida el Refresh Token en la base de datos y limpia la cookie.
 -   `GET /profile`: Devuelve el perfil del usuario autenticado.
 -   `PUT /profile`: Actualiza el perfil del usuario.
 -   `PUT /profile/password`: Cambia la contraseña del usuario.
--   `POST /forgot-password`: Inicia el proceso de recuperación de contraseña.
--   `PUT /reset-password/:token`: Finaliza el proceso de recuperación.
 
-### 5.3. Endpoints de Administración (Protegidos)
+### 4.4. Endpoints de Administración (`/api/users`)
 
--   `GET /api/auth/users`: Lista todos los usuarios.
--   `DELETE /api/auth/users/:id`: Elimina un usuario.
--   `PUT /api/auth/users/:id/role`: Cambia el rol de un usuario.
--   `GET /api/auth/audit-logs`: Obtiene los logs de auditoría.
+Estas rutas están protegidas y solo accesibles para administradores.
 
-## 6. Mejoras Futuras y Oportunidades
+-   `GET /api/users`: Lista todos los usuarios.
+-   `DELETE /api/users/:id`: Elimina un usuario.
+-   ... (CRUD completo para usuarios).
 
-1.  **Gestión de Configuración:** Centralizar la carga y validación de variables de entorno (`.env`) en un único módulo de configuración para asegurar que la aplicación no se inicie si faltan variables críticas.
-2.  **Migraciones de Base de Datos:** Implementar un sistema de migraciones (ej. usando una librería como `node-pg-migrate` adaptada o scripts SQL versionados) para gestionar los cambios de esquema de la base de datos de forma controlada y reversible.
-3.  **Capa de Caché:** Reintroducir una capa de caché con **Redis** para los endpoints de lectura más frecuentes (ej. `GET /api/countries`). Esto reducirá la carga en la base de datos y mejorará drásticamente los tiempos de respuesta.
-4.  **Testing:** Ampliar la cobertura de tests de integración para incluir las rutas de `login`, `profile` y las rutas protegidas por roles. Simular (mock) dependencias externas como `nodemailer` para que las pruebas no envíen correos reales.
-5.  **Documentación de API (Swagger/OpenAPI):** Integrar `swagger-jsdoc` y `swagger-ui-express` para generar documentación interactiva de la API automáticamente a partir de los comentarios JSDoc en las rutas y controladores.
-
-## 7. Cómo Ejecutar el Servidor
+## 5. Cómo Ejecutar el Servidor
 
 -   **Instalar dependencias:** `npm install`
 -   **Modo desarrollo (con auto-recarga):** `npm run dev`

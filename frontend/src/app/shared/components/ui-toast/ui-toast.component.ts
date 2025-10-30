@@ -1,8 +1,8 @@
 // File: d:/desarrollos/countries2/frontend/src/app/shared/components/ui-toast/ui-toast.component.ts | Last Modified: 2025-10-20
 
-import { ChangeDetectionStrategy, Component, EventEmitter, Input, Output } from '@angular/core';
+import { ChangeDetectionStrategy, Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Toast } from '@core/types/toast.types';
+import { Toast } from '@app/types/toast.types';
 import { UiIconComponent } from '../ui-icon/ui-icon.component';
 
 @Component({
@@ -14,10 +14,14 @@ import { UiIconComponent } from '../ui-icon/ui-icon.component';
   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class UiToastComponent {
-  @Input({ required: true, alias: 'uiToastData' }) toast!: Toast;
-  @Output('uiToastClose') close = new EventEmitter<number>();
+  @Input({ required: true }) toast!: Toast;
+  @Output() closed = new EventEmitter<void>();
+
+  @HostBinding('class') get toastTypeClass() {
+    return `ui-toast--${this.toast.type}`;
+  }
 
   onClose(): void {
-    this.close.emit(this.toast.id);
+    this.closed.emit();
   }
 }

@@ -23,7 +23,10 @@ export async function createApp(): Promise<Express> {
   const continentsRouter = (await import('./routes/continents.js')).default;
   const languagesRouter = (await import('./routes/languages.js')).default;
   const areasRouter = (await import('./routes/areas.js')).default;
-  const dependenciesRouter = (await import('./routes/dependencies.js')).default;
+  const dashboardRouter = (await import('./routes/dashboard.routes.js')).default;
+  const areaTypesRouter = (await import('./routes/areaTypes.js')).default;
+  
+  const dependenciesRouter = (await import('./routes/dependencies.js')).default; // Mantener esta línea
   const multilingualnamesRouter = (await import('./routes/multilingualnames.js')).default;
   const usersRouter = (await import('./routes/users.js')).default;
 
@@ -45,7 +48,14 @@ export async function createApp(): Promise<Express> {
 
   // Middlewares
   app.use(morganMiddleware);
-  app.use(cors()); // Enable CORS for all routes
+  // --- Configuración de CORS ---
+  // Es crucial para permitir que el frontend (ej. en localhost:4200) envíe
+  // cookies (como el refresh token) al backend.
+  const corsOptions = {
+    origin: 'http://localhost:4200',
+    credentials: true,
+  };
+  app.use(cors(corsOptions));
   app.use(express.json()); // Middleware to parse JSON
   app.use(cookieParser()); // Middleware to parse cookies
 
@@ -55,9 +65,12 @@ export async function createApp(): Promise<Express> {
   app.use('/api/continents', continentsRouter);
   app.use('/api/languages', languagesRouter);
   app.use('/api/areas', areasRouter);
+  app.use('/api/admin/dashboard', dashboardRouter);
+  app.use('/api/area_types', areaTypesRouter);
   app.use('/api/dependencies', dependenciesRouter);
   app.use('/api/multilingualnames', multilingualnamesRouter);
-  app.use('/api/users', usersRouter);
+  // ✅ REFACTOR: Se registra el nuevo enrutador con el prefijo de administración.
+  app.use('/api/admin/users', usersRouter);
 
   // Error handling middleware (must be the last in the middleware chain)
   app.use(errorHandler);

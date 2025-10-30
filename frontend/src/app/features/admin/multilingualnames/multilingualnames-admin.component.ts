@@ -1,78 +1,41 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy } from '@angular/core';
 
 import { BaseAdminPageComponent } from '@app/shared/base-classes/base-admin-page.component';
-import { UiHeadingComponent } from '@app/shared/components/ui-heading/ui-heading.component';
-import { UiToolbarButtonsComponent } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
-import { UiSearchBoxComponent } from '@app/shared/components/ui-search-box/ui-search-box.component';
-import { UiPaginatorComponent } from '@app/shared/components/ui-paginator/ui-paginator.component';
-import { UiTableComponent } from '@app/shared/components/ui-table/ui-table.component';
 import { UiFormModalComponent } from '@app/shared/components/ui-form-modal/ui-form-modal.component';
-import { TableColumn } from '@app/shared/components/ui-table/table.types';
 import { FormField } from '@app/shared/types/form.types';
-
 import { UiTableColumnDirective } from '@app/shared/components/ui-table/ui-table-column.directive';
 import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/ui-dynamic-form.component';
-import { MultilingualnamesService } from './multilingualnames-admin.component.service';
-import { Multilingualname } from '@app/core/types/multilingualname.types';
+import { UiAdminPageLayoutComponent } from '@app/shared/components/ui-admin-page-layout/ui-admin-page-layout.component';
 import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
+import { TableColumn } from '@app/shared/components/ui-table/table.types';
+
+import { MultilingualnamesService } from './multilingualnames.service';
+import { FormBuilderService } from '@app/shared/services/form-builder.service';
+import { Multilingualname } from '@app/types/multilingualname.types';
 
 @Component({
   selector: 'app-multilingualnames-admin',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    UiHeadingComponent,
-    UiToolbarButtonsComponent,
-    UiSearchBoxComponent,
-    UiPaginatorComponent,
-    UiTableComponent,
     UiFormModalComponent,
-    UiTableColumnDirective,
-    UiDynamicFormComponent,
+    UiTableColumnDirective, // Se mantiene porque se usa en la ng-template.
+    UiDynamicFormComponent, // Se usa dentro del modal.
+    UiAdminPageLayoutComponent, // El nuevo componente de layout.
     UiIconComponent,
   ],
   templateUrl: './multilingualnames-admin.component.html',
   styleUrls: ['./multilingualnames-admin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultilingualnamesAdminComponent extends BaseAdminPageComponent<Multilingualname> {
   // --- Implementación del "Contrato" de la clase base ---
-  readonly actionId = 'admin-multilingualnames';
-  service = inject(MultilingualnamesService);
+  readonly actionId = 'multilingualnames-admin'; // ID único para esta página
+  private formBuilderService = inject(FormBuilderService);
+  service = inject(MultilingualnamesService); 
   columns: TableColumn<Multilingualname>[] = [];
-  formFields: FormField[] = [
-    {
-      name: 'entity_id',
-      label: 'ID de Entidad',
-      type: 'text',
-      placeholder: 'ID de la entidad a la que pertenece el nombre (ej. "ES" para España)',
-      validators: [Validators.required],
-    },
-    {
-      name: 'language',
-      label: 'Idioma',
-      type: 'text',
-      placeholder: 'Código del idioma (ej. "en", "fr")',
-      validators: [Validators.required, Validators.pattern('^[a-z]{2}$')],
-    },
-    {
-      name: 'value',
-      label: 'Valor (Nombre)',
-      type: 'text',
-      placeholder: 'El nombre en el idioma especificado',
-      validators: [Validators.required],
-    },
-    {
-      name: 'type',
-      label: 'Tipo de Entidad',
-      type: 'text',
-      placeholder: 'Tipo de la entidad (ej. "country", "continent")',
-      validators: [Validators.required],
-    },
-  ];
-  override searchableFields: (keyof Multilingualname)[] = ['entity_id', 'language', 'value', 'type'];
+  formFields: FormField[] = this.formBuilderService.buildFormFields('multilingualnames');
+  override searchableFields: (keyof Multilingualname)[] = ['id', 'value'];
 
   constructor() {
     super();
@@ -81,10 +44,24 @@ export class MultilingualnamesAdminComponent extends BaseAdminPageComponent<Mult
 
   private initializeColumns(): void {
     this.columns = [
+      { key: 'id', label: 'ID', sortable: true },
+      { key: 'entity_id', label: 'ID de la Entidad', sortable: true },
+      { key: 'language', label: 'ID del Lenguaje', sortable: true, template: true },
+      { key: 'value', label: 'Traducción', sortable: true, template: true },
       { key: 'type', label: 'Tipo', sortable: true },
-      { key: 'entity_id', label: 'Entidad', sortable: true, template: true },
-      { key: 'language', label: 'Idioma', sortable: true, template: true },
-      { key: 'value', label: 'Nombre', sortable: true, template: true },
     ];
+  }
+
+  /**
+   * Determina el tipo de icono a mostrar basado en el tipo de entidad.
+   * @param entityType El valor del campo 'type' de la entidad Multilingualname.
+   * @returns El tipo de icono a usar en ui-icon.
+   */
+  getEntityIconType(entityType: string): string {
+    switch (entityType) { // Comparamos directamente con los valores en minúsculas
+      case 'lang': return 'lang-circle-flag';
+      case 'country': return 'circle-flag';
+      default: return 'area';
+    }
   }
 }

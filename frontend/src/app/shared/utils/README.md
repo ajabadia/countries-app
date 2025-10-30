@@ -25,7 +25,7 @@ El objetivo es que los componentes de administración (`ContinentsAdminComponent
     ```typescript
     import { AdminPageManager } from '@app/shared/utils/admin-page-manager';
     import { MyEntityService } from './my-entity.service';
-    import { MyEntity } from '@app/core/types/my-entity.types';
+    import { MyEntity } from '@app/types/my-entity.types';
 
     @Component({...})
     export class MyEntityAdminComponent implements OnDestroy {

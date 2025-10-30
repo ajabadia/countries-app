@@ -52,7 +52,7 @@
             @for (col of columns(); track col.key) {
               <td>
                 @if (col.template === true) {
-                  <ng-container [ngTemplateOutlet]="getCellTemplate(col.key)" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
+                  <ng-container [ngTemplateOutlet]="customTemplates[(col.key).toString()]" [ngTemplateOutletContext]="{ $implicit: item }"></ng-container>
                 } @else {
                   {{ getCellValue(item, col.key) }}
                 }

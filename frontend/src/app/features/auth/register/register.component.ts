@@ -1,9 +1,10 @@
 // File: d:\desarrollos\countries2\frontend\src\app\features\auth\register\register.component.ts | New File
 
-import { Component, inject } from '@angular/core';
+import { Component, inject, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterLink } from '@angular/router';
+import { finalize } from 'rxjs';
 
 import { AuthService } from '@core/services/auth.service';
 import { ToastService } from '@core/services/toast.service';
@@ -32,6 +33,7 @@ export class RegisterComponent {
   private router = inject(Router);
   private toastService = inject(ToastService);
 
+  loading = signal(false);
   registerForm: FormGroup;
 
   constructor() {
@@ -48,14 +50,18 @@ export class RegisterComponent {
       return;
     }
 
-    this.authService.register(this.registerForm.value).subscribe({
-      next: () => {
-        this.toastService.showSuccess('¡Registro completado! Ahora puedes iniciar sesión.');
-        this.router.navigate(['/auth/login']);
-      },
-      error: (err) => {
-        this.toastService.showError(err.error.message || 'Error durante el registro.');
-      },
-    });
+    this.loading.set(true);
+
+    this.authService.register(this.registerForm.value)
+      .pipe(finalize(() => this.loading.set(false)))
+      .subscribe({
+        next: () => {
+          this.toastService.showSuccess('¡Registro completado! Ahora puedes iniciar sesión.');
+          this.router.navigate(['/auth/login']);
+        },
+        error: (err) => {
+          this.toastService.showError(err.error.message || 'Error durante el registro.');
+        },
+      });
   }
 }

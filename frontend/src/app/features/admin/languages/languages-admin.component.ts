@@ -1,67 +1,40 @@
 import { Component, inject } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { ReactiveFormsModule, Validators } from '@angular/forms';
+import { ChangeDetectionStrategy } from '@angular/core';
 
-import { FormField } from '@app/shared/types/form.types';
-import { LanguagesService } from './languages.service';
-import type { Language } from '@app/core/types/language.types';
-import { TableColumn } from '@app/shared/components/ui-table/table.types';
 import { BaseAdminPageComponent } from '@app/shared/base-classes/base-admin-page.component';
-import { UiToolbarButtonsComponent } from '@app/shared/components/ui-toolbar-buttons/ui-toolbar-buttons.component';
-import { UiHeadingComponent } from '@app/shared/components/ui-heading/ui-heading.component';
-import { UiSearchBoxComponent } from '@app/shared/components/ui-search-box/ui-search-box.component';
-import { UiTableComponent } from '@app/shared/components/ui-table/ui-table.component';
-import { UiPaginatorComponent } from '@app/shared/components/ui-paginator/ui-paginator.component';
-import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
 import { UiFormModalComponent } from '@app/shared/components/ui-form-modal/ui-form-modal.component';
+import { FormField } from '@app/shared/types/form.types';
 import { UiTableColumnDirective } from '@app/shared/components/ui-table/ui-table-column.directive';
 import { UiDynamicFormComponent } from '@app/shared/components/ui-dynamic-form/ui-dynamic-form.component';
+import { UiAdminPageLayoutComponent } from '@app/shared/components/ui-admin-page-layout/ui-admin-page-layout.component';
+import { UiIconComponent } from '@app/shared/components/ui-icon/ui-icon.component';
+import { TableColumn } from '@app/shared/components/ui-table/table.types';
+
+import { LanguagesService } from './languages.service';
+import { FormBuilderService } from '@app/shared/services/form-builder.service';
+import { Language } from '@app/types/language.types';
 
 @Component({
-  selector: 'app-languages-admin',
+  selector: 'languages-layout-admin',
   standalone: true,
   imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    UiHeadingComponent,
-    UiToolbarButtonsComponent,
-    UiSearchBoxComponent,
-    UiTableComponent,
-    UiPaginatorComponent,
-    UiIconComponent,
     UiFormModalComponent,
-    UiTableColumnDirective,
-    UiDynamicFormComponent,
+    UiTableColumnDirective, // Se mantiene porque se usa en la ng-template.
+    UiDynamicFormComponent, // Se usa dentro del modal.
+    UiAdminPageLayoutComponent, // El nuevo componente de layout.
+    UiIconComponent, // ✅ Añadido para mostrar los iconos de idioma
   ],
   templateUrl: './languages-admin.component.html',
   styleUrls: ['./languages-admin.component.scss'],
+  changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class LanguagesAdminComponent extends BaseAdminPageComponent<Language> {
-  readonly actionId = 'admin-languages';
-  service = inject(LanguagesService);
+  // --- Implementación del "Contrato" de la clase base ---
+  readonly actionId = 'admin-languages-layout'; // ID único para esta página
+  private formBuilderService = inject(FormBuilderService);
+  service = inject(LanguagesService); 
   columns: TableColumn<Language>[] = [];
-  formFields: FormField[] = [
-    {
-      name: 'id',
-      label: 'ID (Código ISO 639-1)',
-      type: 'text',
-      placeholder: 'Código de 2 letras del idioma (ej. es, en)',
-      isPrimaryKey: true,
-      validators: [Validators.required, Validators.pattern('^[a-z]{2}$')],
-    },
-    {
-      name: 'name',
-      label: 'Nombre del Idioma',
-      type: 'text',
-      placeholder: 'Nombre del idioma (ej. Español, Inglés)',
-      validators: [Validators.required, Validators.minLength(3)],
-    },
-    {
-      name: 'active',
-      label: 'Activo',
-      type: 'boolean',
-    },
-  ];
+  formFields: FormField[] = this.formBuilderService.buildFormFields('languages');
   override searchableFields: (keyof Language)[] = ['id', 'name'];
 
   constructor() {
@@ -71,9 +44,9 @@ export class LanguagesAdminComponent extends BaseAdminPageComponent<Language> {
 
   private initializeColumns(): void {
     this.columns = [
-      { key: 'id', label: 'ID', sortable: true },
+      { key: 'id', label: 'Código', sortable: true },
       { key: 'name', label: 'Nombre', sortable: true, template: true },
-      { key: 'active', label: 'Activo', sortable: true, template: true },
+      { key: 'active', label: 'Activo', sortable: true, template: true }, // ✅ Habilitamos la plantilla
     ];
   }
 }

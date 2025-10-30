@@ -31,6 +31,7 @@ export class IconService {
     const typeToPathMap: { [key: string]: string } = {
       'flag': 'flags/square-flags',
       'circle-flag': 'flags/circle-flags',
+      'area': 'areas',
       'globe': 'globes',
       'lang-circle-flag': 'flags/language-flags',
       'other-circle-flag': 'flags/other-flags',

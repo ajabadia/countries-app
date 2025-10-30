@@ -6,7 +6,7 @@ import {
   ActionCategory,
   AppAction,
   GroupedAppAction,
-} from '@core/types/action.types';
+} from '@app/types/action.types';
 
 @Injectable({
   providedIn: 'root',
@@ -62,7 +62,7 @@ export class ActionService {
 
     // --- Acciones de Navegación de Administración ---
     {
-      id: 'admin-dashboard',
+      id: 'dashboard-admin',
       label: 'Dashboard',
       icon: 'icon-dashboard',
       category: 'admin',
@@ -71,7 +71,7 @@ export class ActionService {
       routerLink: '/admin',
     },
     {
-      id: 'admin-countries',
+      id: 'countries-admin',
       label: 'Países',
       icon: 'icon-country',
       category: 'admin',
@@ -80,7 +80,7 @@ export class ActionService {
       routerLink: '/admin/countries',
     },
     {
-      id: 'admin-languages',
+      id: 'languages-admin',
       label: 'Idiomas',
       icon: 'icon-world-globe',
       category: 'admin',
@@ -89,7 +89,7 @@ export class ActionService {
       routerLink: '/admin/languages',
     },
     {
-      id: 'admin-users',
+      id: 'users-admin',
       label: 'Usuarios',
       icon: 'icon-user',
       category: 'admin',
@@ -98,7 +98,7 @@ export class ActionService {
       routerLink: '/admin/users',
     },
     {
-      id: 'admin-continents',
+      id: 'continents-admin',
       label: 'Continentes',
       icon: 'icon-continents',
       category: 'admin',
@@ -107,7 +107,7 @@ export class ActionService {
       routerLink: '/admin/continents',
     },
     {
-      id: 'admin-areas',
+      id: 'areas-admin',
       label: 'Áreas',
       icon: 'icon-area',
       category: 'admin',
@@ -115,8 +115,17 @@ export class ActionService {
       type: 'nav',
       routerLink: '/admin/areas',
     },
+        {
+      id: 'area_types-admin',
+      label: 'Tipos de Área',
+      icon: 'icon-tags',
+      category: 'admin',
+      pageTitle: 'Gestión de Tipos de Área', 
+      type: 'nav',
+      routerLink: '/admin/area_types',
+    },
     {
-      id: 'admin-dependencies',
+      id: 'dependencies-admin',
       label: 'Dependiencias',
       icon: 'icon-dependencies',
       category: 'admin',
@@ -125,13 +134,22 @@ export class ActionService {
       routerLink: '/admin/dependencies',
     },
     {
-      id: 'admin-multilingualnames',
+      id: 'multilingualnames-admin',
       label: 'Traducciones',
       icon: 'icon-translations',
       category: 'admin',
       pageTitle: 'Gestión de Traducciones',
       type: 'nav',
       routerLink: '/admin/multilingualnames',
+    },
+    {
+      id: 'test-layout-admin',
+      label: 'Test Layout',
+      icon: 'icon-lab',
+      category: 'admin',
+      pageTitle: 'Test de Layout',
+      type: 'nav',
+      routerLink: '/admin/test-layout',
     },
 
     // --- Acciones de Barra de Herramientas (Toolbar) ---
@@ -176,7 +194,7 @@ export class ActionService {
     );
 
     return Array.from(groupedMap.entries()).map(
-      ([category, actions]: [ActionCategory, AppAction[]]) => ({
+      ([category, actions]) => ({
         category,
         title: this.getCategoryTitle(category),
         actions,

@@ -1,7 +1,3 @@
-<!-- File: d:\desarrollos\countries2\frontend\src\app\app.component.html | Last Modified: 2025-10-19 -->
-
-<app-ui-toast-container />
-
 <div class="app-layout">
   <header class="app-header">
     <div class="app-header__left">
@@ -14,14 +10,23 @@
     <div class="app-header__right">
       <!-- ✅ NUEVO: Se añaden los botones condicionales para el perfil y el login/logout -->
       @if (authService.isAuthenticated()) {
-        <a routerLink="/user" class="profile-link">Mi Perfil</a>
-        <button app-ui-button (click)="authService.logout()" ui-button-size="s" ui-button-color="secondary">
+        <a
+          app-ui-button
+          routerLink="/user"
+          uiButtonSize="s"
+          uiButtonVariant="outline">
+          Mi Perfil
+        </a>
+        <button
+          app-ui-button
+          (click)="logout()"
+          uiButtonSize="s"
+          uiButtonColor="secondary"
+          [uiButtonLoading]="isLoggingOut()">
           Cerrar Sesión
         </button>
       } @else {
-        <a routerLink="/auth/login">
-          <button app-ui-button ui-button-size="s" ui-button-color="primary">Iniciar Sesión</button>
-        </a>
+        <a app-ui-button routerLink="/auth/login" uiButtonSize="s" uiButtonColor="primary">Iniciar Sesión</a>
       }
     </div>
   </header>

@@ -1,21 +1,27 @@
+// File: d/desarrollos/countries2/frontend/src/app/core/auth/guards/admin.guard.ts | Renamed from auth.guard.ts
+
 import { inject } from '@angular/core';
 import { CanActivateFn, Router } from '@angular/router';
+
 import { AuthService } from '@core/services/auth.service';
 
 /**
  * Un guardián funcional para proteger rutas que requieren rol de administrador.
- *
- * @returns `true` si el usuario es administrador, de lo contrario,
- *          redirige a la página de inicio y devuelve `false`.
+ * Comprueba si el usuario está autenticado y si tiene el rol 'admin'.
  */
 export const adminGuard: CanActivateFn = () => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  if (authService.currentUser()?.role === 'admin') {
-    return true;
+  if (!authService.isAuthenticated()) {
+    router.navigate(['/auth/login']);
+    return false;
   }
 
-  // Si no es admin, redirige a la página de inicio.
-  return router.parseUrl('/');
+  if (authService.currentUser()?.role !== 'admin') {
+    router.navigate(['/']); // Si está logueado pero no es admin, redirige a la home.
+    return false;
+  }
+
+  return true;
 };

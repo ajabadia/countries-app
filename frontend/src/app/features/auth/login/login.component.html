@@ -21,8 +21,14 @@
           }
         </div>
 
-        <button app-ui-button type="submit" [disabled]="loginForm.invalid" ui-button-color="primary" class="full-width">
-          Entrar
+        <button
+          app-ui-button
+          type="submit"
+          uiButtonColor="primary"
+          uiButtonFullWidth
+          [uiButtonLoading]="loading()"
+          [disabled]="loginForm.invalid">
+          Iniciar Sesión
         </button>
       </form>
     </div>
